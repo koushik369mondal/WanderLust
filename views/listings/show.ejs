@@ -6,7 +6,7 @@
                 <%= listing.title %>
             </h3>
         </div>
-        <div class="card col-6 offset-3 show-card">
+        <div class="card col-6 offset-3 show-card listing-card">
             <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image" />
             <div class="card-body">
                 <p class="card-text">
@@ -44,11 +44,17 @@
             </form>
             <hr />
 
-            <h4>All Reviews</h4>
-            <ul>
+            <p><b>All Reviews</b></p>
+            <div class="row">
                 <% for(review of listing.reviews) { %>
-                    <li><%= review.comment %>, <%= review.rating %> stars</li>
+                    <div class="card col-5 ms-3 mb-3">
+                        <div class="card-body">
+                            <h4 class="card-title">John Doe</h4>
+                            <p class="card-text"><%= review.comment %></p>
+                            <p class="card-text"><%= review.rating %> stars</p>
+                        </div>
+                    </div>
                 <% } %>
-            </ul>
+            </div>
         </div>
     </div>
