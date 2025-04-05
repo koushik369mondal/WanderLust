@@ -1,34 +1,34 @@
 <% layout('/layouts/boilerplate') %>
 
-    <div class="row mt-3">
-        <div class="col-8 offset-3">
-            <h3>Listing Details </h3>
-        </div>
-        <div class="card col-6 offset-3 show-card">
-            <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image">
-            <div class="card-body">
-                <p class="card-text">
-                    <b>
-                        <%= listing.title %>
-                    </b>
-                    <br>
-                    <%= listing.description %>
-                        <br>
-                        &#8377;<%= listing.price.toLocaleString("en-IN") %>
-                            <br>
-                            <%= listing.location %>
-                                <br>
-                                <%= listing.country %>
-                                    <br>
-                </p>
-            </div>
-        </div>
-
-        <div class="btns">
-            <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
-
-            <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-                <button class="btn btn-dark offset-5">Delete</button>
-            </form>
-        </div>      
+<div class="row mt-3">
+<div class="col-8 offset-3">
+    <h3><%= listing.title %></h3>
+</div>
+<div class="card col-6 offset-3 show-card">
+    <img
+    src="<%= listing.image.url %>"
+    class="card-img-top show-img"
+    alt="listing_image"
+    />
+    <div class="card-body">
+    <p class="card-text">
+        <%= listing.description %><br />
+        &#8377;<%= listing.price.toLocaleString("en-IN") %><br />
+        <%= listing.location %><br />
+        <%= listing.country %><br />
+    </p>
     </div>
+</div>
+
+<div class="btns">
+    <a
+    href="/listings/<%= listing._id %>/edit"
+    class="btn btn-dark col-1 offset-3 edit-btn"
+    >Edit</a
+    >
+
+    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+    <button class="btn btn-dark offset-5">Delete</button>
+    </form>
+</div>
+</div>
