@@ -14,7 +14,7 @@
 
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea type="text" name="listing[description]" class="form-control"
+                    <textarea name="listing[description]" class="form-control"
                         required><%= listing.description %></textarea>
                     <div class="valid-feedback">Description looks good!</div>
                     <div class="invalid-feedback">Please enter a description</div>
@@ -22,22 +22,11 @@
 
                 <div class="mb-3">
                     <label for="image" class="form-label">Image URL</label>
-                    <input type="text" value="<%= listing.image %>" name="listing[image]" class="form-control" required/>
-                    <div class="valid-feedback">Image URL looks good!</div>
-                    <div class="invalid-feedback">Please enter an image URL</div>
-                </div>
-
-                <!-- Image URL -->
-                <!-- <div class="mb-3">
-                    <label for="image" class="form-label">Image URL</label>
-                    <input type="text" value="<%= listing.image.url %>" name="listing[image][url]" class="form-control"
+                    <input type="text" value="<%= listing.image.url %>" name="listing[image]" class="form-control"
                         required />
                     <div class="valid-feedback">Image URL looks good!</div>
                     <div class="invalid-feedback">Please enter an image URL</div>
-                </div> -->
-
-                <!-- Hidden input to preserve the filename -->
-                <!-- <input type="hidden" name="listing[image][filename]" value="<%= listing.image.filename %>" /> -->
+                </div>
 
                 <div class="row">
                     <div class="mb-3 col-md-4">
