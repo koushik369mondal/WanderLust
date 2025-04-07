@@ -1,29 +1,13 @@
 const express = require("express");
 const app = express();
+const users = require("./routes/user.js");
+
+app.use("/", users);
 
 app.get("/", (req, res) => {
     res.send("Hi, I am root route");
 });
 
-//Index - users
-app.get("/users", (req, res) => {
-    res.send("Hi, I am users route");
-});
-
-//Show - users
-app.get("/users/:id", (req, res) => {
-    res.send(`GET for show users id`);
-});
-
-//POST - users
-app.post("/users", (req, res) => {
-    res.send("POST for users");
-})
-
-//DELETE - users
-app.delete("/users/:id", (req, res) => {
-    res.send(`DELETE for user id`);
-})
 
 //POST
 //Index
