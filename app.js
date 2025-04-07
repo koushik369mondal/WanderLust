@@ -11,6 +11,7 @@ const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 
 const listings = require("./routes/listing.js");
+const reviews = require("./models/review.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -47,6 +48,8 @@ const validateReview = (req, res, next) => {
 };
 
 app.use("/listings", listings);
+app.use("/listings/:id/reviews", reviews);
+
 
 // app.get("/testListing", async (req, res) => {
 //     let sampleListing = new Listing({
