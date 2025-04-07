@@ -8,7 +8,7 @@ const ExpressError = require("./utils/ExpressError.js");
 
 
 const listings = require("./routes/listing.js");
-const reviews = require("./models/review.js");
+const reviews = require("./routes/review.js"); 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -28,7 +28,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.get("/", (req, res) => {
     res.send("Hi, I am root");
