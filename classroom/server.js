@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const users = require("./routes/user.js");
 
-app.use("/", users);
+app.use("/users", users);
 
 app.get("/", (req, res) => {
     res.send("Hi, I am root route");

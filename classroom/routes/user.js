@@ -2,22 +2,22 @@ const express = require("express");
 const router = express.Router();
 
 //Index - users
-router.get("/users", (req, res) => {
+router.get("/", (req, res) => {
     res.send("GET for users route");
 });
 
 //Show - users
-router.get("/users/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     res.send(`GET for show users id`);
 });
 
 //POST - users
-router.post("/users", (req, res) => {
+router.post("/", (req, res) => {
     res.send("POST for users");
 });
 
 //DELETE - users
-router.delete("/users/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
     res.send(`DELETE for user id`);
 });
 
