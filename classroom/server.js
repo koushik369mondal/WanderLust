@@ -15,14 +15,19 @@ app.get("/getcookies", (req, res) => {
 });
 
 app.get("/getsignedcookie", (req, res) => {
-    res.cookie("made-in", "India", {signed: true});
+    res.cookie("made-in", "India", { signed: true });
     res.send("Signed cookie sent");
-})
+});
+
+app.get("/verify", (req, res) => {
+    console.log(req.signedCookies);
+    res.send("Cookies verified");
+});
 
 app.get("/greet", (req, res) => {
-    let {name = "anonymous"} = req.cookies;
+    let { name = "anonymous" } = req.cookies;
     res.send(`Hi, ${name}`);
-})
+});
 
 app.get("/", (req, res) => {
     console.dir(req.cookies);
