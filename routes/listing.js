@@ -35,6 +35,10 @@ router.get(
     wrapAsync(async (req, res) => {
         let { id } = req.params;
         const listing = await Listing.findById(id).populate("reviews");
+        if (!listing) {
+            req.flash("error", "Listing not found!");
+            res.redirect("/listings");
+        }
         res.render("listings/show.ejs", { listing });
     })
 );
