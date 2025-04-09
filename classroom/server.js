@@ -14,12 +14,13 @@ app.use(session(sessionOptions));
 
 app.get("/register", (req, res) => {
     let { name = "anonymous" } = req.query;
-    console.log(req.session);
-    res.send(`Hello ${name}, welcome to our website!`);
+    req.session.name = name;
+    console.log(req.session.name);
+    res.send(`Hello ${name}`);
 });
 
 app.get("/hello", (req, res) => {
-    res.send(`Hello`);
+    res.send(`Hello ${req.session.name}, welcome to our website!`);
 });
 
 // app.get("/requestcount", (req, res) => {
