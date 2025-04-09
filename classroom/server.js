@@ -4,6 +4,10 @@ const users = require("./routes/user.js");
 const posts = require("./routes/post.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const path = require("path");
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 const sessionOptions = {
     secret: "mysupersecretstring",
@@ -17,11 +21,13 @@ app.use(flash());
 app.get("/register", (req, res) => {
     let { name = "anonymous" } = req.query;
     req.session.name = name;
+    req.flash("success", "user register successfully");
     res.redirect("/hello");
 });
 
 app.get("/hello", (req, res) => {
-    res.send(`Hello ${req.session.name}, welcome to our website!`);
+    console.log(req.flash('success'));
+    res.render("page.ejs", {name: req.session.name});
 });
 
 // app.get("/requestcount", (req, res) => {
