@@ -26,8 +26,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/hello", (req, res) => {
-    console.log(req.flash('success'));
-    res.render("page.ejs", {name: req.session.name});
+    res.render("page.ejs", {name: req.session.name, msg: req.flash("success")});
 });
 
 // app.get("/requestcount", (req, res) => {
