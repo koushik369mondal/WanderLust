@@ -8,14 +8,19 @@ const sessionOptions = {
     secret: "mysupersecretstring",
     resave: false,
     saveUninitialized: true,
-}
+};
 
 app.use(session(sessionOptions));
 
 app.get("/register", (req, res) => {
-    let {name = "anonymous"} = req.query;
+    let { name = "anonymous" } = req.query;
+    console.log(req.session);
     res.send(`Hello ${name}, welcome to our website!`);
-})
+});
+
+app.get("/hello", (req, res) => {
+    res.send(`Hello`);
+});
 
 // app.get("/requestcount", (req, res) => {
 //     if(req.session.count) {
