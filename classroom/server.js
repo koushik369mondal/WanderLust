@@ -3,6 +3,7 @@ const app = express();
 const users = require("./routes/user.js");
 const posts = require("./routes/post.js");
 const session = require("express-session");
+const flash = require("connect-flash");
 
 const sessionOptions = {
     secret: "mysupersecretstring",
@@ -11,6 +12,7 @@ const sessionOptions = {
 };
 
 app.use(session(sessionOptions));
+app.use(flash());
 
 app.get("/register", (req, res) => {
     let { name = "anonymous" } = req.query;
