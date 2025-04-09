@@ -4,23 +4,23 @@ const users = require("./routes/user.js");
 const posts = require("./routes/post.js");
 const session = require("express-session");
 
-app.use(
-    session({
-        secret: "mysupersecretstring",
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+const sessionOptions = {
+    secret: "mysupersecretstring",
+    resave: false,
+    saveUninitialized: true,
+}
 
-app.get("/requestcount", (req, res) => {
-    if(req.session.count) {
-        req.session.count++;
-    }
-    else {
-        req.session.count = 1;
-    }
-    res.send(`You sent a request x times ${req.session.count}`);
-});
+app.use(session(sessionOptions));
+
+// app.get("/requestcount", (req, res) => {
+//     if(req.session.count) {
+//         req.session.count++;
+//     }
+//     else {
+//         req.session.count = 1;
+//     }
+//     res.send(`You sent a request x times ${req.session.count}`);
+// });
 
 // app.get("/test", (req, res) => {
 //     res.send("Test successful!");
