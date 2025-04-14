@@ -43,7 +43,7 @@
             <% } %>
                 <div class="col-8 offset-3 mb-3">
                     <hr />
-                    <% if(currentUser && listing.owner._id.equals(currentUser._id)) { %>
+                    <% if(currentUser) { %>
                         <h4>Leave a review</h4>
                         <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate
                             class="needs-validation">
@@ -68,7 +68,7 @@
                                 <% for(review of listing.reviews) { %>
                                     <div class="card col-5 ms-3 mb-3">
                                         <div class="card-body">
-                                            <h4 class="card-title">John Doe</h4>
+                                            <h4 class="card-title"><%= review.author.username %></h4>
                                             <p class="card-text">
                                                 <%= review.comment %>
                                             </p>
