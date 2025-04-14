@@ -54,7 +54,6 @@ router.post(
     validateListing,
     wrapAsync(async (req, res, next) => {
         const newListing = new Listing(req.body.listing);
-        console.log(req.user);
 
         // Set image object
         newListing.image = {
