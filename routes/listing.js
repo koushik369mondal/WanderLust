@@ -100,6 +100,12 @@ router.put(
             filename: "listingimage",
         };
 
+        let listing = await Listing.findById(id);
+        if (!listing.owner._id.equals(res.locals.currentUser._id)) {
+            req.flash("error", "You do not have permission to edit!");
+            return res.redirect(`/listings/${id}`);
+        }
+
         await Listing.findByIdAndUpdate(id, listingData);
         req.flash("success", "Listing updated!");
         res.redirect(`/listings/${id}`);
