@@ -61,6 +61,7 @@ router.post(
             filename: "listingimage",
         };
 
+        newListing.owner = req.user._id;
         await newListing.save();
         req.flash("success", "New listing created!");
         res.redirect(`/listings`);
