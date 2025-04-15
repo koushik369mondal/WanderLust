@@ -8,7 +8,7 @@
 }
 
 .starability-result:after {
-    content: ' ';
+    content: " ";
     position: absolute;
     left: 0;
     height: 30px;
@@ -123,7 +123,7 @@ screen and (min-resolution: 192dpi) {
 }
 
 .starability-slot>label::before {
-    content: '';
+    content: "";
     position: absolute;
     display: block;
     height: 30px;
@@ -200,6 +200,6 @@ screen and (min-resolution: 192dpi) {
 .starability-slot>input:checked~label,
 .starability-slot>input:hover~label,
 .starability-slot>input:focus~label {
-    -webkit-transition: background-position .7s;
-    transition: background-position .7s;
+    -webkit-transition: background-position 0.7s;
+    transition: background-position 0.7s;
 }
