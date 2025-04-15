@@ -9,11 +9,14 @@ const listingsController = require("../controllers/listings.js");
 router
     .route("/")
     .get(wrapAsync(listingsController.index))
-    .post(
-        isLoggedIn,
-        validateListing,
-        wrapAsync(listingsController.createListing)
-    );
+    // .post(
+    //     isLoggedIn,
+    //     validateListing,
+    //     wrapAsync(listingsController.createListing)
+    // );
+    .post((req, res) => {
+        res.send(req.body);
+    })
 
 // New Route
 router.get("/new", isLoggedIn, listingsController.renderNewForm);
