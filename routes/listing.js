@@ -10,9 +10,7 @@ const listingsController = require("../controllers/listings.js");
 router.get("/", wrapAsync(listingsController.index));
 
 // New Route
-router.get("/new", isLoggedIn, (req, res) => {
-    res.render("listings/new.ejs");
-});
+router.get("/new", isLoggedIn, listingsController.renderNewForm);
 
 // Show Route
 router.get(
