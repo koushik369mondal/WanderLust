@@ -33,7 +33,7 @@ module.exports.createListing = async (req, res, next) => {
 
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
-    newListing.image = {url, filename,};
+    newListing.image = { url, filename, };
     await newListing.save();
     req.flash("success", "New listing created!");
     res.redirect(`/listings`);
@@ -43,10 +43,13 @@ module.exports.renderEditForm = async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
     if (!listing) {
-        req.flash("error", "Listing not found!");
+        req.flash("error", "Listing does not exist");
         res.redirect("/listings");
     }
-    res.render("listings/edit.ejs", { listing });
+
+    let originalImageURL = listing.image.url;
+    originalImageURL = originalImageURL.replace("/upload", "/upload/w_250");
+    res.render("listings/edit.ejs", { listing, originalImageURL });
 };
 
 module.exports.updateListing = async (req, res) => {
@@ -59,7 +62,7 @@ module.exports.updateListing = async (req, res) => {
         };
         await listing.save();
     }
-    
+
     req.flash("success", "Listing updated!");
     res.redirect(`/listings/${id}`);
 };
