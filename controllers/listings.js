@@ -50,18 +50,16 @@ module.exports.renderEditForm = async (req, res) => {
 };
 
 module.exports.updateListing = async (req, res) => {
-    // Destructure form data
-    const listingData = { ...req.body.listing };
-
-    // Update image object properly
-    listingData.image = {
-        url: req.body.listing.image || "",
-        filename: "listingimage",
-    };
-
     let { id } = req.params;
-
-    await Listing.findByIdAndUpdate(id, listingData);
+    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if (typeof req.file !== 'undefined') {
+        listing.image = {
+            url: req.file.path,
+            filename: req.file.filename,
+        };
+        await listing.save();
+    }
+    
     req.flash("success", "Listing updated!");
     res.redirect(`/listings/${id}`);
 };
