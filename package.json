@@ -10,7 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "cloudinary": "^2.6.0",
+    "@mapbox/mapbox-sdk": "^0.16.1",
+    "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
