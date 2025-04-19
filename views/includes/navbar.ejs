@@ -1,22 +1,21 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
+        <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="/listings">All Listings</a>
-                <a class="nav-link" href="/listings/new">Add new Listing</a>
+                <a class="nav-link" href="/listings">Explore</a>
             </div>
             <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/listings/new">Airbnb your home</a>
                 <% if(!currentUser) { %>
-                    <a class="nav-link" href="/signup">Sign up</a>
-                    <a class="nav-link" href="/login">Log in</a>
+                    <a class="nav-link" href="/signup"><b>Sign up</b></a>
+                    <a class="nav-link" href="/login"><b>Log in</b></a>
                 <% } %>
                 <% if(currentUser) { %>
-                    <a class="nav-link" href="/logout">Log out</a>
+                    <a class="nav-link" href="/logout"><b>Log out</b></a>
                 <% } %>
             </div>
         </div>
