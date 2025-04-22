@@ -1,1 +1,3 @@
 .qodo
+.env
+node_modules/
