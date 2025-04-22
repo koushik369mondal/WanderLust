@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "22.14.0"
+  },
   "name": "majorproject",
   "version": "1.0.0",
   "main": "index.js",
