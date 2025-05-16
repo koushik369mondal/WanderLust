@@ -2,6 +2,12 @@ if(process.env.NODE_ENV != "production") {
     require("dotenv").config();
 }
 
+// Verify MAP_TOKEN is loaded
+if (!process.env.MAP_TOKEN) {
+    console.error("MAP_TOKEN environment variable is not set!");
+    process.exit(1);
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -65,10 +71,6 @@ const sessionOption = {
     },
 };
 
-// app.get("/", (req, res) => {
-//     res.send("Hi, I am root");
-// });
-
 app.use(session(sessionOption));
 app.use(flash());
 
@@ -86,16 +88,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User({
-//         email: "student@gmail.com",
-//         username: "delta-student",
-//     });
-
-//     let registerUser = await User.register(fakeUser, "helloworld");
-//     res.send(registerUser);
-// });
-
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
@@ -107,7 +99,6 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
     let { statusCode = 500, message = "Something went wrong" } = err;
     res.status(statusCode).render("error.ejs", { message });
-    // res.status(statusCode).send(message);
 });
 
 app.listen(8080, () => {
