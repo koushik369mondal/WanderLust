@@ -45,7 +45,7 @@ Wanderlust is a full-stack web application where users can explore, share, and r
 5. Run the server:
 
    ```bash
-   npm start
+   nodemon app.js
    ```
 
 ---
