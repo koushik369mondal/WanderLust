@@ -1,7 +1,4 @@
-
-````markdown
 # 🌍 Wanderlust - Travel Experience Sharing Platform
-
 A full-stack web app to explore, share, and review travel destinations. Built with **MongoDB**, **Express.js**, **Node.js**, and **EJS**.
 
 ---
@@ -33,16 +30,13 @@ A full-stack web app to explore, share, and review travel destinations. Built wi
    git clone <your-fork-url>
    cd WanderLust
    npm install
-````
-
+   ```
 4. Create a new branch for your feature:
-
    ```bash
    git checkout -b my-feature
    ```
 5. Add your `.env` file (refer to `.env.example`).
 6. Start the server:
-
    ```bash
    nodemon app.js
    ```
@@ -51,6 +45,3 @@ A full-stack web app to explore, share, and review travel destinations. Built wi
 ---
 
 ⭐ Fork, contribute, and give the repo a star if you like it!
-
-
-
