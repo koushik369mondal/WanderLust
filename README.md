@@ -2,74 +2,55 @@
 ````markdown
 # 🌍 Wanderlust - Travel Experience Sharing Platform
 
-Wanderlust is a full-stack web application where users can explore, share, and review travel destinations around the world. Built using **MongoDB**, **Express.js**, **Node.js**, and **EJS** templating engine.
+A full-stack web app to explore, share, and review travel destinations. Built with **MongoDB**, **Express.js**, **Node.js**, and **EJS**.
+
+---
+
+## 🔗 [Live Preview](https://wanderlust-6yh1.onrender.com/listings)
 
 ---
 
 ## 🚀 Features
-
-- View and add beautiful travel destinations
+- Browse and add travel destinations
 - Leave reviews and ratings
-- Clean and responsive UI using EJS
+- Responsive EJS templates
 - Full CRUD functionality
-- MongoDB for data storage
 
 ---
 
 ## 🛠 Tech Stack
-
-- **Backend:** Node.js, Express.js
-- **Frontend:** EJS, HTML, CSS
-- **Database:** MongoDB (with Mongoose)
+- **Backend:** Node.js, Express.js  
+- **Frontend:** EJS, HTML, CSS  
+- **Database:** MongoDB (Mongoose)
 
 ---
 
-## 📂 Installation
-
-1. Clone the repo:
+## 📂 Installation (For Contributors)
+1. **Fork** this repository to your own GitHub account.
+2. Open your forked repo and copy the URL.
+3. Clone **your fork**:
    ```bash
-   git clone https://github.com/koushik369mondal/WanderLust.git
+   git clone <your-fork-url>
+   cd WanderLust
+   npm install
 ````
 
-2. Navigate to the project directory:
+4. Create a new branch for your feature:
 
    ```bash
-   cd WanderLust
+   git checkout -b my-feature
    ```
-3. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-4. Set up your `.env` file (refer `.env.example`)
-5. Run the server:
+5. Add your `.env` file (refer to `.env.example`).
+6. Start the server:
 
    ```bash
    nodemon app.js
    ```
+7. Push changes to your fork and submit a **Pull Request**.
 
 ---
 
-## 🙌 Contributing
+⭐ Fork, contribute, and give the repo a star if you like it!
 
-Contributions are welcome! If you have ideas to improve the platform or want to add new features, feel free to fork this repo and create a pull request.
-
-```bash
-# Fork it
-# Create your branch: git checkout -b my-feature
-# Commit your changes: git commit -m 'Add some feature'
-# Push to the branch: git push origin my-feature
-# Submit a pull request
-```
-
----
-
-## 📧 Contact
-
-Feel free to reach out if you have questions or suggestions!
-
----
-
-**Give the repo a ⭐ if you like it and want to support the project!**
 
 
