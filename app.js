@@ -47,6 +47,16 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+// Add logging for static file requests in development
+if (process.env.NODE_ENV !== "production") {
+    app.use((req, res, next) => {
+        if (req.url.startsWith('/CSS/') || req.url.startsWith('/JS/')) {
+            console.log(`Static file requested: ${req.url}`);
+        }
+        next();
+    });
+}
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
