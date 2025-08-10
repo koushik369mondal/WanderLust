@@ -54,6 +54,8 @@ Wanderlust is a full-stack web application where users can explore, share, and r
 
 Contributions are welcome! If you have ideas to improve the platform or want to add new features, feel free to fork this repo and create a pull request.
 
+Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
 ```bash
 # Fork it
 # Create your branch: git checkout -b my-feature
