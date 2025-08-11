@@ -2,6 +2,15 @@ if(process.env.NODE_ENV != "production") {
     require("dotenv").config();
 }
 
+// Suppress util.isArray deprecation warning from lodash
+process.removeAllListeners('warning');
+process.on('warning', (warning) => {
+    if (warning.name === 'DeprecationWarning' && warning.message.includes('util.isArray')) {
+        return; // Suppress this specific warning
+    }
+    console.warn(warning.name + ': ' + warning.message);
+});
+
 // Verify MAP_TOKEN is loaded
 if (!process.env.MAP_TOKEN) {
     console.error("MAP_TOKEN environment variable is not set!");

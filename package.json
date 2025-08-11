@@ -22,7 +22,7 @@
   "description": "Wanderlust - a travel experience sharing platform built with Node.js, Express, MongoDB, and EJS.",
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.16.1",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.7.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
@@ -32,6 +32,7 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "joi": "^17.13.3",
+    "lodash": "^4.17.21",
     "method-override": "^3.0.0",
     "mongoose": "^8.17.1",
     "multer": "^2.0.2",
@@ -39,5 +40,8 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0"
+  },
+  "overrides": {
+    "lodash": "^4.17.21"
   }
 }
