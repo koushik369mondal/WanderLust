@@ -18,6 +18,80 @@
     padding: 0.5rem 3rem 0.5rem 3rem;
     font-size: 1rem;
   }
+
+  /* Tablet view fixes */
+  @media (max-width: 991px) and (min-width: 768px) {
+    .navbar-nav .d-flex {
+      flex-wrap: nowrap;
+    }
+    
+    .search-inp {
+      min-width: 200px;
+    }
+    
+    .search-btn {
+      white-space: nowrap;
+    }
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 767px) {
+    .navbar-collapse {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-nav .d-flex {
+      flex-direction: column;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    
+    .search-inp {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      margin-right: 0 !important;
+      padding: 0.5rem 1rem;
+    }
+    
+    .search-btn {
+      width: 100%;
+    }
+    
+    .navbar-nav {
+      text-align: center;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    #theme-toggle {
+      margin: 1rem auto 0.5rem auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .mobile-icon {
+      display: inline-block;
+    }
+    
+    .desktop-hide-mobile {
+      display: none;
+    }
+  }
+  
+  .mobile-icon {
+    display: none;
+  }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
@@ -35,7 +109,10 @@
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/listings">Explore</a>
+        <a class="nav-link" href="/listings">
+          <span class="mobile-icon">WanderLust</span>
+          <i class="fa-regular fa-compass mobile-icon"></i>Explore
+        </a>
       </div>
       <div class="navbar-nav ms-auto">
         <form class="d-flex" role="search">
@@ -59,9 +136,11 @@
         <% } %>
       </div>
 
-      <button id="theme-toggle" class="btn btn-outline-secondary ms-2">
-        <i id="theme-icon" class="fa-solid fa-moon"></i>
-      </button>
+      <div class="d-flex justify-content-center">
+        <button id="theme-toggle" class="btn btn-outline-secondary">
+          <i id="theme-icon" class="fa-solid fa-moon"></i>
+        </button>
+      </div>
     </div>
   </div>
 </nav>
