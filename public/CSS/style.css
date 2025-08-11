@@ -9,7 +9,7 @@
     --card-bg: #ffffff;
     --border-color: #dee2e6;
     --accent-color: #fe424d;
-    --shadow: rgba(0, 0, 0, -0.001);
+    --shadow: rgba(0, 0, 0, 0.1);
     --filter-bg: #f8f9fa;
     --filter-text: #495057;
     --filter-border: #dee2e6;
@@ -28,7 +28,7 @@
     --card-bg: #333333;
     --border-color: #404040;
     --accent-color: #fe424d;
-    --shadow: rgba(255, 255, 255, -0.001);
+    --shadow: rgba(255, 255, 255, 0.1);
     --filter-bg: #2d2d2d;
     --filter-text: #cccccc;
     --filter-border: #404040;
@@ -43,7 +43,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* transition: background-color   ease, color   ease; */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -74,6 +74,7 @@ body {
     border: 1px solid var(--border-color);
     background-color: var(--bg-primary);
     color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .search-inp {
@@ -83,6 +84,7 @@ body {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .search-inp::placeholder {
@@ -101,16 +103,18 @@ body {
     border-radius: 25px;
     padding: 0 1rem;
     border: none;
+    transition: background-color 0.3s ease;
 }
 
 .search-btn:hover {
     background-color: #d63641;
 }
+
 /* Footer Styles */
 .f-info {
     text-align: center;
-    height: auto; /* Changed from fixed height */
-    padding: 2rem 0; /* Added padding */
+    height: auto;
+    padding: 2rem 0;
     background-color: var(--bg-secondary) !important;
     border-top: 1px solid var(--border-color);
 }
@@ -118,10 +122,10 @@ body {
 .f-info-links {
     width: 100%;
     display: flex;
-    flex-direction: column; /* Stack links vertically */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem; /* Space between links */
+    gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
@@ -135,14 +139,14 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 1rem; /* Space between icons */
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
 .f-info-socials i {
     font-size: 1.3rem;
     color: var(--text-primary) !important;
-    transition: color   ease;
+    transition: color 0.3s ease;
 }
 
 .f-info-brand {
@@ -164,11 +168,10 @@ body {
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .f-info-links {
-        flex-direction: row; /* Horizontal layout on larger screens */
+        flex-direction: row;
         flex-wrap: wrap;
     }
 }
-
 
 .listing-card {
     border: none !important;
@@ -179,6 +182,12 @@ body {
 .card {
     background-color: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-text {
+    color: var(--text-primary) !important;
 }
 
 .card-img-top {
@@ -195,6 +204,7 @@ body {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .form-control:focus {
@@ -207,6 +217,7 @@ body {
     background-color: var(--accent-color) !important;
     border: none !important;
     color: #fff !important;
+    transition: background-color 0.3s ease;
 }
 
 .add-btn:hover, .edit-btn:hover {
@@ -224,6 +235,7 @@ body {
     margin: 1rem 0;
 }
 
+/* Smooth transitions for colors */
 *, *::before, *::after {
-    transition: background-color  ease, color   ease, border-color   ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
