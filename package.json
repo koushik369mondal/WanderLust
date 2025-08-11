@@ -1,19 +1,25 @@
 {
   "engines": {
-    "node": ">=22.14.0"
+    "node": ">=18.0.0"
   },
   "name": "wanderlust",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": [],
+  "keywords": [
+    "travel",
+    "nodejs",
+    "express",
+    "mongodb",
+    "ejs"
+  ],
   "author": "Kaushik Mandal",
   "license": "MIT",
-  "description": "",
+  "description": "Wanderlust - a travel experience sharing platform built with Node.js, Express, MongoDB, and EJS.",
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.16.1",
     "cloudinary": "^1.41.3",
