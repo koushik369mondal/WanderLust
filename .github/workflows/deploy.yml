@@ -29,72 +29,32 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Check for existing Render deploys
-        id: check-deploys
+      - name: Wait for potential auto-deploy
+        run: |
+          echo "Waiting 60 seconds to avoid conflicts with Render auto-deploy..."
+          sleep 60
+
+      - name: Trigger Render Deploy
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          echo "Checking for active deploys..."
+          echo "🚀 Triggering deployment for commit: ${{ github.sha }}"
           
-          # Get recent deploys
-          DEPLOYS=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" \
-            "https://api.render.com/v1/services/srv-d0971eeuk2gs73a2m2og/deploys?limit=3")
-          
-          echo "Recent deploys: $DEPLOYS"
-          
-          # Check if there's an active deploy in the last 2 minutes
-          ACTIVE_DEPLOY=$(echo "$DEPLOYS" | grep -o '"status":"[^"]*"' | head -1 | grep -E '(created|pending|building)')
-          
-          if [ ! -z "$ACTIVE_DEPLOY" ]; then
-            echo "Active deploy found, skipping GitHub Actions deploy"
-            echo "skip_deploy=true" >> $GITHUB_OUTPUT
-          else
-            echo "No active deploy, proceeding with GitHub Actions deploy"
-            echo "skip_deploy=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Wait for Render auto-deploy to start
-        if: steps.check-deploys.outputs.skip_deploy == 'false'
-        run: |
-          echo "Waiting 45 seconds for Render auto-deploy to potentially start..."
-          sleep 45
-
-      - name: Check again for Render auto-deploy
-        if: steps.check-deploys.outputs.skip_deploy == 'false'
-        id: final-check
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          echo "Final check for auto-deploy..."
-          
-          DEPLOYS=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" \
-            "https://api.render.com/v1/services/srv-d0971eeuk2gs73a2m2og/deploys?limit=2")
-          
-          ACTIVE_DEPLOY=$(echo "$DEPLOYS" | grep -o '"status":"[^"]*"' | head -1 | grep -E '(created|pending|building)')
-          
-          if [ ! -z "$ACTIVE_DEPLOY" ]; then
-            echo "Render auto-deploy is active, skipping GitHub Actions deploy"
-            echo "final_skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "No auto-deploy detected, triggering GitHub Actions deploy"
-            echo "final_skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Trigger GitHub Actions Deploy
-        if: steps.check-deploys.outputs.skip_deploy == 'false' && steps.final-check.outputs.final_skip == 'false'
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          echo "🚀 Triggering GitHub Actions deploy for commit: ${{ github.sha }}"
-          RESPONSE=$(curl -s -X POST \
+          response=$(curl -s -w "%{http_code}" -X POST \
             -H "Authorization: Bearer $RENDER_API_KEY" \
             -H "Content-Type: application/json" \
             https://api.render.com/v1/services/srv-d0971eeuk2gs73a2m2og/deploys)
-          echo "✅ Deploy triggered via GitHub Actions"
-          echo "📋 Response: $RESPONSE"
-
-      - name: Deploy Skipped
-        if: steps.check-deploys.outputs.skip_deploy == 'true' || steps.final-check.outputs.final_skip == 'true'
-        run: |
-          echo "⏭️ Deploy skipped - Render auto-deploy is handling this deployment"
-          echo "This prevents overlapping deploys and cancellations"
+          
+          http_code="${response: -3}"
+          body="${response%???}"
+          
+          echo "HTTP Status: $http_code"
+          echo "Response: $body"
+          
+          if [ "$http_code" -eq 201 ] || [ "$http_code" -eq 200 ]; then
+            echo "✅ Deployment triggered successfully!"
+          else
+            echo "❌ Deployment failed with status: $http_code"
+            echo "Response: $body"
+            exit 1
+          fi
