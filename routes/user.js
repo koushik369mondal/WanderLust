@@ -26,6 +26,11 @@ router
 
 router.get("/logout", userController.logout);
 
+router
+    .route("/profile")
+    .get(userController.renderProfile)
+    .put(userController.updateProfile);
+
 // Root route - redirect to listings
 router.get("/", (req, res) => {
     res.redirect("/listings");

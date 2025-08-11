@@ -81,7 +81,7 @@
     }
     
     .mobile-icon {
-      display: inline-block;
+      display: inline-block !important;
     }
     
     .desktop-hide-mobile {
@@ -91,6 +91,13 @@
   
   .mobile-icon {
     display: none;
+  }
+  
+  /* Desktop view - hide mobile icons */
+  @media (min-width: 768px) {
+    .mobile-icon {
+      display: none !important;
+    }
   }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
@@ -132,6 +139,10 @@
         <a class="nav-link" href="/signup"><b>Sign up</b></a>
         <a class="nav-link" href="/login"><b>Log in</b></a>
         <% } %> <% if(typeof currentUser !== 'undefined' && currentUser) { %>
+        <a class="nav-link" href="/profile">
+          <!-- <i class="fa-solid fa-user mobile-icon"></i> -->
+          <span class="desktop-text">Profile</span>
+        </a>
         <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
       </div>
