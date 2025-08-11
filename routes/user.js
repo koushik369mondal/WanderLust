@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
-const { saveRedirectUrl } = require("../middleware.js");
+const { saveRedirectUrl, isLoggedIn } = require("../middleware.js");
 
 const userController = require("../controllers/users.js");
 
@@ -28,8 +28,8 @@ router.get("/logout", userController.logout);
 
 router
     .route("/profile")
-    .get(userController.renderProfile)
-    .put(userController.updateProfile);
+    .get(isLoggedIn, userController.renderProfile)
+    .put(isLoggedIn, userController.updateProfile);
 
 // Root route - redirect to listings
 router.get("/", (req, res) => {

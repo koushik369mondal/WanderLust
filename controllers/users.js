@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const { isLoggedIn } = require("../middleware.js");
 
 module.exports.renderSignupForm = (req, res) => {
     res.render("users/signup.ejs");
@@ -45,19 +44,10 @@ module.exports.logout = (req, res, next) => {
 };
 
 module.exports.renderProfile = (req, res) => {
-    if (!req.isAuthenticated()) {
-        req.flash("error", "You must be logged in to view your profile!");
-        return res.redirect("/login");
-    }
     res.render("users/profile.ejs");
 };
 
 module.exports.updateProfile = async (req, res) => {
-    if (!req.isAuthenticated()) {
-        req.flash("error", "You must be logged in to update your profile!");
-        return res.redirect("/login");
-    }
-    
     try {
         const { bio, location, hobbies, interests, website, instagram, twitter, linkedin, favoriteDestinations } = req.body;
         
@@ -83,6 +73,7 @@ module.exports.updateProfile = async (req, res) => {
         req.flash("success", "Profile updated successfully!");
         res.redirect("/profile");
     } catch (error) {
+        console.error("Error updating profile:", error);
         req.flash("error", "Error updating profile. Please try again.");
         res.redirect("/profile");
     }
