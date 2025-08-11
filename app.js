@@ -26,9 +26,10 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// // // const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 const dbUrl = process.env.ATLAS_DB_URL;
-
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// const dbUrl = process.env.ATLAS_DB_URL || MONGO_URL;
 main()
     .then(() => {
         console.log("Connected to MongoDB");
@@ -37,7 +38,19 @@ main()
         console.log(err);
     });
 async function main() {
-    await mongoose.connect(dbUrl);
+    try {
+        await mongoose.connect(dbUrl, {
+            ssl: true,
+            tlsAllowInvalidCertificates: true, // Only for development, remove in production
+            tlsAllowInvalidHostnames: true,    // Only for development, remove in production
+            serverSelectionTimeoutMS: 5000,    // Timeout after 5s instead of 30s
+            socketTimeoutMS: 45000,            // Close sockets after 45s of inactivity
+        });
+        console.log('Successfully connected to MongoDB');
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        process.exit(1);
+    }
 }
 
 app.set("view engine", "ejs");
