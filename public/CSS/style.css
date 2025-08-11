@@ -1,67 +1,184 @@
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #ebebeb;
+    --text-primary: #222222;
+    --text-secondary: #666666;
+    --text-muted: #999999;
+    --navbar-bg: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --accent-color: #fe424d;
+    --shadow: rgba(0, 0, 0, -0.001);
+    --filter-bg: #f8f9fa;
+    --filter-text: #495057;
+    --filter-border: #dee2e6;
+    --filter-hover: #e9ecef;
+    --filter-active: #fe424d;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #333333;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #888888;
+    --navbar-bg: #2d2d2d;
+    --card-bg: #333333;
+    --border-color: #404040;
+    --accent-color: #fe424d;
+    --shadow: rgba(255, 255, 255, -0.001);
+    --filter-bg: #2d2d2d;
+    --filter-text: #cccccc;
+    --filter-border: #404040;
+    --filter-hover: #404040;
+    --filter-active: #fe424d;
+}
+
 body {
-    background: linear-gradient(to right, #ffffff 0%, #ffffff 100%);
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
     font-family: "Plus Jakarta Sans", sans-serif !important;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* transition: background-color   ease, color   ease; */
 }
 
 .container {
     flex: 1;
+    background-color: var(--bg-primary) !important;
 }
 
 .navbar {
     height: 5rem;
-    background-color: white;
+    background-color: var(--navbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .fa-compass {
-    color: #fe424d;
+    color: var(--accent-color);
     font-size: 2rem;
 }
 
 .nav-link {
-    color: #222222 !important;
+    color: var(--text-primary) !important;
 }
 
-/* Footer  */
-.f-info-links a {
-    text-decoration: none;
-    color: #222222;
+.nav-link:hover {
+    color: var(--accent-color) !important;
 }
 
-.f-info-links a:hover {
-    text-decoration: underline;
+#theme-toggle {
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 }
 
-.f-info-links,
-.f-info-socials,
-.f-info-brand {
+.search-inp {
+    border-radius: 25px;
+    padding: 0.5rem 3rem;
+    font-size: 1rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.search-inp::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-inp:focus {
+    background-color: var(--bg-primary);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.25);
+}
+
+.search-btn {
+    background-color: var(--accent-color);
+    color: #fff;
+    border-radius: 25px;
+    padding: 0 1rem;
+    border: none;
+}
+
+.search-btn:hover {
+    background-color: #d63641;
+}
+/* Footer Styles */
+.f-info {
+    text-align: center;
+    height: auto; /* Changed from fixed height */
+    padding: 2rem 0; /* Added padding */
+    background-color: var(--bg-secondary) !important;
+    border-top: 1px solid var(--border-color);
+}
+
+.f-info-links {
     width: 100%;
     display: flex;
+    flex-direction: column; /* Stack links vertically */
     align-items: center;
     justify-content: center;
+    gap: 0.5rem; /* Space between links */
+    margin-bottom: 1rem;
+}
+
+.f-info-links a {
+    text-decoration: none;
+    color: var(--text-primary) !important;
+    padding: 0.25rem 0;
+}
+
+.f-info-socials {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1rem; /* Space between icons */
+    margin-bottom: 1rem;
 }
 
 .f-info-socials i {
-    margin-right: 1rem;
     font-size: 1.3rem;
+    color: var(--text-primary) !important;
+    transition: color   ease;
 }
 
-.f-info {
-    text-align: center;
-    height: 8rem;
-    background-color: #ebebeb;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: space-evenly;
+.f-info-brand {
+    width: 100%;
+    margin-top: 1rem;
 }
 
-/* Cards */
+.f-info p {
+    color: var(--text-primary) !important;
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+
+.f-info span {
+    color: var(--text-secondary) !important;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .f-info-links {
+        flex-direction: row; /* Horizontal layout on larger screens */
+        flex-wrap: wrap;
+    }
+}
+
+
 .listing-card {
     border: none !important;
     margin-bottom: 2rem;
+    background-color: var(--card-bg) !important;
+}
+
+.card {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 .card-img-top {
@@ -70,56 +187,43 @@ body {
     object-fit: cover !important;
 }
 
-.card-body {
-    padding: 0 !important;
-}
-
-.card-text p {
-    font-weight: 400 !important;
-}
-
 .listing-link {
     text-decoration: none;
 }
 
-/* Card Effect */
-.card-img-overlay {
-    opacity: 0;
+.form-control {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
-.card-img-overlay:hover {
-    opacity: 0.2;
-    background-color: white;
+.form-control:focus {
+    background-color: var(--bg-primary);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.25);
 }
 
-/* New Page */
-.add-btn {
-    background-color: #fe424d !important;
+.add-btn, .edit-btn {
+    background-color: var(--accent-color) !important;
     border: none !important;
+    color: #fff !important;
 }
 
-/* Edit Page  */
-.edit-btn {
-    background-color: #fe424d !important;
-    border: none !important;
+.add-btn:hover, .edit-btn:hover {
+    background-color: #d63641 !important;
 }
 
-/* Show Page  */
 .show-img {
     height: 30vh;
+    border-radius: 1rem;
 }
 
 .btns {
     display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
 }
 
-.show-card {
-    padding-right: 0;
-    padding-left: 0;
-}
-
-/* Map  */
-#map {
-    height: 400px;
-    width: 80vh;
+*, *::before, *::after {
+    transition: background-color  ease, color   ease, border-color   ease;
 }
