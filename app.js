@@ -32,7 +32,7 @@ const dbUrl = process.env.ATLAS_DB_URL;
 // const dbUrl = process.env.ATLAS_DB_URL || MONGO_URL;
 main()
     .then(() => {
-        console.log("Connected to MongoDB");
+        // Connection success message is handled inside main() function
     })
     .catch((err) => {
         console.log(err);
@@ -59,6 +59,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
+
+// Security headers
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+});
 
 // Add logging for static file requests in development
 if (process.env.NODE_ENV !== "production") {
