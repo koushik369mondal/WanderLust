@@ -1,0 +1,575 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-12">
+            <!-- Profile Header -->
+            <div class="profile-header mb-3">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user-circle fa-4x" style="color: var(--accent-color);"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <h3 class="mb-1" style="color: var(--text-primary);"><%= currentUser.username %></h3>
+                        <p class="text-muted mb-1 fs-6">
+                            <i class="fa-solid fa-envelope me-2"></i><%= currentUser.email %>
+                        </p>
+                        <p class="text-muted mb-0 fs-6">
+                            <i class="fa-solid fa-calendar-days me-2"></i>
+                            Member since <%= new Date(currentUser.joinDate || new Date()).toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            }) %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tabs -->
+            <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="view-tab" data-bs-toggle="tab" data-bs-target="#view-profile" type="button" role="tab">
+                        <i class="fa-solid fa-eye me-2"></i>View Profile
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-profile" type="button" role="tab">
+                        <i class="fa-solid fa-edit me-2"></i>Edit Profile
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="profileTabsContent">
+                <!-- View Profile Tab -->
+                <div class="tab-pane fade show active" id="view-profile" role="tabpanel">
+                    <div class="row">
+                        <!-- Basic Info Card -->
+                        <div class="col-md-6 mb-4">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h5><i class="fa-solid fa-user me-2"></i>Basic Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-item">
+                                        <label>Bio:</label>
+                                        <p><%= currentUser.bio || "No bio added yet" %></p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Location:</label>
+                                        <p>
+                                            <% if (currentUser.location) { %>
+                                                <i class="fa-solid fa-location-dot me-2"></i><%= currentUser.location %>
+                                            <% } else { %>
+                                                Not specified
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interests Card -->
+                        <div class="col-md-6 mb-4">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h5><i class="fa-solid fa-heart me-2"></i>Interests & Hobbies</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-item">
+                                        <label>Hobbies:</label>
+                                        <div class="tags-container">
+                                            <% if (currentUser.hobbies && currentUser.hobbies.length > 0) { %>
+                                                <% currentUser.hobbies.forEach(hobby => { %>
+                                                    <span class="tag"><%= hobby %></span>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <p class="text-muted">No hobbies added</p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Interests:</label>
+                                        <div class="tags-container">
+                                            <% if (currentUser.interests && currentUser.interests.length > 0) { %>
+                                                <% currentUser.interests.forEach(interest => { %>
+                                                    <span class="tag"><%= interest %></span>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <p class="text-muted">No interests added</p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Travel Info Card -->
+                        <div class="col-md-6 mb-4">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h5><i class="fa-solid fa-plane me-2"></i>Travel Preferences</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-item">
+                                        <label>Favorite Destinations:</label>
+                                        <div class="tags-container">
+                                            <% if (currentUser.favoriteDestinations && currentUser.favoriteDestinations.length > 0) { %>
+                                                <% currentUser.favoriteDestinations.forEach(destination => { %>
+                                                    <span class="tag destination-tag"><%= destination %></span>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <p class="text-muted">No favorite destinations added</p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Links Card -->
+                        <div class="col-md-6 mb-4">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h5><i class="fa-solid fa-link me-2"></i>Social Links</h5>
+                                </div>
+                                <div class="card-body">
+                                    <% if (currentUser.socialLinks) { %>
+                                        <% if (currentUser.socialLinks.website) { %>
+                                            <div class="social-link">
+                                                <a href="<%= currentUser.socialLinks.website %>" target="_blank">
+                                                    <i class="fa-solid fa-globe me-2"></i>Website
+                                                </a>
+                                            </div>
+                                        <% } %>
+                                        <% if (currentUser.socialLinks.instagram) { %>
+                                            <div class="social-link">
+                                                <a href="<%= currentUser.socialLinks.instagram %>" target="_blank">
+                                                    <i class="fa-brands fa-instagram me-2"></i>Instagram
+                                                </a>
+                                            </div>
+                                        <% } %>
+                                        <% if (currentUser.socialLinks.twitter) { %>
+                                            <div class="social-link">
+                                                <a href="<%= currentUser.socialLinks.twitter %>" target="_blank">
+                                                    <i class="fa-brands fa-twitter me-2"></i>Twitter
+                                                </a>
+                                            </div>
+                                        <% } %>
+                                        <% if (currentUser.socialLinks.linkedin) { %>
+                                            <div class="social-link">
+                                                <a href="<%= currentUser.socialLinks.linkedin %>" target="_blank">
+                                                    <i class="fa-brands fa-linkedin me-2"></i>LinkedIn
+                                                </a>
+                                            </div>
+                                        <% } %>
+                                        <% if (!currentUser.socialLinks.website && !currentUser.socialLinks.instagram && !currentUser.socialLinks.twitter && !currentUser.socialLinks.linkedin) { %>
+                                            <p class="text-muted">No social links added</p>
+                                        <% } %>
+                                    <% } else { %>
+                                        <p class="text-muted">No social links added</p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Tab -->
+                <div class="tab-pane fade" id="edit-profile" role="tabpanel">
+                    <form action="/profile?_method=PUT" method="POST" class="needs-validation" novalidate>
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-md-6 mb-4">
+                                <div class="profile-card">
+                                    <div class="card-header">
+                                        <h5><i class="fa-solid fa-user me-2"></i>Basic Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="bio" class="form-label">Bio</label>
+                                            <textarea class="form-control" id="bio" name="bio" rows="4" maxlength="500" placeholder="Tell us about yourself..."><%= currentUser.bio || "" %></textarea>
+                                            <div class="form-text">Maximum 500 characters</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="location" class="form-label">Location</label>
+                                            <input type="text" class="form-control" id="location" name="location" value="<%= currentUser.location || "" %>" placeholder="City, Country" maxlength="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interests & Hobbies -->
+                            <div class="col-md-6 mb-4">
+                                <div class="profile-card">
+                                    <div class="card-header">
+                                        <h5><i class="fa-solid fa-heart me-2"></i>Interests & Hobbies</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="hobbies" class="form-label">Hobbies</label>
+                                            <input type="text" class="form-control" id="hobbies" name="hobbies" 
+                                                value="<%= currentUser.hobbies ? currentUser.hobbies.join(', ') : '' %>" 
+                                                placeholder="Photography, Hiking, Reading...">
+                                            <div class="form-text">Separate multiple hobbies with commas</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="interests" class="form-label">Interests</label>
+                                            <input type="text" class="form-control" id="interests" name="interests" 
+                                                value="<%= currentUser.interests ? currentUser.interests.join(', ') : '' %>" 
+                                                placeholder="Travel, Food, Culture...">
+                                            <div class="form-text">Separate multiple interests with commas</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Travel Preferences -->
+                            <div class="col-md-6 mb-4">
+                                <div class="profile-card">
+                                    <div class="card-header">
+                                        <h5><i class="fa-solid fa-plane me-2"></i>Travel Preferences</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="favoriteDestinations" class="form-label">Favorite Destinations</label>
+                                            <input type="text" class="form-control" id="favoriteDestinations" name="favoriteDestinations" 
+                                                value="<%= currentUser.favoriteDestinations ? currentUser.favoriteDestinations.join(', ') : '' %>" 
+                                                placeholder="Paris, Tokyo, New York...">
+                                            <div class="form-text">Separate multiple destinations with commas</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Links -->
+                            <div class="col-md-6 mb-4">
+                                <div class="profile-card">
+                                    <div class="card-header">
+                                        <h5><i class="fa-solid fa-link me-2"></i>Social Links</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="website" class="form-label">Website</label>
+                                            <input type="url" class="form-control" id="website" name="website" 
+                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.website : '' %>" 
+                                                placeholder="https://yourwebsite.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="instagram" class="form-label">Instagram</label>
+                                            <input type="url" class="form-control" id="instagram" name="instagram" 
+                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.instagram : '' %>" 
+                                                placeholder="https://instagram.com/username">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="twitter" class="form-label">Twitter</label>
+                                            <input type="url" class="form-control" id="twitter" name="twitter" 
+                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.twitter : '' %>" 
+                                                placeholder="https://twitter.com/username">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="linkedin" class="form-label">LinkedIn</label>
+                                            <input type="url" class="form-control" id="linkedin" name="linkedin" 
+                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.linkedin : '' %>" 
+                                                placeholder="https://linkedin.com/in/username">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg me-3">
+                                <i class="fa-solid fa-save me-2"></i>Save Changes
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg" onclick="document.getElementById('view-tab').click();">
+                                <i class="fa-solid fa-times me-2"></i>Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4 mb-5">
+                <a href="/listings" class="btn btn-outline-primary me-2">
+                    <i class="fa-solid fa-home me-2"></i>Back to Listings
+                </a>
+                <a href="/logout" class="btn btn-outline-danger">
+                    <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-header {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 0.125rem 0.25rem var(--shadow);
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        box-shadow: 0 0.125rem 0.25rem var(--shadow);
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover {
+        box-shadow: 0 0.25rem 0.5rem var(--shadow);
+        transform: translateY(-2px);
+    }
+
+    .profile-card .card-header {
+        background: var(--accent-color);
+        color: white;
+        border-radius: 0.75rem 0.75rem 0 0;
+        padding: 0.875rem 1.25rem;
+        border: none;
+    }
+
+    .profile-card .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .profile-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .info-item {
+        margin-bottom: 1rem;
+    }
+
+    .info-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-item label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.375rem;
+        display: block;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-item p {
+        color: var(--text-secondary);
+        margin: 0;
+        padding: 0.375rem 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+    }
+
+    .tag {
+        background: var(--accent-color);
+        color: white;
+        padding: 0.25rem 0.625rem;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .destination-tag {
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .social-link {
+        margin-bottom: 0.5rem;
+    }
+
+    .social-link:last-child {
+        margin-bottom: 0;
+    }
+
+    .social-link a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .social-link a:hover {
+        color: var(--text-primary);
+        transform: translateX(4px);
+    }
+
+    .nav-tabs {
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .nav-tabs .nav-link {
+        color: var(--text-secondary);
+        border: 1px solid transparent;
+        border-radius: 0.5rem 0.5rem 0 0;
+        font-weight: 500;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--accent-color);
+        background-color: var(--card-bg);
+        border-color: var(--border-color) var(--border-color) var(--card-bg);
+        border-bottom: 2px solid var(--card-bg);
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: var(--accent-color);
+        border-color: var(--border-color);
+        background-color: var(--bg-secondary);
+    }
+
+    /* Form Controls - Dark Mode Compatible */
+    .form-control {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        background-color: var(--card-bg);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.2rem rgba(254, 66, 77, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
+    }
+
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-text {
+        color: var(--text-muted) !important;
+        font-size: 0.8rem;
+    }
+
+    /* Button Styles */
+    .btn-primary {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #e63946;
+        border-color: #e63946;
+        transform: translateY(-1px);
+        box-shadow: 0 0.25rem 0.5rem rgba(254, 66, 77, 0.3);
+    }
+
+    .btn-outline-primary {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: white;
+    }
+
+    .btn-outline-secondary {
+        color: var(--text-secondary);
+        border-color: var(--border-color);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: var(--text-secondary);
+        border-color: var(--text-secondary);
+        color: var(--card-bg);
+    }
+
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .profile-avatar {
+        margin-bottom: 0.75rem;
+    }
+
+    /* Text Muted Override for Dark Mode */
+    .text-muted {
+        color: var(--text-muted) !important;
+    }
+
+    /* Tab Content */
+    .tab-content {
+        background: transparent;
+    }
+
+    .tab-pane {
+        padding-top: 1rem;
+    }
+
+    /* Professional spacing */
+    .row {
+        margin-bottom: 0;
+    }
+
+    .col-md-6 {
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header {
+            padding: 1rem;
+        }
+        
+        .profile-header .row {
+            text-align: center;
+        }
+        
+        .profile-card .card-body {
+            padding: 1rem;
+        }
+
+        .nav-tabs .nav-link {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+</style>
