@@ -175,8 +175,16 @@ body {
 
 .listing-card {
     border: none !important;
-    margin-bottom: 2rem;
     background-color: var(--card-bg) !important;
+    border-radius: 1rem !important;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.listing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow);
 }
 
 .card {
@@ -194,6 +202,23 @@ body {
     border-radius: 1rem !important;
     width: 100% !important;
     object-fit: cover !important;
+}
+
+.listing-image-container {
+    width: 100%;
+    height: 20rem;
+    overflow: hidden;
+    border-radius: 1rem 1rem 0 0;
+    position: relative;
+}
+
+.listing-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 1rem 1rem 0 0;
 }
 
 
