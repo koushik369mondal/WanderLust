@@ -71,11 +71,13 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://api.mapbox.com"],
             scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://api.mapbox.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-            imgSrc: ["'self'", "data:", "https:", "http:"],
-            connectSrc: ["'self'", "https:", "http:"],
+            imgSrc: ["'self'", "data:", "https:", "http:", "https://api.mapbox.com", "https://*.tiles.mapbox.com"],
+            connectSrc: ["'self'", "https:", "http:", "https://api.mapbox.com", "https://events.mapbox.com"],
+            workerSrc: ["'self'", "blob:"],
+            childSrc: ["'self'", "blob:"],
         },
     },
     crossOriginEmbedderPolicy: false, // Disable for compatibility with external resources

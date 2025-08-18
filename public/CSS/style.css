@@ -266,3 +266,46 @@ body {
 *, *::before, *::after {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
+
+/* Mapbox map styling */
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+/* Ensure map container has proper dimensions */
+.mapboxgl-map {
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+}
+
+/* Style Mapbox popup */
+.mapboxgl-popup-content {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.mapboxgl-popup-content h4 {
+    color: var(--accent-color) !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.mapboxgl-popup-tip {
+    border-top-color: var(--card-bg) !important;
+}
+
+/* Dark theme adjustments for map controls */
+[data-theme="dark"] .mapboxgl-ctrl-group {
+    background: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .mapboxgl-ctrl button {
+    color: var(--text-primary) !important;
+}
