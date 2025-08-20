@@ -3,7 +3,7 @@ A full-stack web app to explore, share, and review travel destinations. Built wi
 
 ---
 
-## 🔗 [Live Preview](https://wanderlust-c8cb.onrender.com/listings)
+## 🔗 [Live Preview](https://wanderlust-j5rm.onrender.com/listings)
 
 ---
 
