@@ -60,7 +60,7 @@
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
 
-![GSSoC Logo](/koushik-WanderLust/public/images/gssoc%20logo.png)
+![GSSoC Logo](./public/images/gssoc_logo.png)
 
 **🌟 Exciting News...**
 
@@ -168,7 +168,7 @@ npm run dev
 npm start
 ```
 
-🎉 Your app should now be running at: [`http://localhost:3000`]
+🎉 Your app should now be running at: [`http://localhost:8080`]
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -338,6 +338,7 @@ This project is licensed under the MIT License - see the [`License`](https://git
   <a href="https://github.com/koushik369mondal/WanderLust/network/members">
     <img src="https://reporoster.com/forks/koushik369mondal/WanderLust?type=svg&limit=100&names=false" alt="Forkers" />
   </a>
+</div>
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
 
