@@ -22,10 +22,19 @@ class ThemeManager {
   }
 
   init() {
+    // Add a smooth fade-in effect when page loads
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.3s ease-in-out';
+    
     this.setTheme(this.currentTheme);
     if (this.themeToggle) {
       this.themeToggle.addEventListener("click", () => this.toggleTheme());
     }
+    
+    // Fade in the page after theme is applied
+    setTimeout(() => {
+      document.body.style.opacity = '1';
+    }, 50);
   }
 
   getStoredTheme() {
@@ -37,15 +46,28 @@ class ThemeManager {
   }
 
   setTheme(theme) {
+    // Add transitioning class for enhanced animations
+    document.body.classList.add('theme-switching');
     document.documentElement.setAttribute("data-theme", theme);
     this.updateThemeIcon(theme);
     this.currentTheme = theme;
+    
+    // Remove transitioning class after animation completes
+    setTimeout(() => {
+      document.body.classList.remove('theme-switching');
+    }, 500);
   }
 
   updateThemeIcon(theme) {
     if (this.themeIcon) {
-      this.themeIcon.className =
-        theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      // Add a smooth transition effect to icon change
+      this.themeIcon.style.transform = 'scale(0.8)';
+      
+      setTimeout(() => {
+        this.themeIcon.className =
+          theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+        this.themeIcon.style.transform = 'scale(1)';
+      }, 150);
     }
   }
 
