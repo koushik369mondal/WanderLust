@@ -11,9 +11,9 @@
     --accent-color: #fe424d;
     --shadow: rgba(0, 0, 0, 0.1);
     --filter-bg: #f8f9fa;
-    --filter-text: #495057;
+    /* --filter-text: #495057; */
     --filter-border: #dee2e6;
-    --filter-hover: #e9ecef;
+    --filter-hover: #430000;
     --filter-active: #fe424d;
 }
 
@@ -29,10 +29,10 @@
     --border-color: #404040;
     --accent-color: #fe424d;
     --shadow: rgba(255, 255, 255, 0.1);
-    --filter-bg: #2d2d2d;
+    /* --filter-bg: #2d2d2d; */
     --filter-text: #cccccc;
-    --filter-border: #404040;
-    --filter-hover: #404040;
+    /* --filter-border: #404040; */
+    /* --filter-hover: #404040; */
     --filter-active: #fe424d;
 }
 
