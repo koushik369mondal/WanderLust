@@ -43,7 +43,9 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: 
+        background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .container {
@@ -55,6 +57,9 @@ body {
     height: 5rem;
     background-color: var(--navbar-bg) !important;
     border-bottom: 1px solid var(--border-color);
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .fa-compass {
@@ -64,10 +69,14 @@ body {
 
 .nav-link {
     color: var(--text-primary) !important;
+    transition: 
+        color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.2s ease;
 }
 
 .nav-link:hover {
     color: var(--accent-color) !important;
+    transform: translateY(-1px);
 }
 
 #theme-toggle {
@@ -84,7 +93,12 @@ body {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+        color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
 }
 
 .search-inp::placeholder {
@@ -95,6 +109,7 @@ body {
     background-color: var(--bg-primary);
     border-color: var(--accent-color);
     box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.25);
+    transform: scale(1.02);
 }
 
 .search-btn {
@@ -103,11 +118,16 @@ body {
     border-radius: 25px;
     padding: 0 1rem;
     border: none;
-    transition: background-color 0.3s ease;
+    transition: 
+        background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.2s ease,
+        box-shadow 0.3s ease;
 }
 
 .search-btn:hover {
     background-color: #d63641;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(254, 66, 77, 0.3);
 }
 
 /* Footer Styles */
@@ -117,6 +137,9 @@ body {
     padding: 2rem 0;
     background-color: var(--bg-secondary) !important;
     border-top: 1px solid var(--border-color);
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .f-info-links {
@@ -146,7 +169,13 @@ body {
 .f-info-socials i {
     font-size: 1.3rem;
     color: var(--text-primary) !important;
-    transition: color 0.3s ease;
+    transition: 
+        color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.2s ease;
+}
+
+.f-info-socials i:hover {
+    transform: scale(1.2) rotate(5deg);
 }
 
 .f-info-brand {
@@ -179,7 +208,10 @@ body {
     border-radius: 1rem !important;
     overflow: hidden;
     box-shadow: 0 2px 8px var(--shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: 
+        transform 0.3s ease, 
+        box-shadow 0.3s ease,
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .listing-card:hover {
@@ -191,7 +223,11 @@ body {
     background-color: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+        color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        box-shadow 0.3s ease;
 }
 
 .card-text {
@@ -231,7 +267,11 @@ body {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+        color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .form-control:focus {
@@ -262,9 +302,99 @@ body {
     margin: 1rem 0;
 }
 
-/* Smooth transitions for colors */
+/* Enhanced smooth transitions for theme switching */
 *, *::before, *::after {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+/* Special transition for theme toggle button */
+#theme-toggle {
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.2s ease;
+}
+
+#theme-toggle:hover {
+    transform: scale(1.05);
+}
+
+#theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Smooth icon transitions */
+#theme-icon {
+    transition: 
+        transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+        opacity 0.3s ease;
+}
+
+/* Add rotation animation for theme icon */
+.theme-switching #theme-icon {
+    transform: rotate(360deg);
+    opacity: 0.7;
+}
+
+/* Smooth transition state class */
+.theme-switching {
+    position: relative;
+}
+
+.theme-switching::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(254, 66, 77, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    animation: themeTransition 0.5s ease-in-out;
+}
+
+@keyframes themeTransition {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Enhanced ripple effect for theme toggle */
+#theme-toggle {
+    position: relative;
+    overflow: hidden;
+}
+
+#theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(254, 66, 77, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    z-index: 0;
+}
+
+#theme-toggle:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+#theme-toggle * {
+    position: relative;
+    z-index: 1;
 }
 
 /* Mapbox map styling */

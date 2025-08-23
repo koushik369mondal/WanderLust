@@ -26,23 +26,21 @@
       <p class="card-text"><%= listing.country %></p>
     </div>
   </div>
+  
+  <br />
 
-  <% if (currentUser && listing.owner._id.equals(currentUser._id)) { %>
-  <div class="row">
-    <div class="col-12 col-md-6 offset-md-3 d-flex justify-content-between">
-      <a
-        href="/listings/<%= listing._id %>/edit"
-        class="btn btn-dark w-45 edit-btn"
-        >Edit</a
-      >
-      <form
-        method="POST"
-        action="/listings/<%= listing._id %>?_method=DELETE"
-        class="w-45"
-      >
-        <button class="btn btn-dark w-100">Delete</button>
-      </form>
-    </div>
+  <% if(currentUser && listing.owner._id.equals(currentUser._id)) { %>
+  <div class="btns mt-3">
+    <a
+      href="/listings/<%= listing._id %>/edit"
+      class="btn btn-dark col-1 offset-3 edit-btn"
+      >Edit</a
+    >
+
+    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+      <button class="btn btn-dark offset-5">Delete</button>
+    </form>
+
   </div>
   <% } %>
 <div class="col-12 col-md-8 offset-md-2 mb-3">
