@@ -4,20 +4,19 @@
   const listing = <%- JSON.stringify(listing) %>;
 </script>
 
-<div class="row mt-3">
-  <div class="col-8 offset-3">
+<div class="row mt-3 m-1">
+  <div class="col-12 col-md-8 offset-md-2">
     <h3><%= listing.title %></h3>
   </div>
-  <div class="card col-6 offset-3 show-card listing-card">
+  <div class="card col-12 col-md-8 offset-md-2 show-card listing-card mb-3">
     <img
       src="<%= listing.image.url %>"
-      class="card-img-top show-img"
+      class="card-img-top mt-3 show-img"
       alt="listing_image"
     />
     <div class="card-body">
       <p class="card-text">
-        Owned by -
-        <i> <%= listing.owner.username %> </i>
+        Owned by - <i><%= listing.owner.username %></i>
       </p>
       <p class="card-text"><%= listing.description %></p>
       <p class="card-text">
@@ -28,33 +27,36 @@
     </div>
   </div>
 
-  <br />
-
-  <% if(currentUser && listing.owner._id.equals(currentUser._id)) { %>
-  <div class="btns">
-    <a
-      href="/listings/<%= listing._id %>/edit"
-      class="btn btn-dark col-1 offset-3 edit-btn"
-      >Edit</a
-    >
-
-    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-      <button class="btn btn-dark offset-5">Delete</button>
-    </form>
+  <% if (currentUser && listing.owner._id.equals(currentUser._id)) { %>
+  <div class="row">
+    <div class="col-12 col-md-6 offset-md-3 d-flex justify-content-between">
+      <a
+        href="/listings/<%= listing._id %>/edit"
+        class="btn btn-dark w-45 edit-btn"
+        >Edit</a
+      >
+      <form
+        method="POST"
+        action="/listings/<%= listing._id %>?_method=DELETE"
+        class="w-45"
+      >
+        <button class="btn btn-dark w-100">Delete</button>
+      </form>
+    </div>
   </div>
   <% } %>
-  <div class="col-8 offset-3 mb-3">
-    <% if(currentUser) { %>
+<div class="col-12 col-md-8 offset-md-2 mb-3">
+  <% if (currentUser) { %>
     <hr />
-    <h4>Leave a review</h4>
+    <h4>Leave a Review</h4>
     <form
       action="/listings/<%= listing._id %>/reviews"
       method="POST"
-      novalidate
       class="needs-validation"
+      novalidate
     >
-      <div class="mb-3 mt-3">
-        <label for="rating" class="form-label">Rating</label>
+      <div class="mb-3">
+       <label for="rating" class="form-label">Rating</label>
         <fieldset class="starability-slot">
           <input
             type="radio"
@@ -102,26 +104,27 @@
           <label for="first-rate5" title="Amazing">5 stars</label>
         </fieldset>
       </div>
-      <div class="mb-3 mt-3">
+      <div class="mb-3">
         <label for="comment" class="form-label">Comment</label>
         <textarea
           name="review[comment]"
           id="comment"
-          cols="30"
-          rows="5"
           class="form-control"
+          rows="4"
           required
         ></textarea>
-        <div class="invalid-feedback">Please add some comments for review</div>
+        <div class="invalid-feedback">Please provide a comment.</div>
       </div>
-      <button class="btn btn-outline-dark">Submit</button>
+      <button type="submit" class="btn btn-dark">Submit</button>
     </form>
     <hr />
-    <% } %> <% if(listing.reviews.length > 0) { %>
+  <% } %>
+
+ <% if(listing.reviews.length > 0) { %>
     <div class="row">
       <p><b>All Reviews</b></p>
       <% for(review of listing.reviews) { %>
-      <div class="card col-5 ms-3 mb-3">
+      <div class="card col-12 col-md-4 mb-2">
         <div class="card-body">
           <h4 class="card-title">@<%= review.author.username %></h4>
           <p
@@ -132,17 +135,17 @@
           <form
             method="POST"
             action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-            class="mb-3"
+            class="mt-4 mb-2"
           >
-            <button class="btn btn-sm btn-dark">Delete</button>
+            <button class="btn btn-sm btn-danger m-1 position-absolute bottom-0 start-10">Delete</button>
           </form>
         </div>
       </div>
       <% } %>
     </div>
     <% } %>
-  </div>
-  <div class="col-6 offset-3 mb-3">
+</div>
+  <div class="col-12 col-md-8 mb-3 offset-md-2">
     <h3>Where you'll be</h3>
     <div id="map"></div>
   </div>
