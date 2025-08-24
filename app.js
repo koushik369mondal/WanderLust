@@ -31,7 +31,8 @@ const passport = require("passport");
 const helmet = require("helmet");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
-
+const Listing = require("./models/listing");
+require("dotenv").config();
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");

@@ -11,7 +11,7 @@
     --accent-color: #fe424d;
     --shadow: rgba(0, 0, 0, 0.1);
     --filter-bg: #f8f9fa;
-    /* --filter-text: #495057; */
+
     --filter-border: #dee2e6;
     --filter-hover: #430000;
     --filter-active: #fe424d;
@@ -37,7 +37,7 @@
 }
 
 body {
-    background: var(--bg-primary) !important;
+    background: linear-gradient(135deg, #034353, #07aac0) !important;
     color: var(--text-primary) !important;
     font-family: "Plus Jakarta Sans", sans-serif !important;
     display: flex;
@@ -50,12 +50,12 @@ body {
 
 .container {
     flex: 1;
-    background-color: var(--bg-primary) !important;
+    background-color: #d7f4f8 !important;
 }
 
 .navbar {
     height: 5rem;
-    background-color: var(--navbar-bg) !important;
+    background-color:#6ee8f8;
     border-bottom: 1px solid var(--border-color);
     transition: 
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -135,7 +135,7 @@ body {
     text-align: center;
     height: auto;
     padding: 2rem 0;
-    background-color: var(--bg-secondary) !important;
+    background-color:#d7f4f8;
     border-top: 1px solid var(--border-color);
     transition: 
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
