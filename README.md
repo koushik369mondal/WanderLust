@@ -10,7 +10,7 @@
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
-**🔗 [Live Preview](https://wanderlust-dtuy.onrender.com)**
+**🔗 [Live Preview](https://wanderlust-zh33.onrender.com/listings)**
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 <div align="center">
@@ -363,7 +363,7 @@ This project is licensed under the MIT License - see the [`License`](https://git
 
 **👨‍💻 Built with ❤️ by the WanderLust Team**
 
-**❤️ Kaushik Mandal and Contributors ❤️** [open an issue](https://github.com/koushik369mondal/WanderLust/issues) | [Watch Demo](https://wanderlust-j5rm.onrender.com/listings)
+**❤️ Kaushik Mandal and Contributors ❤️** [open an issue](https://github.com/koushik369mondal/WanderLust/issues) | [Watch Demo](https://wanderlust-zh33.onrender.com/listings)
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
 
