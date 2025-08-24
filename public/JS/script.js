@@ -156,6 +156,7 @@ document.addEventListener("mousemove", (e) => {
     radial-gradient(circle at ${100 - x}% ${100 - y}%, rgba(0,200,255,0.35), transparent 70%),
     radial-gradient(circle at ${y}% ${x}%, rgba(0,255,120,0.35), transparent 70%)
   `;
+  
 });
 
 });
