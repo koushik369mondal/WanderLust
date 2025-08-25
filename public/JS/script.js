@@ -103,4 +103,60 @@ class SearchManager {
 document.addEventListener("DOMContentLoaded", () => {
   new ThemeManager();
   new SearchManager();
+
+
+  // ✨ Sparkle Effect (Rave Neon)
+  document.addEventListener("mousemove", (e) => {
+    const sparkle = document.createElement("div");
+    sparkle.className = "sparkle";
+
+    // Neon rave colors
+    const colors = ["#ff00ff", "#00ffff", "#ffff00", "#ff8800", "#00ff44"];
+    sparkle.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]}, transparent)`;
+
+    sparkle.style.left = `${e.clientX}px`;
+    sparkle.style.top = `${e.clientY}px`;
+
+    // Random size for wavy look
+    const size = Math.random() * 10 + 6;
+    sparkle.style.width = `${size}px`;
+    sparkle.style.height = `${size}px`;
+
+    // Random rotation + flicker
+    sparkle.style.transform = `rotate(${Math.random() * 360}deg) scale(1)`;
+    sparkle.style.animation = "fadeOut 0.8s forwards, flicker 0.3s alternate infinite";
+
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => {
+      sparkle.remove();
+    }, 800);
+  });
+  document.addEventListener("mousemove", (e) => {
+  let glow = document.getElementById("cursor-glow");
+
+  if (!glow) {
+    glow = document.createElement("div");
+    glow.id = "cursor-glow";
+    glow.className = "cursor-glow";
+    document.body.appendChild(glow);
+  }
+
+  // Move glow towards cursor
+  glow.style.left = `${e.clientX}px`;
+  glow.style.top = `${e.clientY}px`;
+});
+document.addEventListener("mousemove", (e) => {
+  const glow = document.getElementById("page-glow");
+  const x = (e.clientX / window.innerWidth) * 100;
+  const y = (e.clientY / window.innerHeight) * 100;
+
+  glow.style.background = `
+    radial-gradient(circle at ${x}% ${y}%, rgba(255,0,150,0.35), transparent 70%),
+    radial-gradient(circle at ${100 - x}% ${100 - y}%, rgba(0,200,255,0.35), transparent 70%),
+    radial-gradient(circle at ${y}% ${x}%, rgba(0,255,120,0.35), transparent 70%)
+  `;
+  
+});
+
 });
