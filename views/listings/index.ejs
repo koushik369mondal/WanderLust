@@ -544,11 +544,13 @@
                         <img src="<%= listing.image.url %>" class="card-img-top listing-image" alt="listing_image" />
                     </div>
                     <div class="card-body">
-                        <p class="card-text">
-                            <b><%= listing.title %></b><br />
-                            <%= listing.price.toLocaleString("en-IN") %> / night
-                            <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
-                        </p>
+                      <p class="card-text">
+    <b><%= listing.title %></b><br />
+    <span class="price-display" data-base-price="<%= listing.price %>">₹<%= listing.price.toLocaleString("en-IN") %> / night</span>
+    <div class="price-breakdown" style="display: none;">
+        <small>₹<%= listing.price.toLocaleString("en-IN") %> + ₹<%= Math.round(listing.price * 0.18).toLocaleString("en-IN") %> GST</small>
+    </div>
+</p>
                     </div>
                 </div>
             </a>
@@ -557,14 +559,32 @@
   </div>
 </div>
 
-
-
 <script>
+  const TAX_RATE = 0.18; // 18% GST
   let taxSwitch = document.getElementById("switchCheckDefault");
-  taxSwitch.addEventListener("click", () => {
-      let taxInfo = document.getElementsByClassName("tax-info");
-      for(info of taxInfo){
-          info.style.display = (info.style.display !== "inline") ? "inline" : "none";
-      }
+  
+  function formatPrice(amount) {
+      return amount.toLocaleString("en-IN");
+  }
+
+  taxSwitch.addEventListener("change", () => {
+      const priceDisplays = document.querySelectorAll(".price-display");
+      const priceBreakdowns = document.querySelectorAll(".price-breakdown");
+      const showTaxes = taxSwitch.checked;
+
+      priceDisplays.forEach((priceDisplay, index) => {
+          const basePrice = parseInt(priceDisplay.dataset.basePrice);
+          const taxAmount = Math.round(basePrice * TAX_RATE);
+          const totalPrice = basePrice + taxAmount;
+          const breakdown = priceBreakdowns[index];
+
+          if (showTaxes) {
+              priceDisplay.innerHTML = `₹${formatPrice(totalPrice)} / night`;
+              breakdown.style.display = "block";
+          } else {
+              priceDisplay.innerHTML = `₹${formatPrice(basePrice)} / night`;
+              breakdown.style.display = "none";
+          }
+      });
   });
 </script>
