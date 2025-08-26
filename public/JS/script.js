@@ -146,17 +146,5 @@ document.addEventListener("DOMContentLoaded", () => {
   glow.style.left = `${e.clientX}px`;
   glow.style.top = `${e.clientY}px`;
 });
-document.addEventListener("mousemove", (e) => {
-  const glow = document.getElementById("page-glow");
-  const x = (e.clientX / window.innerWidth) * 100;
-  const y = (e.clientY / window.innerHeight) * 100;
-
-  glow.style.background = `
-    radial-gradient(circle at ${x}% ${y}%, rgba(255,0,150,0.35), transparent 70%),
-    radial-gradient(circle at ${100 - x}% ${100 - y}%, rgba(0,200,255,0.35), transparent 70%),
-    radial-gradient(circle at ${y}% ${x}%, rgba(0,255,120,0.35), transparent 70%)
-  `;
-  
-});
 
 });
