@@ -36,8 +36,19 @@
     --filter-active: #fe424d;
 }
 
-body {
-    background: linear-gradient(135deg, #66d7f3, #bef1f8) !important;
+
+
+ body {
+    background: linear-gradient(135deg, #66d7f3, #bef1f8) , 
+                url('/images/travel.jpeg') no-repeat center center / cover !important;
+                 background-attachment: fixed;
+    background-blend-mode:  soft-light;
+
+
+
+
+
+
     color: var(--text-primary) !important;
     font-family: "Plus Jakarta Sans", sans-serif !important;
     display: flex;
@@ -46,7 +57,34 @@ body {
     transition: 
         background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+} 
+
+
+
+
+
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #0b3238, #1a677a, #09454d), 
+                url('/images/travel.jpeg') no-repeat center center / cover !important;
+                 background-attachment: fixed!important;
+                  background-blend-mode: overlay; /* or overlay */
+
 }
+
+[data-theme="dark"] .container {
+    flex: 1;
+    background-color: #8fdbe6 !important;
+}
+[data-theme="dark"].navbar {
+    height: 5rem;
+    background-color:rgba(255, 255, 255, 0.185);
+    border-bottom: 1px solid var(--border-color);
+    transition: 
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+
 [data-theme="dark"] body {
     background: linear-gradient(135deg, #07292e, #23758a, #1b5d66)!important;
 }
@@ -59,6 +97,7 @@ body {
     pointer-events: none;
     z-index: -1;
 }
+
 
 .container {
     flex: 1;
@@ -500,5 +539,8 @@ body {
   transition: top 0.2s ease-out, left 0.2s ease-out;
   filter: blur(100px);
   z-index: 0;
+
+}
+
 }
 
