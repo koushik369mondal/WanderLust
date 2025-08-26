@@ -37,11 +37,15 @@
 }
 
 
+
  body {
     background: linear-gradient(135deg, #66d7f3, #bef1f8) , 
                 url('/images/travel.jpeg') no-repeat center center / cover !important;
                  background-attachment: fixed;
     background-blend-mode:  soft-light;
+
+
+
 
 
 
@@ -66,6 +70,7 @@
                   background-blend-mode: overlay; /* or overlay */
 
 }
+
 [data-theme="dark"] .container {
     flex: 1;
     background-color: #8fdbe6 !important;
@@ -77,6 +82,20 @@
     transition: 
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #07292e, #23758a, #1b5d66)!important;
+}
+[data-theme="dark"] body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,0,150,0.15), transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(0,200,255,0.15), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 
@@ -520,4 +539,8 @@
   transition: top 0.2s ease-out, left 0.2s ease-out;
   filter: blur(100px);
   z-index: 0;
+
 }
+
+}
+
