@@ -36,8 +36,11 @@
     --filter-active: #fe424d;
 }
 
-body {
-    background: linear-gradient(135deg, #034353, #07aac0) !important;
+ body {
+    background: linear-gradient(135deg, #66d7f3, #bef1f8) , 
+                url('/images/travel.jpeg') no-repeat center center / cover !important;
+                 background-attachment: fixed;
+    background-blend-mode:  soft-light;
     color: var(--text-primary) !important;
     font-family: "Plus Jakarta Sans", sans-serif !important;
     display: flex;
@@ -46,6 +49,27 @@ body {
     transition: 
         background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+} 
+
+
+
+
+
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #0b3238, #1a677a, #09454d), 
+                url('/images/travel.jpeg') no-repeat center center / cover !important;
+                 background-attachment: fixed!important;
+                  background-blend-mode: multiply; /* or overlay */
+
+}
+[data-theme="dark"] body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,0,150,0.15), transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(0,200,255,0.15), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .container {
@@ -55,7 +79,7 @@ body {
 
 .navbar {
     height: 5rem;
-    background-color:#6ee8f8;
+    background-color:rgba(255,255,255,0.7);
     border-bottom: 1px solid var(--border-color);
     transition: 
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -471,7 +495,7 @@ body {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 9999; /* behind navbar, flash, body */
+  z-index: 0; /* behind navbar, flash, body */
 }
 .cursor-glow {
   position: fixed;
@@ -490,44 +514,3 @@ body {
   z-index: 0;
 }
 
-
-
-.page-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(
-      circle at center,
-      rgba(255, 0, 150, 0.3),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at center,
-      rgba(0, 200, 255, 0.3),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at center,
-      rgba(0, 255, 120, 0.3),
-      transparent 60%
-    );
-  background-blend-mode: screen;
-  filter: blur(400px);
-  animation: glowShift 8s infinite alternate ease-in-out;
-}
-
-@keyframes glowShift {
-  0% {
-    background-position: 20% 20%, 80% 30%, 50% 80%;
-  }
-  50% {
-    background-position: 80% 80%, 20% 70%, 60% 20%;
-  }
-  100% {
-    background-position: 50% 50%, 70% 20%, 30% 60%;
-  }
-}
