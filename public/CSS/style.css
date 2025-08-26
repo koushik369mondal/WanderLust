@@ -584,7 +584,4 @@
   transition: top 0.2s ease-out, left 0.2s ease-out;
   filter: blur(100px);
   z-index: 0;
-
 }
-
-
