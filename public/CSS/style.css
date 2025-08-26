@@ -59,7 +59,7 @@
     background: linear-gradient(135deg, #0b3238, #1a677a, #09454d), 
                 url('/images/travel.jpeg') no-repeat center center / cover !important;
                  background-attachment: fixed!important;
-                  background-blend-mode: multiply; /* or overlay */
+                  background-blend-mode: overlay; /* or overlay */
 
 }
 [data-theme="dark"] body::before {
