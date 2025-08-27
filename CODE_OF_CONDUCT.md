@@ -60,10 +60,7 @@ If something bad happens, **don’t stress**—we’ve got your back!
 - Your report will be **confidential & handled carefully** 🔒  
 - Optionally, include screenshots or context for faster action 🖼️  
 
-![Report Badge](https://img.shields.io/badge/Report-Confidential-red?style=for-the-badge)
-
-> ![GIF Placeholder](https://media.giphy.com/media/3o7aD4LBf9m8mJbJf6/giphy.gif)  
-> *Reporting made easy and safe!*
+![Reporting GIF](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDFmZmR0amZtbzdyOXlyZmdpemN0NHo5YWNyazQ2bXhxeG1jcnh0aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/L1R1tvI9svkIWwpVYr/giphy.gif)
 
 ---
 
@@ -90,13 +87,21 @@ This Code of Conduct applies to **all places related to Wanderlust**:
 
 ---
 
+## 🎨 **Why We Enhanced This CoC**
+
+- **Visual badges & emojis** → grabs attention & guides contributors  
+- **GIFs & visuals** → make reporting & rules memorable  
+- **Clear headings & tables** → super easy to skim  
+- **Friendly language** → encourages engagement & compliance  
+
+> *We want reading this to be a joy, not a chore!* 😄
+
+---
+
 ## 💖 **Thank You!**
 
 Thanks for helping us make **Wanderlust** a **fun, safe, and inspiring space** for all contributors!  
 
-Let’s code, create, and explore together. 🌟✨
+Let’s code, create, and explore together. 🌟✨  
 
-![Teamwork GIF Placeholder](https://media.giphy.com/media/26FPnsRww0Zt1pPCA/giphy.gif)
-
----
-
+![Thank You GIF](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDdnYjJ6ZWE2Nzh4dzgzZWxmMm1zZ3pveGJ4bm1rd3A4Zzc5dWFmcyZlcD12MV9naWZzX3RyZW5kaW5nJmN0PWc/bWKy65WDyQ06GRnNC8/giphy.gif)
