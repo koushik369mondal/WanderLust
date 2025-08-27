@@ -90,6 +90,131 @@
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
+**� Environment Variables Setup Guide**
+
+This project requires several external services. Follow this comprehensive guide to set up all required environment variables:
+
+**🔧 Step 1: Create your `.env` file**
+```bash
+cp .env.example .env
+```
+
+**☁️ CLOUDINARY Setup (Image Upload Service)**
+
+1. **Create Account:**
+   - Go to [Cloudinary](https://cloudinary.com/) and sign up for free
+   - Verify your email and complete registration
+
+2. **Get Your Credentials:**
+   - After login, go to your **Dashboard**
+   - Find the **Account Details** section
+   - Copy these three values:
+     - **Cloud Name** (e.g., `your_cloud_name`)
+     - **API Key** (e.g., `123456789012345`)
+     - **API Secret** (e.g., `your_api_secret_here`)
+
+3. **Add to `.env`:**
+   ```env
+   CLOUD_NAME=your_cloudinary_name
+   CLOUD_API_KEY=your_cloudinary_api_key
+   CLOUD_API_SECRET=your_cloudinary_api_secret
+   ```
+
+**🗺️ MAPBOX Setup (Maps Service)**
+
+1. **Create Account:**
+   - Go to [Mapbox](https://account.mapbox.com/) and sign up for free
+   - Complete the registration process
+
+2. **Get Access Token:**
+   - After login, go to **Account** → **Access Tokens**
+   - Copy your **Default Public Token** (starts with `pk.`)
+   - Example: `pk.eyJ1IjoieW91cl91c2VybmFtZSIsImEiOiJjbTls...`
+
+3. **Add to `.env`:**
+   ```env
+   MAP_TOKEN=your_mapbox_access_token
+   ```
+
+**🗄️ MONGODB ATLAS Setup (Database Service)**
+
+1. **Create Account:**
+   - Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) and sign up for free
+   - Choose the **Free Tier** (M0 Sandbox)
+
+2. **Create Cluster:**
+   - Click **Build a Database** → **Create** (Free tier)
+   - Choose your preferred **Cloud Provider** and **Region**
+   - Click **Create Cluster** (this takes 1-3 minutes)
+
+3. **Create Database User:**
+   - Go to **Database Access** (left sidebar)
+   - Click **Add New Database User**
+   - Choose **Password** authentication
+   - Set **Username** and **Password** (save these!)
+   - Under **Database User Privileges**, select **Read and write to any database**
+   - Click **Add User**
+
+4. **Allow Network Access:**
+   - Go to **Network Access** (left sidebar)
+   - Click **Add IP Address**
+   - For development, click **Allow Access from Anywhere** (`0.0.0.0/0`)
+   - Click **Confirm**
+
+5. **Get Connection String:**
+   - Go back to **Clusters** → Click **Connect**
+   - Choose **Connect your application**
+   - Select **Node.js** and **4.1 or later**
+   - Copy the connection string
+   - Replace `<username>` and `<password>` with your database user credentials
+
+6. **Add to `.env`:**
+   ```env
+   ATLAS_DB_URL=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   ```
+
+**🔐 SESSION SECRET Setup (Security)**
+
+1. **What is it?**
+   - A session secret is used to encrypt user session data
+   - It should be a long, random, and unique string
+
+2. **Generate a Strong Secret:**
+   - **Option 1:** Use Node.js crypto module:
+     ```bash
+     node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+     ```
+   - **Option 2:** Use online generator: [Random.org](https://www.random.org/passwords/)
+   - **Option 3:** Create your own random string (minimum 32 characters)
+
+3. **Add to `.env`:**
+   ```env
+   SECRET=your_super_secret_session_key_here_make_it_long_and_random
+   ```
+
+**⚠️ IMPORTANT SECURITY NOTES:**
+
+- ✅ **NEVER** commit your `.env` file to GitHub
+- ✅ Keep all credentials private and secure
+- ✅ Use different credentials for development and production
+- ✅ The `.env` file is already in `.gitignore` to prevent accidental commits
+- ✅ If you accidentally expose credentials, regenerate them immediately
+
+**🎯 Final `.env` Example:**
+```env
+CLOUD_NAME=your_cloudinary_name
+CLOUD_API_KEY=your_cloudinary_api_key
+CLOUD_API_SECRET=your_cloudinary_api_secret
+
+MAP_TOKEN=pk.eyJ1IjoieW91cl91c2VybmFtZSIsImEiOiJjbTls...
+
+ATLAS_DB_URL=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+SECRET=your_super_secret_session_key_here_make_it_long_and_random
+```
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 **📋 Prerequisites**
 
 Before you begin, ensure you have the following installed:
