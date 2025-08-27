@@ -87,17 +87,6 @@ This Code of Conduct applies to **all places related to Wanderlust**:
 
 ---
 
-## 🎨 **Why We Enhanced This CoC**
-
-- **Visual badges & emojis** → grabs attention & guides contributors  
-- **GIFs & visuals** → make reporting & rules memorable  
-- **Clear headings & tables** → super easy to skim  
-- **Friendly language** → encourages engagement & compliance  
-
-> *We want reading this to be a joy, not a chore!* 😄
-
----
-
 ## 💖 **Thank You!**
 
 Thanks for helping us make **Wanderlust** a **fun, safe, and inspiring space** for all contributors!  
