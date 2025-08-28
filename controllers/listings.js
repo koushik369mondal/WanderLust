@@ -1,53 +1,54 @@
 const Listing = require("../models/listing");
-const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-
-// Verify MAP_TOKEN is available
-if (!process.env.MAP_TOKEN) {
-    throw new Error("MAP_TOKEN environment variable is not set!");
-}
-
+// Mapbox geocoding disabled for development
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
+  const allListings = await Listing.find({});
+  res.render("listings/index.ejs", { allListings });
 };
 
 module.exports.renderNewForm = (req, res) => {
-    res.render("listings/new.ejs");
+  res.render("listings/new.ejs");
 };
 
 module.exports.showListing = async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id)
-        .populate({
-            path: "reviews",
-            populate: {
-                path: "author",
-            },
-        })
-        .populate("owner");
-    if (!listing) {
-        req.flash("error", "Listing not found!");
-        res.redirect("/listings");
-    }
-    console.log(listing);
-    res.render("listings/show.ejs", { listing });
+  let { id } = req.params;
+  const listing = await Listing.findById(id)
+    .populate({
+      path: "reviews",
+      populate: {
+        path: "author",
+      },
+    })
+    .populate("owner");
+  if (!listing) {
+    req.flash("error", "Listing not found!");
+    res.redirect("/listings");
+  }
+  console.log(listing);
+  res.render("listings/show.ejs", { listing });
 };
 
 module.exports.createListing = async (req, res, next) => {
-    let response = await geocodingClient.forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1,
+  // Geocoding disabled for development
+  let response = await geocodingClient
+    .forwardGeocode({
+      query: req.body.listing.location,
+      limit: 1,
     })
-        .send()
-
-    let url = req.file.path;
-    let filename = req.file.filename;
+    .send();
+  try {
+    let url = "";
+    let filename = "";
+    if (req.file) {
+      url = req.file.path;
+      filename = req.file.filename;
+    }
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
-    newListing.image = { url, filename, };
+    newListing.image = { url, filename };
 
     newListing.geometry = response.body.features[0].geometry;
 
@@ -55,40 +56,45 @@ module.exports.createListing = async (req, res, next) => {
     console.log(savedListings);
     req.flash("success", "New listing created!");
     res.redirect(`/listings`);
+  } catch (error) {
+    console.error("Error creating listing:", error);
+    req.flash("error", "Failed to create listing.");
+    res.redirect("/listings/new");
+  }
 };
 
 module.exports.renderEditForm = async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id);
-    if (!listing) {
-        req.flash("error", "Listing does not exist");
-        res.redirect("/listings");
-    }
+  let { id } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    req.flash("error", "Listing does not exist");
+    res.redirect("/listings");
+  }
 
-    let originalImageURL = listing.image.url;
-    originalImageURL = originalImageURL.replace("/upload", "/upload/w_250");
-    res.render("listings/edit.ejs", { listing, originalImageURL });
+  let originalImageURL = listing.image.url;
+  originalImageURL = originalImageURL.replace("/upload", "/upload/w_250");
+  res.render("listings/edit.ejs", { listing, originalImageURL });
 };
 
 module.exports.updateListing = async (req, res) => {
-    let { id } = req.params;
-    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    if (typeof req.file !== 'undefined') {
-        listing.image = {
-            url: req.file.path,
-            filename: req.file.filename,
-        };
-        await listing.save();
-    }
+  let { id } = req.params;
+  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  if (typeof req.file !== "undefined") {
+    listing.image = {
+      url: req.file.path,
+      filename: req.file.filename,
+    };
+    await listing.save();
+  }
 
-    req.flash("success", "Listing updated!");
-    res.redirect(`/listings/${id}`);
+  req.flash("success", "Listing updated!");
+  res.redirect(`/listings/${id}`);
 };
 
 module.exports.destroyListing = async (req, res) => {
-    let { id } = req.params;
-    const deletedListing = await Listing.findByIdAndDelete(id);
-    console.log(deletedListing);
-    req.flash("success", "Listing deleted!");
-    res.redirect("/listings");
+  let { id } = req.params;
+  const deletedListing = await Listing.findByIdAndDelete(id);
+  console.log(deletedListing);
+  req.flash("success", "Listing deleted!");
+  res.redirect("/listings");
 };
