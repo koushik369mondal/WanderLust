@@ -14,6 +14,10 @@
                     <div class="col-md-10">
                         <h3 class="mb-1" style="color: var(--text-primary);"><%= currentUser.username %></h3>
                         <p class="text-muted mb-1 fs-6">
+                            <i class="fa-solid fa-list me-2"></i>
+                            Listings created: <%= typeof listingCount !== 'undefined' ? listingCount : 0 %>
+                        </p>
+                        <p class="text-muted mb-1 fs-6">
                             <i class="fa-solid fa-envelope me-2"></i><%= currentUser.email %>
                         </p>
                         <p class="text-muted mb-0 fs-6">

@@ -43,8 +43,11 @@ module.exports.logout = (req, res, next) => {
     });
 };
 
-module.exports.renderProfile = (req, res) => {
-    res.render("users/profile.ejs");
+const Listing = require("../models/listing");
+module.exports.renderProfile = async (req, res) => {
+    // Get the count of listings owned by the current user
+    const listingCount = await Listing.countDocuments({ owner: req.user._id });
+    res.render("users/profile.ejs", { listingCount });
 };
 
 module.exports.updateProfile = async (req, res) => {
