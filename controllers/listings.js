@@ -18,9 +18,7 @@ module.exports.showListing = async (req, res) => {
   const listing = await Listing.findById(id)
     .populate({
       path: "reviews",
-      populate: {
-        path: "author",
-      },
+      populate: { path: "author" },
     })
     .populate("owner");
   if (!listing) {
@@ -28,7 +26,7 @@ module.exports.showListing = async (req, res) => {
     res.redirect("/listings");
   }
   console.log(listing);
-  res.render("listings/show.ejs", { listing });
+  res.render("listings/show.ejs", { listing, currentUser: req.user });
 };
 
 module.exports.createListing = async (req, res, next) => {
@@ -97,4 +95,23 @@ module.exports.destroyListing = async (req, res) => {
   console.log(deletedListing);
   req.flash("success", "Listing deleted!");
   res.redirect("/listings");
+};
+// Like a listing
+module.exports.likeListing = async (req, res) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing.likes.includes(req.user._id)) {
+    listing.likes.push(req.user._id);
+    await listing.save();
+  }
+  res.redirect(`/listings/${req.params.id}`);
+};
+
+// Unlike a listing
+module.exports.unlikeListing = async (req, res) => {
+  const listing = await Listing.findById(req.params.id);
+  listing.likes = listing.likes.filter(
+    (userId) => userId.toString() !== req.user._id.toString()
+  );
+  await listing.save();
+  res.redirect(`/listings/${req.params.id}`);
 };

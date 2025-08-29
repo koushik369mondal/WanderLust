@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
@@ -39,5 +40,9 @@ router.get(
     isOwner,
     wrapAsync(listingsController.renderEditForm)
 );
+
+// Like/Unlike routes
+router.post('/:id/like', isLoggedIn, wrapAsync(listingsController.likeListing));
+router.post('/:id/unlike', isLoggedIn, wrapAsync(listingsController.unlikeListing));
 
 module.exports = router;
