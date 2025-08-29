@@ -13,10 +13,10 @@ process.on('warning', (warning) => {
 
 // Verify MAP_TOKEN is loaded
 // MAP_TOKEN check removed for development. Uncomment for production:
-/*if (!process.env.MAP_TOKEN) {
+if (!process.env.MAP_TOKEN) {
     console.error("MAP_TOKEN environment variable is not set!");
     process.exit(1);
-}*/
+}
 
 const express = require("express");
 const app = express();
