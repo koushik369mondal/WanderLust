@@ -162,7 +162,7 @@
                 <a href="/listings/<%= listing._id %>" class="listing-link">
                     <div class="card listing-card h-100">
                         <div class="listing-image-container">
-                            <img src="<%= listing.image.url %>" class="card-img-top listing-image"
+                            <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
                                 alt="listing_image" />
                         </div>
                         <div class="card-body">
@@ -170,7 +170,7 @@
                                 <b>
                                     <%= listing.title %>
                                 </b><br />
-                                <%= listing.price.toLocaleString("en-IN") %> / night
+                                <%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
                                     <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                             </p>
                         </div>

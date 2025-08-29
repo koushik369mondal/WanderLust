@@ -1,8 +1,8 @@
 const Listing = require("../models/listing");
 // Mapbox geocoding disabled for development
-const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+//const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+//const mapToken = process.env.MAP_TOKEN;
+//const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
@@ -18,9 +18,7 @@ module.exports.showListing = async (req, res) => {
   const listing = await Listing.findById(id)
     .populate({
       path: "reviews",
-      populate: {
-        path: "author",
-      },
+      populate: { path: "author" },
     })
     .populate("owner");
   if (!listing) {
@@ -28,17 +26,17 @@ module.exports.showListing = async (req, res) => {
     res.redirect("/listings");
   }
   console.log(listing);
-  res.render("listings/show.ejs", { listing });
+  res.render("listings/show.ejs", { listing, currentUser: req.user });
 };
 
 module.exports.createListing = async (req, res, next) => {
   // Geocoding disabled for development
-  let response = await geocodingClient
+  /*let response = await geocodingClient
     .forwardGeocode({
       query: req.body.listing.location,
       limit: 1,
     })
-    .send();
+    .send();*/
   try {
     let url = "";
     let filename = "";
@@ -50,7 +48,7 @@ module.exports.createListing = async (req, res, next) => {
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
 
-    newListing.geometry = response.body.features[0].geometry;
+    //newListing.geometry = response.body.features[0].geometry;
 
     let savedListings = await newListing.save();
     console.log(savedListings);
@@ -97,4 +95,23 @@ module.exports.destroyListing = async (req, res) => {
   console.log(deletedListing);
   req.flash("success", "Listing deleted!");
   res.redirect("/listings");
+};
+// Like a listing
+module.exports.likeListing = async (req, res) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing.likes.includes(req.user._id)) {
+    listing.likes.push(req.user._id);
+    await listing.save();
+  }
+  res.redirect(`/listings/${req.params.id}`);
+};
+
+// Unlike a listing
+module.exports.unlikeListing = async (req, res) => {
+  const listing = await Listing.findById(req.params.id);
+  listing.likes = listing.likes.filter(
+    (userId) => userId.toString() !== req.user._id.toString()
+  );
+  await listing.save();
+  res.redirect(`/listings/${req.params.id}`);
 };
