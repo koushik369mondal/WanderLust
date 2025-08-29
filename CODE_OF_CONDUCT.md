@@ -10,13 +10,13 @@
 ## ✨ **Welcome!**
 
 Hey there, awesome dev! 👋  
-Welcome to **Wanderlust**—part of **GirlScript Summer of Code 2025**.  
+Welcome to **Wanderlust**—part of **GirlScript Summer of Code 2025**.
 
 We’re building a community that is:
 
-- **Friendly** 💛  
-- **Inclusive** 🌈  
-- **Supportive** 🤝  
+- **Friendly** 💛
+- **Inclusive** 🌈
+- **Supportive** 🤝
 
 Whether you’re a newbie or a pro, your **voice matters**. Let’s create something amazing **together**. 🚀
 
@@ -26,15 +26,15 @@ Whether you’re a newbie or a pro, your **voice matters**. Let’s create somet
 
 We expect everyone in our community to:
 
-| Principle | Emoji | Why It Matters |
-|-----------|-------|----------------|
-| **Respect Others** | 🙏 | Treat everyone kindly & considerately |
-| **Communicate Constructively** | 💬 | Help, guide, and provide feedback politely |
-| **Be Inclusive** | 🌏 | Welcome all backgrounds, skills & identities |
-| **Show Empathy** | ❤️ | Understand different perspectives |
-| **Stay Positive** | ✨ | Keep the vibes uplifting and motivating |
+| Principle                      | Emoji | Why It Matters                               |
+| ------------------------------ | ----- | -------------------------------------------- |
+| **Respect Others**             | 🙏    | Treat everyone kindly & considerately        |
+| **Communicate Constructively** | 💬    | Help, guide, and provide feedback politely   |
+| **Be Inclusive**               | 🌏    | Welcome all backgrounds, skills & identities |
+| **Show Empathy**               | ❤️    | Understand different perspectives            |
+| **Stay Positive**              | ✨    | Keep the vibes uplifting and motivating      |
 
-> *"Kindness is contagious—spread it around!"* 😎
+> _"Kindness is contagious—spread it around!"_ 😎
 
 ---
 
@@ -42,11 +42,11 @@ We expect everyone in our community to:
 
 We take these seriously:
 
-- Harassment, discrimination, or exclusion of any kind 🚫  
-- Personal attacks, insults, or derogatory comments 💢  
-- Unwelcome sexual attention or advances ⚠️  
-- Intimidation, stalking, or threats 😨  
-- Disruptive, trolling, or disrespectful behavior 🛑  
+- Harassment, discrimination, or exclusion of any kind 🚫
+- Personal attacks, insults, or derogatory comments 💢
+- Unwelcome sexual attention or advances ⚠️
+- Intimidation, stalking, or threats 😨
+- Disruptive, trolling, or disrespectful behavior 🛑
 
 > **Pro Tip:** If it feels wrong in real life, don’t type it here. 🧠
 
@@ -54,11 +54,11 @@ We take these seriously:
 
 ## 📢 **Reporting Issues**
 
-If something bad happens, **don’t stress**—we’ve got your back!  
+If something bad happens, **don’t stress**—we’ve got your back!
 
-- Contact the team at: **[koushik369mondal@gmail.com](mailto:koushik369mondal@gmail.com)**  
-- Your report will be **confidential & handled carefully** 🔒  
-- Optionally, include screenshots or context for faster action 🖼️  
+- Contact the team at: **[koushik369mondal@gmail.com](mailto:koushik369mondal@gmail.com)**
+- Your report will be **confidential & handled carefully** 🔒
+- Optionally, include screenshots or context for faster action 🖼️
 
 ![Reporting GIF](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDFmZmR0amZtbzdyOXlyZmdpemN0NHo5YWNyazQ2bXhxeG1jcnh0aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/L1R1tvI9svkIWwpVYr/giphy.gif)
 
@@ -68,9 +68,9 @@ If something bad happens, **don’t stress**—we’ve got your back!
 
 Maintainers are responsible for:
 
-- Clarifying rules 📜  
-- Taking fair & appropriate action ✅  
-- Ensuring a safe & inclusive environment for all 🌟  
+- Clarifying rules 📜
+- Taking fair & appropriate action ✅
+- Ensuring a safe & inclusive environment for all 🌟
 
 ---
 
@@ -78,10 +78,10 @@ Maintainers are responsible for:
 
 This Code of Conduct applies to **all places related to Wanderlust**:
 
-- Repository & branches  
-- Issues & Pull Requests  
-- Discussions, chats, and community forums  
-- Any contributor interactions  
+- Repository & branches
+- Issues & Pull Requests
+- Discussions, chats, and community forums
+- Any contributor interactions
 
 > Think of it as your **safety net in the Wanderlust world** 🕸️
 
@@ -89,8 +89,8 @@ This Code of Conduct applies to **all places related to Wanderlust**:
 
 ## 💖 **Thank You!**
 
-Thanks for helping us make **Wanderlust** a **fun, safe, and inspiring space** for all contributors!  
+Thanks for helping us make **Wanderlust** a **fun, safe, and inspiring space** for all contributors!
 
-Let’s code, create, and explore together. 🌟✨  
+Let’s code, create, and explore together. 🌟✨
 
 ![Thank You GIF](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDdnYjJ6ZWE2Nzh4dzgzZWxmMm1zZ3pveGJ4bm1rd3A4Zzc5dWFmcyZlcD12MV9naWZzX3RyZW5kaW5nJmN0PWc/bWKy65WDyQ06GRnNC8/giphy.gif)

@@ -42,7 +42,7 @@
 ## 🚀 Features
 
 - 🌐 **Browse Destinations** - Explore amazing travel locations
-- 📝 **Add New Places** - Share your favorite destinations  
+- 📝 **Add New Places** - Share your favorite destinations
 - ⭐ **Reviews & Ratings** - Rate and review places you've visited
 - 🗺️ **Interactive Maps** - Powered by Mapbox
 - 📸 **Photo Uploads** - Upload images via Cloudinary
@@ -54,7 +54,7 @@
 
 ![GSSoC Logo](./public/images/gssoc_logo.png)
 
-🚀 This project is now an official part of GirlScript Summer of Code – GSSoC'25! We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow WanderLust together! 
+🚀 This project is now an official part of GirlScript Summer of Code – GSSoC'25! We're thrilled to welcome contributors from all over India and beyond to collaborate, build, and grow WanderLust together!
 
 👩‍💻 GSSoC is one of India's **largest 3-month-long open-source programs** that encourages developers of all levels to contribute to real-world projects while learning, collaborating, and growing together.
 
@@ -70,6 +70,7 @@
 ## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - [Node.js](https://nodejs.org/) (v14 or higher)
 - [MongoDB](https://www.mongodb.com/) (local or Atlas account)
 - [Git](https://git-scm.com/)
@@ -79,6 +80,7 @@ Before you begin, ensure you have the following installed:
 This project requires several external services. Follow this guide to set up all required environment variables:
 
 ### Step 1: Create your `.env` file
+
 ```bash
 cp .env.example .env
 ```
@@ -118,16 +120,19 @@ cp .env.example .env
 ### 🔐 Session Secret Setup
 
 Generate a strong random string for session encryption:
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
 Add to `.env`:
+
 ```env
 SECRET=your_super_secret_session_key_here_make_it_long_and_random
 ```
 
 ### Final `.env` Example:
+
 ```env
 CLOUD_NAME=your_cloudinary_name
 CLOUD_API_KEY=your_cloudinary_api_key
@@ -141,6 +146,7 @@ SECRET=your_super_secret_session_key_here_make_it_long_and_random
 ```
 
 **⚠️ Security Notes:**
+
 - Never commit your `.env` file to GitHub
 - Keep all credentials private and secure
 - The `.env` file is already in `.gitignore`
@@ -157,14 +163,17 @@ SECRET=your_super_secret_session_key_here_make_it_long_and_random
    ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### 3. Set Up Environment Variables
+
 Follow the environment variables setup guide above.
 
 ### 4. Run the Project
+
 ```bash
 # Development mode (with nodemon)
 npm run dev
@@ -203,27 +212,32 @@ npm test           # Run tests (if available)
 We welcome contributions! Follow these steps:
 
 ### 1. Create a Feature Branch
+
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
 ### 2. Make Your Changes
+
 - Write clean, well-commented code
 - Follow existing code style and conventions
 - Test your changes locally
 
 ### 3. Commit Your Changes
+
 ```bash
 git add .
 git commit -m "Add: brief description of your changes"
 ```
 
 ### 4. Push to Your Fork
+
 ```bash
 git push origin feature/your-feature-name
 ```
 
 ### 5. Create a Pull Request
+
 1. Go to your fork on GitHub
 2. Click "New Pull Request"
 3. Provide a clear title and description
@@ -231,12 +245,12 @@ git push origin feature/your-feature-name
 
 ## 🐛 Common Issues & Solutions
 
-| Issue | Solution |
-|-------|----------|
-| "Cannot find module" errors | Run `npm install` |
-| Database connection failed | Check your `ATLAS_DB_URL` in `.env` |
-| Images not uploading | Verify Cloudinary credentials in `.env` |
-| Maps not loading | Check your `MAP_TOKEN` in `.env` |
+| Issue                       | Solution                                |
+| --------------------------- | --------------------------------------- |
+| "Cannot find module" errors | Run `npm install`                       |
+| Database connection failed  | Check your `ATLAS_DB_URL` in `.env`     |
+| Images not uploading        | Verify Cloudinary credentials in `.env` |
+| Maps not loading            | Check your `MAP_TOKEN` in `.env`        |
 
 ## 📜 Code of Conduct
 
@@ -281,6 +295,7 @@ Please refer to the [Code of Conduct](https://github.com/koushik369mondal/Wander
 ## 💡 Support & Feedback
 
 If you find this project helpful:
+
 - Please give it a star ⭐ on GitHub
 - Share it with others
 - Consider contributing
@@ -289,6 +304,7 @@ If you find this project helpful:
 ## 📞 Contact
 
 If you have any questions or suggestions:
+
 - Open an issue on GitHub
 - Contact the maintainers
 

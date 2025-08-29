@@ -53,12 +53,12 @@ module.exports.renderProfile = async (req, res) => {
 module.exports.updateProfile = async (req, res) => {
     try {
         const { bio, location, hobbies, interests, website, instagram, twitter, linkedin, favoriteDestinations } = req.body;
-        
+
         // Parse comma-separated strings into arrays
         const hobbiesArray = hobbies ? hobbies.split(',').map(h => h.trim()).filter(h => h) : [];
         const interestsArray = interests ? interests.split(',').map(i => i.trim()).filter(i => i) : [];
         const destinationsArray = favoriteDestinations ? favoriteDestinations.split(',').map(d => d.trim()).filter(d => d) : [];
-        
+
         await User.findByIdAndUpdate(req.user._id, {
             bio: bio || "",
             location: location || "",
@@ -72,7 +72,7 @@ module.exports.updateProfile = async (req, res) => {
                 linkedin: linkedin || ""
             }
         });
-        
+
         req.flash("success", "Profile updated successfully!");
         res.redirect("/profile");
     } catch (error) {

@@ -1,81 +1,82 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container-fluid">
-    <div class="row justify-content-center align-items-center min-vh-100">
-        <div class="col-lg-8 col-md-10 text-center">
-            <!-- 404 Icon -->
-            <div class="mb-4">
-                <i class="fas fa-map-marked-alt text-primary" style="font-size: 8rem; opacity: 0.7;"></i>
-            </div>
-            
-            <!-- Main 404 Message -->
-            <h1 class="display-1 fw-bold text-primary mb-3">404</h1>
-            <h2 class="h3 mb-4 text-dark">Oops! You've wandered off the beaten path</h2>
-            
-            <!-- Travel-themed message -->
-            <div class="mb-4">
-                <p class="lead text-muted mb-3">
-                    It looks like the destination you're looking for doesn't exist on our map. 
-                    Don't worry, even the best explorers sometimes take a wrong turn!
-                </p>
-                <p class="text-muted">
-                    <i class="fas fa-compass me-2"></i>
-                    Let's get you back on track to discover amazing places.
-                </p>
-            </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-8 col-md-10 text-center">
+                <!-- 404 Icon -->
+                <div class="mb-4">
+                    <i class="fas fa-map-marked-alt text-primary" style="font-size: 8rem; opacity: 0.7;"></i>
+                </div>
 
-            
-            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-4">
-                <a href="/listings" class="btn btn-primary btn-lg px-4">
-                    <i class="fas fa-home me-2"></i>
-                    Explore Listings
-                </a>
-                <button onclick="history.back()" class="btn btn-outline-secondary btn-lg px-4">
-                    <i class="fas fa-arrow-left me-2"></i>
-                    Go Back
-                </button>
-            </div>
+                <!-- Main 404 Message -->
+                <h1 class="display-1 fw-bold text-primary mb-3">404</h1>
+                <h2 class="h3 mb-4 text-dark">Oops! You've wandered off the beaten path</h2>
 
-            
-            <div class="mt-5">
-                <p class="small text-muted">
-                    <i class="fas fa-question-circle me-1"></i>
-                    Need help? Try searching for destinations or 
-                    <a href="/listings" class="text-decoration-none">browse our listings</a>
-                </p>
+                <!-- Travel-themed message -->
+                <div class="mb-4">
+                    <p class="lead text-muted mb-3">
+                        It looks like the destination you're looking for doesn't exist on our map.
+                        Don't worry, even the best explorers sometimes take a wrong turn!
+                    </p>
+                    <p class="text-muted">
+                        <i class="fas fa-compass me-2"></i>
+                        Let's get you back on track to discover amazing places.
+                    </p>
+                </div>
+
+
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-4">
+                    <a href="/listings" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-home me-2"></i>
+                        Explore Listings
+                    </a>
+                    <button onclick="history.back()" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Go Back
+                    </button>
+                </div>
+
+
+                <div class="mt-5">
+                    <p class="small text-muted">
+                        <i class="fas fa-question-circle me-1"></i>
+                        Need help? Try searching for destinations or
+                        <a href="/listings" class="text-decoration-none">browse our listings</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Custom styles for 404 page -->
-<style>
-    .min-vh-100 {
-        min-height: calc(100vh - 200px); /* Adjust for navbar and footer */
-    }
-    
-    .btn-lg {
-        padding: 12px 30px;
-        font-weight: 500;
-    }
-    
-    .display-1 {
-        font-size: 6rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    @media (max-width: 768px) {
+    <!-- Custom styles for 404 page -->
+    <style>
+        .min-vh-100 {
+            min-height: calc(100vh - 200px);
+            /* Adjust for navbar and footer */
+        }
+
+        .btn-lg {
+            padding: 12px 30px;
+            font-weight: 500;
+        }
+
         .display-1 {
-            font-size: 4rem;
+            font-size: 6rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
-        .fas.fa-map-marked-alt {
-            font-size: 5rem !important;
+
+        @media (max-width: 768px) {
+            .display-1 {
+                font-size: 4rem;
+            }
+
+            .fas.fa-map-marked-alt {
+                font-size: 5rem !important;
+            }
         }
-    }
-    
-    .btn:hover {
-        transform: translateY(-2px);
-        transition: all 0.3s ease;
-    }
-</style>
+
+        .btn:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+    </style>

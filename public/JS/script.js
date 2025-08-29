@@ -25,12 +25,12 @@ class ThemeManager {
     // Add a smooth fade-in effect when page loads
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.3s ease-in-out';
-    
+
     this.setTheme(this.currentTheme);
     if (this.themeToggle) {
       this.themeToggle.addEventListener("click", () => this.toggleTheme());
     }
-    
+
     // Fade in the page after theme is applied
     setTimeout(() => {
       document.body.style.opacity = '1';
@@ -51,7 +51,7 @@ class ThemeManager {
     document.documentElement.setAttribute("data-theme", theme);
     this.updateThemeIcon(theme);
     this.currentTheme = theme;
-    
+
     // Remove transitioning class after animation completes
     setTimeout(() => {
       document.body.classList.remove('theme-switching');
@@ -62,7 +62,7 @@ class ThemeManager {
     if (this.themeIcon) {
       // Add a smooth transition effect to icon change
       this.themeIcon.style.transform = 'scale(0.8)';
-      
+
       setTimeout(() => {
         this.themeIcon.className =
           theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
@@ -133,18 +133,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 800);
   });
   document.addEventListener("mousemove", (e) => {
-  let glow = document.getElementById("cursor-glow");
+    let glow = document.getElementById("cursor-glow");
 
-  if (!glow) {
-    glow = document.createElement("div");
-    glow.id = "cursor-glow";
-    glow.className = "cursor-glow";
-    document.body.appendChild(glow);
-  }
+    if (!glow) {
+      glow = document.createElement("div");
+      glow.id = "cursor-glow";
+      glow.className = "cursor-glow";
+      document.body.appendChild(glow);
+    }
 
-  // Move glow towards cursor
-  glow.style.left = `${e.clientX}px`;
-  glow.style.top = `${e.clientY}px`;
-});
+    // Move glow towards cursor
+    glow.style.left = `${e.clientX}px`;
+    glow.style.top = `${e.clientY}px`;
+  });
 
 });

@@ -25,11 +25,11 @@ const initDB = async () => {
         ...obj,
         owner: "67fbb3054d3473367cc96c5b",
         geometry: {
-      type: "Point",
-      // Default coordinates (New York City)
-      // Format: [longitude, latitude]
-      coordinates: [-74.006, 40.7128],
-    },
+            type: "Point",
+            // Default coordinates (New York City)
+            // Format: [longitude, latitude]
+            coordinates: [-74.006, 40.7128],
+        },
     }));
     await Listing.insertMany(initData.data);
     console.log("data was initialized");

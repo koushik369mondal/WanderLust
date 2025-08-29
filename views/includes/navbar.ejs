@@ -5,14 +5,17 @@
     border-radius: 25px;
     padding: 0 1rem 0 1rem;
   }
+
   .search-btn:hover {
     background-color: #fe424d;
     color: #fff;
   }
+
   .search-btn i {
     display: inline;
     margin-right: 0.5rem;
   }
+
   .search-inp {
     border-radius: 25px;
     padding: 0.5rem 3rem 0.5rem 3rem;
@@ -24,11 +27,11 @@
     .navbar-nav .d-flex {
       flex-wrap: nowrap;
     }
-    
+
     .search-inp {
       min-width: 200px;
     }
-    
+
     .search-btn {
       white-space: nowrap;
     }
@@ -44,55 +47,55 @@
       padding: 1rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
+
     .navbar-nav .d-flex {
       flex-direction: column;
       width: 100%;
       margin-top: 0.5rem;
     }
-    
+
     .search-inp {
       width: 100%;
       margin-bottom: 0.5rem;
       margin-right: 0 !important;
       padding: 0.5rem 1rem;
     }
-    
+
     .search-btn {
       width: 100%;
     }
-    
+
     .navbar-nav {
       text-align: center;
     }
-    
+
     .nav-link {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
     }
-    
+
     #theme-toggle {
       margin: 1rem auto 0.5rem auto;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    
+
     .mobile-icon {
       display: inline-block !important;
     }
-    
+
     .desktop-hide-mobile {
       display: none;
     }
   }
-  
+
   .mobile-icon {
     display: none;
   }
-  
+
   /* Desktop view - hide mobile icons */
   @media (min-width: 768px) {
     .mobile-icon {
@@ -102,15 +105,8 @@
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/listings"
-      ><i class="fa-regular fa-compass"></i
-    ></a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-    >
+    <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -123,11 +119,7 @@
       </div>
       <div class="navbar-nav ms-auto">
         <form class="d-flex" role="search">
-          <input
-            class="form-control me-2 search-inp"
-            type="search"
-            placeholder="Search destinations"
-          />
+          <input class="form-control me-2 search-inp" type="search" placeholder="Search destinations" />
           <button class="btn search-btn" type="submit">
             <i class="fa-solid fa-magnifying-glass"></i>Search
           </button>
@@ -135,16 +127,17 @@
       </div>
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Airbnb your home</a>
-        <% if(typeof currentUser === 'undefined' || !currentUser) { %>
-        <a class="nav-link" href="/signup"><b>Sign up</b></a>
-        <a class="nav-link" href="/login"><b>Log in</b></a>
-        <% } %> <% if(typeof currentUser !== 'undefined' && currentUser) { %>
-        <a class="nav-link" href="/profile">
-          <!-- <i class="fa-solid fa-user mobile-icon"></i> -->
-          <span class="desktop-text">Profile</span>
-        </a>
-        <a class="nav-link" href="/logout"><b>Log out</b></a>
-        <% } %>
+        <% if(typeof currentUser==='undefined' || !currentUser) { %>
+          <a class="nav-link" href="/signup"><b>Sign up</b></a>
+          <a class="nav-link" href="/login"><b>Log in</b></a>
+          <% } %>
+            <% if(typeof currentUser !=='undefined' && currentUser) { %>
+              <a class="nav-link" href="/profile">
+                <!-- <i class="fa-solid fa-user mobile-icon"></i> -->
+                <span class="desktop-text">Profile</span>
+              </a>
+              <a class="nav-link" href="/logout"><b>Log out</b></a>
+              <% } %>
       </div>
 
       <div class="d-flex justify-content-center">

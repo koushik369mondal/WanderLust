@@ -38,9 +38,9 @@
 
 
 
- body {
-    background: linear-gradient(135deg, rgba(102, 215, 243, 0.4), rgba(190, 241, 248, 0.3)), 
-                url('/images/beach.jpg') no-repeat center center fixed;
+body {
+    background: linear-gradient(135deg, rgba(102, 215, 243, 0.4), rgba(190, 241, 248, 0.3)),
+        url('/images/beach.jpg') no-repeat center center fixed;
     background-size: cover;
     background-attachment: fixed;
     background-blend-mode: multiply;
@@ -49,18 +49,18 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    transition: 
+    transition:
         background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-} 
+}
 
 
 
 
 
 [data-theme="dark"] body {
-    background: linear-gradient(135deg, rgba(7, 41, 46, 0.9), rgba(35, 117, 138, 0.9), rgba(27, 93, 102, 0.9)), 
-                url('/images/beach.jpg') no-repeat center center fixed;
+    background: linear-gradient(135deg, rgba(7, 41, 46, 0.9), rgba(35, 117, 138, 0.9), rgba(27, 93, 102, 0.9)),
+        url('/images/beach.jpg') no-repeat center center fixed;
     background-size: cover;
     background-attachment: fixed;
     background-blend-mode: overlay;
@@ -70,11 +70,12 @@
     flex: 1;
     background-color: transparent !important;
 }
+
 [data-theme="dark"].navbar {
     height: 5rem;
-    background-color:rgba(255, 255, 255, 0.185);
+    background-color: rgba(255, 255, 255, 0.185);
     border-bottom: 1px solid var(--border-color);
-    transition: 
+    transition:
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -87,9 +88,9 @@
 
 .navbar {
     height: 5rem;
-    background-color:rgba(255,255,255,0.7);
+    background-color: rgba(255, 255, 255, 0.7);
     border-bottom: 1px solid var(--border-color);
-    transition: 
+    transition:
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -101,7 +102,7 @@
 
 .nav-link {
     color: var(--text-primary) !important;
-    transition: 
+    transition:
         color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         transform 0.2s ease;
 }
@@ -125,8 +126,8 @@
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    transition: 
-        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+    transition:
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.3s ease,
         box-shadow 0.3s ease,
@@ -150,7 +151,7 @@
     border-radius: 25px;
     padding: 0 1rem;
     border: none;
-    transition: 
+    transition:
         background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         transform 0.2s ease,
         box-shadow 0.3s ease;
@@ -167,100 +168,104 @@
 
 
 .wander-footer {
-  background: linear-gradient(135deg, #004d61, #112344, #2a5298);
-  color: #f1f1f1;
-  padding: 50px 20px 20px; /* top, sides, bottom */
-  margin-top: 40px; /* gap before footer starts */
-  font-family: "Poppins", sans-serif;
-  
-  border-top: 2px solid #000;
+    background: linear-gradient(135deg, #004d61, #112344, #2a5298);
+    color: #f1f1f1;
+    padding: 50px 20px 20px;
+    /* top, sides, bottom */
+    margin-top: 40px;
+    /* gap before footer starts */
+    font-family: "Poppins", sans-serif;
+
+    border-top: 2px solid #000;
 }
 
 .footer-col a:hover {
-  color: #ffd166; /* warm golden highlight */
+    color: #ffd166;
+    /* warm golden highlight */
 }
 
 
 .footer-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;  /* center container */
-  padding: 20px;
-  box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* center container */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .footer-col h5,
 .footer-col h6 {
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #ffffff;
 }
 
 .footer-col p,
 .footer-col a {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #ccc;
-  text-decoration: none;
-  display: block;
-  margin-bottom: 8px;
-  transition: color 0.3s ease;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
 }
 
 
 
 .footer-col form {
-  display: flex;
-  margin-top: 10px;
+    display: flex;
+    margin-top: 10px;
 }
 
 .footer-col input {
-  padding: 10px;
-  border: none;
-  border-radius: 5px 0 0 5px;
-  outline: none;
-  flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    flex: 1;
 }
 
 .footer-col button {
-  padding: 10px 15px;
-  border: none;
-  background: #ffb347;
-  color: #1e1e1e;
-  font-weight: 600;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  transition: background 0.3s ease;
+    padding: 10px 15px;
+    border: none;
+    background: #ffb347;
+    color: #1e1e1e;
+    font-weight: 600;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .footer-col button:hover {
-  background: #ffa500;
+    background: #ffa500;
 }
 
 .footer-bottom {
-  border-top: 1px solid #333;
-  margin-top: 30px;
-  padding-top: 15px;
-  text-align: center;
-  font-size: 13px;
-  color: #aaa;
+    border-top: 1px solid #333;
+    margin-top: 30px;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 13px;
+    color: #aaa;
 }
 
 .socials {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .socials a {
-  margin: 0 10px;
-  color: #ccc;
-  font-size: 18px;
-  transition: color 0.3s ease;
+    margin: 0 10px;
+    color: #ccc;
+    font-size: 18px;
+    transition: color 0.3s ease;
 }
 
 .socials a:hover {
-  color: #ffb347;
+    color: #ffb347;
 }
 
 
@@ -285,8 +290,8 @@
     border-radius: 1rem !important;
     overflow: hidden;
     box-shadow: 0 2px 8px var(--shadow);
-    transition: 
-        transform 0.3s ease, 
+    transition:
+        transform 0.3s ease,
         box-shadow 0.3s ease,
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -300,8 +305,8 @@
     background-color: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
-    transition: 
-        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+    transition:
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         box-shadow 0.3s ease;
@@ -347,8 +352,8 @@
     padding: 0.75rem 1rem;
     border-radius: 12px;
     font-size: 1rem;
-    transition: 
-        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+    transition:
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.3s ease,
         box-shadow 0.3s ease,
@@ -367,14 +372,16 @@
     transform: translateY(-1px);
 }
 
-.add-btn, .edit-btn {
+.add-btn,
+.edit-btn {
     background-color: var(--accent-color) !important;
     border: none !important;
     color: #fff !important;
     transition: background-color 0.3s ease;
 }
 
-.add-btn:hover, .edit-btn:hover {
+.add-btn:hover,
+.edit-btn:hover {
     background-color: #d63641 !important;
 }
 
@@ -390,8 +397,10 @@
 }
 
 /* Enhanced smooth transitions for theme switching */
-*, *::before, *::after {
-    transition: 
+*,
+*::before,
+*::after {
+    transition:
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -402,7 +411,7 @@
 
 /* Special transition for theme toggle button */
 #theme-toggle {
-    transition: 
+    transition:
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -419,7 +428,7 @@
 
 /* Smooth icon transitions */
 #theme-icon {
-    transition: 
+    transition:
         transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55),
         opacity 0.3s ease;
 }
@@ -450,8 +459,15 @@
 }
 
 @keyframes themeTransition {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 /* Enhanced ripple effect for theme toggle */
@@ -526,55 +542,61 @@
 [data-theme="dark"] .mapboxgl-ctrl button {
     color: var(--text-primary) !important;
 }
+
 .sparkle {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  filter: blur(3px);
-  animation: neonFade 1s forwards;
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    filter: blur(3px);
+    animation: neonFade 1s forwards;
 }
 
 @keyframes neonFade {
-  0% {
-    opacity: 1;
-    transform: scale(0.6) rotate(0deg);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.4) rotate(180deg);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0) rotate(360deg);
-  }
+    0% {
+        opacity: 1;
+        transform: scale(0.6) rotate(0deg);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.4) rotate(180deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0) rotate(360deg);
+    }
 }
+
 #fluid-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 0; /* behind navbar, flash, body */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    /* behind navbar, flash, body */
 }
+
 .cursor-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200vw;
-  height: 200vh;
-  pointer-events: none;
-  background: radial-gradient(circle, rgba(255,0,150,0.4), transparent 60%),
-              radial-gradient(circle, rgba(0,200,255,0.4), transparent 60%),
-              radial-gradient(circle, rgba(0,255,120,0.4), transparent 60%);
-  mix-blend-mode: screen;
-  transform: translate(-50%, -50%);
-  transition: top 0.2s ease-out, left 0.2s ease-out;
-  filter: blur(100px);
-  z-index: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200vw;
+    height: 200vh;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 0, 150, 0.4), transparent 60%),
+        radial-gradient(circle, rgba(0, 200, 255, 0.4), transparent 60%),
+        radial-gradient(circle, rgba(0, 255, 120, 0.4), transparent 60%);
+    mix-blend-mode: screen;
+    transform: translate(-50%, -50%);
+    transition: top 0.2s ease-out, left 0.2s ease-out;
+    filter: blur(100px);
+    z-index: 0;
 }
 
 /* Auth Forms Styling */
@@ -673,11 +695,12 @@
 /* Beach background responsive optimizations */
 @media (max-width: 768px) {
     body {
-        background-attachment: scroll; /* Better performance on mobile */
+        background-attachment: scroll;
+        /* Better performance on mobile */
         background-size: cover;
         background-position: center center;
     }
-    
+
     [data-theme="dark"] body {
         background-attachment: scroll;
         background-size: cover;
@@ -688,9 +711,10 @@
 @media (max-width: 480px) {
     body {
         background-size: cover;
-        background-position: center top; /* Focus on top of beach image for mobile */
+        background-position: center top;
+        /* Focus on top of beach image for mobile */
     }
-    
+
     [data-theme="dark"] body {
         background-size: cover;
         background-position: center top;
@@ -700,13 +724,13 @@
 /* High DPI displays optimization */
 @media (min-resolution: 2dppx) {
     body {
-        background-image: linear-gradient(135deg, rgba(102, 215, 243, 0.4), rgba(190, 241, 248, 0.3)), 
-                         url('/images/beach.jpg');
+        background-image: linear-gradient(135deg, rgba(102, 215, 243, 0.4), rgba(190, 241, 248, 0.3)),
+            url('/images/beach.jpg');
     }
-    
+
     [data-theme="dark"] body {
-        background-image: linear-gradient(135deg, rgba(7, 41, 46, 0.9), rgba(35, 117, 138, 0.9), rgba(27, 93, 102, 0.9)), 
-                         url('/images/beach.jpg');
+        background-image: linear-gradient(135deg, rgba(7, 41, 46, 0.9), rgba(35, 117, 138, 0.9), rgba(27, 93, 102, 0.9)),
+            url('/images/beach.jpg');
     }
 }
 
