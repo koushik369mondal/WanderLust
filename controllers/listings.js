@@ -76,17 +76,43 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  if (typeof req.file !== "undefined") {
-    listing.image = {
-      url: req.file.path,
-      filename: req.file.filename,
-    };
+  
+  try {
+    // Get geocoding data for the updated location
+    let response = await geocodingClient
+      .forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+      })
+      .send();
+    
+    // First update the listing without saving to get the document
+    let listing = await Listing.findById(id);
+    
+    // Update all fields from the form
+    Object.assign(listing, req.body.listing);
+    
+    // Update geometry with new coordinates
+    listing.geometry = response.body.features[0].geometry;
+    
+    // Update image if a new one was uploaded
+    if (typeof req.file !== "undefined") {
+      listing.image = {
+        url: req.file.path,
+        filename: req.file.filename,
+      };
+    }
+    
+    // Save the updated listing
     await listing.save();
+    
+    req.flash("success", "Listing updated!");
+    res.redirect(`/listings/${id}`);
+  } catch (error) {
+    console.error("Error updating listing:", error);
+    req.flash("error", "Failed to update listing.");
+    res.redirect(`/listings/${id}/edit`);
   }
-
-  req.flash("success", "Listing updated!");
-  res.redirect(`/listings/${id}`);
 };
 
 module.exports.destroyListing = async (req, res) => {

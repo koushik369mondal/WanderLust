@@ -1,5 +1,5 @@
 // Check if mapToken is available
-/*if (!mapToken) {
+if (!mapToken) {
     console.error('Mapbox token is not available');
     document.getElementById('map').innerHTML = '<p>Map cannot be loaded due to missing token</p>';
 } else {
@@ -29,4 +29,4 @@
             )
         )
         .addTo(map);
-}*/
+}

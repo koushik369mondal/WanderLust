@@ -11,11 +11,22 @@ process.on('warning', (warning) => {
     console.warn(warning.name + ': ' + warning.message);
 });
 
-// Verify MAP_TOKEN is loaded
-// MAP_TOKEN check removed for development. Uncomment for production:
+// Check for environment variables and provide fallbacks for development
+// In production, you should always set these environment variables properly
 if (!process.env.MAP_TOKEN) {
-    console.error("MAP_TOKEN environment variable is not set!");
-    process.exit(1);
+    console.warn("⚠️ MAP_TOKEN environment variable is not set! Using dummy value for development.");
+    console.warn("ℹ️ For production, please set a real Mapbox token in your .env file.");
+    process.env.MAP_TOKEN = "pk.dummy_mapbox_token_for_development_only";
+}
+
+// Check Cloudinary credentials
+if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_API_SECRET) {
+    console.warn("⚠️ Cloudinary environment variables are missing! Image uploads will not work.");
+    console.warn("ℹ️ For production, please set CLOUD_NAME, CLOUD_API_KEY, and CLOUD_API_SECRET in your .env file.");
+    // Set dummy values for development to prevent crashes
+    process.env.CLOUD_NAME = process.env.CLOUD_NAME || "dummy_cloud_name";
+    process.env.CLOUD_API_KEY = process.env.CLOUD_API_KEY || "dummy_api_key";
+    process.env.CLOUD_API_SECRET = process.env.CLOUD_API_SECRET || "dummy_api_secret";
 }
 
 const express = require("express");
@@ -38,10 +49,20 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// // // const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
-const dbUrl = process.env.ATLAS_DB_URL;
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
-// const dbUrl = process.env.ATLAS_DB_URL || MONGO_URL;
+// Check for MongoDB connection string and provide a fallback for development
+const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+if (!process.env.ATLAS_DB_URL) {
+    console.warn("⚠️ ATLAS_DB_URL environment variable is not set! Using local MongoDB fallback.");
+    console.warn("ℹ️ Make sure you have MongoDB running locally or set ATLAS_DB_URL in .env file.");
+}
+const dbUrl = process.env.ATLAS_DB_URL || MONGO_URL;
+
+// Check for session secret
+if (!process.env.SECRET) {
+    console.warn("⚠️ SECRET environment variable is not set! Using a default secret (not secure for production).");
+    process.env.SECRET = "development_fallback_secret_not_secure_for_production";
+}
+
 main()
     .then(() => {
         // Connection success message is handled inside main() function
@@ -52,7 +73,7 @@ main()
 async function main() {
     try {
         await mongoose.connect(dbUrl, {
-            ssl: true,
+            ssl: process.env.ATLAS_DB_URL ? true : false, // Only use SSL for Atlas connections
             tlsAllowInvalidCertificates: true, // Only for development, remove in production
             tlsAllowInvalidHostnames: true,    // Only for development, remove in production
             serverSelectionTimeoutMS: 5000,    // Timeout after 5s instead of 30s
