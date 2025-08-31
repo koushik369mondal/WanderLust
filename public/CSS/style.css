@@ -55,9 +55,6 @@ body {
 }
 
 
-
-
-
 [data-theme="dark"] body {
     background: linear-gradient(135deg, rgba(7, 41, 46, 0.9), rgba(35, 117, 138, 0.9), rgba(27, 93, 102, 0.9)),
         url('/images/beach.jpg') no-repeat center center fixed;
@@ -80,7 +77,6 @@ body {
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-
 .container {
     flex: 1;
     background-color: transparent !important;
@@ -95,13 +91,15 @@ body {
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+
+
 .fa-compass {
     color: var(--accent-color);
     font-size: 2rem;
 }
 
 .nav-link {
-    color: var(--text-primary) !important;
+    color: black !important;
     transition:
         color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         transform 0.2s ease;
