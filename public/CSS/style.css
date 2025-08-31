@@ -1,12 +1,13 @@
 :root {
-    --bg-primary: #ffffff;
+    --bg-primary-solid:#41b7cc92;
+    --bg-primary: linear-gradient(135deg, #61bcd3fa, #4876cbd6, #4edbcd);
     --bg-secondary: #f8f9fa;
     --bg-tertiary: #ebebeb;
-    --text-primary: #222222;
+    --text-primary: #333333;
     --text-secondary: #666666;
     --text-muted: #999999;
     --navbar-bg: #ffffff;
-    --card-bg: #ffffff;
+    --card-bg: linear-gradient(135deg, #4590a2fa, #315aa5c7, #28d0bf);
     --border-color: #dee2e6;
     --accent-color: #fe424d;
     --shadow: rgba(0, 0, 0, 0.1);
@@ -18,14 +19,15 @@
 }
 
 [data-theme="dark"] {
-    --bg-primary: #1a1a1a;
+    --bg-primary-solid:#00566c92;  
+    --bg-primary:linear-gradient(135deg, #3287c0, #112344ec, #048679) ;
     --bg-secondary: #2d2d2d;
     --bg-tertiary: #333333;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
+    --text-primary: #E0E0E0;
+    --text-secondary: #F5F5F5;
     --text-muted: #888888;
     --navbar-bg: #2d2d2d;
-    --card-bg: #333333;
+    --card-bg: linear-gradient(135deg, #4cafef, #112344c7, #009688);
     --border-color: #404040;
     --accent-color: #fe424d;
     --shadow: rgba(255, 255, 255, 0.1);
@@ -70,12 +72,13 @@ body {
 
 [data-theme="dark"].navbar {
     height: 5rem;
-    background-color: rgba(255, 255, 255, 0.185);
+    background-color:var(--bg-primary);
     border-bottom: 1px solid var(--border-color);
     transition:
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
+
 
 .container {
     flex: 1;
@@ -84,14 +87,21 @@ body {
 
 .navbar {
     height: 5rem;
-    background-color: rgba(255, 255, 255, 0.7);
+    /* backdrop-filter: blur(12px); */
+    background: var(--bg-primary);
     border-bottom: 1px solid var(--border-color);
     transition:
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-
+ @media (max-width: 768px) {
+    .collapse-nav {
+        background-color:var(--bg-primary-solid) !important;
+        background: transparent;
+    backdrop-filter: blur(10px);
+    }
+}
 
 .fa-compass {
     color: var(--accent-color);
@@ -99,7 +109,7 @@ body {
 }
 
 .nav-link {
-    color: black !important;
+    color: var(--text-primary) !important;
     transition:
         color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
         transform 0.2s ease;
@@ -166,7 +176,7 @@ body {
 
 
 .wander-footer {
-    background: linear-gradient(135deg, #004d61, #112344, #2a5298);
+    background: var(--bg-primary);
     color: #f1f1f1;
     padding: 50px 20px 20px;
     /* top, sides, bottom */
@@ -174,7 +184,7 @@ body {
     /* gap before footer starts */
     font-family: "Poppins", sans-serif;
 
-    border-top: 2px solid #000;
+    border-top: 2px solid var(--border-color);
 }
 
 .footer-col a:hover {
@@ -284,14 +294,16 @@ body {
 
 .listing-card {
     border: none !important;
-    background-color: var(--card-bg) !important;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    background-color: var(--bg-primary-solid) !important;
     border-radius: 1rem !important;
     overflow: hidden;
     box-shadow: 0 2px 8px var(--shadow);
     transition:
         transform 0.3s ease,
         box-shadow 0.3s ease,
-        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        /* background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); */
 }
 
 .listing-card:hover {
@@ -300,7 +312,9 @@ body {
 }
 
 .card {
-    background-color: var(--card-bg) !important;
+    background-color: var(--bg-primary-solid) !important;
+    background: transparent;
+    backdrop-filter: blur(10px);
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
     transition:
@@ -452,11 +466,11 @@ body {
     background: linear-gradient(45deg, transparent 30%, rgba(254, 66, 77, 0.05) 50%, transparent 70%);
     pointer-events: none;
     z-index: 9999;
-    opacity: 0;
-    animation: themeTransition 0.5s ease-in-out;
+    /* opacity: 0; */
+    /* animation: themeTransition 0.5s ease-in-out; */
 }
 
-@keyframes themeTransition {
+/* @keyframes themeTransition {
 
     0%,
     100% {
@@ -466,7 +480,7 @@ body {
     50% {
         opacity: 1;
     }
-}
+} */
 
 /* Enhanced ripple effect for theme toggle */
 #theme-toggle {
