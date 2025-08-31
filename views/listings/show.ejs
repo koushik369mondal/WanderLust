@@ -5,10 +5,9 @@
 </script>
 
 <div class="row mt-3 m-1">
-  <div class="col-12 col-md-8 offset-md-2">
-    <h3><%= listing.title %></h3>
-  </div>
+  
   <div class="card col-12 col-md-8 offset-md-2 show-card listing-card mb-3">
+    <h3 class="d-flex justify-content-center mt-3"><%= listing.title %></h3>
     <img
       src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>"
       class="card-img-top mt-3 show-img"
@@ -67,13 +66,15 @@
   <div class="col-12 col-md-8 offset-md-2 mb-3">
     <% if (currentUser) { %>
     <hr />
-    <h4>Leave a Review</h4>
-    <form
-      action="/listings/<%= listing._id %>/reviews"
-      method="POST"
-      class="needs-validation"
-      novalidate
-    >
+    <div class="listing-card p-4">
+      <h4>Leave a Review</h4>
+      <form
+        action="/listings/<%= listing._id %>/reviews"
+        method="POST"
+        class="needs-validation"
+        novalidate
+      >
+    
       <div class="mb-3">
         <label for="rating" class="form-label">Rating</label>
         <fieldset class="starability-slot">
@@ -136,7 +137,9 @@
       </div>
       <button type="submit" class="btn btn-dark">Submit</button>
     </form>
+    </div>  
     <hr />
+    
     <% } %> <% if(listing.reviews.length> 0) { %>
     <div class="row">
       <p><b>All Reviews</b></p>
