@@ -5,7 +5,7 @@
     --bg-tertiary: #ebebeb;
     --text-primary: #333333;
     --text-secondary: #666666;
-    --text-muted: #999999;
+    --text-muted: #525151;
     --navbar-bg: #ffffff;
     --card-bg: linear-gradient(135deg, #4590a2fa, #315aa5c7, #28d0bf);
     --border-color: #dee2e6;
@@ -25,7 +25,7 @@
     --bg-tertiary: #333333;
     --text-primary: #E0E0E0;
     --text-secondary: #F5F5F5;
-    --text-muted: #888888;
+    --text-muted: #a3a3a3;
     --navbar-bg: #2d2d2d;
     --card-bg: linear-gradient(135deg, #4cafef, #112344c7, #009688);
     --border-color: #404040;
@@ -303,7 +303,21 @@ body {
     transition:
         transform 0.3s ease,
         box-shadow 0.3s ease,
-        /* background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); */
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.error-card{
+     border: none !important;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    background-color: var(--bg-primary-solid) !important;
+    border-radius: 1rem !important;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .listing-card:hover {
