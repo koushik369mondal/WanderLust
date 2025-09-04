@@ -30,6 +30,24 @@
           <input type="file" name="listing[image]" value="<%= listing.image.url %>" class="form-control" />
         </div>
 
+        <div class="mb-3">
+          <label for="category" class="form-label">Category</label>
+          <select name="listing[category]" class="form-control" required>
+            <option value="trending" <%= listing.category === 'trending' ? 'selected' : '' %>>Trending</option>
+            <option value="rooms" <%= listing.category === 'rooms' ? 'selected' : '' %>>Rooms</option>
+            <option value="iconic_cities" <%= listing.category === 'iconic_cities' ? 'selected' : '' %>>Iconic Cities</option>
+            <option value="mountains" <%= listing.category === 'mountains' ? 'selected' : '' %>>Mountains</option>
+            <option value="castles" <%= listing.category === 'castles' ? 'selected' : '' %>>Castles</option>
+            <option value="amazing_pools" <%= listing.category === 'amazing_pools' ? 'selected' : '' %>>Amazing Pools</option>
+            <option value="camping" <%= listing.category === 'camping' ? 'selected' : '' %>>Camping</option>
+            <option value="farms" <%= listing.category === 'farms' ? 'selected' : '' %>>Farms</option>
+            <option value="arctic" <%= listing.category === 'arctic' ? 'selected' : '' %>>Arctic</option>
+            <option value="domes" <%= listing.category === 'domes' ? 'selected' : '' %>>Domes</option>
+            <option value="boats" <%= listing.category === 'boats' ? 'selected' : '' %>>Boats</option>
+          </select>
+          <div class="invalid-feedback">Please select a category</div>
+        </div>
+
         <div class="row">
           <div class="mb-3 col-md-4">
             <label for="price" class="form-label">Price</label>

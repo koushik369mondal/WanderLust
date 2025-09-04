@@ -33,15 +33,23 @@ const listingSchema = new Schema({
       required: true,
     },
   },
-  // category: {
-  //     type: String,
-  //     enum: [
-  //         "mountains",
-  //         "arctic",
-  //         "farms",
-  //         "deserts",
-  //     ]
-  // }
+  category: {
+      type: String,
+      enum: [
+          "trending",
+          "rooms",
+          "iconic_cities",
+          "mountains",
+          "castles",
+          "amazing_pools",
+          "camping",
+          "farms",
+          "arctic",
+          "domes",
+          "boats"
+      ],
+      default: "trending"
+  },
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 

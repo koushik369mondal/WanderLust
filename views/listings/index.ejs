@@ -42,6 +42,15 @@
             transform: translateY(-2px);
         }
 
+        /* Add this new style for active filter */
+        .active-filter {
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 1;
+            transform: translateY(-2px);
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
         .filter i {
             font-size: 1.3rem;
             color: white;
@@ -102,6 +111,7 @@
     </style>
 
 
+    <!-- Replace the filter div section with this updated code -->
     <div id="filters">
         <div class="tax-toggle">
             <div class="form-check-reverse form-switch">
@@ -109,51 +119,56 @@
                 <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
             </div>
         </div>
-        <div class="filter">
-            <i class="fa-solid fa-fire"></i>
-            <p>Trending</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-bed"></i>
-            <p>Rooms</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-mountain-city"></i>
-            <p>Iconic Cities</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-mountain"></i>
-            <p>Mountains</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-chess-rook"></i>
-            <p>Castles</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-person-swimming"></i>
-            <p>Amazing pool</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-tents"></i>
-            <p>Camping</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-tractor"></i>
-            <p>Farms</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-snowflake"></i>
-            <p>Arctic</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-igloo"></i>
-            <p>Domes</p>
-        </div>
-        <div class="filter">
-            <i class="fa-solid fa-ship"></i>
-            <p>Boats</p>
-        </div>
     </div>
+    <a href="/listings" class="filter <%= !activeCategory ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-border-all"></i>
+        <p>All</p>
+    </a>
+    <a href="/listings?category=trending" class="filter <%= activeCategory === 'trending' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-fire"></i>
+        <p>Trending</p>
+    </a>
+    <a href="/listings?category=rooms" class="filter <%= activeCategory === 'rooms' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-bed"></i>
+        <p>Rooms</p>
+    </a>
+    <a href="/listings?category=iconic_cities" class="filter <%= activeCategory === 'iconic_cities' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-mountain-city"></i>
+        <p>Iconic Cities</p>
+    </a>
+    <a href="/listings?category=mountains" class="filter <%= activeCategory === 'mountains' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-mountain"></i>
+        <p>Mountains</p>
+    </a>
+    <a href="/listings?category=castles" class="filter <%= activeCategory === 'castles' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-chess-rook"></i>
+        <p>Castles</p>
+    </a>
+    <a href="/listings?category=amazing_pools" class="filter <%= activeCategory === 'amazing_pools' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-person-swimming"></i>
+        <p>Amazing pool</p>
+    </a>
+    <a href="/listings?category=camping" class="filter <%= activeCategory === 'camping' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-tents"></i>
+        <p>Camping</p>
+    </a>
+    <a href="/listings?category=farms" class="filter <%= activeCategory === 'farms' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-tractor"></i>
+        <p>Farms</p>
+    </a>
+    <a href="/listings?category=arctic" class="filter <%= activeCategory === 'arctic' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-snowflake"></i>
+        <p>Arctic</p>
+    </a>
+    <a href="/listings?category=domes" class="filter <%= activeCategory === 'domes' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-igloo"></i>
+        <p>Domes</p>
+    </a>
+    <a href="/listings?category=boats" class="filter <%= activeCategory === 'boats' ? 'active-filter' : '' %>">
+        <i class="fa-solid fa-ship"></i>
+        <p>Boats</p>
+    </a>
+</div>
 
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3">
