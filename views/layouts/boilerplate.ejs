@@ -17,11 +17,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="/CSS/rating.css" />
+  <link rel="stylesheet" href="/CSS/loading.css" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
 </head>
 
 <body>
+  <!-- Loading Spinner Component -->
+  <div id="global-loading" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+  </div>
+  
   <canvas id="fluid-cursor"></canvas>
 
   <%- include("../includes/navbar.ejs") %>
@@ -37,6 +43,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
       <script src="/JS/script.js"></script>
+      <script src="/JS/loading.js"></script>
       <script>
         const canvas = document.getElementById("fluid-cursor");
         const ctx = canvas.getContext("2d");
