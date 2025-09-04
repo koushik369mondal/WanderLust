@@ -6,7 +6,7 @@
 
 > A full-stack web application to explore, share, and review travel destinations. Built with **MongoDB**, **Express.js**, **Node.js**, and **EJS**.
 
-**🔗 [Live Preview](https://wanderlust-zh33.onrender.com/listings)**
+**🔗 [Live Preview](https://wanderlust-fofm.onrender.comlistings)**
 
 <div align="center">
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=3000&pause=1000&color=00C853&center=true&vCenter=true&width=900&lines=Thanks+for+visiting+WanderLust!+🙌;Star+the+repo+✅;Share+it+with+others+🌍;Contribute+and+grow+🛠️;Happy+Coding+✨!" alt="Thanks Banner Typing SVG" />
