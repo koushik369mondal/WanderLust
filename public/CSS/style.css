@@ -306,8 +306,8 @@ body {
         background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.error-card{
-     border: none !important;
+.error-card,.create-container{
+    border: none !important;
     background: transparent;
     backdrop-filter: blur(10px);
     background-color: var(--bg-primary-solid) !important;
