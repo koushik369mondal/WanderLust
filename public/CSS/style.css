@@ -627,20 +627,47 @@ body {
 
 /* Auth Forms Styling */
 .auth-container {
-    background: transparent;
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
     border-radius: 20px;
     padding: 3rem 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     margin: 2rem 0;
     transition: all 0.3s ease;
 }
 
 [data-theme="dark"] .auth-container {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .auth-container p {
+    color: #ffffff !important;
+}
+
+/* Light theme: links inside auth-container */
+.auth-container a {
+    color: #333;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-container a:hover {
+    color: var(--accent-color) !important;
+}
+
+/* Dark theme: links inside auth-container */
+[data-theme="dark"] .auth-container a {
+    color: #ffffff !important;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .auth-container a:hover {
+    color: var(--accent-color) !important;
 }
 
 .auth-container:hover {
@@ -678,10 +705,15 @@ body {
 }
 
 .auth-form .form-control:focus {
-    border-color: var(--accent-color);
     box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.15);
     transform: translateY(-2px);
-    background: var(--bg-primary);
+}
+
+/* Dark theme input fields */
+[data-theme="dark"] .auth-form .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff; /* typed text is bright */
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .auth-form .form-control:hover {
