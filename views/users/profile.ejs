@@ -1,6 +1,6 @@
 <% layout('/layouts/boilerplate') %>
 
-    <div class="container mt-3">
+    <div class="profile-container mt-3">
         <div class="row">
             <div class="col-12">
                 <!-- Profile Header -->
@@ -317,7 +317,7 @@
                                 <button type="submit" class="btn btn-primary btn-lg me-3">
                                     <i class="fa-solid fa-save me-2"></i>Save Changes
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary btn-lg"
+                                <button type="button" class="btn btn-secondary btn-lg"
                                     onclick="document.getElementById('view-tab').click();">
                                     <i class="fa-solid fa-times me-2"></i>Cancel
                                 </button>
@@ -328,10 +328,10 @@
 
                 <!-- Action Buttons -->
                 <div class="text-center mt-4 mb-5">
-                    <a href="/listings" class="btn btn-outline-primary me-2">
+                    <a href="/listings" class="btn btn-primary me-2">
                         <i class="fa-solid fa-home me-2"></i>Back to Listings
                     </a>
-                    <a href="/logout" class="btn btn-outline-danger">
+                    <a href="/logout" class="btn btn-danger">
                         <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -480,24 +480,17 @@
 }
 
 .btn-primary {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
+    background-color: rgb(51, 51, 197);
+    
 }
 
 .btn-primary:hover {
-    background-color:#e63946 ;
-    border-color: #e63946;
-    box-shadow: 0 0.3rem 0.7rem rgba(254, 66, 77, 0.35);
     transform: translateY(-2px);
-}
-
-.btn-outline-primary:hover {
-    /* background: var(--accent-color) */
     background-color: rgb(25, 25, 132);
     color: white;
 }
 
-.btn-outline-danger:hover {
+.btn-danger:hover {
     background: #dc3545;
     color: white;
 }
