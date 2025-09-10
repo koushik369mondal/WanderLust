@@ -174,6 +174,10 @@ app.get("/privacy", (req, res) => {
   res.render("privacy", { title: "Privacy Policy" });
 });
 
+app.get("/terms", (req, res) => {
+  res.render("termCondition", { title: "Term & Condition" });
+});
+
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
