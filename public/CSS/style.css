@@ -309,7 +309,8 @@ body {
   box-shadow: 0 4px 16px var(--shadow);
 }
 
-.card {
+.card,
+.profile-container{
   background-color: var(--bg-primary-solid) !important;
   background: transparent;
   -webkit-backdrop-filter: blur(10px);
