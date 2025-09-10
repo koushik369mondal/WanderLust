@@ -101,6 +101,7 @@ body {
   .collapse-nav {
     background-color: var(--bg-primary-solid) !important;
     background: transparent;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
 }
@@ -276,6 +277,7 @@ body {
 .listing-card {
   border: none !important;
   background: transparent;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background-color: var(--bg-primary-solid) !important;
   border-radius: 1rem !important;
@@ -286,16 +288,18 @@ body {
 }
 
 .error-card,
-.create-container {
+.create-container,
+.privecy-container{
   border: none !important;
   background: transparent;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background-color: var(--bg-primary-solid) !important;
   border-radius: 1rem !important;
   overflow: hidden;
   box-shadow: 0 2px 8px var(--shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease,
-    background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .listing-card:hover {
@@ -306,6 +310,7 @@ body {
 .card {
   background-color: var(--bg-primary-solid) !important;
   background: transparent;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
@@ -599,6 +604,7 @@ body {
 /* Auth Forms Styling */
 .auth-container {
   background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   border-radius: 20px;
   padding: 3rem 2rem;
