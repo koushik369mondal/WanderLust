@@ -168,72 +168,82 @@ body {
   box-shadow: 0 4px 8px rgba(254, 66, 77, 0.3);
 }
 
-.wander-footer {
-  background: var(--bg-primary);
-  color: #f1f1f1;
-  padding: 50px 20px 20px;
-  /* top, sides, bottom */
-  margin-top: 40px;
-  /* gap before footer starts */
+ .wander-footer {
+  position: relative;
+  padding: 20px 20px 3px;
+  margin-top: 50px;
   font-family: "Poppins", sans-serif;
 
-  border-top: 2px solid var(--border-color);
+  /* Glassmorphism panel over your background */
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px 12px 0 0;
+  color: #f1f1f1;
 }
 
-.footer-col a:hover {
-  color: #ffd166;
-  /* warm golden highlight */
-}
-
+/* === Footer layout === */
 .footer-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns in one row */
+  align-items: start;
+  gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
-  /* center container */
   padding: 20px;
   box-sizing: border-box;
 }
 
+/* Column titles */
 .footer-col h5,
 .footer-col h6 {
   font-weight: 600;
-  margin-bottom: 15px;
-  color: #ffffff;
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+  color: #fff;
 }
 
+/* Text & links */
 .footer-col p,
 .footer-col a {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #ccc;
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   display: block;
-  margin-bottom: 8px;
+   margin-bottom: 10px; 
   transition: color 0.3s ease;
 }
 
+.footer-col a:hover {
+  color: #ffd166;
+}
+
+/* Newsletter form */
 .footer-col form {
   display: flex;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .footer-col input {
-  padding: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 5px 0 0 5px;
+  border-radius: 6px 0 0 6px;
   outline: none;
   flex: 1;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
 }
 
 .footer-col button {
-  padding: 10px 15px;
+  padding: 12px 18px;
   border: none;
   background: #ffb347;
   color: #1e1e1e;
   font-weight: 600;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 6px 6px 0;
   cursor: pointer;
   transition: background 0.3s ease;
 }
@@ -242,35 +252,68 @@ body {
   background: #ffa500;
 }
 
-.footer-bottom {
-  border-top: 1px solid #333;
-  margin-top: 30px;
-  padding-top: 15px;
-  text-align: center;
-  font-size: 13px;
-  color: #aaa;
-}
-
+/* Social icons */
 .socials {
-  margin-bottom: 10px;
+  margin: 10px 0 ;
+  text-align: center;
 }
 
 .socials a {
-  margin: 0 10px;
+  margin: 0 8px;
   color: #ccc;
-  font-size: 18px;
-  transition: color 0.3s ease;
+  font-size: 20px;
+  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .socials a:hover {
   color: #ffb347;
+  transform: translateY(-2px);
+  text-shadow: 0 0 6px rgba(255, 179, 71, 0.6);
 }
 
-/* Responsive adjustments */
-@media (min-width: 768px) {
-  .f-info-links {
-    flex-direction: row;
-    flex-wrap: wrap;
+/* Bottom copyright */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+ /*  margin-top: 40px; */
+  padding-top: 12px;
+  padding-bottom: 0; 
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ========== RESPONSIVE BREAKPOINTS ========== */
+
+/* Medium screens (tablets) – 2 columns per row */
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    text-align: left;
+  }
+}
+
+/* Small screens (phones) – stack & center */
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-col {
+    text-align: center;
+  }
+
+  .footer-col form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-col input,
+  .footer-col button {
+    width: 100%;
+    border-radius: 6px;
+    margin: 5px 0;
   }
 }
 
