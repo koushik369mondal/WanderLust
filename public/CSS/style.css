@@ -619,6 +619,47 @@ body {
   }
 }
 
+/* Animation for fadeOut effect used in sparkle animations */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+  
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* Flicker animation for enhanced sparkle effect */
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  
+  25% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+  
+  50% {
+    opacity: 0.6;
+    filter: brightness(0.8);
+  }
+  
+  75% {
+    opacity: 0.9;
+    filter: brightness(1.1);
+  }
+}
+
 #fluid-cursor {
   position: fixed;
   top: 0;
