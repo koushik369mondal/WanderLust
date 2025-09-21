@@ -172,15 +172,35 @@ body {
   position: relative;
   padding: 20px 20px 3px;
   margin-top: 50px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 
-  /* Glassmorphism panel over your background */
-  background: rgba(0, 0, 0, 0.45);
+  /* Enhanced glassmorphism with better contrast */
+  background: linear-gradient(
+    135deg, 
+    rgba(65, 183, 204, 0.85), 
+    rgba(72, 118, 203, 0.85), 
+    rgba(78, 219, 205, 0.85)
+  );
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  border-top: 2px solid var(--border-color);
   border-radius: 12px 12px 0 0;
-  color: #f1f1f1;
+  color: #ffffff;
+  box-shadow: 0 -4px 16px var(--shadow);
+  transition: background 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Dark theme footer styling */
+[data-theme="dark"] .wander-footer {
+  background: linear-gradient(
+    135deg, 
+    rgba(50, 135, 192, 0.9), 
+    rgba(17, 35, 68, 0.9), 
+    rgba(4, 134, 121, 0.9)
+  );
+  color: #ffffff;
 }
 
 /* === Footer layout === */
@@ -201,7 +221,7 @@ body {
   font-weight: 600;
   margin-bottom: 18px;
   font-size: 1.1rem;
-  color: #fff;
+  color: #ffffff;
 }
 
 /* Text & links */
@@ -209,7 +229,7 @@ body {
 .footer-col a {
   font-size: 15px;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   display: block;
    margin-bottom: 10px; 
@@ -217,7 +237,8 @@ body {
 }
 
 .footer-col a:hover {
-  color: #ffd166;
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(254, 66, 77, 0.8);
 }
 
 /* Newsletter form */
@@ -228,20 +249,32 @@ body {
 
 .footer-col input {
   padding: 12px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px 0 0 6px;
   outline: none;
   flex: 1;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-col input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-col input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(254, 66, 77, 0.3);
 }
 
 .footer-col button {
   padding: 12px 18px;
   border: none;
-  background: #ffb347;
-  color: #1e1e1e;
+  background: var(--accent-color);
+  color: #fff;
   font-weight: 600;
   border-radius: 0 6px 6px 0;
   cursor: pointer;
@@ -249,7 +282,8 @@ body {
 }
 
 .footer-col button:hover {
-  background: #ffa500;
+  background: #d63641;
+  transform: translateY(-1px);
 }
 
 /* Social icons */
@@ -260,26 +294,26 @@ body {
 
 .socials a {
   margin: 0 8px;
-  color: #ccc;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 20px;
   transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .socials a:hover {
-  color: #ffb347;
+  color: #ffffff;
   transform: translateY(-2px);
-  text-shadow: 0 0 6px rgba(255, 179, 71, 0.6);
+  text-shadow: 0 0 12px rgba(254, 66, 77, 0.8);
 }
 
 /* Bottom copyright */
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
  /*  margin-top: 40px; */
   padding-top: 12px;
   padding-bottom: 0; 
   text-align: center;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* ========== RESPONSIVE BREAKPOINTS ========== */
