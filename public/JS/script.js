@@ -110,76 +110,76 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ✨ Enhanced Sparkle Effect (Rave Neon) with performance optimizations
   // Only enable if user doesn't prefer reduced motion
-  if (!prefersReducedMotion) {
-    let sparkleCount = 0;
-    const maxSparkles = 15; // Limit concurrent sparkles for performance
-    let lastSparkleTime = 0;
-    const sparkleThrottle = 16; // ~60fps throttling
+  // if (!prefersReducedMotion) {
+  //   let sparkleCount = 0;
+  //   const maxSparkles = 15; // Limit concurrent sparkles for performance
+  //   let lastSparkleTime = 0;
+  //   const sparkleThrottle = 16; // ~60fps throttling
   
-  document.addEventListener("mousemove", (e) => {
-    const now = Date.now();
+  // document.addEventListener("mousemove", (e) => {
+  //   const now = Date.now();
     
-    // Throttle sparkle creation for better performance
-    if (now - lastSparkleTime < sparkleThrottle || sparkleCount >= maxSparkles) {
-      return;
-    }
+  //   // Throttle sparkle creation for better performance
+  //   if (now - lastSparkleTime < sparkleThrottle || sparkleCount >= maxSparkles) {
+  //     return;
+  //   }
     
-    lastSparkleTime = now;
-    sparkleCount++;
+  //   lastSparkleTime = now;
+  //   sparkleCount++;
     
-    const sparkle = document.createElement("div");
-    sparkle.className = "sparkle";
-    sparkle.setAttribute('aria-hidden', 'true'); // Accessibility improvement
+  //   const sparkle = document.createElement("div");
+  //   sparkle.className = "sparkle";
+  //   sparkle.setAttribute('aria-hidden', 'true'); // Accessibility improvement
 
-    // Enhanced neon rave colors with better contrast
-    const colors = [
-      "#ff00ff", "#00ffff", "#ffff00", 
-      "#ff8800", "#00ff44", "#ff0080", 
-      "#8000ff", "#00ff80"
-    ];
-    const selectedColor = colors[Math.floor(Math.random() * colors.length)];
-    sparkle.style.background = `radial-gradient(circle, ${selectedColor}, transparent 70%)`;
+  //   // Enhanced neon rave colors with better contrast
+  //   const colors = [
+  //     "#ff00ff", "#00ffff", "#ffff00", 
+  //     "#ff8800", "#00ff44", "#ff0080", 
+  //     "#8000ff", "#00ff80"
+  //   ];
+  //   const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+  //   sparkle.style.background = `radial-gradient(circle, ${selectedColor}, transparent 70%)`;
 
-    sparkle.style.left = `${e.clientX}px`;
-    sparkle.style.top = `${e.clientY}px`;
+  //   sparkle.style.left = `${e.clientX}px`;
+  //   sparkle.style.top = `${e.clientY}px`;
 
-    // Random size with better distribution
-    const size = Math.random() * 8 + 4;
-    sparkle.style.width = `${size}px`;
-    sparkle.style.height = `${size}px`;
+  //   // Random size with better distribution
+  //   const size = Math.random() * 8 + 4;
+  //   sparkle.style.width = `${size}px`;
+  //   sparkle.style.height = `${size}px`;
 
-    // Enhanced animation with proper timing
-    sparkle.style.transform = `rotate(${Math.random() * 360}deg) scale(1)`;
-    sparkle.style.animation = "fadeOut 0.8s ease-out forwards, flicker 0.3s ease-in-out alternate infinite";
+  //   // Enhanced animation with proper timing
+  //   sparkle.style.transform = `rotate(${Math.random() * 360}deg) scale(1)`;
+  //   sparkle.style.animation = "fadeOut 0.8s ease-out forwards, flicker 0.3s ease-in-out alternate infinite";
 
-    document.body.appendChild(sparkle);
+  //   document.body.appendChild(sparkle);
 
-    // Cleanup with performance tracking
-    setTimeout(() => {
-      if (sparkle.parentNode) {
-        sparkle.remove();
-        sparkleCount--;
-      }
-    }, 800);
-  });
+  //   // Cleanup with performance tracking
+  //   setTimeout(() => {
+  //     if (sparkle.parentNode) {
+  //       sparkle.remove();
+  //       sparkleCount--;
+  //     }
+  //   }, 800);
+  // });
   
-  // Cursor glow effect - also respects reduced motion preference
-  document.addEventListener("mousemove", (e) => {
-    let glow = document.getElementById("cursor-glow");
+  // // Cursor glow effect - also respects reduced motion preference
+  // document.addEventListener("mousemove", (e) => {
+  //   let glow = document.getElementById("cursor-glow");
 
-    if (!glow) {
-      glow = document.createElement("div");
-      glow.id = "cursor-glow";
-      glow.className = "cursor-glow";
-      glow.setAttribute('aria-hidden', 'true'); // Accessibility improvement
-      document.body.appendChild(glow);
-    }
+  //   if (!glow) {
+  //     glow = document.createElement("div");
+  //     glow.id = "cursor-glow";
+  //     glow.className = "cursor-glow";
+  //     glow.setAttribute('aria-hidden', 'true'); // Accessibility improvement
+  //     document.body.appendChild(glow);
+  //   }
 
-    // Move glow towards cursor
-    glow.style.left = `${e.clientX}px`;
-    glow.style.top = `${e.clientY}px`;
-  });
+  //   // Move glow towards cursor
+  //   glow.style.left = `${e.clientX}px`;
+  //   glow.style.top = `${e.clientY}px`;
+  // });
   
-  } // Close accessibility check
+  // } // Close accessibility check
 
 });
