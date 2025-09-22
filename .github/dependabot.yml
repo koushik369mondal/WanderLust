@@ -4,43 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-      time: "06:00"
-      timezone: "UTC"
 
+    # Keep only 5 open PRs at a time
     open-pull-requests-limit: 5
-    rebase-strategy: "auto"
-
-    groups:
-      production-dependencies:
-        applies-to: version-updates
-        dependency-type: "production"
-        update-types:
-          - "minor"
-          - "patch"
-
-      development-dependencies:
-        applies-to: version-updates
-        dependency-type: "development"
-        update-types:
-          - "minor"
-          - "patch"
-
-    commit-message:
-      prefix: "⬆️"
-      include: "scope"
-
-    reviewers:
-      - "koushik369mondal"
-
-    labels:
-      - "dependencies"
-      - "automated"
-      - "security"
-
-    target-branch: "main"
 
     # Leave ignore empty if not ignoring dependencies
     ignore: []
-    # Example (uncomment if needed):
-    # - dependency-name: "package-name"
-    #   update-types: ["version-update:semver-major"]
