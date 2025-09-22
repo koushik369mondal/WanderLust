@@ -56,8 +56,8 @@ updates:
     # Target branch for PRs (default is usually main)
     target-branch: "main"
     
-    # Ignore specific dependencies if needed
-    ignore:
+    # Ignore specific dependencies if needed (empty array if no dependencies to ignore)
+    ignore: []
       # Example: ignore major version updates for specific packages
       # - dependency-name: "package-name"
       #   update-types: ["version-update:semver-major"]
