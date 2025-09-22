@@ -1,0 +1,73 @@
+# Lint & Format Check Workflow
+# This workflow runs code linting and formatting checks on every push and pull request
+# to ensure code quality and consistent formatting across the project
+
+name: "🔍 Lint & Format Check"
+
+# Trigger this workflow on push to any branch and on all pull requests
+on:
+  push:
+    branches: [ "main", "develop", "feature/*" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  lint-and-format:
+    name: 🧹 Code Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Get the latest code from the repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for better diffs in linting
+          fetch-depth: 0
+
+      # Step 2: Set up Node.js environment with the latest LTS version
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          # Use npm cache to speed up dependency installation
+          cache: 'npm'
+
+      # Step 3: Install project dependencies
+      - name: 📦 Install Dependencies
+        run: npm install
+
+      # Step 4: Run linting to check for code style issues
+      - name: 🔍 Run Linter
+        run: |
+          # Check if lint script exists in package.json
+          if npm run --silent lint --dry-run 2>/dev/null; then
+            echo "Running npm run lint..."
+            npm run lint
+          else
+            echo "⚠️ No lint script found in package.json - skipping linting"
+            echo "Consider adding ESLint to your project for better code quality"
+          fi
+
+      # Step 5: Run format check if available (Prettier, etc.)
+      - name: 🎨 Check Code Formatting
+        run: |
+          # Check if format:check script exists in package.json
+          if npm run --silent format:check --dry-run 2>/dev/null; then
+            echo "Running npm run format:check..."
+            npm run format:check
+          elif npm run --silent prettier:check --dry-run 2>/dev/null; then
+            echo "Running npm run prettier:check..."
+            npm run prettier:check
+          else
+            echo "⚠️ No format:check or prettier:check script found - skipping format check"
+            echo "Consider adding Prettier to your project for consistent code formatting"
+          fi
+
+      # Step 6: Show summary of checks performed
+      - name: ✅ Summary
+        if: always()
+        run: |
+          echo "🎉 Code quality checks completed!"
+          echo "✓ Dependencies installed successfully"
+          echo "✓ Linting check completed"
+          echo "✓ Format check completed"

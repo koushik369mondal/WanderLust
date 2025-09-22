@@ -1,0 +1,141 @@
+# Environment Variables Check Workflow
+# This workflow validates that .env.example contains all the keys present in .env
+# to ensure new contributors have all required environment variables documented
+
+name: "🔧 Environment Variables Check"
+
+# Trigger only on pull requests when environment files change
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - '.env'
+      - '.env.example'
+      - '.env.*'
+
+jobs:
+  env-check:
+    name: 🔍 Validate .env.example Completeness
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Check if .env.example exists
+      - name: 🔍 Check .env.example Existence
+        run: |
+          if [ ! -f ".env.example" ]; then
+            echo "❌ Error: .env.example file is missing!"
+            echo "Please create a .env.example file with sample environment variables"
+            echo "This helps new contributors understand what environment variables are needed"
+            exit 1
+          else
+            echo "✅ .env.example file found"
+          fi
+
+      # Step 3: Compare .env and .env.example files
+      - name: 🔎 Validate Environment Variables
+        run: |
+          echo "Validating that .env.example contains all variables from .env..."
+          
+          # Check if .env file exists
+          if [ ! -f ".env" ]; then
+            echo "⚠️ No .env file found - skipping comparison"
+            echo "If you have environment variables, create a .env file"
+            exit 0
+          fi
+          
+          # Extract variable names from .env (ignore comments and empty lines)
+          ENV_VARS=$(grep -v '^#' .env | grep -v '^$' | cut -d'=' -f1 | sort)
+          
+          # Extract variable names from .env.example (ignore comments and empty lines)
+          EXAMPLE_VARS=$(grep -v '^#' .env.example | grep -v '^$' | cut -d'=' -f1 | sort)
+          
+          # Find missing variables
+          MISSING_VARS=$(comm -23 <(echo "$ENV_VARS") <(echo "$EXAMPLE_VARS"))
+          
+          # Count variables
+          ENV_COUNT=$(echo "$ENV_VARS" | wc -w)
+          EXAMPLE_COUNT=$(echo "$EXAMPLE_VARS" | wc -w)
+          
+          echo "📊 Environment Variables Summary:"
+          echo "  .env variables: $ENV_COUNT"
+          echo "  .env.example variables: $EXAMPLE_COUNT"
+          echo ""
+          
+          if [ -n "$MISSING_VARS" ]; then
+            echo "❌ Missing variables in .env.example:"
+            echo "$MISSING_VARS" | sed 's/^/  - /'
+            echo ""
+            echo "Please add these variables to .env.example with sample values"
+            echo "Example format:"
+            echo "$MISSING_VARS" | sed 's/^/  /' | sed 's/$/=your_value_here/'
+            exit 1
+          else
+            echo "✅ All variables from .env are documented in .env.example"
+          fi
+
+      # Step 4: Check for sensitive data in .env.example
+      - name: 🛡️ Check for Sensitive Data
+        run: |
+          echo "Checking .env.example for potential sensitive data..."
+          
+          # Common patterns that shouldn't be in .env.example
+          SENSITIVE_PATTERNS=(
+            "password.*=.*[^(your_password|changeme|sample)]"
+            "secret.*=.*[^(your_secret|changeme|sample)]"
+            "key.*=.*[a-zA-Z0-9]{20,}"
+            "token.*=.*[a-zA-Z0-9]{20,}"
+            "api.*key.*=.*[a-zA-Z0-9]{20,}"
+          )
+          
+          FOUND_SENSITIVE=false
+          
+          for pattern in "${SENSITIVE_PATTERNS[@]}"; do
+            if grep -iE "$pattern" .env.example >/dev/null 2>&1; then
+              if [ "$FOUND_SENSITIVE" = false ]; then
+                echo "⚠️  Potential sensitive data found in .env.example:"
+                FOUND_SENSITIVE=true
+              fi
+              grep -iE "$pattern" .env.example | sed 's/^/  🚨 /'
+            fi
+          done
+          
+          if [ "$FOUND_SENSITIVE" = true ]; then
+            echo ""
+            echo "Please replace actual sensitive values with placeholders like:"
+            echo "  PASSWORD=your_password_here"
+            echo "  SECRET_KEY=your_secret_key_here"
+            echo "  API_TOKEN=your_api_token_here"
+            echo ""
+            echo "This is a warning - not failing the check"
+          else
+            echo "✅ No sensitive data detected in .env.example"
+          fi
+
+      # Step 5: Generate helpful documentation suggestions
+      - name: 📚 Documentation Suggestions
+        if: always()
+        run: |
+          echo ""
+          echo "💡 Environment Variables Best Practices:"
+          echo "======================================"
+          echo "✓ Keep .env.example updated with all required variables"
+          echo "✓ Use placeholder values like 'your_value_here'"
+          echo "✓ Add comments explaining what each variable does"
+          echo "✓ Never commit actual sensitive values"
+          echo "✓ Group related variables together"
+          echo ""
+          echo "📝 Example .env.example format:"
+          echo "# Database Configuration"
+          echo "DB_HOST=localhost"
+          echo "DB_PORT=5432"
+          echo "DB_NAME=wanderlust"
+          echo "DB_USER=your_username"
+          echo "DB_PASSWORD=your_password"
+          echo ""
+          echo "# API Keys"
+          echo "MAPBOX_TOKEN=your_mapbox_token_here"
+          echo "CLOUDINARY_API_KEY=your_cloudinary_key_here"

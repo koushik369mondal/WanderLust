@@ -1,0 +1,63 @@
+# Dependabot Configuration
+# This file configures Dependabot to automatically check for dependency updates
+# and create pull requests when new versions are available
+
+version: 2
+updates:
+  # Enable updates for npm dependencies
+  - package-ecosystem: "npm"
+    # Look for package.json files in the root directory
+    directory: "/"
+    # Check for updates daily at 6 AM UTC
+    schedule:
+      interval: "daily"
+      time: "06:00"
+      timezone: "UTC"
+    
+    # Dependency update settings
+    open-pull-requests-limit: 5
+    
+    # Automatically rebase PRs when conflicts occur
+    rebase-strategy: "auto"
+    
+    # Group minor and patch updates together to reduce PR noise
+    groups:
+      # Group all minor and patch updates for production dependencies
+      production-dependencies:
+        applies-to: version-updates
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      
+      # Group all minor and patch updates for development dependencies  
+      development-dependencies:
+        applies-to: version-updates
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    
+    # Custom commit message format
+    commit-message:
+      prefix: "⬆️"
+      include: "scope"
+    
+    # Add reviewers for dependency updates
+    reviewers:
+      - "koushik369mondal"
+    
+    # Add labels to dependency update PRs for easy identification
+    labels:
+      - "dependencies"
+      - "automated"
+      - "security"
+    
+    # Target branch for PRs (default is usually main)
+    target-branch: "main"
+    
+    # Ignore specific dependencies if needed
+    ignore:
+      # Example: ignore major version updates for specific packages
+      # - dependency-name: "package-name"
+      #   update-types: ["version-update:semver-major"]

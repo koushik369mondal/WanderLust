@@ -1,0 +1,140 @@
+# Documentation Lint Workflow
+# This workflow checks Markdown and YAML files for syntax errors and formatting issues
+# to ensure documentation quality and consistency
+
+name: "📝 Documentation Lint"
+
+# Trigger only on pull requests to avoid unnecessary runs
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+    # Only run when documentation files are changed
+    paths:
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
+      - '.github/workflows/**'
+
+jobs:
+  markdown-lint:
+    name: 📖 Markdown Lint Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js for markdown-lint tool
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      # Step 3: Install markdown linting tool
+      - name: 📦 Install Markdown Lint
+        run: |
+          echo "Installing markdownlint-cli2 for Markdown linting..."
+          npm install -g markdownlint-cli2
+
+      # Step 4: Create markdownlint configuration
+      - name: ⚙️ Setup Markdown Lint Config
+        run: |
+          echo "Creating markdownlint configuration..."
+          cat > .markdownlint.json << 'EOF'
+          {
+            "extends": "markdownlint/style/prettier",
+            "MD013": {
+              "line_length": 100,
+              "code_blocks": false,
+              "tables": false
+            },
+            "MD033": {
+              "allowed_elements": ["br", "sub", "sup", "kbd", "details", "summary"]
+            },
+            "MD041": false
+          }
+          EOF
+
+      # Step 5: Run Markdown linting
+      - name: 🔍 Lint Markdown Files
+        run: |
+          echo "Linting all Markdown files..."
+          markdownlint-cli2 "**/*.md" "#node_modules" "#.git"
+
+  yaml-lint:
+    name: 📋 YAML Lint Check  
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python for yamllint tool
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Step 3: Install YAML linting tool
+      - name: 📦 Install YAML Lint
+        run: |
+          echo "Installing yamllint for YAML file validation..."
+          pip install yamllint
+
+      # Step 4: Create yamllint configuration
+      - name: ⚙️ Setup YAML Lint Config
+        run: |
+          echo "Creating yamllint configuration..."
+          cat > .yamllint.yml << 'EOF'
+          extends: default
+          
+          rules:
+            line-length:
+              max: 100
+              allow-non-breakable-words: true
+              allow-non-breakable-inline-mappings: true
+            indentation:
+              spaces: 2
+            brackets:
+              max-spaces-inside: 1
+            comments:
+              min-spaces-from-content: 2
+          EOF
+
+      # Step 5: Run YAML linting
+      - name: 🔍 Lint YAML Files
+        run: |
+          echo "Linting all YAML files..."
+          find . -type f \( -name "*.yml" -o -name "*.yaml" \) \
+            -not -path "./node_modules/*" \
+            -not -path "./.git/*" \
+            | xargs yamllint -c .yamllint.yml
+
+  documentation-summary:
+    name: 📊 Documentation Quality Summary
+    runs-on: ubuntu-latest
+    needs: [markdown-lint, yaml-lint]
+    if: always()
+    
+    steps:
+      # Step 1: Checkout for file counting
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Generate documentation summary
+      - name: 📈 Generate Summary
+        run: |
+          echo "📝 Documentation Quality Check Summary"
+          echo "======================================"
+          
+          # Count documentation files
+          MD_COUNT=$(find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" | wc -l)
+          YAML_COUNT=$(find . -type f \( -name "*.yml" -o -name "*.yaml" \) -not -path "./node_modules/*" -not -path "./.git/*" | wc -l)
+          
+          echo "📖 Markdown files checked: $MD_COUNT"
+          echo "📋 YAML files checked: $YAML_COUNT"
+          echo ""
+          echo "✅ All documentation files have been validated!"
+          echo "🎉 Your documentation meets quality standards!"

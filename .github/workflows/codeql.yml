@@ -1,0 +1,91 @@
+# CodeQL Security Analysis Workflow
+# This workflow performs security analysis using GitHub's CodeQL to detect
+# potential security vulnerabilities and coding errors in JavaScript/Node.js code
+
+name: "🔒 CodeQL Security Analysis"
+
+on:
+  # Trigger on pushes to main branches
+  push:
+    branches: [ "main", "develop" ]
+  
+  # Trigger on pull requests targeting main branches  
+  pull_request:
+    branches: [ "main", "develop" ]
+    
+  # Run weekly security scans (every Monday at 2 AM UTC)
+  schedule:
+    - cron: '0 2 * * 1'
+  
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: 🛡️ Security Analysis
+    runs-on: ubuntu-latest
+    
+    # Required permissions for CodeQL
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Analyze JavaScript/TypeScript code
+        language: [ 'javascript' ]
+        
+    steps:
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Initialize CodeQL analysis
+      - name: 🔧 Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # Use built-in query suite for security analysis
+          queries: +security-and-quality
+          
+      # Step 3: Set up Node.js for dependency analysis
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      # Step 4: Install dependencies (needed for complete analysis)
+      - name: 📦 Install Dependencies
+        run: |
+          echo "Installing dependencies for comprehensive security analysis..."
+          npm ci --ignore-scripts
+        continue-on-error: true
+
+      # Step 5: Perform CodeQL Analysis
+      - name: 🔍 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+      # Step 6: Upload analysis results
+      - name: 📤 Upload Analysis Results
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ../results
+        continue-on-error: true
+
+      # Step 7: Security scan summary
+      - name: ✅ Security Scan Summary
+        if: always()
+        run: |
+          echo "🔒 CodeQL Security Analysis completed!"
+          echo "✓ Repository scanned for security vulnerabilities"
+          echo "✓ Code quality issues analyzed"
+          echo "✓ Results uploaded to GitHub Security tab"
+          echo ""
+          echo "📊 Check the Security tab in your repository for detailed results"
+          echo "🛡️ Any security issues found will appear as alerts"

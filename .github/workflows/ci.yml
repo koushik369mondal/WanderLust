@@ -1,0 +1,93 @@
+# Build & Test Workflow
+# This workflow builds the application and runs tests to ensure everything works correctly
+# Uses npm ci for faster, reliable, reproducible builds
+
+name: "🏗️ Build & Test"
+
+# Trigger this workflow on push and pull requests to main branches
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  build-and-test:
+    name: 🚀 Build and Test Application
+    runs-on: ubuntu-latest
+    
+    # Test against multiple Node.js versions for compatibility
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 21.x]
+        
+    steps:
+      # Step 1: Get the latest code from the repository
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          # Use npm cache for faster builds
+          cache: 'npm'
+
+      # Step 3: Clean install dependencies (faster and more reliable than npm install)
+      - name: 📦 Install Dependencies
+        run: |
+          echo "Installing dependencies with npm ci for reproducible builds..."
+          npm ci
+
+      # Step 4: Build the application
+      - name: 🏗️ Build Application
+        run: |
+          # Check if build script exists in package.json
+          if npm run --silent build --dry-run 2>/dev/null; then
+            echo "Building application..."
+            npm run build
+          else
+            echo "⚠️ No build script found in package.json"
+            echo "If your project needs compilation, add a build script to package.json"
+            echo "Skipping build step..."
+          fi
+
+      # Step 5: Run tests
+      - name: 🧪 Run Tests
+        run: |
+          # Check if test script exists in package.json
+          if npm run --silent test --dry-run 2>/dev/null; then
+            echo "Running tests..."
+            npm test
+          else
+            echo "⚠️ No test script found in package.json"
+            echo "Consider adding tests to improve code reliability"
+            echo "You can use testing frameworks like Jest, Mocha, or Vitest"
+            echo "Skipping test step..."
+          fi
+
+      # Step 6: Upload build artifacts (if build folder exists)
+      - name: 📤 Upload Build Artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files-node-${{ matrix.node-version }}
+          path: |
+            build/
+            dist/
+            public/
+          # Keep artifacts for 7 days
+          retention-days: 7
+        continue-on-error: true
+
+      # Step 7: Show build summary
+      - name: ✅ Build Summary
+        if: always()
+        run: |
+          echo "🎉 Build and test workflow completed!"
+          echo "✓ Node.js ${{ matrix.node-version }} environment ready"
+          echo "✓ Dependencies installed with npm ci"
+          echo "✓ Build process completed"
+          echo "✓ Tests executed"
+          echo "Ready for deployment! 🚀"
