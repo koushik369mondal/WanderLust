@@ -15,11 +15,6 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Navbar */
-        /* .navbar {
-            backdrop-filter: blur(12px);
-            background: var(--bg-primary);
-        } */
 
         .filter {
             text-align: center;
@@ -34,6 +29,14 @@
             border-radius: 12px;
             padding: 6px 10px;
         }
+
+        .filter.active {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            transform: translateY(-4px);
+            opacity: 1;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+}
 
         .filter:hover {
             opacity: 1;
@@ -96,9 +99,7 @@
             padding: 1rem;
         }
 
-        /* .listing-card .card-body b {
-            color: #777;
-        } */
+        
     </style>
 
 
@@ -110,14 +111,14 @@
             </div>
         </div>
         <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Trending') ? 'active' : '' %>">
             <i class="fa-solid fa-fire"></i>
             <p>Trending</p>
         </div>
         </a>
 
         <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Rooms') ? 'active' : '' %>">
             <i class="fa-solid fa-bed"></i>
             <p>Rooms</p>
         </div>
@@ -125,7 +126,7 @@
 
 
         <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Iconic Cities') ? 'active' : '' %>">
             <i class="fa-solid fa-mountain-city"></i>
             <p>Iconic Cities</p>
         </div>
@@ -133,7 +134,7 @@
 
 
         <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Mountains') ? 'active' : '' %>">
             <i class="fa-solid fa-mountain"></i>
             <p>Mountains</p>
         </div>
@@ -141,7 +142,7 @@
 
 
         <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Castles') ? 'active' : '' %>">
             <i class="fa-solid fa-chess-rook"></i>
             <p>Castles</p>
         </div>
@@ -149,7 +150,7 @@
         
 
         <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Amazing pool') ? 'active' : '' %>">
             <i class="fa-solid fa-person-swimming"></i>
             <p>Amazing pool</p>
         </div>
@@ -157,7 +158,7 @@
         
 
         <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Camping') ? 'active' : '' %>">
             <i class="fa-solid fa-tents"></i>
             <p>Camping</p>
         </div>
@@ -165,7 +166,7 @@
         
 
         <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Farms') ? 'active' : '' %>">
             <i class="fa-solid fa-tractor"></i>
             <p>Farms</p>
         </div>
@@ -173,7 +174,7 @@
         
 
         <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Arctic') ? 'active' : '' %>">
             <i class="fa-solid fa-snowflake"></i>
             <p>Arctic</p>
         </div>
@@ -181,7 +182,7 @@
         
 
         <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Domes') ? 'active' : '' %>">
             <i class="fa-solid fa-igloo"></i>
             <p>Domes</p>
         </div>
@@ -189,7 +190,7 @@
         
 
         <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
-        <div class="filter">
+        <div class="filter  <%= (category === 'Boats') ? 'active' : '' %>">
             <i class="fa-solid fa-ship"></i>
             <p>Boats</p>
         </div>
