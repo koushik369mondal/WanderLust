@@ -21,6 +21,28 @@
         </div>
 
         <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="listing[category]" id="category" class="form-select" required>
+                <% const categories = ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pool', 'Camping', 'Farms', 'Arctic']; %>
+                <% for(let category of categories) { %>
+                    <option <%= listing.category === category ? 'selected' : '' %>><%= category %></option>
+                <% } %>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label for="bestSeason" class="form-label">Best Season to Visit</label>
+                <input name="listing[bestSeason]" value="<%= listing.bestSeason || '' %>" type="text" class="form-control">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label for="travelTip" class="form-label">Travel Buddy Tip</label>
+                <input name="listing[travelTip]" value="<%= listing.travelTip || '' %>" type="text" class="form-control">
+            </div>
+        </div>
+
+
+        <div class="mb-3">
           <h6>Original Image Listing</h6>
           <img src="<%= originalImageURL %>" height="200" />
         </div>
