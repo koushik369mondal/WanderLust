@@ -21,6 +21,39 @@
                     <div class="invalid-feedback">Please enter a description</div>
                 </div>
 
+
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="listing[category]" id="category" class="form-select" required>
+                        <option selected disabled value="">Choose a category</option>
+                        <option>Trending</option>
+                        <option>Rooms</option>
+                        <option>Iconic Cities</option>
+                        <option>Mountains</option>
+                        <option>Castles</option>
+                        <option>Amazing Pool</option>
+                        <option>Camping</option>
+                        <option>Farms</option>
+                        <option>Arctic</option>
+                        <option>Domes</option>
+                        <option>Boats</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a category</div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="bestSeason" class="form-label">Best Season to Visit</label>
+                        <input name="listing[bestSeason]" placeholder="e.g., Winter (Nov-Feb)" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="travelTip" class="form-label">Travel Buddy Tip</label>
+                        <input name="listing[travelTip]" placeholder="e.g., Go early to avoid crowds" type="text" class="form-control">
+                    </div>
+                </div>
+
+
+
                 <div class="mb-3">
                     <label for="image" class="form-label">Upload Listing Image</label>
                     <input type="file" name="listing[image]" class="form-control" required/>
