@@ -13,21 +13,98 @@ module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
 
-module.exports.showListing = async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id)
-    .populate({
-      path: "reviews",
-      populate: { path: "author" },
-    })
-    .populate("owner");
-  if (!listing) {
-    req.flash("error", "Listing not found!");
-    res.redirect("/listings");
+// module.exports.showListing = async (req, res) => {
+//   let { id } = req.params;
+//   const listing = await Listing.findById(id)
+//     .populate({
+//       path: "reviews",
+//       populate: { path: "author" },
+//     })
+//     .populate("owner");
+//   if (!listing) {
+//     req.flash("error", "Listing not found!");
+//     //return word added in front of res.redirect
+//     return res.redirect("/listings");
+//   }
+//   console.log(listing);
+//   res.render("listings/show.ejs", { listing, currentUser: req.user });
+// };
+
+// module.exports.showListing = async (req, res, next) => {
+//   try {
+//     let { id } = req.params;
+//     console.log("Looking for listing with ID:", id);
+    
+//     const listing = await Listing.findById(id)
+//       .populate({
+//         path: "reviews",
+//         populate: { path: "author" },
+//       })
+//       .populate("owner");
+      
+//     if (!listing) {
+//       req.flash("error", "Listing not found!");
+//       return res.redirect("/listings");
+//     }
+    
+//     console.log("Found listing:", listing);
+//     res.render("listings/show.ejs", { listing, currentUser: req.user });
+//   } catch (error) {
+//     console.error("Error in showListing:", error);
+//     next(error);
+//   }
+// };
+
+module.exports.showListing = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    console.log("=== SHOW LISTING DEBUG ===");
+    console.log("Looking for listing with ID:", id);
+    console.log("Request URL:", req.url);
+    console.log("Request method:", req.method);
+    
+    const listing = await Listing.findById(id)
+      .populate({
+        path: "reviews",
+        populate: { path: "author" },
+      })
+      .populate("owner");
+      
+    if (!listing) {
+      console.log("❌ Listing not found in database");
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
+    }
+    
+    console.log("✅ Found listing:", listing.title);
+    console.log("About to render template...");
+    
+    // Check if template file exists
+    const path = require('path');
+    const templatePath = path.join(__dirname, '../views/listings/show.ejs');
+    console.log("Template path:", templatePath);
+    
+    // Add error handling for template rendering
+    res.render("listings/show.ejs", { listing, currentUser: req.user }, (err, html) => {
+      if (err) {
+        console.error("❌ TEMPLATE RENDERING ERROR:");
+        console.error("Error message:", err.message);
+        console.error("Error stack:", err.stack);
+        console.error("Template path:", templatePath);
+        return next(err);
+      }
+      console.log("✅ Template rendered successfully, sending response");
+      res.send(html);
+    });
+    
+  } catch (error) {
+    console.error("❌ ERROR in showListing:");
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    next(error);
   }
-  console.log(listing);
-  res.render("listings/show.ejs", { listing, currentUser: req.user });
 };
+
 
 module.exports.createListing = async (req, res, next) => {
   // Geocoding disabled for development
