@@ -1,4 +1,4 @@
-name: Auto Comment on PR
+name: Smart Auto Comment on PR
 
 on:
   pull_request_target:
@@ -12,19 +12,93 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Comment on PR
-        uses: actions/github-script@v6
+      - name: Generate Personalized PR Comment
+        uses: actions/github-script@v7
         with:
           script: |
             const prNumber = context.issue.number;
-
-            const commentBody = `### Thanks for creating a PR for your Issue! ☺️\n\nWe'll review it as soon as possible.\nIn the meantime, please double-check the **file changes** and ensure that **all commits** are accurate.\n\nIf there are any **unresolved review comments**, feel free to resolve them. 🙌🏼`;
+            const username = context.payload.pull_request.user.login;
+            const title = context.payload.pull_request.title.toLowerCase();
+            const body = context.payload.pull_request.body ? context.payload.pull_request.body.toLowerCase() : '';
+            const isDraft = context.payload.pull_request.draft;
+            const changedFiles = context.payload.pull_request.changed_files;
+            const additions = context.payload.pull_request.additions;
+            const deletions = context.payload.pull_request.deletions;
+            
+            let personalizedMessage = `### Hello @${username}! 👋\n\n`;
+            
+            // Handle draft PRs
+            if (isDraft) {
+              personalizedMessage += `Thanks for creating this draft PR! 📝 We appreciate you sharing your work-in-progress.\n\n`;
+              personalizedMessage += `Take your time to:\n`;
+              personalizedMessage += `- Complete your changes\n`;
+              personalizedMessage += `- Test thoroughly\n`;
+              personalizedMessage += `- Mark as ready for review when done\n\n`;
+            } else {
+              // Detect PR type and personalize accordingly
+              if (title.includes('fix') || title.includes('bug') || title.includes('hotfix')) {
+                personalizedMessage += `Thanks for the bug fix! 🐛➡️✨ Your contribution helps make the project more stable.\n\n`;
+                personalizedMessage += `**Bug Fix Checklist:**\n`;
+                personalizedMessage += `- ✅ Issue reproduction steps tested\n`;
+                personalizedMessage += `- ✅ Fix verified to work as expected\n`;
+                personalizedMessage += `- ✅ No new bugs introduced\n\n`;
+              } else if (title.includes('feat') || title.includes('feature') || title.includes('add')) {
+                personalizedMessage += `Awesome new feature! 🚀 Thanks for enhancing the project.\n\n`;
+                personalizedMessage += `**Feature Checklist:**\n`;
+                personalizedMessage += `- ✅ Feature works as described\n`;
+                personalizedMessage += `- ✅ Documentation updated (if needed)\n`;
+                personalizedMessage += `- ✅ Tests added/updated\n\n`;
+              } else if (title.includes('docs') || title.includes('documentation') || title.includes('readme')) {
+                personalizedMessage += `Great documentation improvement! 📚 Clear docs help everyone.\n\n`;
+                personalizedMessage += `**Documentation Checklist:**\n`;
+                personalizedMessage += `- ✅ Information is accurate and up-to-date\n`;
+                personalizedMessage += `- ✅ Language is clear and helpful\n`;
+                personalizedMessage += `- ✅ Examples work correctly\n\n`;
+              } else if (title.includes('refactor') || title.includes('cleanup') || title.includes('improve')) {
+                personalizedMessage += `Nice refactoring work! ♻️ Code improvements make the project better for everyone.\n\n`;
+                personalizedMessage += `**Refactoring Checklist:**\n`;
+                personalizedMessage += `- ✅ Functionality remains unchanged\n`;
+                personalizedMessage += `- ✅ Code is more readable/maintainable\n`;
+                personalizedMessage += `- ✅ No breaking changes introduced\n\n`;
+              } else if (title.includes('test') || title.includes('testing')) {
+                personalizedMessage += `Excellent work on testing! 🧪 Tests make our codebase more reliable.\n\n`;
+                personalizedMessage += `**Testing Checklist:**\n`;
+                personalizedMessage += `- ✅ Tests cover the intended functionality\n`;
+                personalizedMessage += `- ✅ All tests pass locally\n`;
+                personalizedMessage += `- ✅ Test names are descriptive\n\n`;
+              } else {
+                personalizedMessage += `Thank you for your contribution! 🎉 We appreciate your effort to improve the project.\n\n`;
+              }
+            }
+            
+            // Add PR stats
+            personalizedMessage += `**📊 PR Stats:**\n`;
+            personalizedMessage += `- Files changed: ${changedFiles}\n`;
+            personalizedMessage += `- Additions: +${additions}\n`;
+            personalizedMessage += `- Deletions: -${deletions}\n\n`;
+            
+            // Add review guidelines
+            personalizedMessage += `**🔍 Review Process:**\n`;
+            personalizedMessage += `1. Our team will review your changes\n`;
+            personalizedMessage += `2. We may suggest improvements or ask questions\n`;
+            personalizedMessage += `3. Once approved, we'll merge your contribution\n\n`;
+            
+            // Add helpful reminders
+            personalizedMessage += `**💡 Before we review, please ensure:**\n`;
+            personalizedMessage += `- All commits are properly formatted\n`;
+            personalizedMessage += `- Code follows our style guidelines\n`;
+            personalizedMessage += `- Changes are thoroughly tested\n`;
+            personalizedMessage += `- Documentation is updated (if applicable)\n\n`;
+            
+            // Add encouraging footer
+            personalizedMessage += `> We'll review this as soon as possible! Feel free to address any automated checks that may appear below. �\n\n`;
+            personalizedMessage += `Thanks again for contributing to WanderLust! ✨`;
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: commentBody
+              body: personalizedMessage
             });
 
-            console.log('Comment added successfully.');
+            console.log(`Personalized PR comment added successfully for @${username}`);
