@@ -171,7 +171,7 @@ module.exports.destroyListing = async (req, res) => {
 };
 
 
-// Like a listing
+
 module.exports.likeListing = async (req, res) => {
     const listing = await Listing.findById(req.params.id);
     const user = await User.findById(req.user._id);
@@ -188,7 +188,7 @@ module.exports.likeListing = async (req, res) => {
     res.redirect(`/listings/${req.params.id}`);
 };
 
-// Unlike a listing
+
 module.exports.unlikeListing = async (req, res) => {
     const { id } = req.params;
     const userId = req.user._id;
