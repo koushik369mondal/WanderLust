@@ -1,4 +1,4 @@
-name: Auto Comment on Issue
+name: Smart Auto Comment on Issue
 
 on:
   issues:
@@ -11,18 +11,49 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Add Comment to Issue
-        uses: actions/github-script@v6
+      - name: Generate Personalized Comment
+        uses: actions/github-script@v7
         with:
           script: |
             const issueNumber = context.issue.number;
-            const commentBody = `### Thank you for raising this issue!\n We'll review it as soon as possible. We truly appreciate your contributions! ✨\n\n> Meanwhile make sure you've visited the README.md, CONTRIBUTING.md, and CODE_OF_CONDUCT.md before creating a PR for this. Also, please do NOT create a PR until this issue has been assigned to you. 😊`;
+            const username = context.payload.issue.user.login;
+            const title = context.payload.issue.title.toLowerCase();
+            const body = context.payload.issue.body ? context.payload.issue.body.toLowerCase() : '';
+            const labels = context.payload.issue.labels.map(label => label.name);
+            
+            let personalizedMessage = `### Hello @${username}! 👋\n\n`;
+            
+            // Detect issue type and personalize accordingly
+            if (title.includes('bug') || title.includes('error') || title.includes('issue')) {
+              personalizedMessage += `Thanks for reporting this bug! 🐛 Your detailed report helps us improve the project.\n\n`;
+              personalizedMessage += `To help us resolve this quickly, please ensure you've included:\n`;
+              personalizedMessage += `- Steps to reproduce the issue\n`;
+              personalizedMessage += `- Expected vs actual behavior\n`;
+              personalizedMessage += `- Your environment details\n\n`;
+            } else if (title.includes('feature') || title.includes('enhancement') || title.includes('request')) {
+              personalizedMessage += `Great feature suggestion! 💡 We appreciate community input on improving the project.\n\n`;
+              personalizedMessage += `Your idea will be reviewed by our team. Meanwhile, feel free to:\n`;
+              personalizedMessage += `- Check our [roadmap](ROADMAP.md) for planned features\n`;
+              personalizedMessage += `- Join discussions with other contributors\n\n`;
+            } else if (title.includes('question') || title.includes('help') || title.includes('how')) {
+              personalizedMessage += `Thanks for your question! 🤔 We're here to help.\n\n`;
+              personalizedMessage += `Before diving in, you might find answers in:\n`;
+              personalizedMessage += `- Our [documentation](docs/)\n`;
+              personalizedMessage += `- [FAQ section](FAQ.md)\n`;
+              personalizedMessage += `- [Previous discussions](../../discussions)\n\n`;
+            } else {
+              personalizedMessage += `Thank you for opening this issue! We appreciate your contribution to the project.\n\n`;
+            }
+            
+            // Add standard footer
+            personalizedMessage += `> Please review our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before making any contributions.\n\n`;
+            personalizedMessage += `We'll review this as soon as possible! ✨`;
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: commentBody
+              body: personalizedMessage
             });
 
-            console.log('Comment added successfully.');
+            console.log('Personalized comment added successfully.');
