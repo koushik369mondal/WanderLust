@@ -1,4 +1,4 @@
-name: Build and Test
+name: 🚀 Deploy to Production
 
 on:
   push:
@@ -10,37 +10,47 @@ on:
       - "CODE_OF_CONDUCT.md"
       - "SECURITY.md"
       - ".gitignore"
+      - "docs/**"
+      - ".github/ISSUE_TEMPLATE/**"
 
-# Prevent multiple builds from running simultaneously
+# Prevent multiple deployments from running simultaneously
 concurrency:
-  group: build-and-test
+  group: deploy-production
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
+  deploy:
     runs-on: ubuntu-latest
-    name: build-and-test
+    name: 🌐 Production Deployment
+    
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: 🟢 Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: '20.x'  # Use stable LTS version for production
           cache: "npm"
 
-      - name: Install dependencies
+      - name: 📦 Install Dependencies
         run: npm ci
 
-      - name: Run security audit
+      - name: 🔒 Run Security Audit
         run: npm audit --audit-level high
 
-      - name: Build application
+      - name: 🏗️ Build Application
         run: |
-          echo "🚀 Building WanderLust for commit: ${{ github.sha }}"
-          echo "✅ Dependencies installed and security audit passed!"
-          echo "📦 Application ready for deployment!"
+          echo "🚀 Building WanderLust for production deployment"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "👤 Author: ${{ github.actor }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo ""
+          echo "✅ Dependencies installed successfully"
+          echo "🔒 Security audit passed"
+          echo "📦 Application ready for deployment"
           echo ""
           echo "🔗 Render will auto-deploy from this commit to:"
           echo "   https://wanderlust-c8cb.onrender.com"
+          echo ""
+          echo "🎉 Deployment initiated successfully!"

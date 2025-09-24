@@ -70,22 +70,14 @@ jobs:
         with:
           category: "/language:${{matrix.language}}"
 
-      # Step 6: Upload analysis results
-      - name: 📤 Upload Analysis Results
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ../results
-        continue-on-error: true
-
-      # Step 7: Security scan summary
+      # Step 6: Security scan summary
       - name: ✅ Security Scan Summary
         if: always()
         run: |
           echo "🔒 CodeQL Security Analysis completed!"
           echo "✓ Repository scanned for security vulnerabilities"
           echo "✓ Code quality issues analyzed"
-          echo "✓ Results uploaded to GitHub Security tab"
+          echo "✓ Results automatically uploaded to GitHub Security tab"
           echo ""
           echo "📊 Check the Security tab in your repository for detailed results"
           echo "🛡️ Any security issues found will appear as alerts"

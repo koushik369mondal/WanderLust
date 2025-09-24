@@ -34,7 +34,7 @@ jobs:
 
       # Step 3: Install project dependencies
       - name: 📦 Install Dependencies
-        run: npm install
+        run: npm ci
 
       # Step 4: Run linting to check for code style issues
       - name: 🔍 Run Linter

@@ -19,7 +19,7 @@ jobs:
     # Test against multiple Node.js versions for compatibility
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 21.x]
+        node-version: [18.x, 20.x, 22.x]  # Use LTS and current stable versions
         
     steps:
       # Step 1: Get the latest code from the repository

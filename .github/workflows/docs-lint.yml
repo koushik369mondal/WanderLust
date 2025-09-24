@@ -60,7 +60,12 @@ jobs:
       - name: 🔍 Lint Markdown Files
         run: |
           echo "Linting all Markdown files..."
-          markdownlint-cli2 "**/*.md" "#node_modules" "#.git"
+          if ! markdownlint-cli2 "**/*.md" "#node_modules" "#.git"; then
+            echo "❌ Markdown linting found issues"
+            echo "Please fix the above issues before merging"
+            exit 1
+          fi
+          echo "✅ All Markdown files passed linting"
 
   yaml-lint:
     name: 📋 YAML Lint Check  
@@ -107,10 +112,25 @@ jobs:
       - name: 🔍 Lint YAML Files
         run: |
           echo "Linting all YAML files..."
-          find . -type f \( -name "*.yml" -o -name "*.yaml" \) \
+          YAML_FILES=$(find . -type f \( -name "*.yml" -o -name "*.yaml" \) \
             -not -path "./node_modules/*" \
-            -not -path "./.git/*" \
-            | xargs yamllint -c .yamllint.yml
+            -not -path "./.git/*")
+          
+          if [ -z "$YAML_FILES" ]; then
+            echo "⚠️ No YAML files found to lint"
+            exit 0
+          fi
+          
+          echo "Found YAML files to lint:"
+          echo "$YAML_FILES"
+          echo ""
+          
+          if ! echo "$YAML_FILES" | xargs yamllint -c .yamllint.yml; then
+            echo "❌ YAML linting found issues"
+            echo "Please fix the above issues before merging"
+            exit 1
+          fi
+          echo "✅ All YAML files passed linting"
 
   documentation-summary:
     name: 📊 Documentation Quality Summary
