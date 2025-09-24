@@ -6,7 +6,33 @@ module.exports.renderSignupForm = (req, res) => {
 
 module.exports.signup = async (req, res) => {
     try {
-        let { username, email, password } = req.body;
+        let { username, email, password, confirmPassword, acceptTerms } = req.body;
+        
+        // Validate required fields
+        if (!username || !email || !password || !confirmPassword) {
+            req.flash("error", "All fields are required");
+            return res.redirect("/signup");
+        }
+        
+        // Check if terms are accepted
+        if (!acceptTerms) {
+            req.flash("error", "You must accept the Terms of Service and Privacy Policy");
+            return res.redirect("/signup");
+        }
+        
+        // Validate password confirmation
+        if (password !== confirmPassword) {
+            req.flash("error", "Passwords do not match");
+            return res.redirect("/signup");
+        }
+        
+        // Validate password strength
+        const passwordValidation = validatePasswordStrength(password);
+        if (!passwordValidation.isValid) {
+            req.flash("error", passwordValidation.message);
+            return res.redirect("/signup");
+        }
+        
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
         console.log(registeredUser);
@@ -22,6 +48,33 @@ module.exports.signup = async (req, res) => {
         res.redirect("/signup");
     }
 };
+
+// Password strength validation function
+function validatePasswordStrength(password) {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[@!$%]/.test(password);
+    
+    if (password.length < minLength) {
+        return { isValid: false, message: "Password must be at least 8 characters long" };
+    }
+    if (!hasUpperCase) {
+        return { isValid: false, message: "Password must contain at least one uppercase letter" };
+    }
+    if (!hasLowerCase) {
+        return { isValid: false, message: "Password must contain at least one lowercase letter" };
+    }
+    if (!hasNumbers) {
+        return { isValid: false, message: "Password must contain at least one number" };
+    }
+    if (!hasSpecialChar) {
+        return { isValid: false, message: "Password must contain at least one special character (@!$%)" };
+    }
+    
+    return { isValid: true, message: "Password is strong" };
+}
 
 module.exports.renderLoginForm = (req, res) => {
     res.render("users/login.ejs");
@@ -80,4 +133,10 @@ module.exports.updateProfile = async (req, res) => {
         req.flash("error", "Error updating profile. Please try again.");
         res.redirect("/profile");
     }
+};
+
+// Google OAuth callback handler
+module.exports.googleCallback = (req, res) => {
+    req.flash("success", "Welcome to Wanderlust!");
+    res.redirect("/listings");
 };

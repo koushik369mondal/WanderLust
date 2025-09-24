@@ -7,6 +7,19 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    // Google OAuth fields
+    googleId: {
+        type: String,
+        sparse: true, // Allows multiple documents without this field
+    },
+    displayName: {
+        type: String,
+        default: "",
+    },
+    profilePicture: {
+        type: String,
+        default: "",
+    },
     joinDate: {
         type: Date,
         default: Date.now,
