@@ -1,0 +1,54 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+    .glass-container {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px); 
+        border: 1px solid rgba(255, 255, 255, 0.3); 
+        border-radius: 1rem; 
+        padding: 2rem; 
+        text-align: center; 
+        color: white; 
+    }
+    .glass-container h3 {
+        font-weight: 600; 
+    }
+    .glass-container p {
+        font-size: 1.1rem;
+        opacity: 0.9; 
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 glass-container">
+            <h3><%= name %>'s Liked Listings</h3>
+            <p>All the places you've saved in one spot!</p>
+        </div>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+        <% if (likedListings && likedListings.length > 0) { %>
+            <% for(let listing of likedListings) { %>
+                <div class="col">
+                    <a href="/listings/<%= listing._id %>" class="listing-link">
+                        <div class="card listing-card h-100">
+                            <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <b><%= listing.title %></b><br>
+                                    &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% } %>
+        <% } else { %>
+            <div class="col-12 glass-container mt-3">
+                <p>You haven't liked any listings yet. Start exploring to save your favorites!</p>
+            </div>
+        <% } %>
+    </div>
+</div>

@@ -98,16 +98,32 @@ module.exports.logout = (req, res, next) => {
 
 const Listing = require("../models/listing");
 module.exports.renderProfile = async (req, res) => {
-    // Get the count of listings owned by the current user
     const listingCount = await Listing.countDocuments({ owner: req.user._id });
     res.render("users/profile.ejs", { listingCount });
+};
+
+module.exports.showLikedListings = async (req, res) => {
+    const user = await User.findById(req.user._id).populate("likes");
+
+    if (!user) {
+        req.flash("error", "User not found.");
+        return res.redirect("/listings");
+    }
+
+
+    console.log("Liked listings being sent to the page:", user.likes);
+    
+    res.render("users/liked.ejs", { 
+        name: user.username,
+        likedListings: user.likes 
+    });
 };
 
 module.exports.updateProfile = async (req, res) => {
     try {
         const { bio, location, hobbies, interests, website, instagram, twitter, linkedin, favoriteDestinations } = req.body;
 
-        // Parse comma-separated strings into arrays
+    
         const hobbiesArray = hobbies ? hobbies.split(',').map(h => h.trim()).filter(h => h) : [];
         const interestsArray = interests ? interests.split(',').map(i => i.trim()).filter(i => i) : [];
         const destinationsArray = favoriteDestinations ? favoriteDestinations.split(',').map(d => d.trim()).filter(d => d) : [];

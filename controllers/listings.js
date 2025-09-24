@@ -1,3 +1,5 @@
+const User = require("../models/user"); 
+
 const Listing = require("../models/listing");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
@@ -167,22 +169,35 @@ module.exports.destroyListing = async (req, res) => {
   req.flash("success", "Listing deleted!");
   res.redirect("/listings");
 };
-// Like a listing
+
+
+
 module.exports.likeListing = async (req, res) => {
-  const listing = await Listing.findById(req.params.id);
-  if (!listing.likes.includes(req.user._id)) {
-    listing.likes.push(req.user._id);
-    await listing.save();
-  }
-  res.redirect(`/listings/${req.params.id}`);
+    const listing = await Listing.findById(req.params.id);
+    const user = await User.findById(req.user._id);
+
+    // Add user to listing's likes AND listing to user's likes
+    if (!listing.likes.includes(user._id)) {
+        listing.likes.push(user._id);
+        user.likes.push(listing._id);
+
+        await listing.save();
+        await user.save();
+        req.flash("success", "Added to your liked listings!");
+    }
+    res.redirect(`/listings/${req.params.id}`);
 };
 
-// Unlike a listing
+
 module.exports.unlikeListing = async (req, res) => {
-  const listing = await Listing.findById(req.params.id);
-  listing.likes = listing.likes.filter(
-    (userId) => userId.toString() !== req.user._id.toString()
-  );
-  await listing.save();
-  res.redirect(`/listings/${req.params.id}`);
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    // Remove user ID from the listing's likes array
+    await Listing.findByIdAndUpdate(id, { $pull: { likes: userId } });
+    // Remove listing ID from the user's likes array
+    await User.findByIdAndUpdate(userId, { $pull: { likes: id } });
+    
+    req.flash("success", "Removed from your liked listings.");
+    res.redirect(`/listings/${id}`);
 };
