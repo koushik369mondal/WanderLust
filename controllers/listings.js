@@ -82,6 +82,7 @@ module.exports.createListing = async (req, res, next) => {
     })
     .send();
   try {
+
     let url = "";
     let filename = "";
     if (req.file) {
