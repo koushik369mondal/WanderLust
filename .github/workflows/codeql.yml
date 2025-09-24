@@ -8,10 +8,20 @@ on:
   # Trigger on pushes to main branches
   push:
     branches: [ "main", "develop" ]
+    paths:
+      - '**.js'
+      - '**.ts'
+      - '**.json'
+      - '.github/workflows/codeql.yml'
   
   # Trigger on pull requests targeting main branches  
   pull_request:
     branches: [ "main", "develop" ]
+    paths:
+      - '**.js'
+      - '**.ts'
+      - '**.json'
+      - '.github/workflows/codeql.yml'
     
   # Run weekly security scans (every Monday at 2 AM UTC)
   schedule:
@@ -24,6 +34,7 @@ jobs:
   analyze:
     name: 🛡️ Security Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # Prevent workflow from running too long
     
     # Required permissions for CodeQL
     permissions:
@@ -35,7 +46,10 @@ jobs:
       fail-fast: false
       matrix:
         # Analyze JavaScript/TypeScript code
-        language: [ 'javascript' ]
+        language: [ 'javascript-typescript' ]
+        include:
+          - language: 'javascript-typescript'
+            build-mode: none
         
     steps:
       # Step 1: Checkout the repository
@@ -44,11 +58,13 @@ jobs:
 
       # Step 2: Initialize CodeQL analysis
       - name: 🔧 Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
           # Use built-in query suite for security analysis
           queries: +security-and-quality
+          # Add config file if needed
+          # config-file: ./.github/codeql/codeql-config.yml
           
       # Step 3: Set up Node.js for dependency analysis
       - name: 🟢 Setup Node.js
@@ -61,16 +77,31 @@ jobs:
       - name: 📦 Install Dependencies
         run: |
           echo "Installing dependencies for comprehensive security analysis..."
-          npm ci --ignore-scripts
+          # Use npm ci for faster, more reliable builds in CI
+          npm ci --ignore-scripts --only=production
         continue-on-error: true
 
-      # Step 5: Perform CodeQL Analysis
+      # Step 5: Build the application (helps with analysis)
+      - name: 🏗️ Build Application  
+        run: |
+          echo "Building application for enhanced CodeQL analysis..."
+          # Only build if build script exists
+          if npm run --silent build --dry-run 2>/dev/null; then
+            npm run build
+          else
+            echo "No build script found, skipping build step"
+          fi
+        continue-on-error: true
+
+      # Step 6: Perform CodeQL Analysis
       - name: 🔍 Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
+          # Upload results even if there are no findings
+          upload: always
 
-      # Step 6: Security scan summary
+      # Step 7: Security scan summary
       - name: ✅ Security Scan Summary
         if: always()
         run: |
@@ -81,3 +112,4 @@ jobs:
           echo ""
           echo "📊 Check the Security tab in your repository for detailed results"
           echo "🛡️ Any security issues found will appear as alerts"
+          echo "🔗 View results at: https://github.com/${{ github.repository }}/security/code-scanning"
