@@ -64,6 +64,12 @@ const userSchema = new Schema({
         type: String,
         maxlength: 100,
     }],
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Listing",
+        },
+    ],
 });
 
 userSchema.plugin(passportLocalMongoose);

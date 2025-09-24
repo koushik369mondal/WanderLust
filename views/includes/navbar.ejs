@@ -132,12 +132,20 @@
           <a class="nav-link" href="/login"><b>Log in</b></a>
           <% } %>
             <% if(typeof currentUser !=='undefined' && currentUser) { %>
-              <a class="nav-link" href="/profile">
-                <!-- <i class="fa-solid fa-user mobile-icon"></i> -->
-                <span class="desktop-text">Profile</span>
-              </a>
-              <a class="nav-link" href="/logout"><b>Log out</b></a>
-              <% } %>
+
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="desktop-text">Profile</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="/profile">My Profile</a></li>
+            <li><a class="dropdown-item" href="/profile/likes">Liked Listings</a></li>
+        </ul>
+    </div>
+
+    <a class="nav-link" href="/logout"><b>Log out</b></a>
+    
+<% } %>
       </div>
 
       <div class="d-flex justify-content-center">

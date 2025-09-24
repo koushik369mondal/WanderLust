@@ -103,6 +103,26 @@ module.exports.renderProfile = async (req, res) => {
     res.render("users/profile.ejs", { listingCount });
 };
 
+module.exports.showLikedListings = async (req, res) => {
+    // Find the current user and populate the 'likes' field to get the full listing details
+    const user = await User.findById(req.user._id).populate("likes");
+
+    if (!user) {
+        req.flash("error", "User not found.");
+        return res.redirect("/listings");
+    }
+
+
+    // ADD THIS LINE TO DEBUG
+    console.log("Liked listings being sent to the page:", user.likes);
+
+    // Pass the populated listings to a new view
+    res.render("users/liked.ejs", { 
+        name: user.username,
+        likedListings: user.likes 
+    });
+};
+
 module.exports.updateProfile = async (req, res) => {
     try {
         const { bio, location, hobbies, interests, website, instagram, twitter, linkedin, favoriteDestinations } = req.body;
