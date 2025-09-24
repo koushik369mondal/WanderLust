@@ -36,6 +36,10 @@ router.get("/auth/google/callback",
     userController.googleCallback
 );
 
+
+router.get("/profile/likes", isLoggedIn, userController.showLikedListings);
+
+
 router
     .route("/profile")
     .get(isLoggedIn, userController.renderProfile)
