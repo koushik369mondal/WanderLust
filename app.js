@@ -180,6 +180,20 @@ app.get("/terms", (req, res) => {
   res.render("termCondition", { title: "Term & Condition" });
 });
 
+app.get('/debug-listings', async (req, res) => {
+  const Listing = require('./models/listing');
+  const listings = await Listing.find({}, {
+    title: 1,
+    createdAt: 1,
+    isFeatured: 1,
+    hasDiscount: 1,
+    avgRating: 1,
+    hasFeaturedReview: 1,
+    discountPrice: 1
+  });
+  res.json(listings);
+});
+
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
@@ -189,7 +203,10 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error.ejs", { message });
 });
 
-app.listen(8080, () => {
+
+const { seedListings } = require('./init/data');
+app.listen(8080, async () => {
+    await seedListings();
     console.log("Server is running on port 8080");
     console.log("Visit: http://localhost:8080/listings");
 });

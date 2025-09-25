@@ -349,4 +349,40 @@ const sampleListings = [
   },
 ];
 
-module.exports = { data: sampleListings };
+const Listing = require('../models/listing');
+
+async function seedListings() {
+  await Listing.deleteMany({});
+  const Review = require('../models/review');
+  await Review.deleteMany({});
+  const now = new Date();
+  // Create demo reviews for avgRating
+  const demoReviews = [];
+  for (let i = 0; i < 10; i++) {
+    demoReviews.push(await Review.create({
+      comment: `Demo review ${i+1}`,
+      rating: 4 + (i % 2), // 4 or 5
+      createdAt: new Date(now.getTime() - (i * 12 * 60 * 60 * 1000)),
+      author: null // can be set to a demo user if needed
+    }));
+  }
+
+  const listingsWithBadges = sampleListings.map((l, i) => {
+    l.discountPrice = (i % 2 === 0) ? Math.floor(l.price * 0.85) : undefined;
+    l.hasDiscount = l.discountPrice ? l.discountPrice <= l.price * 0.9 : false;
+    l.isFeatured = i % 3 === 0;
+    l.hasFeaturedReview = i % 6 === 0;
+    l.createdAt = new Date(now.getTime() - (i * 24 * 60 * 60 * 1000));
+    l.geometry = {
+      type: "Point",
+      coordinates: [0, 0]
+    };
+    // Assign demo reviews for avgRating
+    l.reviews = demoReviews.slice(0, (i % 5) + 1).map(r => r._id);
+    return l;
+  });
+  await Listing.insertMany(listingsWithBadges);
+  console.log('Seeded listings with badges and demo reviews!');
+}
+
+module.exports = { data: sampleListings, seedListings };
