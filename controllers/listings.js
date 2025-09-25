@@ -14,7 +14,35 @@ module.exports.index = async (req, res) => {
     filter.category = category;
   }
 
-  const allListings = await Listing.find(filter);
+  // Populate reviews (with author) for avgRating calculation
+  const allListings = await Listing.find(filter)
+    .populate({ path: 'reviews', populate: { path: 'author' } });
+
+  // Badge logic for each listing
+  for (const listing of allListings) {
+    // 1️⃣ New Badge: createdAt within last 7 days
+    const now = new Date();
+    const createdAt = new Date(listing.createdAt);
+    const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
+    listing.isNewBadge = daysOld <= 7;
+
+    // 2️⃣ Featured Badge: isFeatured
+    listing.isFeaturedBadge = !!listing.isFeatured;
+
+    // 3️⃣ Discount Badge: hasDiscount
+    listing.isDiscountBadge = !!listing.hasDiscount;
+
+    // 4️⃣ Highly Rated Badge: avgRating from reviews
+    let avgRating = 0;
+    if (listing.reviews && listing.reviews.length > 0) {
+      const total = listing.reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+      avgRating = total / listing.reviews.length;
+    }
+    listing.avgRating = avgRating;
+    // Only show badge if avgRating >= 4.5 and has at least one review
+    listing.isHighlyRatedBadge = (listing.reviews && listing.reviews.length > 0 && avgRating >= 4.5);
+  }
+
   res.render("listings/index.ejs", { allListings, category: req.query.category });
 
 };
@@ -39,6 +67,21 @@ module.exports.showListing = async (req, res, next) => {
         populate: { path: "author" },
       })
       .populate("owner");
+
+    // Badge logic for show page
+    const now = new Date();
+    const createdAt = new Date(listing.createdAt);
+    const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
+    listing.isNewBadge = daysOld <= 7;
+    listing.isFeaturedBadge = !!listing.isFeatured;
+    listing.isDiscountBadge = !!listing.hasDiscount;
+    let avgRating = 0;
+    if (listing.reviews && listing.reviews.length > 0) {
+      const total = listing.reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+      avgRating = total / listing.reviews.length;
+    }
+    listing.avgRating = avgRating;
+    listing.isHighlyRatedBadge = avgRating >= 4.5;
       
     if (!listing) {
       console.log(" Listing not found in database");

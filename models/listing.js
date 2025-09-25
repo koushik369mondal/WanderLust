@@ -13,17 +13,24 @@ const listingSchema = new Schema({
   location: String,
   country: String,
 
+  // BADGE FIELDS
+  isFeatured: { type: Boolean, default: false },
+  hasDiscount: { type: Boolean, default: false },
+  avgRating: { type: Number, default: 0 },
+  hasFeaturedReview: { type: Boolean, default: false },
+  discountPrice: { type: Number },
+  createdAt: { type: Date, default: Date.now },
 
-    category: {
-        type: String,
-        enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pool', 'Camping', 'Farms', 'Arctic','Domes','Boats'], // This ensures only these values are accepted
-    },
-    bestSeason: {
-        type: String,
-    },
-    travelTip: {
-        type: String,
-    },
+  category: {
+    type: String,
+    enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pool', 'Camping', 'Farms', 'Arctic','Domes','Boats'], // This ensures only these values are accepted
+  },
+  bestSeason: {
+    type: String,
+  },
+  travelTip: {
+    type: String,
+  },
 
   reviews: [
     {
