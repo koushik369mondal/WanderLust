@@ -7,7 +7,6 @@
             align-items: center;
             overflow-x: auto;
             padding: 1rem;
-            gap: 1rem;
             margin-top: 10px;
             border-radius: 20px;
             background:var(--bg-primary);
@@ -15,11 +14,34 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
+        .filters-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: space-evenly;
+            gap: 0.5rem;
+            min-width: 0;
+        }
 
         .filter {
             text-align: center;
             color: white;
             white-space: nowrap;
+            flex-shrink: 0;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .filter.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         /* tax toggle restyled */
@@ -32,8 +54,9 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin-left: auto;
             color: white;
+            margin-left: 1rem;
+            white-space: nowrap;
         }
 
         /* Hide scrollbar */
@@ -111,97 +134,91 @@
 
 
     <div id="filters">
+        <div class="filters-container">
+            <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Trending') ? 'active' : '' %>">
+                <i class="fa-solid fa-fire"></i>
+                <p>Trending</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Rooms') ? 'active' : '' %>">
+                <i class="fa-solid fa-bed"></i>
+                <p>Rooms</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Iconic Cities') ? 'active' : '' %>">
+                <i class="fa-solid fa-mountain-city"></i>
+                <p>Iconic Cities</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Mountains') ? 'active' : '' %>">
+                <i class="fa-solid fa-mountain"></i>
+                <p>Mountains</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Castles') ? 'active' : '' %>">
+                <i class="fa-solid fa-chess-rook"></i>
+                <p>Castles</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Amazing pool') ? 'active' : '' %>">
+                <i class="fa-solid fa-person-swimming"></i>
+                <p>Amazing pool</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Camping') ? 'active' : '' %>">
+                <i class="fa-solid fa-tents"></i>
+                <p>Camping</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Farms') ? 'active' : '' %>">
+                <i class="fa-solid fa-tractor"></i>
+                <p>Farms</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Arctic') ? 'active' : '' %>">
+                <i class="fa-solid fa-snowflake"></i>
+                <p>Arctic</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Domes') ? 'active' : '' %>">
+                <i class="fa-solid fa-igloo"></i>
+                <p>Domes</p>
+            </div>
+            </a>
+
+            <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
+            <div class="filter  <%= (category === 'Boats') ? 'active' : '' %>">
+                <i class="fa-solid fa-ship"></i>
+                <p>Boats</p>
+            </div>
+            </a>
+        </div>
+        
         <div class="tax-toggle">
             <div class="form-check-reverse form-switch">
                 <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
                 <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
             </div>
         </div>
-        <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Trending') ? 'active' : '' %>">
-            <i class="fa-solid fa-fire"></i>
-            <p>Trending</p>
-        </div>
-        </a>
-
-        <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Rooms') ? 'active' : '' %>">
-            <i class="fa-solid fa-bed"></i>
-            <p>Rooms</p>
-        </div>
-        </a>
-
-
-        <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Iconic Cities') ? 'active' : '' %>">
-            <i class="fa-solid fa-mountain-city"></i>
-            <p>Iconic Cities</p>
-        </div>
-        </a>
-
-
-        <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Mountains') ? 'active' : '' %>">
-            <i class="fa-solid fa-mountain"></i>
-            <p>Mountains</p>
-        </div>
-        </a>
-
-
-        <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Castles') ? 'active' : '' %>">
-            <i class="fa-solid fa-chess-rook"></i>
-            <p>Castles</p>
-        </div>
-        </a>
-        
-
-        <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Amazing pool') ? 'active' : '' %>">
-            <i class="fa-solid fa-person-swimming"></i>
-            <p>Amazing pool</p>
-        </div>
-        </a>
-        
-
-        <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Camping') ? 'active' : '' %>">
-            <i class="fa-solid fa-tents"></i>
-            <p>Camping</p>
-        </div>
-        </a>
-        
-
-        <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Farms') ? 'active' : '' %>">
-            <i class="fa-solid fa-tractor"></i>
-            <p>Farms</p>
-        </div>
-        </a>
-        
-
-        <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Arctic') ? 'active' : '' %>">
-            <i class="fa-solid fa-snowflake"></i>
-            <p>Arctic</p>
-        </div>
-        </a>
-        
-
-        <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Domes') ? 'active' : '' %>">
-            <i class="fa-solid fa-igloo"></i>
-            <p>Domes</p>
-        </div>
-        </a>
-        
-
-        <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
-        <div class="filter  <%= (category === 'Boats') ? 'active' : '' %>">
-            <i class="fa-solid fa-ship"></i>
-            <p>Boats</p>
-        </div>
-        </a>
         
     </div>
 
@@ -252,14 +269,63 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let taxSwitch = document.getElementById("switchCheckDefault");
+            
             if (taxSwitch) {
-                taxSwitch.addEventListener("click", () => {
+                taxSwitch.addEventListener("change", function() {
+                    const showTotalPrice = this.checked;
+                    
+                    // Update price display
+                    updatePriceDisplay(showTotalPrice);
+                    
+                    // Toggle tax info visibility (opposite of price display)
                     let taxInfo = document.getElementsByClassName("tax-info");
                     for (let info of taxInfo) {
-                        info.style.display = (info.style.display !== "inline") ? "inline" : "none";
+                        info.style.display = showTotalPrice ? "none" : "inline";
                     }
                 });
             }
+
+            function updatePriceDisplay(showWithTax) {
+                const priceElements = document.querySelectorAll('.card-text');
+                
+                priceElements.forEach(function(element) {
+                    const priceText = element.innerHTML;
+                    const priceMatch = priceText.match(/([\d,]+)/);
+                    
+                    if (priceMatch) {
+                        let basePrice = parseInt(priceMatch[1].replace(/,/g, ''));
+                        let displayPrice;
+                        
+                        if (showWithTax) {
+                            // If currently showing base price, calculate total with tax
+                            if (!element.dataset.originalPrice) {
+                                element.dataset.originalPrice = basePrice;
+                            }
+                            displayPrice = Math.round(basePrice * 1.18);
+                        } else {
+                            // Show original base price
+                            if (element.dataset.originalPrice) {
+                                displayPrice = parseInt(element.dataset.originalPrice);
+                            } else {
+                                // If showing tax-included price, reverse calculate base price
+                                displayPrice = Math.round(basePrice / 1.18);
+                                element.dataset.originalPrice = displayPrice;
+                            }
+                        }
+                        
+                        const formattedPrice = displayPrice.toLocaleString("en-IN");
+                        const taxInfo = showWithTax ? '' : '<i class="tax-info">&nbsp; &nbsp; +18% GST</i>';
+                        
+                        // Get the title from the element
+                        const titleMatch = element.innerHTML.match(/<b>(.*?)<\/b>/);
+                        const title = titleMatch ? titleMatch[1] : 'N/A';
+                        
+                        // Update the price display
+                        element.innerHTML = `<b>${title}</b><br />${formattedPrice} / night${taxInfo}`;
+                    }
+                });
+            }
+            
             function showRatedModal(title, avgRating) {
                 const modal = document.createElement('div');
                 modal.id = 'rated-modal';
@@ -289,6 +355,7 @@
                     document.body.removeChild(modal);
                 };
             }
+            
             // Attach event listeners for badges
             document.querySelectorAll('.highly-rated-badge').forEach(function(badge) {
                 badge.addEventListener('click', function(e) {
@@ -297,6 +364,7 @@
                     showRatedModal(badge.getAttribute('data-title'), badge.getAttribute('data-avg'));
                 });
             });
+            
             // Attach event listener for test button
             var testBtn = document.getElementById('test-modal-btn');
             if (testBtn) {
