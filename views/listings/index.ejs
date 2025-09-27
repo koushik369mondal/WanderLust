@@ -1,6 +1,15 @@
 <% layout('/layouts/boilerplate') %>
 
     <style>
+         .main-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem; /* Adds space between toggle and filters */
+        }
+
+        #filters {
+            flex-grow: 1; /* Allows the filter container to take up remaining space */
+        }
         /* New gradient filter bar */
         #filters {
             display: flex;
@@ -132,96 +141,89 @@
         
     </style>
 
+<div class="main-filter-bar">
+
+    
 
     <div id="filters">
         <div class="filters-container">
             <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Trending') ? 'active' : '' %>">
-                <i class="fa-solid fa-fire"></i>
-                <p>Trending</p>
-            </div>
+                <div class="filter <%= (category === 'Trending') ? 'active' : '' %>">
+                    <i class="fa-solid fa-fire"></i>
+                    <p>Trending</p>
+                </div>
             </a>
-
             <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Rooms') ? 'active' : '' %>">
-                <i class="fa-solid fa-bed"></i>
-                <p>Rooms</p>
-            </div>
+                <div class="filter <%= (category === 'Rooms') ? 'active' : '' %>">
+                    <i class="fa-solid fa-bed"></i>
+                    <p>Rooms</p>
+                </div>
             </a>
-
             <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Iconic Cities') ? 'active' : '' %>">
-                <i class="fa-solid fa-mountain-city"></i>
-                <p>Iconic Cities</p>
-            </div>
+                <div class="filter <%= (category === 'Iconic Cities') ? 'active' : '' %>">
+                    <i class="fa-solid fa-mountain-city"></i>
+                    <p>Iconic Cities</p>
+                </div>
             </a>
-
             <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Mountains') ? 'active' : '' %>">
-                <i class="fa-solid fa-mountain"></i>
-                <p>Mountains</p>
-            </div>
+                <div class="filter <%= (category === 'Mountains') ? 'active' : '' %>">
+                    <i class="fa-solid fa-mountain"></i>
+                    <p>Mountains</p>
+                </div>
             </a>
-
             <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Castles') ? 'active' : '' %>">
-                <i class="fa-solid fa-chess-rook"></i>
-                <p>Castles</p>
-            </div>
+                <div class="filter <%= (category === 'Castles') ? 'active' : '' %>">
+                    <i class="fa-solid fa-chess-rook"></i>
+                    <p>Castles</p>
+                </div>
             </a>
-
             <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Amazing pool') ? 'active' : '' %>">
-                <i class="fa-solid fa-person-swimming"></i>
-                <p>Amazing pool</p>
-            </div>
+                <div class="filter <%= (category === 'Amazing pool') ? 'active' : '' %>">
+                    <i class="fa-solid fa-person-swimming"></i>
+                    <p>Amazing pool</p>
+                </div>
             </a>
-
             <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Camping') ? 'active' : '' %>">
-                <i class="fa-solid fa-tents"></i>
-                <p>Camping</p>
-            </div>
+                <div class="filter <%= (category === 'Camping') ? 'active' : '' %>">
+                    <i class="fa-solid fa-tents"></i>
+                    <p>Camping</p>
+                </div>
             </a>
-
             <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Farms') ? 'active' : '' %>">
-                <i class="fa-solid fa-tractor"></i>
-                <p>Farms</p>
-            </div>
+                <div class="filter <%= (category === 'Farms') ? 'active' : '' %>">
+                    <i class="fa-solid fa-tractor"></i>
+                    <p>Farms</p>
+                </div>
             </a>
-
             <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Arctic') ? 'active' : '' %>">
-                <i class="fa-solid fa-snowflake"></i>
-                <p>Arctic</p>
-            </div>
+                <div class="filter <%= (category === 'Arctic') ? 'active' : '' %>">
+                    <i class="fa-solid fa-snowflake"></i>
+                    <p>Arctic</p>
+                </div>
             </a>
-
             <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Domes') ? 'active' : '' %>">
-                <i class="fa-solid fa-igloo"></i>
-                <p>Domes</p>
-            </div>
+                <div class="filter <%= (category === 'Domes') ? 'active' : '' %>">
+                    <i class="fa-solid fa-igloo"></i>
+                    <p>Domes</p>
+                </div>
             </a>
-
             <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
-            <div class="filter  <%= (category === 'Boats') ? 'active' : '' %>">
-                <i class="fa-solid fa-ship"></i>
-                <p>Boats</p>
-            </div>
+                <div class="filter <%= (category === 'Boats') ? 'active' : '' %>">
+                    <i class="fa-solid fa-ship"></i>
+                    <p>Boats</p>
+                </div>
             </a>
         </div>
-        
-        <div class="tax-toggle">
-            <div class="form-check-reverse form-switch">
-                <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
-                <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
-            </div>
-        </div>
-        
     </div>
-
+    
+</div>
+<div class="tax-toggle">
+        <div class="form-check-reverse form-switch">
+            <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
+            <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
+        </div>
+    </div>
+    
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3">
         <% for(let listing of allListings) { %>
