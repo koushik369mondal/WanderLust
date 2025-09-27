@@ -1,6 +1,16 @@
 <% layout('/layouts/boilerplate') %>
 
 <style>
+        .card-img-container {
+            height: 15rem; /* Sets a fixed height for all image containers */
+            overflow: hidden; 
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This is the magic part! */
+        }
     .glass-container {
         background-color: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px); 
@@ -34,7 +44,10 @@
                 <div class="col">
                     <a href="/listings/<%= listing._id %>" class="listing-link">
                         <div class="card listing-card h-100">
-                            <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+                            
+                            <div class="card-img-container">
+    <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+</div>
                             <div class="card-body">
                                 <p class="card-text">
                                     <b><%= listing.title %></b><br>
