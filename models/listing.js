@@ -23,7 +23,7 @@ const listingSchema = new Schema({
 
   category: {
     type: String,
-    enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing Pool', 'Camping', 'Farms', 'Arctic','Domes','Boats'], // This ensures only these values are accepted
+    enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing pool', 'Camping', 'Farms', 'Arctic','Domes','Boats'], // This ensures only these values are accepted
   },
   bestSeason: {
     type: String,
