@@ -118,10 +118,10 @@
         </a>
       </div>
       <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search">
-          <input class="form-control me-2 search-inp" type="search" placeholder="Search destinations" />
+        <form class="d-flex" action="/listings/search" method="GET" role="search">
+          <input class="form-control me-2 search-inp" type="search" name="q" placeholder="Search destinations" aria-label="Search">
           <button class="btn search-btn" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>Search
+          <i class="fa-solid fa-magnifying-glass"></i>Search
           </button>
         </form>
       </div>
