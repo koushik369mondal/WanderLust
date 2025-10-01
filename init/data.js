@@ -10,6 +10,9 @@ const sampleListings = [
     price: 1500,
     location: "Malibu",
     country: "United States",
+    category: "Rooms",
+    bestSeason: "Summer (Jun-Aug)",
+    travelTip: "Watch the sunset from the deck for a magical experience.",
   },
   {
     title: "Modern Loft in Downtown",
@@ -22,6 +25,9 @@ const sampleListings = [
     price: 1200,
     location: "New York City",
     country: "United States",
+    category: "Iconic Cities",
+    bestSeason: "Autumn (Sep-Nov)",
+    travelTip: "Use the subway to get around; it's faster than a taxi.",
   },
   {
     title: "Mountain Retreat",
@@ -34,6 +40,9 @@ const sampleListings = [
     price: 1000,
     location: "Aspen",
     country: "United States",
+    category: "Mountains",
+    bestSeason: "Winter (Dec-Feb)",
+    travelTip: "The hiking trails behind the cabin are beautiful in the snow.",
   },
   {
     title: "Historic Villa in Tuscany",
@@ -46,6 +55,9 @@ const sampleListings = [
     price: 2500,
     location: "Florence",
     country: "Italy",
+    category: "Castles",
+    bestSeason: "Spring (Apr-Jun)",
+    travelTip: "Join a local wine tasting tour for an authentic experience.",
   },
   {
     title: "Secluded Treehouse Getaway",
@@ -58,6 +70,9 @@ const sampleListings = [
     price: 800,
     location: "Portland",
     country: "United States",
+    category: "Domes",
+    bestSeason: "Summer (Jul-Sep)",
+    travelTip: "The area is perfect for bird watching in the mornings.",
   },
   {
     title: "Beachfront Paradise",
@@ -70,6 +85,9 @@ const sampleListings = [
     price: 2000,
     location: "Cancun",
     country: "Mexico",
+    category: "Amazing pool",
+    bestSeason: "Winter (Dec-Apr)",
+    travelTip: "Try snorkeling at the nearby coral reef.",
   },
   {
     title: "Rustic Cabin by the Lake",
@@ -82,7 +100,11 @@ const sampleListings = [
     price: 900,
     location: "Lake Tahoe",
     country: "United States",
+    category: "Camping",
+    bestSeason: "Summer (Jun-Aug)",
+    travelTip: "Rent a kayak to explore the hidden coves of the lake.",
   },
+
   {
     title: "Luxury Penthouse with City Views",
     description:
@@ -94,6 +116,9 @@ const sampleListings = [
     price: 3500,
     location: "Los Angeles",
     country: "United States",
+    category: "Iconic Cities",
+    bestSeason: "All Year",
+    travelTip: "The rooftop pool is the best place to be at sunset.",
   },
   {
     title: "Ski-In/Ski-Out Chalet",
@@ -106,6 +131,9 @@ const sampleListings = [
     price: 3000,
     location: "Verbier",
     country: "Switzerland",
+    category: "Mountains",
+    bestSeason: "Winter (Dec-Mar)",
+    travelTip: "The off-piste skiing here is world-class.",
   },
   {
     title: "Safari Lodge in the Serengeti",
@@ -118,6 +146,9 @@ const sampleListings = [
     price: 4000,
     location: "Serengeti National Park",
     country: "Tanzania",
+     category: "Farms",
+    bestSeason: "Dry Season (Jun-Oct)",
+    travelTip: "A hot air balloon ride at sunrise is unforgettable.",
   },
   {
     title: "Historic Canal House",
@@ -130,6 +161,9 @@ const sampleListings = [
     price: 1800,
     location: "Amsterdam",
     country: "Netherlands",
+    category: "Iconic Cities",
+    bestSeason: "Spring (Apr-May)",
+    travelTip: "Rent a bike to explore the city like a local.",
   },
   {
     title: "Private Island Retreat",
@@ -142,6 +176,9 @@ const sampleListings = [
     price: 10000,
     location: "Fiji",
     country: "Fiji",
+    category: "Amazing pool",
+    bestSeason: "Dry Season (May-Oct)",
+    travelTip: "The coral reefs around the island are pristine for diving.",
   },
   {
     title: "Charming Cottage in the Cotswolds",
@@ -154,6 +191,9 @@ const sampleListings = [
     price: 1200,
     location: "Cotswolds",
     country: "United Kingdom",
+    category: "Rooms",
+    bestSeason: "Summer (Jun-Aug)",
+    travelTip: "Visit the local pubs for a traditional Sunday roast.",
   },
   {
     title: "Historic Brownstone in Boston",
@@ -166,6 +206,9 @@ const sampleListings = [
     price: 2200,
     location: "Boston",
     country: "United States",
+    category: "Iconic Cities",
+    bestSeason: "Autumn (Sep-Oct)",
+    travelTip: "Walk the Freedom Trail to see all the historic sites.",
   },
   {
     title: "Beachfront Bungalow in Bali",
@@ -178,6 +221,9 @@ const sampleListings = [
     price: 1800,
     location: "Bali",
     country: "Indonesia",
+    category: "Amazing pool",
+    bestSeason: "Dry Season (Apr-Oct)",
+    travelTip: "Don't miss the traditional Kecak fire dance at Uluwatu Temple.",
   },
   {
     title: "Mountain View Cabin in Banff",
@@ -190,6 +236,9 @@ const sampleListings = [
     price: 1500,
     location: "Banff",
     country: "Canada",
+    category: "Mountains",
+    bestSeason: "Summer (Jun-Aug)",
+    travelTip: "Visit Lake Louise at sunrise for stunning photos.",
   },
   {
     title: "Art Deco Apartment in Miami",
@@ -202,6 +251,9 @@ const sampleListings = [
     price: 1600,
     location: "Miami",
     country: "United States",
+    category: "Iconic Cities",
+    bestSeason: "Winter (Dec-Mar)",
+    travelTip: "Take a walking tour of the Art Deco Historic District.",
   },
   {
     title: "Tropical Villa in Phuket",
@@ -214,6 +266,9 @@ const sampleListings = [
     price: 3000,
     location: "Phuket",
     country: "Thailand",
+    category: "Amazing pool",
+    bestSeason: "Dry Season (Nov-Apr)",
+    travelTip: "Explore the Phi Phi Islands on a day trip by boat.",
   },
   {
     title: "Historic Castle in Scotland",
@@ -226,6 +281,9 @@ const sampleListings = [
     price: 4000,
     location: "Scottish Highlands",
     country: "United Kingdom",
+    category: "Castles",
+    bestSeason: "Summer (Jun-Aug)",
+    travelTip: "Keep an eye out for the Loch Ness Monster!",
   },
   {
     title: "Desert Oasis in Dubai",
@@ -238,6 +296,9 @@ const sampleListings = [
     price: 5000,
     location: "Dubai",
     country: "United Arab Emirates",
+    category: "Trending",
+    bestSeason: "Winter (Nov-Mar)",
+    travelTip: "A desert safari with dune bashing is a thrilling activity.",
   },
   {
     title: "Rustic Log Cabin in Montana",
@@ -250,6 +311,9 @@ const sampleListings = [
     price: 1100,
     location: "Montana",
     country: "United States",
+    category: "Farms",
+    bestSeason: "Autumn (Sep-Oct)",
+    travelTip: "Go stargazing at night; the sky is incredibly clear.",
   },
   {
     title: "Beachfront Villa in Greece",
@@ -262,6 +326,9 @@ const sampleListings = [
     price: 2500,
     location: "Mykonos",
     country: "Greece",
+    category: "Rooms",
+    bestSeason: "Summer (Jun-Sep)",
+    travelTip: "Explore the island's famous windmills at sunset.",
   },
   {
     title: "Eco-Friendly Treehouse Retreat",
@@ -274,6 +341,9 @@ const sampleListings = [
     price: 750,
     location: "Costa Rica",
     country: "Costa Rica",
+    category: "Domes",
+    bestSeason: "Dry Season (Dec-Apr)",
+    travelTip: "Look for sloths and monkeys in the surrounding trees.",
   },
   {
     title: "Historic Cottage in Charleston",
@@ -286,6 +356,9 @@ const sampleListings = [
     price: 1600,
     location: "Charleston",
     country: "United States",
+    category: "Iconic Cities",
+    bestSeason: "Spring (Mar-May)",
+    travelTip: "Take a horse-drawn carriage tour to learn about the city's history.",
   },
   {
     title: "Modern Apartment in Tokyo",
@@ -298,6 +371,9 @@ const sampleListings = [
     price: 2000,
     location: "Tokyo",
     country: "Japan",
+    category: "Iconic Cities",
+    bestSeason: "Spring (Mar-May)",
+    travelTip: "Visit the Tsukiji Outer Market for amazing street food.",
   },
   {
     title: "Lakefront Cabin in New Hampshire",
@@ -310,7 +386,11 @@ const sampleListings = [
     price: 1200,
     location: "New Hampshire",
     country: "United States",
+    category: "Camping",
+    bestSeason: "Autumn (Sep-Oct)",
+    travelTip: "The fall foliage views from the cabin are spectacular.",
   },
+
   {
     title: "Luxury Villa in the Maldives",
     description:
@@ -322,6 +402,9 @@ const sampleListings = [
     price: 6000,
     location: "Maldives",
     country: "Maldives",
+    category: "Amazing pool",
+    bestSeason: "Dry Season (Nov-Apr)",
+    travelTip: "Go for a swim with manta rays and whale sharks.",
   },
   {
     title: "Ski Chalet in Aspen",
@@ -334,6 +417,9 @@ const sampleListings = [
     price: 4000,
     location: "Aspen",
     country: "United States",
+    category: "Mountains",
+    bestSeason: "Winter (Dec-Feb)",
+    travelTip: "Après-ski is a must-do; check out the local spots.",
   },
   {
     title: "Secluded Beach House in Costa Rica",
@@ -346,6 +432,9 @@ const sampleListings = [
     price: 1800,
     location: "Costa Rica",
     country: "Costa Rica",
+    category: "Rooms",
+    bestSeason: "Dry Season (Dec-Apr)",
+    travelTip: "Watch for nesting sea turtles on the beach at night.",
   },
 ];
 
