@@ -3,7 +3,12 @@ const User = require("../models/user");
 const Listing = require("../models/listing");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+
+// Temporary fix for development - only initialize if valid token
+let geocodingClient = null;
+if (mapToken && mapToken.startsWith('pk.') && mapToken.length > 50) {
+  geocodingClient = mbxGeocoding({ accessToken: mapToken });
+}
 
 
 module.exports.index = async (req, res) => {
@@ -120,12 +125,15 @@ module.exports.showListing = async (req, res, next) => {
 
 
 module.exports.createListing = async (req, res, next) => {
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: req.body.listing.location,
-      limit: 1,
-    })
-    .send();
+  let response = null;
+  if (geocodingClient) {
+    response = await geocodingClient
+      .forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+      })
+      .send();
+  }
   try {
 
     let url = "";
@@ -138,7 +146,16 @@ module.exports.createListing = async (req, res, next) => {
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
 
-    newListing.geometry = response.body.features[0].geometry;
+    // Set geometry from geocoding or use default coordinates
+    if (response && response.body.features.length > 0) {
+      newListing.geometry = response.body.features[0].geometry;
+    } else {
+      // Default coordinates (New York City) for development
+      newListing.geometry = {
+        type: "Point",
+        coordinates: [-74.006, 40.7128]
+      };
+    }
 
     let savedListings = await newListing.save();
     console.log(savedListings);
@@ -169,12 +186,15 @@ module.exports.updateListing = async (req, res) => {
   
   try {
     // Get geocoding data for the updated location
-    let response = await geocodingClient
-      .forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1,
-      })
-      .send();
+    let response = null;
+    if (geocodingClient) {
+      response = await geocodingClient
+        .forwardGeocode({
+          query: req.body.listing.location,
+          limit: 1,
+        })
+        .send();
+    }
     
     // First update the listing without saving to get the document
     let listing = await Listing.findById(id);
@@ -182,8 +202,18 @@ module.exports.updateListing = async (req, res) => {
     // Update all fields from the form
     Object.assign(listing, req.body.listing);
     
-    // Update geometry with new coordinates
-    listing.geometry = response.body.features[0].geometry;
+    // Update geometry with new coordinates or use default
+    if (response && response.body.features.length > 0) {
+      listing.geometry = response.body.features[0].geometry;
+    } else {
+      // Keep existing geometry or set default
+      if (!listing.geometry) {
+        listing.geometry = {
+          type: "Point",
+          coordinates: [-74.006, 40.7128]
+        };
+      }
+    }
     
     // Update image if a new one was uploaded
     if (typeof req.file !== "undefined") {
