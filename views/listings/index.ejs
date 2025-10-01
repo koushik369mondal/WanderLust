@@ -141,9 +141,22 @@
         
     </style>
 
-<div class="main-filter-bar">
 
-    
+<% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <% if (noResults) { %>
+                    No listings found for: <strong>"<%= searchQuery %>"</strong>. <a href="/listings" class="alert-link">Clear search</a>.
+                <% } else { %>
+                    Showing results for: <strong>"<%= searchQuery %>"</strong>. <a href="/listings" class="alert-link">Clear search</a>.
+                <% } %>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<div class="main-filter-bar">
 
     <div id="filters">
         <div class="filters-container">

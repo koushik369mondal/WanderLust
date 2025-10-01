@@ -244,3 +244,25 @@ module.exports.unlikeListing = async (req, res) => {
     req.flash("success", "Removed from your liked listings.");
     res.redirect(`/listings/${id}`);
 };
+
+module.exports.searchListings = async (req, res) => {
+    const { q } = req.query; //by query params
+    let allListings = [];
+    let noResults = false;
+
+    if (q) {
+        allListings = await Listing.find({
+            $or: [
+                { title: { $regex: q, $options: "i" } },
+                { category: { $regex: q, $options: "i" } },
+                { location: { $regex: q, $options: "i" } },
+                { country: { $regex: q, $options: "i" } }
+            ]
+        });
+        if(allListings.length === 0) {
+            noResults = true;
+        }
+    }
+//rendering on idnex pg only
+    res.render("listings/index.ejs", { allListings, category: null, searchQuery: q, noResults });
+};
