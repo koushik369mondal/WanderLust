@@ -22,6 +22,24 @@
     font-size: 1rem;
   }
 
+  /* Enhanced navbar brand styling */
+  .navbar-brand {
+    font-size: 1.5rem;
+    color: var(--accent-color) !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-brand:hover {
+    color: var(--accent-color) !important;
+    transform: scale(1.05);
+  }
+
+  .navbar-brand i {
+    color: #fe424d;
+    font-size: 1.4rem;
+  }
+
   /* Tablet view fixes */
   @media (max-width: 991px) and (min-width: 768px) {
     .navbar-nav .d-flex {
@@ -105,7 +123,10 @@
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand mt-1" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
+      <i class="fa-regular fa-compass me-2"></i>
+      <span class="fw-bold">WanderLust</span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
     </button>
