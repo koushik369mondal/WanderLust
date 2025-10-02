@@ -225,4 +225,273 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         document.body.appendChild(modal);
     };
+
+    // =====================================
+    // MODERN DESIGN ENHANCEMENTS
+    // =====================================
+
+    // Enhanced Navbar Scroll Effect
+    function initNavbarScrollEffect() {
+        const navbar = document.querySelector('.navbar');
+        let lastScrollTop = 0;
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Auto-hide navbar on scroll down (mobile)
+            if (window.innerWidth <= 768) {
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    }
+
+    // Intersection Observer for Reveal Animations
+    function initRevealAnimations() {
+        const revealElements = document.querySelectorAll('.reveal, .card, .glass-card');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            revealObserver.observe(element);
+        });
+    }
+
+    // Enhanced Card Interactions
+    function initCardInteractions() {
+        const cards = document.querySelectorAll('.card, .listing-card, .glass-card');
+        
+        cards.forEach(card => {
+            // Add tilt effect on mouse move
+            card.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768) {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            });
+        });
+    }
+
+    // Smooth Page Transitions
+    function initPageTransitions() {
+        // Add fade-in animation to page content
+        document.body.style.opacity = '0';
+        window.addEventListener('load', () => {
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            document.body.style.opacity = '1';
+        });
+
+        // Smooth link transitions
+        const links = document.querySelectorAll('a[href^="/"], a[href^="./"]');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 150);
+                }
+            });
+        });
+    }
+
+    // Enhanced Form Interactions
+    function initFormEnhancements() {
+        const formControls = document.querySelectorAll('.form-control, input, textarea');
+        
+        formControls.forEach(control => {
+            // Add modern styling
+            control.classList.add('form-control-modern');
+            
+            // Floating label effect
+            const label = control.previousElementSibling;
+            if (label && label.tagName === 'LABEL') {
+                control.addEventListener('focus', () => {
+                    label.style.transform = 'translateY(-25px) scale(0.85)';
+                    label.style.color = 'var(--accent-color)';
+                });
+                
+                control.addEventListener('blur', () => {
+                    if (!control.value) {
+                        label.style.transform = 'translateY(0) scale(1)';
+                        label.style.color = 'var(--text-muted)';
+                    }
+                });
+            }
+        });
+    }
+
+    // Parallax Background Effect
+    function initParallaxBackground() {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            document.body.style.backgroundPosition = `center ${rate}px`;
+        });
+    }
+
+    // Progressive Image Loading
+    function initLazyLoading() {
+        const images = document.querySelectorAll('img[data-src]');
+        
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.add('loaded');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+    }
+
+    // Enhanced Button Interactions
+    function initButtonEnhancements() {
+        const buttons = document.querySelectorAll('.btn, button');
+        
+        buttons.forEach(button => {
+            // Add ripple effect
+            button.addEventListener('click', (e) => {
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    pointer-events: none;
+                `;
+                
+                button.style.position = 'relative';
+                button.style.overflow = 'hidden';
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    }
+
+    // Theme-aware animations
+    function initThemeAnimations() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                document.body.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                // Add a subtle flash effect
+                const flash = document.createElement('div');
+                flash.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: var(--accent-color);
+                    opacity: 0;
+                    pointer-events: none;
+                    z-index: 9999;
+                    animation: themeFlash 0.3s ease-out;
+                `;
+                
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 300);
+            });
+        }
+    }
+
+    // Initialize all enhancements
+    initNavbarScrollEffect();
+    initRevealAnimations();
+    initCardInteractions();
+    initPageTransitions();
+    initFormEnhancements();
+    initParallaxBackground();
+    initLazyLoading();
+    initButtonEnhancements();
+    initThemeAnimations();
 });
+
+// CSS Animations (to be added via JavaScript)
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes themeFlash {
+        0% { opacity: 0; }
+        50% { opacity: 0.1; }
+        100% { opacity: 0; }
+    }
+    
+    .loaded {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+    
+    img[data-src] {
+        opacity: 0;
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+`;
+document.head.appendChild(style);
