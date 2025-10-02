@@ -1,34 +1,154 @@
-name: Summarize new issues
+name: "🤖 Issue Auto-Processor"
 
 on:
   issues:
     types: [opened]
+  pull_request:
+    types: [opened]
 
 jobs:
-  summary:
+  welcome-and-label:
+    name: "Welcome & Auto-Label"
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      models: read
+      pull-requests: write
       contents: read
 
     steps:
-      - name: Checkout repository
+      - name: "Checkout repository"
         uses: actions/checkout@v4
 
-      - name: Run AI inference
-        id: inference
-        uses: actions/ai-inference@v1
+      - name: "Welcome new contributors"
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
         with:
-          prompt: |
-            Summarize the following GitHub issue in one paragraph:
-            Title: ${{ github.event.issue.title }}
-            Body: ${{ github.event.issue.body }}
+          script: |
+            // Check if this is the user's first issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator: context.payload.issue.user.login,
+              state: 'all'
+            });
+            
+            if (issues.data.length === 1) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: `🎉 **Welcome to WanderLust!** 🌍✈️
 
-      - name: Comment with AI summary
-        run: |
-          gh issue comment $ISSUE_NUMBER --body '${{ steps.inference.outputs.response }}'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          RESPONSE: ${{ steps.inference.outputs.response }}
+            Thank you for opening your first issue! We're excited to have you as part of our community.
+
+            📋 **What happens next?**
+            - Our team will review your issue and provide feedback
+            - If you're reporting a bug, please include steps to reproduce it
+            - If you're suggesting a feature, feel free to elaborate on the use case
+
+            🤝 **Want to contribute?**
+            - Check out our [Contributing Guidelines](CONTRIBUTION.md)
+            - Look for issues labeled \`good-first-issue\` to get started
+            - Join our discussions and help other travelers!
+
+            Happy coding! 🚀`
+              });
+            }
+
+      - name: "Auto-label issues"
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = issue.body?.toLowerCase() || '';
+            const labels = [];
+            
+            // Bug detection
+            if (title.includes('bug') || title.includes('error') || title.includes('fix') || 
+                body.includes('error') || body.includes('crash') || body.includes('broken')) {
+              labels.push('bug');
+            }
+            
+            // Feature request detection
+            if (title.includes('feature') || title.includes('enhancement') || title.includes('add') ||
+                body.includes('feature') || body.includes('enhancement') || body.includes('new')) {
+              labels.push('enhancement');
+            }
+            
+            // Documentation detection
+            if (title.includes('doc') || title.includes('readme') || title.includes('documentation') ||
+                body.includes('documentation') || body.includes('docs')) {
+              labels.push('documentation');
+            }
+            
+            // Question detection
+            if (title.includes('question') || title.includes('how') || title.includes('?') ||
+                body.includes('question') || body.includes('how do i')) {
+              labels.push('question');
+            }
+            
+            // Help wanted detection
+            if (title.includes('help') || body.includes('help wanted')) {
+              labels.push('help-wanted');
+            }
+            
+            // Component-specific labels
+            if (title.includes('frontend') || body.includes('ui') || body.includes('css') || body.includes('html')) {
+              labels.push('frontend');
+            }
+            
+            if (title.includes('backend') || body.includes('api') || body.includes('server') || body.includes('database')) {
+              labels.push('backend');
+            }
+            
+            if (title.includes('test') || body.includes('testing') || body.includes('jest') || body.includes('cypress')) {
+              labels.push('testing');
+            }
+            
+            // Apply labels if any were detected
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labels
+              });
+            }
+
+      - name: "Welcome new PR contributors"
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check if this is the user's first PR
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator: context.payload.pull_request.user.login,
+              state: 'all'
+            });
+            
+            if (prs.data.length === 1) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: `🚀 **Thank you for your first contribution to WanderLust!** 🌍
+
+            We appreciate you taking the time to submit a pull request!
+
+            🔍 **Review Process:**
+            - Our maintainers will review your changes
+            - Please ensure all tests pass
+            - Be ready to address any feedback
+
+            💡 **Tips for success:**
+            - Make sure your PR description clearly explains the changes
+            - Link to any related issues
+            - Keep your commits focused and well-described
+
+            Thank you for helping make WanderLust better! ✨`
+              });
+            }

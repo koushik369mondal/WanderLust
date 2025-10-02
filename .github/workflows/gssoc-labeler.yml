@@ -1,0 +1,242 @@
+name: "🏷️ GSSoC'25 Auto-Labeler"
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-label-gssoc:
+    name: "Apply GSSoC'25 Labels"
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: "Auto-label issues with GSSoC'25"
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                labels: ['GSSoC\'25', 'Level2']
+              });
+              
+              console.log('Successfully added GSSoC\'25 and Level2 labels to issue #' + context.payload.issue.number);
+            } catch (error) {
+              console.error('Error adding labels to issue:', error);
+              
+              // Try to create the labels if they don't exist
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'GSSoC\'25',
+                  description: 'Part of GirlScript Summer of Code 2025',
+                  color: 'ff6b35'
+                });
+                console.log('Created GSSoC\'25 label');
+              } catch (createError) {
+                console.log('GSSoC\'25 label might already exist');
+              }
+              
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'Level2',
+                  description: 'Intermediate level task - suitable for contributors with some experience',
+                  color: '0366d6'
+                });
+                console.log('Created Level2 label');
+              } catch (createError) {
+                console.log('Level2 label might already exist');
+              }
+              
+              // Try adding labels again after creation
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.issue.number,
+                  labels: ['GSSoC\'25', 'Level2']
+                });
+                console.log('Successfully added labels after creation');
+              } catch (retryError) {
+                console.error('Failed to add labels even after creation:', retryError);
+              }
+            }
+
+      - name: "Auto-label PRs with GSSoC'25"
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: ['GSSoC\'25', 'Level2']
+              });
+              
+              console.log('Successfully added GSSoC\'25 and Level2 labels to PR #' + context.payload.pull_request.number);
+            } catch (error) {
+              console.error('Error adding labels to PR:', error);
+              
+              // Try to create the labels if they don't exist
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'GSSoC\'25',
+                  description: 'Part of GirlScript Summer of Code 2025',
+                  color: 'ff6b35'
+                });
+                console.log('Created GSSoC\'25 label');
+              } catch (createError) {
+                console.log('GSSoC\'25 label might already exist');
+              }
+              
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'Level2',
+                  description: 'Intermediate level task - suitable for contributors with some experience',
+                  color: '0366d6'
+                });
+                console.log('Created Level2 label');
+              } catch (createError) {
+                console.log('Level2 label might already exist');
+              }
+              
+              // Try adding labels again after creation
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  labels: ['GSSoC\'25', 'Level2']
+                });
+                console.log('Successfully added labels after creation');
+              } catch (retryError) {
+                console.error('Failed to add labels even after creation:', retryError);
+              }
+            }
+
+      - name: "Add welcome comment for GSSoC'25 contributors"
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check if this is a new contributor
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator: context.payload.issue.user.login,
+              state: 'all'
+            });
+            
+            if (issues.data.length === 1) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: `## 🎉 Welcome to GSSoC'25! 🌟
+
+            Thank you for contributing to **WanderLust** as part of **GirlScript Summer of Code 2025**! 
+
+            ### 🏷️ **Your Issue Details:**
+            - 🎯 **Program**: GSSoC'25
+            - 📊 **Level**: Level2 (Intermediate)
+            - 🌍 **Project**: WanderLust - Travel Platform
+
+            ### 📋 **Next Steps:**
+            1. **Wait for Assignment** - A maintainer will review and assign this issue
+            2. **Read Guidelines** - Check our [Contributing Guide](CONTRIBUTION.md)
+            3. **Ask Questions** - Feel free to ask for clarification
+            4. **Stay Updated** - Watch this issue for updates
+
+            ### 💡 **GSSoC'25 Tips:**
+            - 🕒 **Time Management**: Plan your work effectively
+            - 🤝 **Communication**: Keep maintainers updated on progress
+            - 🔍 **Quality**: Focus on clean, well-documented code
+            - 📈 **Learning**: This is a great opportunity to grow your skills!
+
+            ### 🌟 **Point System:**
+            - **Level2 Issues**: Worth more points for intermediate complexity
+            - **Quality Matters**: Well-implemented solutions earn bonus points
+            - **Documentation**: Good documentation and tests are highly valued
+
+            **Happy Coding! Let's make WanderLust amazing together! 🚀✨**
+
+            *This is an automated message for GSSoC'25 participants. For questions, tag a maintainer.*`
+              });
+            }
+
+      - name: "Add welcome comment for GSSoC'25 PR contributors"
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check if this is the contributor's first PR
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator: context.payload.pull_request.user.login,
+              state: 'all'
+            });
+            
+            if (prs.data.length === 1) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: `## 🚀 First GSSoC'25 Pull Request! 🎉
+
+            Congratulations on submitting your first PR to **WanderLust** for **GSSoC'25**!
+
+            ### 🏷️ **PR Classification:**
+            - 🎯 **Program**: GSSoC'25  
+            - 📊 **Level**: Level2 (Intermediate)
+            - 🔄 **Status**: Under Review
+
+            ### 📝 **Review Process:**
+            1. **Automated Checks** - CI/CD pipeline will run tests
+            2. **Code Review** - Maintainers will review your changes
+            3. **Feedback** - Address any requested changes
+            4. **Merge** - Approved PRs will be merged
+
+            ### ✅ **PR Checklist:**
+            - [ ] Code follows project style guidelines
+            - [ ] Tests pass locally
+            - [ ] Documentation updated if needed
+            - [ ] Linked to related issue (if applicable)
+            - [ ] No merge conflicts
+
+            ### 🌟 **Scoring Criteria:**
+            - **Code Quality**: Clean, readable, and well-structured
+            - **Functionality**: Meets requirements and works correctly
+            - **Testing**: Proper test coverage
+            - **Documentation**: Clear comments and documentation
+            - **Best Practices**: Follows project conventions
+
+            ### 💡 **Tips for Success:**
+            - 🔍 Respond promptly to review feedback
+            - 🧪 Ensure all tests pass
+            - 📚 Keep learning and improving
+            - 🤝 Engage with the community
+
+            **Thank you for contributing to GSSoC'25! 🌟**
+
+            *This is an automated message for GSSoC'25 participants. Good luck! 🍀*`
+              });
+            }

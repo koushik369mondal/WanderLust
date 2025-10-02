@@ -1,0 +1,119 @@
+# Configuration for the labeler workflow
+# This file defines which labels to apply based on file paths changed in PRs
+
+# GSSoC'25 Program Labels (applied to all PRs automatically by gssoc-labeler.yml)
+"GSSoC'25":
+  - "**/*"  # All files - indicates this is part of GSSoC'25
+
+"Level2":
+  - "**/*"  # All files - indicates intermediate level
+
+# Frontend changes
+"frontend":
+  - "views/**/*"
+  - "public/**/*"
+  - "*.html"
+  - "*.ejs"
+  - "*.css"
+  - "*.scss"
+  - "*.js"
+  - "public/CSS/**/*"
+  - "public/JS/**/*"
+  - "public/images/**/*"
+
+# Backend changes
+"backend":
+  - "controllers/**/*"
+  - "models/**/*"
+  - "routes/**/*"
+  - "middleware.js"
+  - "app.js"
+  - "utils/**/*"
+  - "schema.js"
+
+# Database related
+"database":
+  - "models/**/*"
+  - "init/**/*"
+  - "schema.js"
+  - "**/*seed*"
+  - "**/*migration*"
+
+# Configuration changes
+"config":
+  - "package.json"
+  - "package-lock.json"
+  - "*.env*"
+  - ".env.example"
+  - "cloudConfig.js"
+  - "*.config.js"
+  - "*.config.json"
+
+# Documentation
+"documentation":
+  - "README.md"
+  - "*.md"
+  - "docs/**/*"
+  - "CONTRIBUTION.md"
+  - "CODE_OF_CONDUCT.md"
+  - "SECURITY.md"
+  - "SPARKLE_IMPROVEMENTS.md"
+
+# CI/CD and DevOps
+"ci/cd":
+  - ".github/**/*"
+  - "Dockerfile"
+  - "docker-compose.yml"
+  - ".dockerignore"
+  - "*.yml"
+  - "*.yaml"
+
+# Dependencies
+"dependencies":
+  - "package.json"
+  - "package-lock.json"
+  - "yarn.lock"
+
+# Testing
+"testing":
+  - "test/**/*"
+  - "tests/**/*"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+  - "jest.config.js"
+  - "cypress.json"
+  - "cypress/**/*"
+
+# Security
+"security":
+  - "SECURITY.md"
+  - "middleware.js"
+  - "**/*auth*"
+  - "**/*security*"
+
+# UI/UX
+"ui/ux":
+  - "views/**/*"
+  - "public/CSS/**/*"
+  - "public/images/**/*"
+  - "**/*style*"
+  - "**/*theme*"
+
+# API changes
+"api":
+  - "routes/**/*"
+  - "controllers/**/*"
+  - "**/*api*"
+
+# Performance
+"performance":
+  - "**/*perf*"
+  - "**/*performance*"
+  - "**/*optimize*"
+  - "**/*cache*"
+
+# Small changes (usually safe to merge)
+"minor":
+  - "*.md"
+  - ".gitignore"
+  - "*.txt"

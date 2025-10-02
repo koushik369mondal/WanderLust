@@ -3,25 +3,77 @@
 # You can adjust the behavior by modifying this file.
 # For more information, see:
 # https://github.com/actions/stale
-name: Mark stale issues and pull requests
+
+name: "🗂️ Mark stale issues and pull requests"
 
 on:
   schedule:
-  - cron: '33 12 * * *'
+    - cron: '0 12 * * *'  # Run daily at 12:00 UTC
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   stale:
-
+    name: "Mark stale items"
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
 
     steps:
-    - uses: actions/stale@v5
+    - name: "Mark stale issues and PRs"
+      uses: actions/stale@v9
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
-        stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
+        
+        # Issues configuration
+        days-before-issue-stale: 60
+        days-before-issue-close: 14
+        stale-issue-message: |
+          👋 Hello! This issue has been automatically marked as stale because it has not had recent activity.
+          
+          🏃‍♂️ **To keep this issue active:**
+          - Add a comment with updates or questions
+          - Reference it in a pull request
+          - Add the `keep-open` label
+          
+          🗑️ **If no activity occurs within 14 days, this issue will be automatically closed.**
+          
+          Thank you for contributing to WanderLust! 🌍✈️
+        close-issue-message: |
+          🔒 This issue has been automatically closed due to inactivity.
+          
+          If you believe this issue is still relevant, please feel free to reopen it or create a new issue with updated information.
+          
+          Thank you for your contribution to WanderLust! 🌍
+        stale-issue-label: 'stale'
+        
+        # Pull requests configuration
+        days-before-pr-stale: 30
+        days-before-pr-close: 7
+        stale-pr-message: |
+          👋 Hello! This pull request has been automatically marked as stale because it has not had recent activity.
+          
+          🔄 **To keep this PR active:**
+          - Push new commits
+          - Add a comment with updates
+          - Request a review
+          - Add the `keep-open` label
+          
+          🗑️ **If no activity occurs within 7 days, this PR will be automatically closed.**
+          
+          Thank you for contributing to WanderLust! 🌍✈️
+        close-pr-message: |
+          🔒 This pull request has been automatically closed due to inactivity.
+          
+          If you'd like to continue with this PR, please feel free to reopen it and address any feedback.
+          
+          Thank you for your contribution to WanderLust! 🌍
+        stale-pr-label: 'stale'
+        
+        # Exempt labels
+        exempt-issue-labels: 'keep-open,bug,enhancement,documentation,help-wanted,good-first-issue,priority-high'
+        exempt-pr-labels: 'keep-open,work-in-progress,review-requested,priority-high'
+        
+        # Other options
+        remove-stale-when-updated: true
+        delete-branch: false
