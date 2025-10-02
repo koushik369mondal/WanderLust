@@ -23,9 +23,9 @@
   --bg-primary: linear-gradient(135deg, #3287c0, #112344ec, #048679);
   --bg-secondary: #2d2d2d;
   --bg-tertiary: #333333;
-  --text-primary: #e0e0e0;
-  --text-secondary: #f5f5f5;
-  --text-muted: #a3a3a3;
+  --text-primary: #ffffff;
+  --text-secondary: #f0f0f0;
+  --text-muted: #cccccc;
   --navbar-bg: #2d2d2d;
   --card-bg: linear-gradient(135deg, #4cafef, #112344c7, #009688);
   --border-color: #404040;
@@ -113,6 +113,8 @@ body {
 
 .nav-link {
   color: var(--text-primary) !important;
+  font-weight: 500;
+  font-size: 1rem;
   transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     transform 0.2s ease;
 }
@@ -224,15 +226,16 @@ body {
   color: #ffffff;
 }
 
-/* Text & links */
+/* Text & links - Enhanced visibility */
 .footer-col p,
 .footer-col a {
   font-size: 15px;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   text-decoration: none;
   display: block;
-   margin-bottom: 10px; 
+  margin-bottom: 10px;
+  font-weight: 400; 
   transition: color 0.3s ease;
 }
 
@@ -261,7 +264,8 @@ body {
 }
 
 .footer-col input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
 }
 
 .footer-col input:focus {
@@ -401,6 +405,24 @@ body {
 
 .card-text {
   color: var(--text-primary) !important;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.card-text b {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.card-body p {
+  margin-bottom: 0.75rem;
+}
+
+.tax-info {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 .card-img-top {
@@ -744,10 +766,11 @@ body {
 [data-theme="dark"] .auth-container p {
   color: #ffffff !important;
 }
-/* Dark mode tab fixes */
+/* Dark mode tab fixes - Enhanced visibility */
 [data-theme="dark"] .nav-link,
 [data-theme="dark"] .tab-text {
-  color: var(--text-secondary) !important; /* brighter gray/white */
+  color: #ffffff !important;
+  font-weight: 500;
 }
 
 [data-theme="dark"] .nav-link.active,
@@ -783,6 +806,17 @@ body {
   color: var(--accent-color) !important;
 }
 
+/* Dark theme form labels - Enhanced visibility */
+[data-theme="dark"] .auth-form .form-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .form-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
 .auth-container:hover {
   transform: translateY(-5px);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
@@ -801,10 +835,11 @@ body {
 }
 
 .auth-form .form-label {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  letter-spacing: 0.025em;
 }
 
 .auth-form .form-control {
@@ -822,11 +857,16 @@ body {
   transform: translateY(-2px);
 }
 
-/* Dark theme input fields */
+/* Dark theme input fields - Enhanced visibility */
 [data-theme="dark"] .auth-form .form-control {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff; /* typed text is bright */
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+[data-theme="dark"] .auth-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .auth-form .form-control:hover {
@@ -870,6 +910,37 @@ body {
     /* Better performance on mobile */
     background-size: cover;
     background-position: center center;
+    font-size: 16px; /* Improved base font size for mobile */
+    line-height: 1.6;
+  }
+
+  /* Enhanced mobile typography */
+  .nav-link {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .auth-form .form-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .auth-form .form-control {
+    font-size: 1rem;
+    padding: 1.2rem 1.25rem;
+  }
+
+  .footer-col p,
+  .footer-col a {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  /* Better button text visibility on mobile */
+  .btn {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
   }
 
   [data-theme="dark"] body {
