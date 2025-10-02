@@ -8,7 +8,7 @@ module.exports.subscribe = async (req, res) => {
         // Validate email
         if (!email) {
             req.flash("error", "Please provide an email address.");
-            return res.redirect("back");
+            return res.redirect(req.get("Referrer") || "/");
         }
 
         // Check if email already exists
@@ -17,14 +17,14 @@ module.exports.subscribe = async (req, res) => {
         if (existingSubscriber) {
             if (existingSubscriber.isActive) {
                 req.flash("error", "This email is already subscribed to our newsletter!");
-                return res.redirect("back");
+                return res.redirect(req.get("Referrer") || "/");
             } else {
                 // Reactivate subscription
                 existingSubscriber.isActive = true;
                 existingSubscriber.subscribedAt = new Date();
                 await existingSubscriber.save();
                 req.flash("success", "Welcome back! Your newsletter subscription has been reactivated.");
-                return res.redirect("back");
+                return res.redirect(req.get("Referrer") || "/");
             }
         }
 
@@ -36,7 +36,7 @@ module.exports.subscribe = async (req, res) => {
 
         await newSubscriber.save();
         req.flash("success", "🎉 Thank you for subscribing! You'll receive travel tips and exclusive deals.");
-        res.redirect("back");
+        res.redirect(req.get("Referrer") || "/");
 
     } catch (error) {
         console.error("Newsletter subscription error:", error);
@@ -49,7 +49,7 @@ module.exports.subscribe = async (req, res) => {
             req.flash("error", "Something went wrong. Please try again later.");
         }
         
-        res.redirect("back");
+        res.redirect(req.get("Referrer") || "/");
     }
 };
 
@@ -60,31 +60,31 @@ module.exports.unsubscribe = async (req, res) => {
         
         if (!email) {
             req.flash("error", "Please provide an email address.");
-            return res.redirect("back");
+            return res.redirect(req.get("Referrer") || "/");
         }
 
         const subscriber = await Newsletter.findOne({ email: email.toLowerCase() });
         
         if (!subscriber) {
             req.flash("error", "Email address not found in our newsletter list.");
-            return res.redirect("back");
+            return res.redirect(req.get("Referrer") || "/");
         }
 
         if (!subscriber.isActive) {
             req.flash("error", "This email is already unsubscribed.");
-            return res.redirect("back");
+            return res.redirect(req.get("Referrer") || "/");
         }
 
         subscriber.isActive = false;
         await subscriber.save();
         
         req.flash("success", "You have been successfully unsubscribed from our newsletter.");
-        res.redirect("back");
+        res.redirect(req.get("Referrer") || "/");
 
     } catch (error) {
         console.error("Newsletter unsubscribe error:", error);
         req.flash("error", "Something went wrong. Please try again later.");
-        res.redirect("back");
+        res.redirect(req.get("Referrer") || "/");
     }
 };
 
