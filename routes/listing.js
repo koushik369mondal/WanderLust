@@ -19,6 +19,9 @@ router
         wrapAsync(listingsController.createListing)
     );
 
+// Search suggestions API
+router.get("/search/suggestions", wrapAsync(listingsController.getSearchSuggestions));
+
 // New Route - This must come BEFORE the /:id route
 router.get("/new", isLoggedIn, listingsController.renderNewForm);
 

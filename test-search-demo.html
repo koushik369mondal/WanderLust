@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Functionality Demo - WanderLust</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Arial', sans-serif; }
+        .demo-section { margin: 2rem 0; padding: 2rem; border-radius: 15px; }
+        .feature-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .success-bg { background: linear-gradient(135deg, #28a745, #34ce57); color: white; }
+        .info-bg { background: linear-gradient(135deg, #17a2b8, #1cc7d0); color: white; }
+        .warning-bg { background: linear-gradient(135deg, #ffc107, #ffcd3a); color: black; }
+        .code-block { background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 4px solid #007bff; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .highlight { background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4">🔍 Advanced Search Functionality</h1>
+            <p class="lead">Comprehensive search system with auto-suggestions and smart filtering</p>
+            <div class="badge bg-success fs-6">Search Enhancement - Complete Implementation</div>
+        </div>
+
+        <!-- Features Overview -->
+        <div class="demo-section feature-bg">
+            <h2 class="text-center mb-4">✨ Search Features Implemented</h2>
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h5>Multi-Field Search</h5>
+                    <p>Search across titles, descriptions, locations, and countries</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h5>Auto-Suggestions</h5>
+                    <p>Real-time search suggestions with smart categorization</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-highlighter"></i>
+                    </div>
+                    <h5>Result Highlighting</h5>
+                    <p>Visual highlighting of search terms in results</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h5>Search Analytics</h5>
+                    <p>Comprehensive logging and analytics system</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Implementation -->
+        <div class="demo-section info-bg">
+            <h2 class="mb-4">🔧 Technical Implementation</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-server"></i> Backend Features</h5>
+                    <ul>
+                        <li><strong>MongoDB Search:</strong> Regex-based multi-field search</li>
+                        <li><strong>Search Analytics:</strong> Complete logging system</li>
+                        <li><strong>Auto-Suggestions API:</strong> Real-time search suggestions</li>
+                        <li><strong>Performance Optimization:</strong> Database indexing</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5><i class="fas fa-desktop"></i> Frontend Features</h5>
+                    <ul>
+                        <li><strong>Live Search:</strong> Debounced input with suggestions</li>
+                        <li><strong>Result Highlighting:</strong> JavaScript-based term highlighting</li>
+                        <li><strong>Smart UI:</strong> Search results feedback and empty state</li>
+                        <li><strong>Mobile Responsive:</strong> Optimized for all devices</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Functionality Demo -->
+        <div class="demo-section">
+            <h3><i class="fas fa-play text-primary"></i> Search Examples</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
+                            <h6 class="card-title">Location Search</h6>
+                            <p class="card-text">Try searching for "Tokyo", "Bali", or "New York" to find listings by location</p>
+                            <div class="code-block">
+                                <code>Search: "Tokyo"</code><br>
+                                <small>Finds all listings in Tokyo, Japan</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-home fa-2x text-success mb-3"></i>
+                            <h6 class="card-title">Property Type Search</h6>
+                            <p class="card-text">Search for property types like "cottage", "loft", or "cabin"</p>
+                            <div class="code-block">
+                                <code>Search: "cabin"</code><br>
+                                <small>Finds mountain cabins and cozy retreats</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-water fa-2x text-info mb-3"></i>
+                            <h6 class="card-title">Amenity Search</h6>
+                            <p class="card-text">Search for amenities like "pool", "beach", or "mountain view"</p>
+                            <div class="code-block">
+                                <code>Search: "beach"</code><br>
+                                <small>Finds beachfront properties and cottages</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto-Suggestions Demo -->
+        <div class="demo-section success-bg">
+            <h3><i class="fas fa-magic"></i> Auto-Suggestions System</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>How It Works</h5>
+                    <ol>
+                        <li><strong>Type 2+ characters</strong> in the search box</li>
+                        <li><strong>Get real-time suggestions</strong> categorized by type</li>
+                        <li><strong>Click a suggestion</strong> to search immediately</li>
+                        <li><strong>See highlighted results</strong> with matching terms</li>
+                    </ol>
+                </div>
+                <div class="col-md-6">
+                    <h5>Suggestion Categories</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-light text-dark"><i class="fas fa-map-marker-alt"></i> Locations</span>
+                        <span class="badge bg-light text-dark"><i class="fas fa-globe"></i> Countries</span>
+                        <span class="badge bg-light text-dark"><i class="fas fa-home"></i> Properties</span>
+                    </div>
+                    <p class="mt-3">Each suggestion shows its category and includes relevant icons for easy identification.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Analytics -->
+        <div class="demo-section warning-bg">
+            <h3><i class="fas fa-chart-line"></i> Search Analytics & Logging</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>What We Track</h5>
+                    <ul>
+                        <li><strong>Search Query:</strong> What users are searching for</li>
+                        <li><strong>Results Count:</strong> How many listings matched</li>
+                        <li><strong>Timestamp:</strong> When the search occurred</li>
+                        <li><strong>User Info:</strong> Browser and IP (anonymized)</li>
+                        <li><strong>Category Filter:</strong> If combined with category filtering</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Business Value</h5>
+                    <ul>
+                        <li><strong>Popular Destinations:</strong> Identify trending locations</li>
+                        <li><strong>Search Optimization:</strong> Improve search algorithms</li>
+                        <li><strong>Content Strategy:</strong> Add listings for popular searches</li>
+                        <li><strong>User Experience:</strong> Enhance based on search patterns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Details -->
+        <div class="demo-section">
+            <h3><i class="fas fa-code text-primary"></i> Implementation Details</h3>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Backend Implementation</h5>
+                    <div class="code-block">
+                        <pre><code>// Multi-field search with MongoDB
+const searchRegex = new RegExp(searchQuery, 'i');
+filter.$or = [
+  { title: searchRegex },
+  { description: searchRegex },
+  { location: searchRegex },
+  { country: searchRegex }
+];</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Frontend Auto-Suggestions</h5>
+                    <div class="code-block">
+                        <pre><code>// Debounced search with suggestions
+this.debounceTimer = setTimeout(() => {
+  this.fetchSuggestions(query);
+}, 300);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Search Analytics Model</h5>
+                    <div class="code-block">
+                        <pre><code>// Search logging schema
+{
+  query: String,
+  resultsCount: Number,
+  timestamp: Date,
+  userAgent: String,
+  category: String
+}</code></pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Result Highlighting</h5>
+                    <div class="code-block">
+                        <pre><code>// JavaScript highlighting
+const regex = new RegExp(`(${term})`, 'gi');
+html = html.replace(regex, 
+  '&lt;mark class="search-highlight"&gt;$1&lt;/mark&gt;');</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Files Created/Modified -->
+        <div class="demo-section info-bg">
+            <h3><i class="fas fa-file-code"></i> Files Modified/Created</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>New Files Created</h5>
+                    <ul>
+                        <li><code>models/searchLog.js</code> - Search analytics model</li>
+                        <li><code>test-search-demo.html</code> - Feature demonstration</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Modified Files</h5>
+                    <ul>
+                        <li><code>controllers/listings.js</code> - Search logic & suggestions API</li>
+                        <li><code>routes/listing.js</code> - Search suggestions endpoint</li>
+                        <li><code>views/listings/index.ejs</code> - Search results UI</li>
+                        <li><code>views/includes/navbar.ejs</code> - Enhanced search form</li>
+                        <li><code>public/JS/script.js</code> - Auto-suggestions functionality</li>
+                        <li><code>app.js</code> - Global search query middleware</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Experience -->
+        <div class="demo-section success-bg">
+            <h3><i class="fas fa-user-friends"></i> User Experience Enhancements</h3>
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <i class="fas fa-search fa-3x mb-3"></i>
+                    <h6>Smart Search</h6>
+                    <p>Search across multiple fields simultaneously for comprehensive results</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <i class="fas fa-bolt fa-3x mb-3"></i>
+                    <h6>Instant Suggestions</h6>
+                    <p>Real-time search suggestions appear as you type, saving time</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <i class="fas fa-eye fa-3x mb-3"></i>
+                    <h6>Visual Feedback</h6>
+                    <p>Search terms are highlighted in results for easy scanning</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <i class="fas fa-mobile-alt fa-3x mb-3"></i>
+                    <h6>Mobile Optimized</h6>
+                    <p>Responsive design works perfectly on all device sizes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testing Instructions -->
+        <div class="demo-section">
+            <h3><i class="fas fa-vial text-success"></i> Testing the Search Functionality</h3>
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> How to Test</h5>
+                <ol>
+                    <li><strong>Visit:</strong> <a href="http://localhost:8080/listings" target="_blank">http://localhost:8080/listings</a></li>
+                    <li><strong>Try searches:</strong> "Tokyo", "beach", "cabin", "mountain", "pool"</li>
+                    <li><strong>Test suggestions:</strong> Type slowly in search box to see auto-suggestions</li>
+                    <li><strong>Check highlighting:</strong> Look for <span class="highlight">highlighted terms</span> in results</li>
+                    <li><strong>Empty results:</strong> Search for "xyz123" to see no-results page</li>
+                </ol>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card border-success">
+                        <div class="card-body">
+                            <h6 class="card-title text-success">✅ Expected Results</h6>
+                            <ul class="list-unstyled">
+                                <li>• Search suggestions appear while typing</li>
+                                <li>• Search terms are highlighted in results</li>
+                                <li>• Search statistics are logged to database</li>
+                                <li>• "Clear Search" button works correctly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-warning">
+                        <div class="card-body">
+                            <h6 class="card-title text-warning">⚠️ Test Scenarios</h6>
+                            <ul class="list-unstyled">
+                                <li>• Search with 1 character (no suggestions)</li>
+                                <li>• Search with special characters</li>
+                                <li>• Mobile responsiveness testing</li>
+                                <li>• Keyboard navigation (Escape key)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-info">
+                        <div class="card-body">
+                            <h6 class="card-title text-info">💡 Advanced Testing</h6>
+                            <ul class="list-unstyled">
+                                <li>• Combine search with category filters</li>
+                                <li>• Check browser console for errors</li>
+                                <li>• Test API endpoint directly</li>
+                                <li>• Verify database search logs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <div class="alert alert-success">
+                <h4><i class="fas fa-trophy"></i> Search Functionality Complete!</h4>
+                <p class="mb-0">Advanced search system with auto-suggestions, analytics, and smart highlighting - ready for production use!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
