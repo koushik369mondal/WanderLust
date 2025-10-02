@@ -28,16 +28,28 @@
       <p class="card-text">
         <b>Likes:</b> <%= listing.likes ? listing.likes.length : 0 %>
       </p>
-      <% if (currentUser) { %> <% if (listing.likes && listing.likes.some(id =>
-      id.toString() === currentUser._id.toString())) { %>
-      <form action="/listings/<%= listing._id %>/unlike" method="POST">
-        <button type="submit" class="btn btn-danger">Unlike</button>
-      </form>
-      <% } else { %>
-      <form action="/listings/<%= listing._id %>/like" method="POST">
-        <button type="submit" class="btn btn-success">Like</button>
-      </form>
-      <% } %> <% } %>
+      <% if (currentUser) { %>
+        <div class="listing-actions d-flex gap-2 mb-3">
+          <% if (listing.likes && listing.likes.some(id => id.toString() === currentUser._id.toString())) { %>
+            <form action="/listings/<%= listing._id %>/unlike" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-heart-broken me-1"></i>Unlike
+              </button>
+            </form>
+          <% } else { %>
+            <form action="/listings/<%= listing._id %>/like" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-heart me-1"></i>Like
+              </button>
+            </form>
+          <% } %>
+          
+          <!-- Wishlist Button -->
+          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
+            <i class="fa-solid fa-bookmark me-1"></i>Add to Wishlist
+          </button>
+        </div>
+      <% } %>
       <p class="card-text">
         <%= listing.description || "No description available" %>
       </p>
@@ -193,6 +205,51 @@
             </div>
           </div>
         <% } %>
+
+<!-- Wishlist Modal -->
+<% if (currentUser) { %>
+  <div class="modal fade" id="wishlistModal" tabindex="-1" aria-labelledby="wishlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="wishlistModalLabel">
+            <i class="fa-solid fa-bookmark me-2"></i>Add to Wishlist
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/profile/wishlist/<%= listing._id %>" method="POST">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="wishlistNotes" class="form-label">Notes (Optional)</label>
+              <textarea class="form-control" id="wishlistNotes" name="notes" rows="3" 
+                        placeholder="Why do you want to visit this place?"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="wishlistPriority" class="form-label">Priority</label>
+              <select class="form-select" id="wishlistPriority" name="priority">
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="wishlistPrivate" name="isPrivate">
+              <label class="form-check-label" for="wishlistPrivate">
+                Keep this private (only visible to you)
+              </label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-plus me-1"></i>Add to Wishlist
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<% } %>
       <% } %>
     </div>
     <% } %>

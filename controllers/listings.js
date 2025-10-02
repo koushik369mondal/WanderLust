@@ -3,7 +3,21 @@ const User = require("../models/user");
 const Listing = require("../models/listing");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+
+// Initialize geocoding client only if token is available and valid
+let geocodingClient = null;
+if (mapToken && mapToken !== 'dummy_token' && mapToken.startsWith('pk.')) {
+    try {
+        geocodingClient = mbxGeocoding({ accessToken: mapToken });
+    } catch (error) {
+        console.warn('Mapbox geocoding initialization failed:', error.message);
+        console.warn('ℹ️ Geocoding features will be disabled. Set a valid MAP_TOKEN in your .env file.');
+        geocodingClient = null;
+    }
+} else {
+    console.warn('⚠️ MAP_TOKEN environment variable is missing or invalid! Geocoding features will be disabled.');
+    console.warn('ℹ️ For production, please set a valid Mapbox token in your .env file.');
+}
 
 
 module.exports.index = async (req, res) => {

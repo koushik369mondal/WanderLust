@@ -57,3 +57,22 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     }
     next();
 };
+
+// Badge checking middleware - runs after user actions that might earn badges
+module.exports.checkForNewBadges = async (req, res, next) => {
+    if (req.user) {
+        try {
+            const BadgeService = require('./services/badgeService');
+            const newBadges = await BadgeService.checkAndAwardBadges(req.user._id);
+            
+            if (newBadges && newBadges.length > 0) {
+                const badgeNames = newBadges.join(', ');
+                req.flash('success', `🎉 Congratulations! You earned new badge(s): ${badgeNames}`);
+            }
+        } catch (error) {
+            console.error('Error checking for badges:', error);
+            // Don't let badge errors break the main flow
+        }
+    }
+    next();
+};
