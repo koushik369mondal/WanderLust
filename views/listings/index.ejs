@@ -73,6 +73,74 @@
             display: none;
         }
 
+        /* Search Results Styling */
+        .search-results-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid #007bff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-results-header h4 {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .search-results-header .text-muted {
+            font-size: 0.95rem;
+        }
+
+        .no-results-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            border-radius: 20px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .search-suggestions .btn-outline-primary {
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-suggestions .btn-outline-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+        }
+
+        /* Enhanced search input in navbar */
+        .search-inp:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(254,66,77,0.3);
+        }
+
+        /* Search term highlighting */
+        .search-highlight {
+            background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 1px 3px rgba(255,193,7,0.3);
+        }
+
+        /* Enhanced listing card styles for search */
+        .listing-location {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .listing-price {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
         /* Card refinements */
         .listing-card {
             border: none !important;
@@ -238,6 +306,62 @@
     </div>
     
 
+    <!-- Search Results Header -->
+    <% if (searchQuery) { %>
+        <div class="search-results-header mt-4 mb-3">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="mb-1">
+                            <i class="fas fa-search text-primary me-2"></i>
+                            Search Results for "<%= searchQuery %>"
+                        </h4>
+                        <p class="text-muted mb-0">
+                            <% if (totalResults > 0) { %>
+                                Found <%= totalResults %> <%= totalResults === 1 ? 'listing' : 'listings' %> matching your search
+                            <% } else { %>
+                                No listings found for your search. Try different keywords.
+                            <% } %>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="/listings" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i>Clear Search
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- No Results Message -->
+    <% if (searchQuery && totalResults === 0) { %>
+        <div class="no-results-container text-center py-5">
+            <div class="container">
+                <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted mb-3">No listings found</h3>
+                <p class="text-muted mb-4">
+                    We couldn't find any listings matching "<strong><%= searchQuery %></strong>". 
+                    Try searching for different destinations, property types, or amenities.
+                </p>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="search-suggestions">
+                            <h5 class="mb-3">Try searching for:</h5>
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                <a href="/listings?search=beach" class="btn btn-outline-primary btn-sm">Beach</a>
+                                <a href="/listings?search=cabin" class="btn btn-outline-primary btn-sm">Cabin</a>
+                                <a href="/listings?search=tokyo" class="btn btn-outline-primary btn-sm">Tokyo</a>
+                                <a href="/listings?search=mountains" class="btn btn-outline-primary btn-sm">Mountains</a>
+                                <a href="/listings?search=swimming" class="btn btn-outline-primary btn-sm">Swimming Pool</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3">
         <% for(let listing of allListings) { %>
             <div class="col mb-4">
@@ -268,11 +392,17 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text">
-                                <b>
+                                <b class="listing-title">
                                     <%= listing.title %>
                                 </b><br />
-                                <%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
+                                <small class="text-muted listing-location">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    <%= listing.location %>, <%= listing.country %>
+                                </small><br />
+                                <span class="listing-price">
+                                    ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
                                     <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -283,6 +413,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Search term highlighting
+            const searchQuery = '<%= searchQuery || "" %>';
+            if (searchQuery) {
+                highlightSearchTerms(searchQuery);
+            }
+
             let taxSwitch = document.getElementById("switchCheckDefault");
             
             if (taxSwitch) {
@@ -385,6 +521,28 @@
             if (testBtn) {
                 testBtn.addEventListener('click', function() {
                     showRatedModal('Test Listing', 4.75);
+                });
+            }
+
+            // Search term highlighting function
+            function highlightSearchTerms(searchQuery) {
+                if (!searchQuery || searchQuery.trim() === '') return;
+                
+                const terms = searchQuery.toLowerCase().split(' ').filter(term => term.length > 2);
+                const selectors = ['.listing-title', '.listing-location'];
+                
+                selectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(element => {
+                        let html = element.innerHTML;
+                        
+                        terms.forEach(term => {
+                            const regex = new RegExp(`(${term})`, 'gi');
+                            html = html.replace(regex, '<mark class="search-highlight">$1</mark>');
+                        });
+                        
+                        element.innerHTML = html;
+                    });
                 });
             }
         });
