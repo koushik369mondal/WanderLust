@@ -5,15 +5,8 @@ const SearchLog = require("../models/searchLog");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 
-// Initialize geocoding client only if we have a valid token
-let geocodingClient = null;
-if (mapToken && mapToken !== "pk.dummy_mapbox_token_for_development_only") {
-  try {
-    geocodingClient = mbxGeocoding({ accessToken: mapToken });
-  } catch (error) {
-    console.warn("Mapbox geocoding disabled: Invalid token");
-  }
-}
+
+
 
 
 module.exports.index = async (req, res) => {

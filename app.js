@@ -83,6 +83,11 @@ async function main() {
             socketTimeoutMS: 45000,            // Close sockets after 45s of inactivity
         });
         console.log('Successfully connected to MongoDB✅');
+        
+        // Initialize badge system
+        const BadgeDefinition = require('./models/badgeDefinition');
+        await BadgeDefinition.initializeDefaults();
+        console.log('Badge system initialized✅');
     } catch (error) {
         console.error('MongoDB connection error:', error);
         process.exit(1);

@@ -39,11 +39,21 @@ router.get("/auth/google/callback",
 
 router.get("/profile/likes", isLoggedIn, userController.showLikedListings);
 
-
+// Enhanced Profile Routes
 router
     .route("/profile")
     .get(isLoggedIn, userController.renderProfile)
     .put(isLoggedIn, userController.updateProfile);
+
+// Wishlist Routes
+router.get("/profile/wishlist", isLoggedIn, userController.showWishlist);
+router.post("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
+router.delete("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.removeFromWishlist));
+
+// Travel Goals Routes
+router.post("/profile/travel-goals", isLoggedIn, wrapAsync(userController.addTravelGoal));
+router.patch("/profile/travel-goals/:goalId/complete", isLoggedIn, wrapAsync(userController.completeTravelGoal));
+router.delete("/profile/travel-goals/:goalId", isLoggedIn, wrapAsync(userController.deleteTravelGoal));
 
 // Root route - redirect to listings
 router.get("/", (req, res) => {
