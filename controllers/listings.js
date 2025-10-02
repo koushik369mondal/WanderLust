@@ -4,6 +4,7 @@ const Listing = require("../models/listing");
 const SearchLog = require("../models/searchLog");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
 
 
@@ -246,11 +247,26 @@ module.exports.createListing = async (req, res, next) => {
     if (response && response.body.features && response.body.features.length > 0) {
       newListing.geometry = response.body.features[0].geometry;
     } else {
-      // Default coordinates (New York City) for development
+      // Default coordinates based on country or use Delhi, India
+      const countryDefaults = {
+        'india': [77.2090, 28.6139],     // Delhi
+        'usa': [-74.006, 40.7128],       // New York
+        'uk': [-0.1276, 51.5074],        // London
+        'france': [2.3522, 48.8566],     // Paris
+        'germany': [13.4050, 52.5200],   // Berlin
+        'japan': [139.6917, 35.6895],    // Tokyo
+        'australia': [151.2093, -33.8688], // Sydney
+      };
+      
+      const country = (req.body.listing.country || '').toLowerCase();
+      const defaultCoords = countryDefaults[country] || [77.2090, 28.6139]; // Default to Delhi
+      
       newListing.geometry = {
         type: "Point",
-        coordinates: [-74.006, 40.7128]
+        coordinates: defaultCoords
       };
+      
+      console.log(`Using default coordinates for ${country}: ${defaultCoords}`);
     }
 
     let savedListings = await newListing.save();
@@ -306,12 +322,27 @@ module.exports.updateListing = async (req, res) => {
     if (response && response.body.features && response.body.features.length > 0) {
       listing.geometry = response.body.features[0].geometry;
     } else {
-      // Keep existing geometry or set default
-      if (!listing.geometry) {
+      // Keep existing geometry or set default based on country
+      if (!listing.geometry || !listing.geometry.coordinates) {
+        const countryDefaults = {
+          'india': [77.2090, 28.6139],     // Delhi
+          'usa': [-74.006, 40.7128],       // New York
+          'uk': [-0.1276, 51.5074],        // London
+          'france': [2.3522, 48.8566],     // Paris
+          'germany': [13.4050, 52.5200],   // Berlin
+          'japan': [139.6917, 35.6895],    // Tokyo
+          'australia': [151.2093, -33.8688], // Sydney
+        };
+        
+        const country = (listing.country || '').toLowerCase();
+        const defaultCoords = countryDefaults[country] || [77.2090, 28.6139];
+        
         listing.geometry = {
           type: "Point",
-          coordinates: [-74.006, 40.7128]
+          coordinates: defaultCoords
         };
+        
+        console.log(`Using default coordinates for ${country}: ${defaultCoords}`);
       }
     }
     
