@@ -1,31 +1,35 @@
 const User = require("../models/user"); 
 
 const Listing = require("../models/listing");
+const SearchLog = require("../models/searchLog");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 
-// Initialize geocoding client only if token is available and valid
-let geocodingClient = null;
-if (mapToken && mapToken !== 'dummy_token' && mapToken.startsWith('pk.')) {
-    try {
-        geocodingClient = mbxGeocoding({ accessToken: mapToken });
-    } catch (error) {
-        console.warn('Mapbox geocoding initialization failed:', error.message);
-        console.warn('ℹ️ Geocoding features will be disabled. Set a valid MAP_TOKEN in your .env file.');
-        geocodingClient = null;
-    }
-} else {
-    console.warn('⚠️ MAP_TOKEN environment variable is missing or invalid! Geocoding features will be disabled.');
-    console.warn('ℹ️ For production, please set a valid Mapbox token in your .env file.');
-}
+
+
 
 
 module.exports.index = async (req, res) => {
-  const { category } = req.query;
+  const { category, search } = req.query;
   const filter = {};
+  let searchQuery = null;
 
+  // Category filtering
   if (category) {
     filter.category = category;
+  }
+
+  // Search functionality
+  if (search && search.trim()) {
+    searchQuery = search.trim();
+    // Create a case-insensitive regex search across multiple fields
+    const searchRegex = new RegExp(searchQuery, 'i');
+    filter.$or = [
+      { title: searchRegex },
+      { description: searchRegex },
+      { location: searchRegex },
+      { country: searchRegex }
+    ];
   }
 
   // Populate reviews (with author) for avgRating calculation
@@ -57,8 +61,87 @@ module.exports.index = async (req, res) => {
     listing.isHighlyRatedBadge = (listing.reviews && listing.reviews.length > 0 && avgRating >= 4.5);
   }
 
-  res.render("listings/index.ejs", { allListings, category: req.query.category });
+  // Log search queries for analytics (async, don't wait for completion)
+  if (searchQuery) {
+    SearchLog.create({
+      query: searchQuery,
+      resultsCount: allListings.length,
+      userAgent: req.headers['user-agent'] || '',
+      ipAddress: req.ip || req.connection.remoteAddress || '',
+      category: category || ''
+    }).catch(err => {
+      console.log('Search logging error:', err.message);
+    });
+  }
 
+  res.render("listings/index.ejs", { 
+    allListings, 
+    category: req.query.category,
+    searchQuery: searchQuery,
+    totalResults: allListings.length,
+    hasSearch: !!searchQuery
+  });
+
+};
+
+// Get search suggestions based on popular searches
+module.exports.getSearchSuggestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q || q.length < 2) {
+      return res.json([]);
+    }
+    
+    // Get unique locations and countries that match the query
+    const suggestions = await Listing.aggregate([
+      {
+        $match: {
+          $or: [
+            { location: { $regex: q, $options: 'i' } },
+            { country: { $regex: q, $options: 'i' } },
+            { title: { $regex: q, $options: 'i' } }
+          ]
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          locations: { $addToSet: "$location" },
+          countries: { $addToSet: "$country" },
+          titles: { $addToSet: "$title" }
+        }
+      }
+    ]);
+
+    let results = [];
+    if (suggestions.length > 0) {
+      const { locations, countries, titles } = suggestions[0];
+      
+      // Filter and format suggestions
+      const locationSuggestions = locations
+        .filter(loc => loc.toLowerCase().includes(q.toLowerCase()))
+        .slice(0, 3)
+        .map(loc => ({ type: 'location', value: loc, icon: 'fa-map-marker-alt' }));
+      
+      const countrySuggestions = countries
+        .filter(country => country.toLowerCase().includes(q.toLowerCase()))
+        .slice(0, 2)
+        .map(country => ({ type: 'country', value: country, icon: 'fa-globe' }));
+      
+      const titleSuggestions = titles
+        .filter(title => title.toLowerCase().includes(q.toLowerCase()))
+        .slice(0, 2)
+        .map(title => ({ type: 'property', value: title, icon: 'fa-home' }));
+      
+      results = [...locationSuggestions, ...countrySuggestions, ...titleSuggestions];
+    }
+    
+    res.json(results.slice(0, 8));
+  } catch (error) {
+    console.error('Search suggestions error:', error);
+    res.json([]);
+  }
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -134,12 +217,19 @@ module.exports.showListing = async (req, res, next) => {
 
 
 module.exports.createListing = async (req, res, next) => {
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: req.body.listing.location,
-      limit: 1,
-    })
-    .send();
+  let response = null;
+  if (geocodingClient) {
+    try {
+      response = await geocodingClient
+        .forwardGeocode({
+          query: req.body.listing.location,
+          limit: 1,
+        })
+        .send();
+    } catch (error) {
+      console.warn("Geocoding failed:", error.message);
+    }
+  }
   try {
 
     let url = "";
@@ -152,7 +242,16 @@ module.exports.createListing = async (req, res, next) => {
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
 
-    newListing.geometry = response.body.features[0].geometry;
+    // Set geometry from geocoding or use default coordinates
+    if (response && response.body.features && response.body.features.length > 0) {
+      newListing.geometry = response.body.features[0].geometry;
+    } else {
+      // Default coordinates (New York City) for development
+      newListing.geometry = {
+        type: "Point",
+        coordinates: [-74.006, 40.7128]
+      };
+    }
 
     let savedListings = await newListing.save();
     console.log(savedListings);
@@ -183,12 +282,19 @@ module.exports.updateListing = async (req, res) => {
   
   try {
     // Get geocoding data for the updated location
-    let response = await geocodingClient
-      .forwardGeocode({
-        query: req.body.listing.location,
-        limit: 1,
-      })
-      .send();
+    let response = null;
+    if (geocodingClient) {
+      try {
+        response = await geocodingClient
+          .forwardGeocode({
+            query: req.body.listing.location,
+            limit: 1,
+          })
+          .send();
+      } catch (error) {
+        console.warn("Geocoding failed:", error.message);
+      }
+    }
     
     // First update the listing without saving to get the document
     let listing = await Listing.findById(id);
@@ -196,8 +302,18 @@ module.exports.updateListing = async (req, res) => {
     // Update all fields from the form
     Object.assign(listing, req.body.listing);
     
-    // Update geometry with new coordinates
-    listing.geometry = response.body.features[0].geometry;
+    // Update geometry with new coordinates or use default
+    if (response && response.body.features && response.body.features.length > 0) {
+      listing.geometry = response.body.features[0].geometry;
+    } else {
+      // Keep existing geometry or set default
+      if (!listing.geometry) {
+        listing.geometry = {
+          type: "Point",
+          coordinates: [-74.006, 40.7128]
+        };
+      }
+    }
     
     // Update image if a new one was uploaded
     if (typeof req.file !== "undefined") {
@@ -257,4 +373,26 @@ module.exports.unlikeListing = async (req, res) => {
     
     req.flash("success", "Removed from your liked listings.");
     res.redirect(`/listings/${id}`);
+};
+
+module.exports.searchListings = async (req, res) => {
+    const { q } = req.query; //by query params
+    let allListings = [];
+    let noResults = false;
+
+    if (q) {
+        allListings = await Listing.find({
+            $or: [
+                { title: { $regex: q, $options: "i" } },
+                { category: { $regex: q, $options: "i" } },
+                { location: { $regex: q, $options: "i" } },
+                { country: { $regex: q, $options: "i" } }
+            ]
+        });
+        if(allListings.length === 0) {
+            noResults = true;
+        }
+    }
+//rendering on idnex pg only
+    res.render("listings/index.ejs", { allListings, category: null, searchQuery: q, noResults });
 };

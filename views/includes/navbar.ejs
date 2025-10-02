@@ -22,6 +22,24 @@
     font-size: 1rem;
   }
 
+  /* Enhanced navbar brand styling */
+  .navbar-brand {
+    font-size: 1.5rem;
+    color: var(--accent-color) !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-brand:hover {
+    color: var(--accent-color) !important;
+    transform: scale(1.05);
+  }
+
+  .navbar-brand i {
+    color: #fe424d;
+    font-size: 1.4rem;
+  }
+
   /* Tablet view fixes */
   @media (max-width: 991px) and (min-width: 768px) {
     .navbar-nav .d-flex {
@@ -102,10 +120,72 @@
       display: none !important;
     }
   }
+
+  /* Search suggestions styling */
+  .search-form-container {
+    position: relative;
+  }
+
+  .search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+  }
+
+  .search-suggestions.show {
+    display: block;
+  }
+
+  .search-suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s ease;
+  }
+
+  .search-suggestion-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  .search-suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .search-suggestion-icon {
+    color: #6c757d;
+    width: 16px;
+    text-align: center;
+  }
+
+  .search-suggestion-text {
+    flex: 1;
+    font-size: 0.95rem;
+  }
+
+  .search-suggestion-type {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: capitalize;
+  }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand mt-1" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
+      <i class="fa-regular fa-compass me-2"></i>
+      <span class="fw-bold">WanderLust</span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -118,10 +198,16 @@
         </a>
       </div>
       <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search">
-          <input class="form-control me-2 search-inp" type="search" placeholder="Search destinations" />
+        <form class="d-flex search-form-container" role="search" method="GET" action="/listings">
+          <div class="position-relative">
+            <input class="form-control me-2 search-inp" type="search" name="search" 
+                   placeholder="Search destinations, cities, properties..." 
+                   value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+                   autocomplete="off" />
+            <div class="search-suggestions dropdown-menu" id="searchSuggestions"></div>
+          </div>
           <button class="btn search-btn" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>Search
+          <i class="fa-solid fa-magnifying-glass"></i>Search
           </button>
         </form>
       </div>

@@ -83,24 +83,113 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------
     // SEARCH MANAGER
     // ------------------
-    // Handles the search form submission to redirect with a query parameter.
+    // Handles the search form submission and auto-suggestions
     class SearchManager {
         constructor() {
             this.searchForm = document.querySelector('form[role="search"]');
             this.searchInput = document.querySelector(".search-inp");
+            this.suggestionsContainer = document.getElementById("searchSuggestions");
+            this.debounceTimer = null;
             this.init();
         }
 
         init() {
-            if (this.searchForm) {
+            if (this.searchForm && this.searchInput) {
                 this.searchForm.addEventListener("submit", (e) => {
                     e.preventDefault();
                     const query = this.searchInput.value.trim();
                     if (query) {
+                        this.hideSuggestions();
                         window.location.href = `/listings?search=${encodeURIComponent(query)}`;
                     }
                 });
+
+                // Auto-suggestions
+                if (this.suggestionsContainer) {
+                    this.searchInput.addEventListener("input", (e) => {
+                        this.handleSearchInput(e.target.value);
+                    });
+
+                    this.searchInput.addEventListener("focus", (e) => {
+                        if (e.target.value.length > 1) {
+                            this.handleSearchInput(e.target.value);
+                        }
+                    });
+
+                    this.searchInput.addEventListener("blur", () => {
+                        // Delay hiding to allow click on suggestions
+                        setTimeout(() => this.hideSuggestions(), 200);
+                    });
+
+                    // Hide suggestions on Escape
+                    this.searchInput.addEventListener("keydown", (e) => {
+                        if (e.key === "Escape") {
+                            this.hideSuggestions();
+                        }
+                    });
+                }
             }
+        }
+
+        handleSearchInput(query) {
+            clearTimeout(this.debounceTimer);
+            
+            if (query.length < 2) {
+                this.hideSuggestions();
+                return;
+            }
+
+            this.debounceTimer = setTimeout(() => {
+                this.fetchSuggestions(query);
+            }, 300);
+        }
+
+        async fetchSuggestions(query) {
+            try {
+                const response = await fetch(`/listings/search/suggestions?q=${encodeURIComponent(query)}`);
+                const suggestions = await response.json();
+                this.displaySuggestions(suggestions);
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+                this.hideSuggestions();
+            }
+        }
+
+        displaySuggestions(suggestions) {
+            if (!suggestions || suggestions.length === 0) {
+                this.hideSuggestions();
+                return;
+            }
+
+            this.suggestionsContainer.innerHTML = '';
+            
+            suggestions.forEach(suggestion => {
+                const item = document.createElement('div');
+                item.className = 'search-suggestion-item';
+                item.innerHTML = `
+                    <i class="fas ${suggestion.icon} search-suggestion-icon"></i>
+                    <span class="search-suggestion-text">${suggestion.value}</span>
+                    <small class="search-suggestion-type">${suggestion.type}</small>
+                `;
+                
+                item.addEventListener('click', () => {
+                    this.searchInput.value = suggestion.value;
+                    this.hideSuggestions();
+                    this.searchForm.submit();
+                });
+                
+                this.suggestionsContainer.appendChild(item);
+            });
+
+            this.showSuggestions();
+        }
+
+        showSuggestions() {
+            this.suggestionsContainer.classList.add('show');
+        }
+
+        hideSuggestions() {
+            this.suggestionsContainer.classList.remove('show');
         }
     }
 
