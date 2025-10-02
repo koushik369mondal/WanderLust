@@ -50,6 +50,7 @@ require("dotenv").config();
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const newsletterRouter = require("./routes/newsletter.js");
 
 // Check for MongoDB connection string and provide a fallback for development
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -167,6 +168,7 @@ app.use((req, res, next) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/newsletter", newsletterRouter);
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });

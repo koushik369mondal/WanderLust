@@ -14,6 +14,7 @@
       <h6>Quick Links</h6>
       <a href="/about">About Us</a>
       <a href="/listings">Destinations</a>
+      <a href="/newsletter">Newsletter</a>
       <a href="/privacy">Privacy Policy</a>
       <a href="/terms">Terms & Conditions</a>
     </div>
@@ -30,8 +31,9 @@
     <div class="footer-col">
       <h6>Stay Updated</h6>
       <p>Subscribe to our newsletter for travel tips & exclusive deals ✈️</p>
-      <form>
-        <input type="email" placeholder="Your email" required>
+      <form action="/newsletter/subscribe" method="POST" class="newsletter-form">
+        <input type="email" name="email" placeholder="Your email" required>
+        <input type="hidden" name="source" value="footer">
         <button type="submit">Subscribe</button>
       </form>
     </div>
