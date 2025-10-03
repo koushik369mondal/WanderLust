@@ -39,5 +39,48 @@ If there are user-facing changes then we may require documentation to be updated
 If there are any breaking changes to public APIs, please add the `api change` label.
 -->
 
-## Screenshots(if Applicable)
-<!-- If  any user facing chnages , please provide the Screenshots -->
+## 📷 Screenshots & Visual Documentation
+
+<!-- 
+🚨 REQUIRED: Screenshots are mandatory for PRs with visual changes!
+The screenshot-check workflow will automatically verify this requirement.
+
+📋 What to include:
+- Before/after comparisons for UI changes
+- Screenshots of new features or pages
+- Mobile views for responsive changes
+- Error states and edge cases
+- Visual proof of bug fixes
+
+💡 How to add screenshots:
+1. Drag and drop images directly into this text area
+2. Use markdown: ![description](image-url)
+3. Use HTML: <img src="image-url" alt="description" width="500">
+
+⏭️ Skip this requirement:
+Add [skip-screenshot] to your PR title for non-visual changes like:
+- Documentation only (docs:)
+- Tests only (test:)
+- Configuration (config:)
+- Dependencies (deps:)
+- Refactoring without visual changes (refactor:)
+-->
+
+### 🖼️ Visual Changes
+<!-- Add your screenshots here -->
+
+<!-- Example format:
+![Feature Description](https://user-images.githubusercontent.com/your-image-url.png)
+
+### Before/After Comparison
+| Before | After |
+|--------|-------|
+| ![Before](before-image-url) | ![After](after-image-url) |
+
+### Mobile View
+<details>
+<summary>📱 Click to view mobile screenshots</summary>
+
+![Mobile View](mobile-image-url)
+</details>
+-->
