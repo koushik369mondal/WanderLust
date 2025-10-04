@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             
             let node;
-            while (node = walker.nextNode()) {
+            while ((node = walker.nextNode()) !== null) {
                 if (node.textContent.trim()) {
                     textNodes.push(node);
                 }
