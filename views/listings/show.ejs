@@ -62,8 +62,9 @@
           <% } %>
           
           <!-- Wishlist Button -->
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
-            <i class="fa-solid fa-bookmark me-1"></i>Add to Wishlist
+          <button type="button" class="btn btn-outline-primary" 
+                  <% if (typeof isInWishlist !== 'undefined' && isInWishlist) { %>disabled<% } else { %>data-bs-toggle="modal" data-bs-target="#wishlistModal"<% } %>>
+            <i class="fa-solid fa-bookmark me-1"></i><% if (typeof isInWishlist !== 'undefined' && isInWishlist) { %>Added to Wishlist<% } else { %>Add to Wishlist<% } %>
           </button>
         </div>
       <% } %>
