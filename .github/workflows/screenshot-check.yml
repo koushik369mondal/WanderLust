@@ -27,6 +27,13 @@ jobs:
             console.log('📝 PR Title:', pr_title);
             console.log('📄 PR Body Length:', pr_body.length);
             
+            // Check for debug mode
+            const debugMode = /\[debug[\s-]?screenshot\]/i.test(pr_title) || /\[debug[\s-]?screenshot\]/i.test(pr_body);
+            if (debugMode) {
+              console.log('🐛 DEBUG MODE ENABLED');
+              console.log('📄 Full PR Body:', pr_body);
+            }
+            
             // Skip check for certain types of PRs
             const skipPatterns = [
               /^\[skip[\s-]?screenshot\]/i,
@@ -65,33 +72,65 @@ jobs:
               return;
             }
             
+            // First, remove code blocks to avoid false positives
+            const codeBlockPattern = /```[\s\S]*?```/g;
+            const inlineCodePattern = /`[^`]*`/g;
+            const cleanedBody = pr_body
+              .replace(codeBlockPattern, ' [CODE_BLOCK] ')
+              .replace(inlineCodePattern, ' [CODE] ');
+            
+            console.log('🧹 Cleaned PR body length:', cleanedBody.length);
+            
+            if (debugMode) {
+              console.log('🧹 Cleaned PR Body:', cleanedBody);
+              console.log('🔍 Testing each pattern:');
+            }
+            
             // Patterns to detect screenshots and images
             const imagePatterns = [
-              // Markdown image syntax: ![alt](url)
-              /!\[.*?\]\(.*?\.(png|jpg|jpeg|gif|webp|svg).*?\)/gi,
-              // HTML img tags
-              /<img[^>]+src=['"'][^'"]*\.(png|jpg|jpeg|gif|webp|svg)[^'"]*['"][^>]*>/gi,
-              // GitHub user-images URLs (uploaded images)
-              /https:\/\/user-images\.githubusercontent\.com\/[\w\-\.\/]+\.(png|jpg|jpeg|gif|webp)/gi,
-              // GitHub assets URLs
-              /https:\/\/github\.com\/[\w\-]+\/[\w\-]+\/assets\/[\w\-\.\/]+\.(png|jpg|jpeg|gif|webp)/gi,
-              // Direct image URLs
-              /https?:\/\/[^\s\)]+\.(png|jpg|jpeg|gif|webp|svg)/gi
+              // Markdown image syntax: ![alt](url) - improved to handle query params
+              /!\[.*?\]\([^)]*\.(png|jpg|jpeg|gif|webp|svg)(?:\?[^)]*)?\)/gi,
+              // HTML img tags - handle multiline and extra whitespace
+              /<img[^>]*src\s*=\s*['"']([^'"]*\.(png|jpg|jpeg|gif|webp|svg)(?:\?[^'"]*)?)['"'][^>]*>/gmi,
+              // GitHub user-images URLs - handle numeric IDs and query params
+              /https:\/\/user-images\.githubusercontent\.com\/\d+\/[\w\-\.%]+\.(png|jpg|jpeg|gif|webp)(?:\?[^\s\)]*)?/gi,
+              // GitHub assets URLs - handle numeric asset IDs
+              /https:\/\/github\.com\/[\w\-]+\/[\w\-]+\/assets\/\d+\/[\w\-\.%]+\.(png|jpg|jpeg|gif|webp)(?:\?[^\s\)]*)?/gi,
+              // GitHub raw content URLs
+              /https:\/\/raw\.githubusercontent\.com\/[\w\-]+\/[\w\-]+\/[\w\-\/%.]+\.(png|jpg|jpeg|gif|webp|svg)/gi,
+              // GitHub camo proxy URLs
+              /https:\/\/camo\.githubusercontent\.com\/[\w\-\.\/]+/gi,
+              // Direct image URLs - handle query params and special chars
+              /https?:\/\/[^\s\)\]"`]+\.(png|jpg|jpeg|gif|webp|svg)(?:\?[^\s\)\]"`]*)?/gi
             ];
             
             let foundImages = [];
             let hasScreenshot = false;
             
-            // Check for images in PR body
+            // Check for images in cleaned PR body (code blocks removed)
             for (const pattern of imagePatterns) {
-              const matches = pr_body.match(pattern);
+              const matches = cleanedBody.match(pattern);
               if (matches) {
+                if (debugMode) {
+                  console.log(`✅ Pattern matched: ${pattern}`);
+                  console.log(`   Found: ${matches.join(', ')}`);
+                }
                 foundImages = foundImages.concat(matches);
                 hasScreenshot = true;
+              } else if (debugMode) {
+                console.log(`❌ No match for pattern: ${pattern}`);
               }
             }
             
-            // Additional check for screenshot-related keywords
+            // Remove duplicates and filter out code block placeholders
+            foundImages = [...new Set(foundImages)].filter(img => 
+              !img.includes('[CODE_BLOCK]') && !img.includes('[CODE]')
+            );
+            
+            // Update hasScreenshot based on filtered results
+            hasScreenshot = foundImages.length > 0;
+            
+            // Additional check for screenshot-related keywords in cleaned body
             const screenshotKeywords = [
               /screenshot/gi,
               /screen\s*shot/gi,
@@ -103,16 +142,20 @@ jobs:
             ];
             
             const hasScreenshotKeywords = screenshotKeywords.some(keyword => 
-              keyword.test(pr_body) || keyword.test(pr_title)
+              keyword.test(cleanedBody) || keyword.test(pr_title)
             );
             
             console.log('🖼️ Found images:', foundImages.length);
             console.log('🔤 Has screenshot keywords:', hasScreenshotKeywords);
             
             if (foundImages.length > 0) {
+              console.log('📷 Detected images:');
               foundImages.forEach((img, index) => {
-                console.log(`📷 Image ${index + 1}:`, img.substring(0, 100) + '...');
+                console.log(`  ${index + 1}. ${img.substring(0, 100)}${img.length > 100 ? '...' : ''}`);
               });
+            } else {
+              console.log('🔍 No images detected in PR body');
+              console.log('📝 PR body preview (first 200 chars):', cleanedBody.substring(0, 200));
             }
             
             // Determine the result
