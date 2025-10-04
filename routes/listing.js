@@ -52,4 +52,8 @@ router.get(
 router.post('/:id/like', isLoggedIn, wrapAsync(listingsController.likeListing));
 router.post('/:id/unlike', isLoggedIn, wrapAsync(listingsController.unlikeListing));
 
+// Favorite routes
+router.post('/:id/favorite', isLoggedIn, wrapAsync(listingsController.favoriteListing));
+router.post('/:id/unfavorite', isLoggedIn, wrapAsync(listingsController.unfavoriteListing));
+
 module.exports = router;
