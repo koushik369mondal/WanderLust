@@ -283,12 +283,22 @@ module.exports.removeFromWishlist = async (req, res) => {
 
 module.exports.showWishlist = async (req, res) => {
     try {
+        const user = await User.findById(req.user._id);
+        
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
         const wishlistItems = await Wishlist.find({ user: req.user._id })
             .populate('listing')
             .sort({ addedAt: -1 });
 
+        console.log("Wishlist items being sent to the page:", wishlistItems);
+
         res.render("users/wishlist.ejs", { 
             wishlistItems,
+            name: user.username,
             title: "My Wishlist"
         });
     } catch (error) {

@@ -1,102 +1,44 @@
 <% layout('/layouts/boilerplate') %>
 
 <style>
-    :root {
-        --wishlist-header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --wishlist-card-bg: rgba(255, 255, 255, 0.95);
-        --accent-color: #667eea;
-        --secondary-color: #764ba2;
-        --text-dark: #2c3e50;
-        --text-muted: #6c757d;
-        --border-color: #e9ecef;
-        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    .card-img-container {
+        height: 15rem; /* Sets a fixed height for all image containers */
+        overflow: hidden; 
     }
 
-    .wishlist-header {
-        background: var(--wishlist-header-bg);
-        color: white;
-        padding: 3rem 0;
-        margin-bottom: 2rem;
-        border-radius: 1rem;
-        text-align: center;
-        box-shadow: var(--shadow);
+    .card-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* This is the magic part! */
     }
-
-    .wishlist-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    .glass-container {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px); 
+        border: 1px solid rgba(255, 255, 255, 0.3); 
+        border-radius: 1rem; 
+        padding: 2rem; 
+        text-align: center; 
+        color: white; 
     }
-
-    .wishlist-header p {
+    
+    .glass-container h3 {
+        font-weight: 600; 
+    }
+    
+    .glass-container p {
         font-size: 1.1rem;
-        opacity: 0.9;
-        margin: 0;
+        opacity: 0.9; 
+        margin-bottom: 0;
     }
 
-    .wishlist-stats {
-        background: white;
-        border-radius: 1rem;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border-color);
-    }
-
-    .wishlist-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .filter-controls {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-
-    .filter-controls select {
-        border: 1px solid var(--border-color);
-        border-radius: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: white;
-        color: var(--text-dark);
-    }
-
-    .wishlist-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .wishlist-card {
-        background: var(--wishlist-card-bg);
-        border-radius: 1rem;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: all 0.3s ease;
-        border: 1px solid var(--border-color);
-        position: relative;
-    }
-
-    .wishlist-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-hover);
-    }
-
-    .wishlist-card .priority-badge {
+    .priority-badge {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.8rem;
+        top: 10px;
+        right: 10px;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         z-index: 2;
@@ -117,303 +59,115 @@
         color: white;
     }
 
-    .wishlist-card .card-image {
-        height: 200px;
-        background-size: cover;
-        background-position: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .wishlist-card .card-image::after {
-        content: '';
+    .wishlist-actions {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+        bottom: 10px;
+        right: 10px;
+        z-index: 2;
     }
 
-    .wishlist-card .card-body {
-        padding: 1.5rem;
+    .wishlist-actions .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        margin-left: 0.25rem;
     }
 
-    .wishlist-card .card-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--text-dark);
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
+    .listing-card {
+        position: relative;
+        transition: transform 0.3s ease;
     }
 
-    .wishlist-card .card-location {
-        color: var(--text-muted);
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
+    .listing-card:hover {
+        transform: translateY(-5px);
     }
 
-    .wishlist-card .card-price {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--accent-color);
-        margin-bottom: 1rem;
-    }
-
-    .wishlist-card .card-notes {
+    .card-notes {
         background: #f8f9fa;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
+        border-left: 3px solid #667eea;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
         font-style: italic;
-        color: var(--text-muted);
-        border-left: 3px solid var(--accent-color);
-    }
-
-    .wishlist-card .card-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: var(--text-muted);
         font-size: 0.9rem;
-        margin-bottom: 1rem;
+        color: #6c757d;
     }
 
-    .wishlist-card .card-actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .wishlist-card .btn {
-        flex: 1;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        text-decoration: none;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: var(--accent-color);
-        color: white;
-        border: 1px solid var(--accent-color);
-    }
-
-    .btn-primary:hover {
-        background: var(--secondary-color);
-        border-color: var(--secondary-color);
-        color: white;
-    }
-
-    .btn-outline-danger {
-        background: transparent;
-        color: #dc3545;
-        border: 1px solid #dc3545;
-    }
-
-    .btn-outline-danger:hover {
-        background: #dc3545;
-        color: white;
-    }
-
-    .empty-wishlist {
-        text-align: center;
-        padding: 4rem 2rem;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: var(--shadow);
-    }
-
-    .empty-wishlist i {
-        font-size: 4rem;
-        color: var(--text-muted);
-        margin-bottom: 1rem;
-    }
-
-    .empty-wishlist h3 {
-        color: var(--text-dark);
-        margin-bottom: 1rem;
-    }
-
-    .empty-wishlist p {
-        color: var(--text-muted);
-        margin-bottom: 2rem;
-    }
-
-    .btn-explore {
-        background: var(--accent-color);
-        color: white;
-        padding: 0.75rem 2rem;
-        border-radius: 0.5rem;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn-explore:hover {
-        background: var(--secondary-color);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    @media (max-width: 768px) {
-        .wishlist-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .wishlist-controls {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .filter-controls {
-            justify-content: center;
-        }
+    .wishlist-meta {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
     }
 </style>
 
-<div class="container my-4">
-    <!-- Wishlist Header -->
-    <div class="wishlist-header">
-        <h1><i class="fas fa-heart me-3"></i>My Wishlist</h1>
-        <p>Your favorite destinations and dream stays</p>
-    </div>
-
-    <% if (wishlistItems && wishlistItems.length > 0) { %>
-        <!-- Wishlist Stats -->
-        <div class="wishlist-stats">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <h4 class="text-primary mb-1"><%= wishlistItems.length %></h4>
-                    <p class="text-muted mb-0">Total Items</p>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="text-danger mb-1">
-                        <%= wishlistItems.filter(item => item.priority === 'high').length %>
-                    </h4>
-                    <p class="text-muted mb-0">High Priority</p>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="text-warning mb-1">
-                        <%= wishlistItems.filter(item => item.priority === 'medium').length %>
-                    </h4>
-                    <p class="text-muted mb-0">Medium Priority</p>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="text-success mb-1">
-                        <%= wishlistItems.filter(item => item.priority === 'low').length %>
-                    </h4>
-                    <p class="text-muted mb-0">Low Priority</p>
-                </div>
-            </div>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 glass-container">
+            <h3><i class="fa-solid fa-bookmark me-2"></i>My Wishlist</h3>
+            <p>Your saved destinations and dream stays!</p>
         </div>
-
-        <!-- Wishlist Controls -->
-        <div class="wishlist-controls">
-            <div class="filter-controls">
-                <label for="priorityFilter" class="form-label mb-0">Filter by Priority:</label>
-                <select id="priorityFilter" class="form-select" onchange="filterWishlist()">
-                    <option value="">All Priorities</option>
-                    <option value="high">High Priority</option>
-                    <option value="medium">Medium Priority</option>
-                    <option value="low">Low Priority</option>
-                </select>
-            </div>
-            <div>
-                <a href="/listings" class="btn btn-outline-primary">
-                    <i class="fas fa-plus me-2"></i>Add More Destinations
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+        <% if (wishlistItems && wishlistItems.length > 0) { %>
+            <% for(let item of wishlistItems) { %>
+                <% if (item.listing) { %>
+                <div class="col">
+                    <a href="/listings/<%= item.listing._id %>" class="listing-link">
+                        <div class="card listing-card h-100">
+                            <!-- Priority Badge -->
+                            <div class="priority-badge priority-<%= item.priority %>">
+                                <%= item.priority %>
+                            </div>
+                            
+                            <!-- Remove Button -->
+                            <div class="wishlist-actions">
+                                <form action="/profile/wishlist/<%= item.listing._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                            onclick="event.preventDefault(); event.stopPropagation(); if(confirm('Remove from wishlist?')) this.form.submit();">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <div class="card-img-container">
+                                <img src="<%= item.listing.image && item.listing.image.url ? item.listing.image.url : 'https://via.placeholder.com/300' %>" 
+                                     class="card-img-top" alt="<%= item.listing.title || 'Listing Image' %>">
+                            </div>
+                            
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <b><%= item.listing.title || 'Untitled Listing' %></b><br>
+                                    <small class="text-muted">
+                                        <i class="fa-solid fa-location-dot me-1"></i><%= item.listing.location || 'Location not available' %>
+                                    </small><br>
+                                    &#8377;<%= item.listing.price ? item.listing.price.toLocaleString("en-IN") : 'Price not available' %> / night
+                                </p>
+                                
+                                <% if (item.notes) { %>
+                                    <div class="card-notes">
+                                        "<%= item.notes %>"
+                                    </div>
+                                <% } %>
+                                
+                                <div class="wishlist-meta">
+                                    Added: <%= new Date(item.addedAt).toLocaleDateString() %>
+                                    <% if (item.isPrivate) { %>
+                                        <span class="badge bg-secondary ms-1">Private</span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <% } %>
+            <% } %>
+        <% } else { %>
+            <div class="col-12 glass-container mt-3">
+                <p><i class="fa-solid fa-bookmark me-2"></i>You haven't added any listings to your wishlist yet.</p>
+                <p>Start exploring to save your favorite destinations!</p>
+                <a href="/listings" class="btn btn-primary mt-2">
+                    <i class="fa-solid fa-compass me-1"></i>Explore Listings
                 </a>
             </div>
-        </div>
-
-        <!-- Wishlist Grid -->
-        <div class="wishlist-grid" id="wishlistGrid">
-            <% wishlistItems.forEach(item => { %>
-                <div class="wishlist-card" data-priority="<%= item.priority %>" data-listing-id="<%= item.listing._id %>">
-                    <div class="priority-badge priority-<%= item.priority %>">
-                        <%= item.priority %>
-                    </div>
-                    
-                    <div class="card-image" style="background-image: url('<%= item.listing.image && item.listing.image.url ? item.listing.image.url : '/images/default-listing.jpg' %>');">
-                    </div>
-                    
-                    <div class="card-body">
-                        <h5 class="card-title"><%= item.listing.title %></h5>
-                        
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <%= item.listing.location %>
-                        </div>
-                        
-                        <div class="card-price">
-                            ₹<%= item.listing.price ? item.listing.price.toLocaleString() : 'Price not available' %> / night
-                        </div>
-                        
-                        <% if (item.notes) { %>
-                            <div class="card-notes">
-                                "<%= item.notes %>"
-                            </div>
-                        <% } %>
-                        
-                        <div class="card-meta">
-                            <span>Added <%= new Date(item.addedAt).toLocaleDateString() %></span>
-                            <% if (item.isPrivate) { %>
-                                <span class="badge bg-secondary">Private</span>
-                            <% } %>
-                        </div>
-                        
-                        <div class="card-actions">
-                            <a href="/listings/<%= item.listing._id %>" class="btn btn-primary">
-                                <i class="fas fa-eye me-1"></i>View Details
-                            </a>
-                            <form action="/profile/wishlist/<%= item.listing._id %>?_method=DELETE" method="POST" style="flex: 1; margin-left: 0.5rem;">
-                                <button type="submit" class="btn btn-outline-danger w-100" 
-                                        onclick="return confirm('Remove from wishlist?')">
-                                    <i class="fas fa-trash me-1"></i>Remove
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            <% }); %>
-        </div>
-    <% } else { %>
-        <!-- Empty Wishlist -->
-        <div class="empty-wishlist">
-            <i class="fas fa-heart-broken"></i>
-            <h3>Your wishlist is empty</h3>
-            <p>Start exploring amazing destinations and add your favorites to create your dream travel list!</p>
-            <a href="/listings" class="btn-explore">
-                <i class="fas fa-compass me-2"></i>Explore Destinations
-            </a>
-        </div>
-    <% } %>
+        <% } %>
+    </div>
 </div>
-
-<script>
-    function filterWishlist() {
-        const filter = document.getElementById('priorityFilter').value;
-        const cards = document.querySelectorAll('.wishlist-card');
-        
-        cards.forEach(card => {
-            const priority = card.getAttribute('data-priority');
-            if (filter === '' || priority === filter) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Add smooth animations
-    document.addEventListener('DOMContentLoaded', function() {
-        const cards = document.querySelectorAll('.wishlist-card');
-        cards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
-            card.classList.add('animate__animated', 'animate__fadeInUp');
-        });
-    });
-</script>
