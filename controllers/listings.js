@@ -77,7 +77,9 @@ module.exports.index = async (req, res) => {
   // Features filtering (if we had features in the model)
   if (features) {
     const featureArray = Array.isArray(features) ? features : [features];
+    // TODO: Replace simulation logic with proper feature schema filtering when implemented.
     // For now, we'll simulate feature filtering based on title/description
+    // See issue tracker: https://github.com/your-org/your-repo/issues/123
     if (featureArray.length > 0) {
       const featureConditions = featureArray.map(feature => {
         const featureRegex = new RegExp(feature, 'i');
