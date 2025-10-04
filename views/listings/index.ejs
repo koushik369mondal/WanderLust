@@ -599,10 +599,7 @@
     </div>
 
     <!-- Active Filters Summary -->
-    <% if (typeof appliedFilters !== 'undefined' && appliedFilters && 
-           (appliedFilters.minPrice || appliedFilters.maxPrice || appliedFilters.minRating || 
-            (appliedFilters.features && appliedFilters.features.length > 0) || 
-            appliedFilters.location || appliedFilters.sort)) { %>
+    <% if (showFilterSummary) { %>
         <div class="filter-summary mt-3">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between">
