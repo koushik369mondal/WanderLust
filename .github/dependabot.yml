@@ -1,0 +1,34 @@
+version: 2
+updates:
+  # 1. Configure npm ecosystem monitoring for Node.js dependencies
+  - package-ecosystem: "npm"
+    directory: "/" # Looks for package.json in the root
+    
+    # 2. Set weekly update schedule
+    schedule:
+      interval: "weekly" 
+    
+    # 3. Target main branch for pull requests
+    target-branch: "main" 
+    
+    # 4. Configure commit message format with "deps:" prefix
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+      
+    # 5. Limit maximum open pull requests (set to 8, which is 5-10 range)
+    open-pull-requests-limit: 8 
+    
+    # 6. Add project admin as reviewer
+    reviewers:
+      - "koushik369mondal"
+      
+    # 7. Include security updates with higher priority (handled by the label)
+    labels:
+      - "dependencies"
+      - "security"
+      
+    # Ensure production and development dependencies are monitored
+    allow:
+      - dependency-type: "all"
