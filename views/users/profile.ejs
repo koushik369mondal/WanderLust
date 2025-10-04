@@ -657,10 +657,6 @@
                             <div class="stat-label">Wishlist Items</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number"><%= favoritesCount %></div>
-                            <div class="stat-label">Favorites</div>
-                        </div>
-                        <div class="stat-card">
                             <div class="stat-number"><%= user.badges.length %></div>
                             <div class="stat-label">Badges Earned</div>
                         </div>
@@ -774,15 +770,18 @@
                                     <div class="info-item">
                                         <label>Favorite Destinations:</label>
                                         <div class="tags-container">
-                                            <% if (user.favorites && user.favorites.length > 0) { %>
-                                                <% user.favorites.forEach(listing => { %>
+                                            <% if (currentUser.favoriteDestinations &&
+                                                currentUser.favoriteDestinations.length> 0) { %>
+                                                <% currentUser.favoriteDestinations.forEach(destination=> { %>
                                                     <span class="tag destination-tag">
-                                                        <%= listing.title %> - <%= listing.location %>, <%= listing.country %>
+                                                        <%= destination %>
                                                     </span>
-                                                <% }); %>
-                                            <% } else { %>
-                                                <p class="text-muted">No favorite destinations added</p>
-                                            <% } %>
+                                                    <% });
+                                                        %>
+                                                        <% } else { %>
+                                                            <p class="text-muted">No favorite destinations added
+                                                            </p>
+                                                            <% } %>
                                         </div>
                                     </div>
                                 </div>

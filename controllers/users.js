@@ -107,10 +107,6 @@ module.exports.renderProfile = async (req, res) => {
             .populate({
                 path: 'wishlist.listing',
                 select: 'title price location image'
-            })
-            .populate({
-                path: 'favorites',
-                select: 'title location country image'
             });
 
         const [listingCount, reviewCount, wishlistCount] = await Promise.all([
@@ -118,8 +114,6 @@ module.exports.renderProfile = async (req, res) => {
             Review.countDocuments({ author: req.user._id }),
             Wishlist.countDocuments({ user: req.user._id })
         ]);
-        
-        const favoritesCount = user.favorites.length;
 
         // Update user stats
         await BadgeService.updateUserStats(req.user._id);
@@ -137,7 +131,6 @@ module.exports.renderProfile = async (req, res) => {
             listingCount,
             reviewCount,
             wishlistCount,
-            favoritesCount,
             user: updatedUser,
             recentActivity,
             newBadges: newBadges.length > 0 ? newBadges : null,
