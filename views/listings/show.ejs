@@ -49,14 +49,14 @@
         <div class="listing-actions d-flex gap-2 mb-3">
           <% if (listing.likes && listing.likes.some(id => id.toString() === currentUser._id.toString())) { %>
             <form action="/listings/<%= listing._id %>/unlike" method="POST" style="display: inline;">
-              <button type="submit" class="btn btn-danger">
-                <i class="fa-solid fa-heart-broken me-1"></i>Unlike
+              <button type="submit" style="background: none; border: none; padding: 8px; cursor: pointer; border-radius: 50%; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+                <i class="fa-solid fa-heart" style="color: #dc3545; font-size: 24px;"></i>
               </button>
             </form>
           <% } else { %>
             <form action="/listings/<%= listing._id %>/like" method="POST" style="display: inline;">
-              <button type="submit" class="btn btn-success">
-                <i class="fa-solid fa-heart me-1"></i>Like
+              <button type="submit" style="background: none; border: none; padding: 8px; cursor: pointer; border-radius: 50%; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+                <i class="fa-regular fa-heart" style="color: #6c757d; font-size: 24px;"></i>
               </button>
             </form>
           <% } %>
