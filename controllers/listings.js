@@ -11,9 +11,22 @@ const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : nul
 
 
 module.exports.index = async (req, res) => {
-  const { category, search } = req.query;
+  const { 
+    category, 
+    search, 
+    minPrice, 
+    maxPrice, 
+    minRating, 
+    features, 
+    location, 
+    instantBook, 
+    superhost,
+    sort 
+  } = req.query;
+  
   const filter = {};
   let searchQuery = null;
+  let sortOptions = {};
 
   // Category filtering
   if (category) {
@@ -33,11 +46,90 @@ module.exports.index = async (req, res) => {
     ];
   }
 
-  // Populate reviews (with author) for avgRating calculation
-  const allListings = await Listing.find(filter)
-    .populate({ path: 'reviews', populate: { path: 'author' } });
+  // Price range filtering
+  if (minPrice || maxPrice) {
+    filter.price = {};
+    if (minPrice && !isNaN(minPrice)) {
+      filter.price.$gte = parseInt(minPrice);
+    }
+    if (maxPrice && !isNaN(maxPrice)) {
+      filter.price.$lte = parseInt(maxPrice);
+    }
+  }
 
-  // Badge logic for each listing
+  // Location filtering (additional to search)
+  if (location && location.trim() && location !== searchQuery) {
+    const locationRegex = new RegExp(location.trim(), 'i');
+    if (filter.$or) {
+      // If search already exists, add location as additional OR condition
+      filter.$or.push(
+        { location: locationRegex },
+        { country: locationRegex }
+      );
+    } else {
+      filter.$or = [
+        { location: locationRegex },
+        { country: locationRegex }
+      ];
+    }
+  }
+
+  // Features filtering (if we had features in the model)
+  if (features) {
+    const featureArray = Array.isArray(features) ? features : [features];
+    // For now, we'll simulate feature filtering based on title/description
+    if (featureArray.length > 0) {
+      const featureConditions = featureArray.map(feature => {
+        const featureRegex = new RegExp(feature, 'i');
+        return {
+          $or: [
+            { title: featureRegex },
+            { description: featureRegex }
+          ]
+        };
+      });
+      
+      if (filter.$and) {
+        filter.$and.push(...featureConditions);
+      } else {
+        filter.$and = featureConditions;
+      }
+    }
+  }
+
+  // Sorting options
+  switch (sort) {
+    case 'price-low':
+      sortOptions = { price: 1 };
+      break;
+    case 'price-high':
+      sortOptions = { price: -1 };
+      break;
+    case 'rating':
+      sortOptions = { avgRating: -1 };
+      break;
+    case 'newest':
+      sortOptions = { createdAt: -1 };
+      break;
+    default:
+      // Default relevance sort (newest first, then by title)
+      sortOptions = { createdAt: -1, title: 1 };
+  }
+
+  // Populate reviews (with author) for avgRating calculation and apply sorting
+  let query = Listing.find(filter)
+    .populate({ path: 'reviews', populate: { path: 'author' } });
+  
+  // Apply sorting
+  if (Object.keys(sortOptions).length > 0) {
+    query = query.sort(sortOptions);
+  }
+  
+  const allListings = await query;
+
+  // Badge logic for each listing and rating filtering
+  const filteredListings = [];
+  
   for (const listing of allListings) {
     // 1️⃣ New Badge: createdAt within last 7 days
     const now = new Date();
@@ -60,27 +152,75 @@ module.exports.index = async (req, res) => {
     listing.avgRating = avgRating;
     // Only show badge if avgRating >= 4.5 and has at least one review
     listing.isHighlyRatedBadge = (listing.reviews && listing.reviews.length > 0 && avgRating >= 4.5);
+
+    // Apply rating filter after calculating avgRating
+    if (minRating && !isNaN(minRating)) {
+      const minRatingFloat = parseFloat(minRating);
+      if (avgRating >= minRatingFloat) {
+        filteredListings.push(listing);
+      }
+    } else {
+      filteredListings.push(listing);
+    }
   }
+
+  // Use filtered listings for the final result
+  const finalListings = filteredListings;
 
   // Log search queries for analytics (async, don't wait for completion)
   if (searchQuery) {
     SearchLog.create({
       query: searchQuery,
-      resultsCount: allListings.length,
+      resultsCount: finalListings.length,
       userAgent: req.headers['user-agent'] || '',
       ipAddress: req.ip || req.connection.remoteAddress || '',
-      category: category || ''
+      category: category || '',
+      filters: {
+        minPrice,
+        maxPrice,
+        minRating,
+        features,
+        location,
+        sort
+      }
     }).catch(err => {
       console.log('Search logging error:', err.message);
     });
   }
 
+  // Check if this is an AJAX request for filtering
+  if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+    // Return JSON response for AJAX requests
+    return res.json({
+      listings: finalListings,
+      totalResults: finalListings.length,
+      hasSearch: !!searchQuery,
+      appliedFilters: {
+        category,
+        minPrice,
+        maxPrice,
+        minRating,
+        features,
+        location,
+        sort
+      }
+    });
+  }
+
   res.render("listings/index.ejs", { 
-    allListings, 
+    allListings: finalListings, 
     category: req.query.category,
     searchQuery: searchQuery,
-    totalResults: allListings.length,
-    hasSearch: !!searchQuery
+    totalResults: finalListings.length,
+    hasSearch: !!searchQuery,
+    appliedFilters: {
+      minPrice,
+      maxPrice,
+      minRating,
+      features: Array.isArray(features) ? features : (features ? [features] : []),
+      location,
+      sort
+    }
   });
 
 };

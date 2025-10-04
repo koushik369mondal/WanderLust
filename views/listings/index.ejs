@@ -206,6 +206,216 @@
             background-color: #17a2b8;
             color: white;
         }
+
+        /* Advanced Search & Filter Styles */
+        .advanced-search-controls {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filter-sort-controls .btn {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-sort-controls .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .filter-count {
+            font-size: 0.7rem;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Offcanvas Filter Styles */
+        .offcanvas-end {
+            width: 400px;
+        }
+
+        .filter-section {
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 1rem;
+        }
+
+        .filter-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .price-range-container .input-group {
+            border-radius: 8px;
+        }
+
+        .price-range-slider {
+            margin-top: 1rem;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .features-grid .form-check-label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .features-grid .form-check-label:hover {
+            background-color: #f8f9fa;
+        }
+
+        .features-grid .form-check-input:checked + .form-check-label {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .location-tag {
+            border-radius: 15px;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .location-tag:hover {
+            transform: scale(1.05);
+        }
+
+        .location-tag.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .filter-actions {
+            border-top: 1px solid #e9ecef;
+            padding-top: 1rem;
+        }
+
+        /* Loading and No Results States */
+        .listings-loading {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .listings-loading .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .no-results-advanced {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            border-radius: 20px;
+            margin: 2rem 0;
+        }
+
+        .filter-summary {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-summary .filter-tag {
+            display: inline-block;
+            background: #1976d2;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+        }
+
+        .filter-tag .remove-filter {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .filter-tag .remove-filter:hover {
+            opacity: 1;
+        }
+
+        /* Sorting Styles */
+        .sort-option {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sort-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .sort-option.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Mobile Responsive Filters */
+        @media (max-width: 768px) {
+            .offcanvas-end {
+                width: 100%;
+            }
+            
+            .filter-sort-controls {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .filter-sort-controls .d-flex {
+                flex-direction: column;
+            }
+            
+            .advanced-search-controls .row {
+                flex-direction: column;
+            }
+            
+            .advanced-search-controls .col-lg-4 {
+                margin-top: 1rem;
+            }
+        }
+
+        /* Enhanced listing cards with better spacing */
+        #listingsContainer {
+            min-height: 400px;
+        }
+
+        .listing-card {
+            transition: all 0.3s ease;
+        }
+
+        .listing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Filter highlight for search results */
+        .search-highlight {
+            background-color: yellow;
+            font-weight: bold;
+            border-radius: 2px;
+            padding: 0 2px;
+        }
         
     </style>
 
@@ -306,29 +516,142 @@
     </div>
     
 
-    <!-- Search Results Header -->
-    <% if (searchQuery) { %>
-        <div class="search-results-header mt-4 mb-3">
+    <!-- Advanced Search & Filter Controls -->
+    <div class="advanced-search-controls mt-4 mb-3">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Search Results Header -->
+                <div class="col-lg-8">
+                    <% if (searchQuery) { %>
+                        <div class="search-results-header">
+                            <h4 class="mb-1">
+                                <i class="fas fa-search text-primary me-2"></i>
+                                Search Results for "<%= searchQuery %>"
+                            </h4>
+                            <p class="text-muted mb-0">
+                                <% if (totalResults > 0) { %>
+                                    Found <%= totalResults %> <%= totalResults === 1 ? 'listing' : 'listings' %> matching your search
+                                <% } else { %>
+                                    No listings found for your search. Try different keywords.
+                                <% } %>
+                            </p>
+                        </div>
+                    <% } else { %>
+                        <div class="search-results-header">
+                            <h4 class="mb-1">
+                                <i class="fas fa-compass text-primary me-2"></i>
+                                Explore Amazing Destinations
+                            </h4>
+                            <p class="text-muted mb-0">
+                                Discover <%= totalResults %> unique places to stay around the world
+                            </p>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <!-- Filter & Sort Controls -->
+                <div class="col-lg-4">
+                    <div class="filter-sort-controls">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <!-- Advanced Filter Toggle -->
+                            <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" 
+                                    data-bs-target="#advancedFilters" aria-controls="advancedFilters">
+                                <i class="fas fa-filter me-1"></i>
+                                Filters
+                                <span class="filter-count badge bg-primary ms-1" id="activeFilterCount" style="display: none;">0</span>
+                            </button>
+                            
+                            <!-- Sort Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" 
+                                        id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-sort me-1"></i>
+                                    <span id="currentSort">Best Match</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
+                                    <li><a class="dropdown-item sort-option" href="#" data-sort="relevance">
+                                        <i class="fas fa-star me-2"></i>Best Match
+                                    </a></li>
+                                    <li><a class="dropdown-item sort-option" href="#" data-sort="price-low">
+                                        <i class="fas fa-arrow-up me-2"></i>Price: Low to High
+                                    </a></li>
+                                    <li><a class="dropdown-item sort-option" href="#" data-sort="price-high">
+                                        <i class="fas fa-arrow-down me-2"></i>Price: High to Low
+                                    </a></li>
+                                    <li><a class="dropdown-item sort-option" href="#" data-sort="rating">
+                                        <i class="fas fa-star me-2"></i>Highest Rated
+                                    </a></li>
+                                    <li><a class="dropdown-item sort-option" href="#" data-sort="newest">
+                                        <i class="fas fa-clock me-2"></i>Newest First
+                                    </a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Clear All Filters -->
+                            <button class="btn btn-outline-danger" id="clearAllFilters" style="display: none;">
+                                <i class="fas fa-times me-1"></i>Clear All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Filters Summary -->
+    <% if (typeof appliedFilters !== 'undefined' && appliedFilters && 
+           (appliedFilters.minPrice || appliedFilters.maxPrice || appliedFilters.minRating || 
+            (appliedFilters.features && appliedFilters.features.length > 0) || 
+            appliedFilters.location || appliedFilters.sort)) { %>
+        <div class="filter-summary mt-3">
             <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4 class="mb-1">
-                            <i class="fas fa-search text-primary me-2"></i>
-                            Search Results for "<%= searchQuery %>"
-                        </h4>
-                        <p class="text-muted mb-0">
-                            <% if (totalResults > 0) { %>
-                                Found <%= totalResults %> <%= totalResults === 1 ? 'listing' : 'listings' %> matching your search
-                            <% } else { %>
-                                No listings found for your search. Try different keywords.
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <small class="text-muted">Active filters:</small>
+                        <div class="mt-1">
+                            <% if (appliedFilters.minPrice) { %>
+                                <span class="filter-tag">
+                                    Min: ₹<%= appliedFilters.minPrice %>
+                                    <span class="remove-filter" data-filter="minPrice">×</span>
+                                </span>
                             <% } %>
-                        </p>
+                            <% if (appliedFilters.maxPrice) { %>
+                                <span class="filter-tag">
+                                    Max: ₹<%= appliedFilters.maxPrice %>
+                                    <span class="remove-filter" data-filter="maxPrice">×</span>
+                                </span>
+                            <% } %>
+                            <% if (appliedFilters.minRating) { %>
+                                <span class="filter-tag">
+                                    <%= appliedFilters.minRating %>+ Stars
+                                    <span class="remove-filter" data-filter="minRating">×</span>
+                                </span>
+                            <% } %>
+                            <% if (appliedFilters.features && appliedFilters.features.length > 0) { %>
+                                <% appliedFilters.features.forEach(feature => { %>
+                                    <span class="filter-tag">
+                                        <%= feature.charAt(0).toUpperCase() + feature.slice(1) %>
+                                        <span class="remove-filter" data-filter="features" data-value="<%= feature %>">×</span>
+                                    </span>
+                                <% }); %>
+                            <% } %>
+                            <% if (appliedFilters.location && appliedFilters.location !== searchQuery) { %>
+                                <span class="filter-tag">
+                                    Location: <%= appliedFilters.location %>
+                                    <span class="remove-filter" data-filter="location">×</span>
+                                </span>
+                            <% } %>
+                            <% if (appliedFilters.sort && appliedFilters.sort !== 'relevance') { %>
+                                <span class="filter-tag">
+                                    Sort: <%= appliedFilters.sort.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) %>
+                                    <span class="remove-filter" data-filter="sort">×</span>
+                                </span>
+                            <% } %>
+                        </div>
                     </div>
-                    <div class="col-md-4 text-end">
-                        <a href="/listings" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-1"></i>Clear Search
-                        </a>
-                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="clearAllFilters()">
+                        <i class="fas fa-times me-1"></i>Clear All
+                    </button>
                 </div>
             </div>
         </div>
@@ -362,7 +685,183 @@
         </div>
     <% } %>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3">
+    <!-- Advanced Filters Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="advancedFilters" aria-labelledby="advancedFiltersLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="advancedFiltersLabel">
+                <i class="fas fa-filter me-2"></i>Advanced Filters
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="advancedFilterForm">
+                
+                <!-- Price Range Filter -->
+                <div class="filter-section mb-4">
+                    <h6 class="filter-title">
+                        <i class="fas fa-dollar-sign me-2"></i>Price Range (per night)
+                    </h6>
+                    <div class="price-range-container">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="minPrice" class="form-label">Min Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="number" class="form-control" id="minPrice" name="minPrice" 
+                                           placeholder="0" min="0" step="100">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="maxPrice" class="form-label">Max Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="number" class="form-control" id="maxPrice" name="maxPrice" 
+                                           placeholder="50000" min="0" step="100">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-range-slider mt-3">
+                            <input type="range" class="form-range" id="priceRangeSlider" min="0" max="50000" step="500">
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>₹0</span>
+                                <span>₹50,000+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating Filter -->
+                <div class="filter-section mb-4">
+                    <h6 class="filter-title">
+                        <i class="fas fa-star me-2"></i>Minimum Rating
+                    </h6>
+                    <div class="rating-filter">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="minRating" id="rating-any" value="" checked>
+                            <label class="form-check-label" for="rating-any">
+                                Any Rating
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="minRating" id="rating-4" value="4">
+                            <label class="form-check-label" for="rating-4">
+                                <span class="rating-stars">★★★★☆</span> 4+ stars
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="minRating" id="rating-4.5" value="4.5">
+                            <label class="form-check-label" for="rating-4.5">
+                                <span class="rating-stars">★★★★★</span> 4.5+ stars
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Features Filter -->
+                <div class="filter-section mb-4">
+                    <h6 class="filter-title">
+                        <i class="fas fa-home me-2"></i>Property Features
+                    </h6>
+                    <div class="features-grid">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="feature-pool" name="features" value="pool">
+                            <label class="form-check-label" for="feature-pool">
+                                <i class="fas fa-swimming-pool me-2"></i>Swimming Pool
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="feature-wifi" name="features" value="wifi">
+                            <label class="form-check-label" for="feature-wifi">
+                                <i class="fas fa-wifi me-2"></i>WiFi
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="feature-parking" name="features" value="parking">
+                            <label class="form-check-label" for="feature-parking">
+                                <i class="fas fa-parking me-2"></i>Free Parking
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="feature-kitchen" name="features" value="kitchen">
+                            <label class="form-check-label" for="feature-kitchen">
+                                <i class="fas fa-utensils me-2"></i>Kitchen
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="feature-ac" name="features" value="ac">
+                            <label class="form-check-label" for="feature-ac">
+                                <i class="fas fa-snowflake me-2"></i>Air Conditioning
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="feature-pet" name="features" value="pet">
+                            <label class="form-check-label" for="feature-pet">
+                                <i class="fas fa-paw me-2"></i>Pet Friendly
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Filter -->
+                <div class="filter-section mb-4">
+                    <h6 class="filter-title">
+                        <i class="fas fa-map-marker-alt me-2"></i>Location
+                    </h6>
+                    <div class="location-filter">
+                        <input type="text" class="form-control mb-3" id="locationFilter" 
+                               placeholder="Enter city, country, or region..." name="location">
+                        
+                        <div class="popular-locations">
+                            <small class="text-muted">Popular locations:</small>
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm location-tag" data-location="Mumbai, India">Mumbai</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm location-tag" data-location="Delhi, India">Delhi</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm location-tag" data-location="Goa, India">Goa</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm location-tag" data-location="Kerala, India">Kerala</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm location-tag" data-location="Rajasthan, India">Rajasthan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instant Book Filter -->
+                <div class="filter-section mb-4">
+                    <h6 class="filter-title">
+                        <i class="fas fa-bolt me-2"></i>Booking Options
+                    </h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="instantBook" name="instantBook">
+                        <label class="form-check-label" for="instantBook">
+                            <strong>Instant Book</strong>
+                            <small class="d-block text-muted">Book without waiting for host approval</small>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="superhost" name="superhost">
+                        <label class="form-check-label" for="superhost">
+                            <strong>Superhost</strong>
+                            <small class="d-block text-muted">Stay with recognized hosts</small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Apply & Reset Buttons -->
+                <div class="filter-actions mt-4">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Apply Filters
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="resetFilters">
+                            <i class="fas fa-undo me-2"></i>Reset All
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsContainer">
         <% for(let listing of allListings) { %>
             <div class="col mb-4">
                 <a href="/listings/<%= listing._id %>" class="listing-link">
