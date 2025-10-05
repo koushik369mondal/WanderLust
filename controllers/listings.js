@@ -75,18 +75,12 @@ module.exports.index = async (req, res) => {
     });
   }
 
-  let currentUser = null;
-  if (req.user) {
-    currentUser = await User.findById(req.user._id).select('favorites');
-  }
-
   res.render("listings/index.ejs", { 
     allListings, 
     category: req.query.category,
     searchQuery: searchQuery,
     totalResults: allListings.length,
-    hasSearch: !!searchQuery,
-    currentUser
+    hasSearch: !!searchQuery
   });
 
 };
@@ -172,6 +166,7 @@ module.exports.showListing = async (req, res, next) => {
       })
       .populate("owner");
 
+
     if (!listing) {
       console.log(" Listing not found in database");
       req.flash("error", "Listing not found!");
@@ -188,6 +183,7 @@ module.exports.showListing = async (req, res, next) => {
       });
       isInWishlist = !!wishlistItem;
     }
+
 
     // Badge logic for show page
     const now = new Date();
@@ -286,8 +282,10 @@ module.exports.showListing = async (req, res, next) => {
     const templatePath = path.join(__dirname, '../views/listings/show.ejs');
     console.log("Template path:", templatePath);
     
-    // Add error handling for template rendering
+    // Add error handling for template rendering main
     res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations }, (err, html) => {
+
+    res.render("listings/show.ejs", { listing, currentUser: req.user }, (err, html) => {
       if (err) {
         console.error(" TEMPLATE RENDERING ERROR:");
         console.error("Error message:", err.message);
@@ -495,22 +493,6 @@ module.exports.unlikeListing = async (req, res) => {
     
     req.flash("success", "Removed from your liked listings.");
     res.redirect(`/listings/${id}`);
-};
-
-module.exports.favoriteListing = async (req, res) => {
-    const user = await User.findById(req.user._id);
-    if (!user.favorites.includes(req.params.id)) {
-        user.favorites.push(req.params.id);
-        await user.save();
-        req.flash("success", "Added to favorites!");
-    }
-    res.redirect(`/listings/${req.params.id}`);
-};
-
-module.exports.unfavoriteListing = async (req, res) => {
-    await User.findByIdAndUpdate(req.user._id, { $pull: { favorites: req.params.id } });
-    req.flash("success", "Removed from favorites.");
-    res.redirect(`/listings/${req.params.id}`);
 };
 
 module.exports.searchListings = async (req, res) => {

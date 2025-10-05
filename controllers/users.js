@@ -107,10 +107,6 @@ module.exports.renderProfile = async (req, res) => {
             .populate({
                 path: 'wishlist.listing',
                 select: 'title price location image'
-            })
-            .populate({
-                path: 'favorites',
-                select: 'title location country image'
             });
 
         const [listingCount, reviewCount, wishlistCount] = await Promise.all([
@@ -118,8 +114,6 @@ module.exports.renderProfile = async (req, res) => {
             Review.countDocuments({ author: req.user._id }),
             Wishlist.countDocuments({ user: req.user._id })
         ]);
-        
-        const favoritesCount = user.favorites.length;
 
         // Update user stats
         await BadgeService.updateUserStats(req.user._id);
@@ -137,7 +131,6 @@ module.exports.renderProfile = async (req, res) => {
             listingCount,
             reviewCount,
             wishlistCount,
-            favoritesCount,
             user: updatedUser,
             recentActivity,
             newBadges: newBadges.length > 0 ? newBadges : null,
@@ -290,12 +283,22 @@ module.exports.removeFromWishlist = async (req, res) => {
 
 module.exports.showWishlist = async (req, res) => {
     try {
+        const user = await User.findById(req.user._id);
+        
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
         const wishlistItems = await Wishlist.find({ user: req.user._id })
             .populate('listing')
             .sort({ addedAt: -1 });
 
+        console.log("Wishlist items being sent to the page:", wishlistItems);
+
         res.render("users/wishlist.ejs", { 
             wishlistItems,
+            name: user.username,
             title: "My Wishlist"
         });
     } catch (error) {

@@ -70,12 +70,6 @@ const userSchema = new Schema({
             ref: "Listing",
         },
     ],
-    favorites: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Listing",
-        },
-    ],
     // Enhanced profile fields
     avatar: {
         url: {
