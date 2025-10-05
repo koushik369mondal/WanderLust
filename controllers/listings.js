@@ -293,7 +293,7 @@ module.exports.showListing = async (req, res, next) => {
         console.error("Template path:", templatePath);
         return next(err);
       }
-      console.log("Template rendered successfully, sending response");
+      console.log("Template rendered successfully, sending  response");
       res.send(html);
     });
     
