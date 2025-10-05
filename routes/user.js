@@ -39,16 +39,16 @@ router.get("/auth/google/callback",
 
 router.get("/profile/likes", isLoggedIn, userController.showLikedListings);
 
+// Wishlist Routes (place before general profile routes)
+router.get("/profile/wishlist", isLoggedIn, wrapAsync(userController.showWishlist));
+router.post("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
+router.delete("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.removeFromWishlist));
+
 // Enhanced Profile Routes
 router
     .route("/profile")
     .get(isLoggedIn, userController.renderProfile)
     .put(isLoggedIn, userController.updateProfile);
-
-// Wishlist Routes
-router.get("/profile/wishlist", isLoggedIn, userController.showWishlist);
-router.post("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
-router.delete("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.removeFromWishlist));
 
 // Travel Goals Routes
 router.post("/profile/travel-goals", isLoggedIn, wrapAsync(userController.addTravelGoal));
