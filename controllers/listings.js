@@ -285,7 +285,7 @@ module.exports.showListing = async (req, res, next) => {
     // Add error handling for template rendering main
     res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations }, (err, html) => {
 
-    res.render("listings/show.ejs", { listing, currentUser: req.user }, (err, html) => {
+   
       if (err) {
         console.error(" TEMPLATE RENDERING ERROR:");
         console.error("Error message:", err.message);
