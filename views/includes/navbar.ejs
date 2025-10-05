@@ -219,6 +219,16 @@
           <% } %>
             <% if(typeof currentUser !=='undefined' && currentUser) { %>
 
+    <!-- Notification Bell -->
+    <div class="nav-item notification-badge" id="notificationIcon">
+        <a class="nav-link position-relative" href="/notifications" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span id="notificationCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle d-none" 
+                  style="font-size: 0.7rem; min-width: 18px; height: 18px; line-height: 16px; border-radius: 50%;">
+            </span>
+        </a>
+    </div>
+
     <div class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="desktop-text">Profile</span>
@@ -227,6 +237,9 @@
             <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user me-2"></i>My Profile</a></li>
             <li><a class="dropdown-item" href="/profile/wishlist"><i class="fa-solid fa-bookmark me-2"></i>My Wishlist</a></li>
             <li><a class="dropdown-item" href="/profile/likes"><i class="fa-solid fa-heart me-2"></i>Liked Listings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/notifications"><i class="fa-solid fa-bell me-2"></i>Notifications</a></li>
+            <li><a class="dropdown-item" href="/notifications/settings"><i class="fa-solid fa-cog me-2"></i>Notification Settings</a></li>
         </ul>
     </div>
 

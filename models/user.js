@@ -190,6 +190,31 @@ const userSchema = new Schema({
             default: true,
         }
     },
+    notificationSettings: {
+        email: {
+            newReview: { type: Boolean, default: true },
+            badgeEarned: { type: Boolean, default: true },
+            wishlistDiscount: { type: Boolean, default: true },
+            systemAnnouncements: { type: Boolean, default: true },
+            newsletter: { type: Boolean, default: true }
+        },
+        push: {
+            newReview: { type: Boolean, default: true },
+            badgeEarned: { type: Boolean, default: true },
+            wishlistDiscount: { type: Boolean, default: true },
+            systemAnnouncements: { type: Boolean, default: false },
+            newsletter: { type: Boolean, default: false }
+        },
+        inApp: {
+            newReview: { type: Boolean, default: true },
+            newRating: { type: Boolean, default: true },
+            listingLiked: { type: Boolean, default: true },
+            badgeEarned: { type: Boolean, default: true },
+            wishlistDiscount: { type: Boolean, default: true },
+            systemAnnouncements: { type: Boolean, default: true },
+            newsletter: { type: Boolean, default: true }
+        }
+    },
     lastActive: {
         type: Date,
         default: Date.now,

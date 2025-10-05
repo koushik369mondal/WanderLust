@@ -31,6 +31,15 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_
 
 const express = require("express");
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
@@ -51,6 +60,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const newsletterRouter = require("./routes/newsletter.js");
+const notificationRouter = require("./routes/notifications.js");
 
 // Check for MongoDB connection string and provide a fallback for development
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -171,10 +181,60 @@ app.use((req, res, next) => {
     next();
 });
 
+// Initialize notification system with Socket.io
+const notificationController = require('./controllers/notifications');
+notificationController.setSocketIO(io);
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+    console.log('User connected to notification system:', socket.id);
+
+    // Handle user authentication for notifications
+    socket.on('authenticate', (userId) => {
+        if (userId) {
+            socket.join(`user_${userId}`);
+            console.log(`User ${userId} joined their notification room`);
+        }
+    });
+
+    // Handle notification read acknowledgment
+    socket.on('notification_read', async (data) => {
+        try {
+            const { notificationId, userId } = data;
+            await notificationController.markAsRead({ params: { id: notificationId }, user: { _id: userId } }, {
+                json: (response) => {
+                    socket.emit('notification_read_response', response);
+                }
+            });
+        } catch (error) {
+            console.error('Error handling notification read:', error);
+        }
+    });
+
+    // Handle request for unread count
+    socket.on('get_unread_count', async (userId) => {
+        try {
+            const Notification = require('./models/notification');
+            const unreadCount = await Notification.getUnreadCount(userId);
+            socket.emit('unread_count_update', unreadCount);
+        } catch (error) {
+            console.error('Error getting unread count:', error);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected from notification system:', socket.id);
+    });
+});
+
+// Make io available globally for other parts of the application
+global.io = io;
+
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 app.use("/newsletter", newsletterRouter);
+app.use("/notifications", notificationRouter);
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
@@ -213,8 +273,9 @@ app.use((err, req, res, next) => {
 
 
 const { seedListings } = require('./init/data');
-app.listen(8080, async () => {
+server.listen(8080, async () => {
     await seedListings();
     console.log("Server is running on port 8080");
     console.log("Visit: http://localhost:8080/listings");
+    console.log("Real-time notifications enabled ✅");
 });

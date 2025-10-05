@@ -39,6 +39,17 @@ module.exports.signup = async (req, res) => {
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
         console.log(registeredUser);
+        
+        // Send welcome notification
+        try {
+            const NotificationService = require("../services/notificationService");
+            const notificationService = new NotificationService(global.io);
+            await notificationService.createWelcomeNotification(registeredUser._id);
+        } catch (notificationError) {
+            console.error('Error sending welcome notification:', notificationError);
+            // Don't fail registration if notification fails
+        }
+        
         req.login(registeredUser, (err) => {
             if (err) {
                 return next(err);

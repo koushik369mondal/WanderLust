@@ -26,6 +26,19 @@ class BadgeService {
                         category: badgeDefinition.category
                     });
                     newBadgesAwarded.push(badgeDefinition.name);
+                    
+                    // Send badge earned notification
+                    try {
+                        const NotificationService = require('./notificationService');
+                        const notificationService = new NotificationService(global.io);
+                        await notificationService.createBadgeEarnedNotification(
+                            userId,
+                            badgeDefinition.name,
+                            badgeDefinition.icon
+                        );
+                    } catch (notificationError) {
+                        console.error('Error sending badge notification:', notificationError);
+                    }
                 }
             }
 
