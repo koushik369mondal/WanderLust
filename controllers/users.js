@@ -236,19 +236,24 @@ module.exports.addToWishlist = async (req, res) => {
             return res.redirect(`/listings/${listingId}`);
         }
 
+        // For GET requests (quick add), use default values
+        const isQuickAdd = req.method === 'GET';
+        
         const wishlistItem = new Wishlist({
             user: req.user._id,
             listing: listingId,
             notes: notes || "",
             priority: priority || 'medium',
-            isPrivate: isPrivate === 'on'
+            isPrivate: isQuickAdd ? false : (isPrivate === 'on')
         });
 
         await wishlistItem.save();
 
         // Log activity
         const user = await User.findById(req.user._id);
-        await user.logActivity('wishlist_add', 'Added listing to wishlist', listingId);
+        if (user && user.logActivity) {
+            await user.logActivity('wishlist_add', 'Added listing to wishlist', listingId);
+        }
 
         req.flash("success", "Added to your wishlist!");
         res.redirect(`/listings/${listingId}`);
@@ -262,6 +267,7 @@ module.exports.addToWishlist = async (req, res) => {
 module.exports.removeFromWishlist = async (req, res) => {
     try {
         const { listingId } = req.params;
+        const { redirect } = req.query;
 
         await Wishlist.findOneAndDelete({
             user: req.user._id,
@@ -270,10 +276,18 @@ module.exports.removeFromWishlist = async (req, res) => {
 
         // Log activity
         const user = await User.findById(req.user._id);
-        await user.logActivity('wishlist_remove', 'Removed listing from wishlist', listingId);
+        if (user && user.logActivity) {
+            await user.logActivity('wishlist_remove', 'Removed listing from wishlist', listingId);
+        }
 
         req.flash("success", "Removed from your wishlist!");
-        res.redirect("/profile/wishlist");
+        
+        // Redirect based on where the request came from
+        if (redirect === 'listing') {
+            res.redirect(`/listings/${listingId}`);
+        } else {
+            res.redirect("/profile/wishlist");
+        }
     } catch (error) {
         console.error("Error removing from wishlist:", error);
         req.flash("error", "Error removing from wishlist. Please try again.");

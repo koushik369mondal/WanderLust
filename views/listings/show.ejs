@@ -62,9 +62,22 @@
           <% } %>
           
           <!-- Wishlist Button -->
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
-            <i class="fa-solid fa-bookmark me-1"></i><%= __('add_to_wishlist') %>
-          </button>
+          <% if (isInWishlist) { %>
+            <form action="/profile/wishlist/<%= listing._id %>?_method=DELETE&redirect=listing" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-warning">
+                <i class="fa-solid fa-bookmark me-1"></i>Remove from Wishlist
+              </button>
+            </form>
+          <% } else { %>
+            <div class="btn-group" role="group">
+              <a href="/profile/wishlist/add/<%= listing._id %>" class="btn btn-outline-primary">
+                <i class="fa-solid fa-bookmark me-1"></i>Quick Add
+              </a>
+              <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
+                <i class="fa-solid fa-cog me-1"></i>Customize
+              </button>
+            </div>
+          <% } %>
         </div>
       <% } %>
       <p class="card-text">

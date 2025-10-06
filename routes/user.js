@@ -42,6 +42,7 @@ router.get("/profile/likes", isLoggedIn, userController.showLikedListings);
 // Wishlist Routes (place before general profile routes)
 router.get("/profile/wishlist", isLoggedIn, wrapAsync(userController.showWishlist));
 router.post("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
+router.get("/profile/wishlist/add/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
 router.delete("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.removeFromWishlist));
 
 // Enhanced Profile Routes
