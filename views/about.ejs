@@ -1,89 +1,622 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="about-container" style="max-width:1000px;margin:auto;padding:40px;line-height:1.8;">
-  <h1 class="text-3xl font-bold mb-6">About Wanderlust</h1>
-  
-  <p>
-    Welcome to <strong>Wanderlust</strong>, a community-driven platform built to inspire 
-    and empower travelers. We believe every journey has the power to connect people, 
-    spark creativity, and create unforgettable stories. Our vision is simple: 
-    to help you <em>feel at home, anywhere in the world</em>.
-  </p>
-
-  <h2 class="text-2xl font-semibold mt-8 mb-3">🌍 Our Mission</h2>
-  <p>
-    Wanderlust isn’t just about finding a place to stay—it’s about discovering places 
-    that feel like they were meant for you. From city lofts to countryside retreats, 
-    we make travel accessible, safe, and truly memorable. 
-    Our mission is to connect curious travelers with passionate hosts and experiences 
-    that go beyond walls and roofs.
-  </p>
-
-  <h2 class="text-2xl font-semibold mt-8 mb-3">💡 Our Story</h2>
-  <p>
-    Born from the idea that travel should be more personal and less transactional, 
-    Wanderlust was created by a small group of developers and explorers who wanted 
-    to reimagine how people travel. Inspired by platforms like Airbnb, we designed 
-    Wanderlust with simplicity, trust, and community at its core.
-  </p>
-
-  <h2 class="text-2xl font-semibold mt-8 mb-3">✨ Why Choose Wanderlust?</h2>
-  <ul style="margin-left:20px;list-style:disc;">
-    <li>Handpicked stays that fit every style and budget</li>
-    <li>Trusted hosts and verified listings for peace of mind</li>
-    <li>Seamless booking with secure payments</li>
-    <li>Personalized experiences designed for modern travelers</li>
-  </ul>
-
-  <h2 class="text-2xl font-semibold mt-8 mb-3">🤝 Our Values</h2>
-  <p>
-    We are guided by three simple values: <strong>Trust, Belonging, and Adventure</strong>.  
-    Wanderlust is more than a website—it’s a community. We believe in creating spaces 
-    where every traveler feels welcome, and every host feels supported.
-  </p>
-
-  <h2 class="text-2xl font-semibold mt-8 mb-3">🚀 Join the Journey</h2>
-  <p>
-    Whether you’re looking for your next destination or opening your doors to the world, 
-    Wanderlust is here to make it possible. Together, let’s redefine what it means 
-    to travel and belong anywhere.
-  </p>
-
-  <a href="/listings" class="btn">Book your Hotel</a>
-</div>
-
-
-
-
 <style>
-
-
-h1, h2 {
-  color: #fe424d;
-  margin-bottom: 15px;
-}
-
-ul {
-  margin-left: 20px;
-
-}
-.btn{
-    background-color: #fe424d;
-}
-
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #ff5a5f;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  outline: none;
-}
-
-.btn:hover {
-  background-color: #430000;
-}
-
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3') center/cover;
+    opacity: 0.2;
+    z-index: 1;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .testimonial-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+  
+  .testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #fe424d, #667eea, #764ba2);
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  }
+  
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fe424d, #667eea);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+    border: 3px solid rgba(255,255,255,0.3);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+  
+  .testimonial-text {
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+  }
+  
+  .user-name {
+    font-weight: 700;
+    color: #fe424d;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .user-location {
+    color: #667eea;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .stats-section {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 4rem 0;
+  }
+  
+  .stat-card {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fe424d;
+    display: block;
+  }
+  
+  .stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #fe424d, #667eea);
+    border-radius: 2px;
+  }
+  
+  .feature-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  }
+  
+  .feature-icon {
+    font-size: 3rem;
+    color: #fe424d;
+    margin-bottom: 1rem;
+  }
+  
+  .team-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+  }
+  
+  .team-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+  
+  .team-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+    border: 4px solid rgba(255,255,255,0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  
+  .mission-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+    border-radius: 2rem;
+    padding: 4rem;
+    margin: 2rem 0;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.3);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: all 0.5s ease;
+  }
+  
+  .mission-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 35px 70px rgba(0,0,0,0.2), 0 0 0 1px rgba(254,66,77,0.3);
+  }
+  
+  .mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #fe424d, #667eea, #764ba2, #fe424d);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease-in-out infinite;
+  }
+  
+  .mission-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(254,66,77,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+  }
+  
+  .mission-emoji {
+    position: relative;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .mission-emoji::before {
+    content: '✨';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 2rem;
+    animation: sparkle 2s ease-in-out infinite;
+  }
+  
+  .mission-emoji::after {
+    content: '🚀';
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    font-size: 1.5rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  
+  .mission-text {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .mission-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(45deg, #fe424d, #667eea);
+    border-radius: 50%;
+    animation: particleFloat 4s ease-in-out infinite;
+  }
+  
+  .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+  .particle:nth-child(2) { top: 60%; left: 20%; animation-delay: 1s; }
+  .particle:nth-child(3) { top: 30%; left: 80%; animation-delay: 2s; }
+  .particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 3s; }
+  .particle:nth-child(5) { top: 10%; left: 60%; animation-delay: 0.5s; }
+  
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+  
+  @keyframes particleFloat {
+    0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
+    25% { transform: translateY(-10px) translateX(5px); opacity: 1; }
+    50% { transform: translateY(-5px) translateX(-5px); opacity: 0.7; }
+    75% { transform: translateY(-15px) translateX(10px); opacity: 1; }
+  }
+  
+  .cta-section {
+    background: linear-gradient(135deg, #fe424d, #667eea);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+  }
 </style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container hero-content">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h1 class="display-3 fw-bold mb-4">🌍 Welcome to WanderLust</h1>
+        <p class="lead fs-4 mb-4">Your ultimate travel companion for discovering and sharing amazing destinations around the world</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="/listings" class="btn btn-light btn-lg px-4 py-3">
+            <i class="fa-solid fa-compass me-2"></i>Explore Now
+          </a>
+          <a href="/signup" class="btn btn-outline-light btn-lg px-4 py-3">
+            <i class="fa-solid fa-user-plus me-2"></i>Join Community
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">10K+</span>
+          <span class="stat-label">Happy Travelers</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">5K+</span>
+          <span class="stat-label">Destinations</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">25K+</span>
+          <span class="stat-label">Reviews</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Countries</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="section-title display-5 fw-bold">✨ What Makes Us Special</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-map-marked-alt"></i>
+          </div>
+          <h4>Discover Places</h4>
+          <p>Explore thousands of unique destinations shared by fellow travelers</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-camera"></i>
+          </div>
+          <h4>Share Adventures</h4>
+          <p>Create beautiful listings and help others discover hidden gems</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <h4>Real Reviews</h4>
+          <p>Get authentic insights from travelers who have been there</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-route"></i>
+          </div>
+          <h4>Plan Journey</h4>
+          <p>Use interactive maps and detailed info to plan your perfect trip</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+  <div class="container">
+    <div class="mission-card">
+      <div class="mission-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+      </div>
+      <div class="row align-items-center mission-text">
+        <div class="col-lg-6">
+          <h2 class="display-5 fw-bold mb-4" style="color: #2c3e50; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">🚀 Our Mission</h2>
+          <p class="lead" style="color: #34495e; font-weight: 500; line-height: 1.8;">To create a world where every traveler feels at home, anywhere they go. We believe travel should be <span style="color: #fe424d; font-weight: 700;">personal</span>, <span style="color: #667eea; font-weight: 700;">authentic</span>, and <span style="color: #764ba2; font-weight: 700;">transformative</span>.</p>
+          <p style="color: #34495e; font-size: 1.1rem; line-height: 1.7;">WanderLust isn't just about finding places to stay—it's about discovering experiences that change you, connecting with locals who welcome you, and creating memories that last a lifetime.</p>
+          <div class="mt-4">
+            <div class="d-flex align-items-center mb-2">
+              <span style="color: #fe424d; font-size: 1.5rem; margin-right: 1rem;">💝</span>
+              <span style="color: #2c3e50; font-weight: 600;">Authentic Connections</span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+              <span style="color: #667eea; font-size: 1.5rem; margin-right: 1rem;">🌟</span>
+              <span style="color: #2c3e50; font-weight: 600;">Transformative Experiences</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span style="color: #764ba2; font-size: 1.5rem; margin-right: 1rem;">🏠</span>
+              <span style="color: #2c3e50; font-weight: 600;">Feel at Home Anywhere</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center">
+          <div class="mission-emoji" style="font-size: 10rem; color: #fe424d; opacity: 0.9; filter: drop-shadow(0 10px 20px rgba(254,66,77,0.3));">
+            🌍
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="section-title display-5 fw-bold">💬 What Our Travelers Say</h2>
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="testimonial-card">
+          <div class="user-avatar">M</div>
+          <div class="testimonial-text">
+            "Hey! I'm Mary and I just came back from the most amazing trip to Bali! WanderLust helped me find this hidden waterfall that wasn't in any guidebook. The local recommendations were spot on! 🌺"
+          </div>
+          <div class="text-center">
+            <div class="user-name">Mary Johnson</div>
+            <div class="user-location">
+              <i class="fa-solid fa-location-dot"></i>
+              New York, USA
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="testimonial-card">
+          <div class="user-avatar">A</div>
+          <div class="testimonial-text">
+            "As a solo female traveler, safety is my priority. The detailed reviews and photos on WanderLust gave me confidence to explore Tokyo on my own. Met amazing people through the platform! 🗾"
+          </div>
+          <div class="text-center">
+            <div class="user-name">Alex Chen</div>
+            <div class="user-location">
+              <i class="fa-solid fa-location-dot"></i>
+              Toronto, Canada
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="testimonial-card">
+          <div class="user-avatar">R</div>
+          <div class="testimonial-text">
+            "I've been using WanderLust for 2 years now. From the Swiss Alps to Moroccan deserts, every recommendation has been perfect. The community here truly understands what makes a place special! ⛰️"
+          </div>
+          <div class="text-center">
+            <div class="user-name">Raj Patel</div>
+            <div class="user-location">
+              <i class="fa-solid fa-location-dot"></i>
+              Mumbai, India
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="testimonial-card">
+          <div class="user-avatar">S</div>
+          <div class="testimonial-text">
+            "Planning our honeymoon was stressful until we found WanderLust! The couples who shared their romantic getaway spots made our Santorini trip absolutely magical. Forever grateful! 💕"
+          </div>
+          <div class="text-center">
+            <div class="user-name">Sarah & Mike</div>
+            <div class="user-location">
+              <i class="fa-solid fa-location-dot"></i>
+              London, UK
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="testimonial-card">
+          <div class="user-avatar">L</div>
+          <div class="testimonial-text">
+            "As a budget backpacker, I love how WanderLust shows real costs and budget-friendly options. Found amazing hostels in Prague and Budapest that I never would have discovered otherwise! 🎒"
+          </div>
+          <div class="text-center">
+            <div class="user-name">Lucas Schmidt</div>
+            <div class="user-location">
+              <i class="fa-solid fa-location-dot"></i>
+              Berlin, Germany
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="testimonial-card">
+          <div class="user-avatar">P</div>
+          <div class="testimonial-text">
+            "Traveling with kids is challenging, but WanderLust's family-friendly filters and parent reviews made our Costa Rica adventure smooth and fun for everyone! The kids still talk about it! 👨👩👧👦"
+          </div>
+          <div class="text-center">
+            <div class="user-name">Priya Sharma</div>
+            <div class="user-location">
+              <i class="fa-solid fa-location-dot"></i>
+              Sydney, Australia
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+  <div class="container">
+    <h2 class="section-title display-5 fw-bold">👥 Meet Our Team</h2>
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="team-card">
+          <div class="team-avatar">K</div>
+          <h4 style="color: #2c3e50;">Kaushik Mandal</h4>
+          <p style="color: #667eea; font-weight: 600;">Founder & Lead Developer</p>
+          <p style="color: #34495e;">"Passionate about creating technology that brings people together. When I'm not coding, you'll find me exploring new destinations!"</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="team-card">
+          <div class="team-avatar">🤖</div>
+          <h4 style="color: #2c3e50;">AI Assistant</h4>
+          <p style="color: #667eea; font-weight: 600;">Development Partner</p>
+          <p style="color: #34495e;">"Helping build amazing features and ensuring every line of code contributes to better travel experiences for our community."</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="team-card">
+          <div class="team-avatar">🌟</div>
+          <h4 style="color: #2c3e50;">You!</h4>
+          <p style="color: #667eea; font-weight: 600;">Community Member</p>
+          <p style="color: #34495e;">"Every traveler, host, and explorer who joins WanderLust becomes part of our extended team. Welcome aboard!"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h2 class="display-4 fw-bold mb-4">🚀 Ready to Start Your Adventure?</h2>
+        <p class="lead mb-4">Join thousands of travelers who trust WanderLust to make their journeys unforgettable</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="/listings" class="btn btn-light btn-lg px-5 py-3">
+            <i class="fa-solid fa-compass me-2"></i>Explore Destinations
+          </a>
+          <a href="/signup" class="btn btn-outline-light btn-lg px-5 py-3">
+            <i class="fa-solid fa-user-plus me-2"></i>Join Community
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
