@@ -27,7 +27,7 @@ module.exports.destroyReview = async (req, res) => {
 module.exports.translateReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const review = await Review.findById(reviewId);
+        const review = await Review.findById(reviewId); 
         
         if (!review) {
             return res.status(404).json({ error: 'Review not found' });
