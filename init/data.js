@@ -439,6 +439,7 @@ const sampleListings = [
 ];
 
 const Listing = require('../models/listing');
+const { updateListingCoordinates } = require('../utils/updateCoordinates');
 
 async function seedListings() {
   await Listing.deleteMany({});
@@ -462,16 +463,17 @@ async function seedListings() {
     l.isFeatured = i % 3 === 0;
     l.hasFeaturedReview = i % 6 === 0;
     l.createdAt = new Date(now.getTime() - (i * 24 * 60 * 60 * 1000));
-    l.geometry = {
-      type: "Point",
-      coordinates: [0, 0]
-    };
+    // Don't set geometry here - let the controller handle geocoding
     // Assign demo reviews for avgRating
     l.reviews = demoReviews.slice(0, (i % 5) + 1).map(r => r._id);
     return l;
   });
   await Listing.insertMany(listingsWithBadges);
   console.log('Seeded listings with badges and demo reviews!');
+  
+  // Update coordinates for all listings
+  await updateListingCoordinates();
+  console.log('Updated all listing coordinates!');
 }
 
 module.exports = { data: sampleListings, seedListings };
