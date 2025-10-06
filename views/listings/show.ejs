@@ -115,114 +115,209 @@
   <% } %>
   <div class="col-12 col-md-8 offset-md-2 mb-3">
     <% if (currentUser) { %>
-    <hr />
-    <div class="listing-card p-4">
-      <h4>Leave a Review</h4>
+    <div class="review-section-divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">Share Your Experience</span>
+      <div class="divider-line"></div>
+    </div>
+    
+    <div class="review-form-container">
+      <div class="review-form-header">
+        <i class="fa-solid fa-star-half-stroke review-icon"></i>
+        <h4>Leave a Review</h4>
+        <p class="review-subtitle">Help other travelers by sharing your experience</p>
+      </div>
+      
       <form
         action="/listings/<%= listing._id %>/reviews"
         method="POST"
-        class="needs-validation"
+        class="review-form needs-validation"
         novalidate
       >
+        <div class="rating-section">
+          <label for="rating" class="form-label">
+            <i class="fa-solid fa-star me-2"></i>Your Rating
+          </label>
+          <div class="rating-container">
+            <fieldset class="starability-slot">
+              <input
+                type="radio"
+                id="no-rate"
+                class="input-no-rate"
+                name="review[rating]"
+                value="1"
+                checked
+                aria-label="No rating."
+              />
+              <input
+                type="radio"
+                id="first-rate1"
+                name="review[rating]"
+                value="1"
+              />
+              <label for="first-rate1" title="Poor - Needs improvement">1 star</label>
+              <input
+                type="radio"
+                id="first-rate2"
+                name="review[rating]"
+                value="2"
+              />
+              <label for="first-rate2" title="Fair - Below expectations">2 stars</label>
+              <input
+                type="radio"
+                id="first-rate3"
+                name="review[rating]"
+                value="3"
+              />
+              <label for="first-rate3" title="Good - Met expectations">3 stars</label>
+              <input
+                type="radio"
+                id="first-rate4"
+                name="review[rating]"
+                value="4"
+              />
+              <label for="first-rate4" title="Very Good - Exceeded expectations">4 stars</label>
+              <input
+                type="radio"
+                id="first-rate5"
+                name="review[rating]"
+                value="5"
+              />
+              <label for="first-rate5" title="Excellent - Outstanding experience">5 stars</label>
+            </fieldset>
+            <div class="rating-text" id="rating-text">Select a rating</div>
+          </div>
+        </div>
+        
+        <div class="comment-section">
+          <label for="comment" class="form-label">
+            <i class="fa-solid fa-comment me-2"></i>Your Review
+          </label>
+          <textarea
+            name="review[comment]"
+            id="comment"
+            class="form-control review-textarea"
+            rows="5"
+            placeholder="Share your experience... What did you love about this place? Any tips for future travelers?"
+            required
+          ></textarea>
+          <div class="character-count">
+            <span id="char-count">0</span>/500 characters
+          </div>
+          <div class="invalid-feedback">Please provide a detailed review (minimum 10 characters).</div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit">
+            <i class="fa-solid fa-paper-plane me-2"></i>
+            Submit Review
+          </button>
+          <small class="form-note">
+            <i class="fa-solid fa-info-circle me-1"></i>
+            Your review will help other travelers make informed decisions
+          </small>
+        </div>
+      </form>
+    </div>
     
-      <div class="mb-3">
-        <label for="rating" class="form-label">Rating</label>
-        <fieldset class="starability-slot">
-          <input
-            type="radio"
-            id="no-rate"
-            class="input-no-rate"
-            name="review[rating]"
-            value="1"
-            checked
-            aria-label="No rating."
-          />
-          <input
-            type="radio"
-            id="first-rate1"
-            name="review[rating]"
-            value="1"
-          />
-          <label for="first-rate1" title="Terrible">1 star</label>
-          <input
-            type="radio"
-            id="first-rate2"
-            name="review[rating]"
-            value="2"
-          />
-          <label for="first-rate2" title="Not good">2 stars</label>
-          <input
-            type="radio"
-            id="first-rate3"
-            name="review[rating]"
-            value="3"
-          />
-          <label for="first-rate3" title="Average">3 stars</label>
-          <input
-            type="radio"
-            id="first-rate4"
-            name="review[rating]"
-            value="4"
-          />
-          <label for="first-rate4" title="Very good">4 stars</label>
-          <input
-            type="radio"
-            id="first-rate5"
-            name="review[rating]"
-            value="5"
-          />
-          <label for="first-rate5" title="Amazing">5 stars</label>
-        </fieldset>
-      </div>
-      <div class="mb-3">
-        <label for="comment" class="form-label">Comment</label>
-        <textarea
-          name="review[comment]"
-          id="comment"
-          class="form-control"
-          rows="4"
-          required
-        ></textarea>
-        <div class="invalid-feedback">Please provide a comment.</div>
-      </div>
-      <button type="submit" class="btn btn-dark">Submit</button>
-    </form>
-    </div>  
-    <hr />
+    <div class="review-section-divider mt-4">
+      <div class="divider-line"></div>
+      <span class="divider-text">Traveler Reviews</span>
+      <div class="divider-line"></div>
+    </div>
     
     <% } %>
     
     <!-- Reviews Section -->
     <% if(listing.reviews && listing.reviews.length > 0) { %>
-    <div class="row">
-      <p><b>All Reviews (<%= listing.reviews.length %>)</b></p>
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <h5 class="reviews-title">
+          <i class="fa-solid fa-comments me-2"></i>
+          All Reviews (<%= listing.reviews.length %>)
+        </h5>
+        <% if(listing.reviews.length > 0) { %>
+        <div class="reviews-summary">
+          <% 
+            let totalRating = listing.reviews.reduce((sum, review) => sum + review.rating, 0);
+            let avgRating = (totalRating / listing.reviews.length).toFixed(1);
+          %>
+          <div class="avg-rating">
+            <span class="rating-number"><%= avgRating %></span>
+            <div class="rating-stars">
+              <% for(let i = 1; i <= 5; i++) { %>
+                <i class="fa-solid fa-star <%= i <= Math.round(avgRating) ? 'filled' : '' %>"></i>
+              <% } %>
+            </div>
+            <span class="rating-text">Average Rating</span>
+          </div>
+        </div>
+        <% } %>
+      </div>
+      
+      <div class="reviews-grid">
       <% for (let review of listing.reviews) { %>
         <% if (review && review.author) { %>
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100">
-              <div class="card-body position-relative">
-                <h5 class="card-title">@<%= review.author.username %></h5>
-                <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-                <p class="card-text"><%= review.comment %></p>
-                
+          <div class="review-card-wrapper">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-avatar">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div class="reviewer-details">
+                    <h6 class="reviewer-name">@<%= review.author.username %></h6>
+                    <div class="review-rating">
+                      <div class="starability-result" data-rating="<%= review.rating %>"></div>
+                    </div>
+                  </div>
+                </div>
                 <% if(currentUser && review.author._id.equals(currentUser._id)) { %>
-                <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" 
-                      class="position-absolute bottom-0 end-0 m-2">
-                  <button type="submit" class="btn btn-sm btn-outline-danger" 
-                          onclick="return confirm('Delete this review?')">
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </form>
+                <div class="review-actions">
+                  <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" 
+                        style="display: inline;">
+                    <button type="submit" class="btn-delete" 
+                            onclick="return confirm('Are you sure you want to delete this review?')" 
+                            title="Delete Review">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
                 <% } %>
+              </div>
+              
+              <div class="review-content">
+                <p class="review-text"><%= review.comment %></p>
+              </div>
+              
+              <div class="review-footer">
+                <small class="review-date">
+                  <i class="fa-solid fa-calendar me-1"></i>
+                  <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  }) : 'Recently' %>
+                </small>
               </div>
             </div>
           </div>
         <% } %>
       <% } %>
+      </div>
     </div>
     <% } else { %>
-    <div class="text-center text-muted py-4">
-      <p><i class="fa-solid fa-comment-slash me-2"></i>No reviews yet. Be the first to review!</p>
+    <div class="no-reviews-container">
+      <div class="no-reviews-content">
+        <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
+        <h5>No reviews yet</h5>
+        <p>Be the first to share your experience at this amazing place!</p>
+        <% if (!currentUser) { %>
+        <a href="/login" class="btn btn-outline-primary">
+          <i class="fa-solid fa-sign-in-alt me-2"></i>Login to Review
+        </a>
+        <% } %>
+      </div>
     </div>
     <% } %>
   </div>
@@ -319,3 +414,118 @@
 <% } %>
 
 <script src="/JS/map.js"></script>
+
+<script>
+// Enhanced Review Form Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Rating interaction feedback
+  const ratingInputs = document.querySelectorAll('input[name="review[rating]"]');
+  const ratingText = document.getElementById('rating-text');
+  
+  const ratingLabels = {
+    1: 'Poor - Needs improvement',
+    2: 'Fair - Below expectations', 
+    3: 'Good - Met expectations',
+    4: 'Very Good - Exceeded expectations',
+    5: 'Excellent - Outstanding experience'
+  };
+  
+  ratingInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      if (this.value && ratingText) {
+        ratingText.textContent = ratingLabels[this.value];
+        ratingText.style.color = 'var(--accent-color)';
+        ratingText.style.fontWeight = '600';
+      }
+    });
+  });
+  
+  // Character count for review textarea
+  const reviewTextarea = document.getElementById('comment');
+  const charCount = document.getElementById('char-count');
+  
+  if (reviewTextarea && charCount) {
+    reviewTextarea.addEventListener('input', function() {
+      const count = this.value.length;
+      charCount.textContent = count;
+      
+      // Change color based on character count
+      if (count > 450) {
+        charCount.style.color = '#dc3545';
+      } else if (count > 350) {
+        charCount.style.color = '#ffc107';
+      } else {
+        charCount.style.color = 'var(--text-secondary)';
+      }
+      
+      // Limit to 500 characters
+      if (count > 500) {
+        this.value = this.value.substring(0, 500);
+        charCount.textContent = 500;
+        charCount.style.color = '#dc3545';
+      }
+    });
+  }
+  
+  // Form validation enhancement
+  const reviewForm = document.querySelector('.review-form');
+  if (reviewForm) {
+    reviewForm.addEventListener('submit', function(e) {
+      const comment = reviewTextarea.value.trim();
+      const rating = document.querySelector('input[name="review[rating]"]:checked');
+      
+      if (comment.length < 10) {
+        e.preventDefault();
+        reviewTextarea.classList.add('is-invalid');
+        reviewTextarea.focus();
+        return false;
+      }
+      
+      if (!rating || rating.value === '1' && rating.id === 'no-rate') {
+        e.preventDefault();
+        alert('Please select a rating before submitting your review.');
+        return false;
+      }
+      
+      // Add loading state to submit button
+      const submitBtn = this.querySelector('.btn-submit');
+      if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Submitting...';
+        submitBtn.disabled = true;
+      }
+    });
+  }
+  
+  // Remove invalid class on input
+  if (reviewTextarea) {
+    reviewTextarea.addEventListener('input', function() {
+      if (this.value.trim().length >= 10) {
+        this.classList.remove('is-invalid');
+      }
+    });
+  }
+});
+</script>
+
+<style>
+/* Additional inline styles for review enhancements */
+.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.starability-slot input:checked ~ label,
+.starability-slot input:hover ~ label {
+  animation: starGlow 0.3s ease;
+}
+
+@keyframes starGlow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.review-card-wrapper {
+  height: 100%;
+}
+</style>
