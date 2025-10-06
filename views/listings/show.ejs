@@ -36,34 +36,34 @@
 
     <div class="card-body ">
       <p class="card-text">
-        Owned by -
+        <%= __('owned_by') %> -
         <i>
           <%= listing.owner && listing.owner.username ? listing.owner.username :
           "Unknown" %>
         </i>
       </p>
       <p class="card-text">
-        <b>Likes:</b> <%= listing.likes ? listing.likes.length : 0 %>
+        <b><%= __('likes') %>:</b> <%= listing.likes ? listing.likes.length : 0 %>
       </p>
       <% if (currentUser) { %>
         <div class="listing-actions d-flex gap-2 mb-3">
           <% if (listing.likes && listing.likes.some(id => id.toString() === currentUser._id.toString())) { %>
             <form action="/listings/<%= listing._id %>/unlike" method="POST" style="display: inline;">
               <button type="submit" class="btn btn-danger">
-                <i class="fa-solid fa-heart-broken me-1"></i>Unlike
+                <i class="fa-solid fa-heart-broken me-1"></i><%= __('unlike') %>
               </button>
             </form>
           <% } else { %>
             <form action="/listings/<%= listing._id %>/like" method="POST" style="display: inline;">
               <button type="submit" class="btn btn-success">
-                <i class="fa-solid fa-heart me-1"></i>Like
+                <i class="fa-solid fa-heart me-1"></i><%= __('like') %>
               </button>
             </form>
           <% } %>
           
           <!-- Wishlist Button -->
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
-            <i class="fa-solid fa-bookmark me-1"></i>Add to Wishlist
+            <i class="fa-solid fa-bookmark me-1"></i><%= __('add_to_wishlist') %>
           </button>
         </div>
       <% } %>
@@ -102,12 +102,12 @@
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="d-flex gap-2 justify-content-center">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary">
-        <i class="fa-solid fa-edit me-1"></i>Edit Listing
+        <i class="fa-solid fa-edit me-1"></i><%= __('edit_listing') %>
       </a>
       <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" style="display: inline;">
         <button type="submit" class="btn btn-danger" 
                 onclick="return confirm('Are you sure you want to delete this listing?')">
-          <i class="fa-solid fa-trash me-1"></i>Delete Listing
+          <i class="fa-solid fa-trash me-1"></i><%= __('delete_listing') %>
         </button>
       </form>
     </div>
@@ -117,15 +117,15 @@
     <% if (currentUser) { %>
     <div class="review-section-divider">
       <div class="divider-line"></div>
-      <span class="divider-text">Share Your Experience</span>
+      <span class="divider-text"><%= __('share_your_journey') %></span>
       <div class="divider-line"></div>
     </div>
     
     <div class="review-form-container">
       <div class="review-form-header">
         <i class="fa-solid fa-star-half-stroke review-icon"></i>
-        <h4>Leave a Review</h4>
-        <p class="review-subtitle">Help other travelers by sharing your experience</p>
+        <h4><%= __('share_your_journey') %></h4>
+        <p class="review-subtitle"><%= __('your_words_inspire') %></p>
       </div>
       
       <form
@@ -136,7 +136,7 @@
       >
         <div class="rating-section">
           <label for="rating" class="form-label">
-            <i class="fa-solid fa-star me-2"></i>Your Rating
+            <i class="fa-solid fa-star me-2"></i><%= __('rate_your_experience') %>
           </label>
           <div class="rating-container">
             <fieldset class="starability-slot">
@@ -191,14 +191,14 @@
         
         <div class="comment-section">
           <label for="comment" class="form-label">
-            <i class="fa-solid fa-comment me-2"></i>Your Review
+            <i class="fa-solid fa-comment me-2"></i><%= __('tell_your_story') %>
           </label>
           <textarea
             name="review[comment]"
             id="comment"
             class="form-control review-textarea"
             rows="5"
-            placeholder="Share your experience... What did you love about this place? Any tips for future travelers?"
+            placeholder="<%= __('what_made_special') %>"
             required
           ></textarea>
           <div class="character-count">
@@ -210,11 +210,11 @@
         <div class="form-actions">
           <button type="submit" class="btn btn-submit">
             <i class="fa-solid fa-paper-plane me-2"></i>
-            Submit Review
+            <%= __('launch_review') %>
           </button>
           <small class="form-note">
             <i class="fa-solid fa-info-circle me-1"></i>
-            Your review will help other travelers make informed decisions
+            <%= __('your_review_creates') %>
           </small>
         </div>
       </form>
@@ -222,7 +222,7 @@
     
     <div class="review-section-divider mt-4">
       <div class="divider-line"></div>
-      <span class="divider-text">Traveler Reviews</span>
+      <span class="divider-text"><%= __('traveler_stories') %></span>
       <div class="divider-line"></div>
     </div>
     
@@ -234,7 +234,7 @@
       <div class="reviews-header">
         <h5 class="reviews-title">
           <i class="fa-solid fa-comments me-2"></i>
-          All Reviews (<%= listing.reviews.length %>)
+          <%= __('all_reviews') %> (<%= listing.reviews.length %>)
         </h5>
         <% if(listing.reviews.length > 0) { %>
         <div class="reviews-summary">
@@ -249,7 +249,7 @@
                 <i class="fa-solid fa-star <%= i <= Math.round(avgRating) ? 'filled' : '' %>"></i>
               <% } %>
             </div>
-            <span class="rating-text">Average Rating</span>
+            <span class="rating-text"><%= __('average_rating') %></span>
           </div>
         </div>
         <% } %>
@@ -287,7 +287,13 @@
               </div>
               
               <div class="review-content">
-                <p class="review-text"><%= review.comment %></p>
+                <p class="review-text" id="review-text-<%= review._id %>"><%= review.comment %></p>
+                <button class="btn btn-sm btn-outline-primary translate-btn mt-2" 
+                        data-review-id="<%= review._id %>" 
+                        data-listing-id="<%= listing._id %>">
+                  <i class="fa-solid fa-language me-1"></i>
+                  <span class="translate-text"><%= __('translate_review') %></span>
+                </button>
               </div>
               
               <div class="review-footer">
@@ -297,7 +303,7 @@
                     year: 'numeric', 
                     month: 'short', 
                     day: 'numeric' 
-                  }) : 'Recently' %>
+                  }) : __('recently') %>
                 </small>
               </div>
             </div>
@@ -310,11 +316,11 @@
     <div class="no-reviews-container">
       <div class="no-reviews-content">
         <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
-        <h5>No reviews yet</h5>
-        <p>Be the first to share your experience at this amazing place!</p>
+        <h5><%= __('no_reviews_yet') %></h5>
+        <p><%= __('be_first_to_review') %></p>
         <% if (!currentUser) { %>
         <a href="/login" class="btn btn-outline-primary">
-          <i class="fa-solid fa-sign-in-alt me-2"></i>Login to Review
+          <i class="fa-solid fa-sign-in-alt me-2"></i><%= __('login_to_review') %>
         </a>
         <% } %>
       </div>
@@ -327,7 +333,7 @@
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="card">
       <div class="card-header">
-        <h4 class="mb-0"><i class="fa-solid fa-lightbulb me-2"></i>You may also like</h4>
+        <h4 class="mb-0"><i class="fa-solid fa-lightbulb me-2"></i><%= __('you_may_also_like') %></h4>
       </div>
       <div class="card-body">
         <div class="row">
@@ -344,7 +350,7 @@
                 <p class="card-text small mb-2">
                   <strong>₹<%= rec.price ? rec.price.toLocaleString('en-IN') : 'N/A' %></strong>/night
                 </p>
-                <a href="/listings/<%= rec._id %>" class="btn btn-sm btn-primary w-100">View Details</a>
+                <a href="/listings/<%= rec._id %>" class="btn btn-sm btn-primary w-100"><%= __('view_details') %></a>
               </div>
             </div>
           </div>
@@ -359,7 +365,7 @@
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="card">
       <div class="card-header">
-        <h4 class="mb-0"><i class="fa-solid fa-map-location-dot me-2"></i>Where you'll be</h4>
+        <h4 class="mb-0"><i class="fa-solid fa-map-location-dot me-2"></i><%= __('where_youll_be') %></h4>
       </div>
       <div class="card-body p-0">
         <div id="map" style="height: 400px; border-radius: 0 0 0.375rem 0.375rem;"></div>
@@ -375,7 +381,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="wishlistModalLabel">
-          <i class="fa-solid fa-bookmark me-2"></i>Add to Wishlist
+          <i class="fa-solid fa-bookmark me-2"></i><%= __('add_to_wishlist') %>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -404,7 +410,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-plus me-1"></i>Add to Wishlist
+            <i class="fa-solid fa-plus me-1"></i><%= __('add_to_wishlist') %>
           </button>
         </div>
       </form>
@@ -423,11 +429,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const ratingText = document.getElementById('rating-text');
   
   const ratingLabels = {
-    1: 'Poor - Needs improvement',
-    2: 'Fair - Below expectations', 
-    3: 'Good - Met expectations',
-    4: 'Very Good - Exceeded expectations',
-    5: 'Excellent - Outstanding experience'
+    1: '<%= __('poor_experience') %>',
+    2: '<%= __('below_expectations') %>', 
+    3: '<%= __('good_experience') %>',
+    4: '<%= __('amazing_experience') %>',
+    5: '<%= __('absolutely_perfect') %>'
   };
   
   ratingInputs.forEach(input => {
@@ -504,6 +510,54 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  
+  // Translation functionality
+  const translateBtns = document.querySelectorAll('.translate-btn');
+  translateBtns.forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const reviewId = this.dataset.reviewId;
+      const listingId = this.dataset.listingId;
+      const reviewTextEl = document.getElementById(`review-text-${reviewId}`);
+      const translateTextEl = this.querySelector('.translate-text');
+      
+      if (this.dataset.translated === 'true') {
+        // Show original
+        reviewTextEl.textContent = this.dataset.originalText;
+        translateTextEl.textContent = '<%= __('translate_review') %>';
+        this.dataset.translated = 'false';
+        return;
+      }
+      
+      // Store original text
+      if (!this.dataset.originalText) {
+        this.dataset.originalText = reviewTextEl.textContent;
+      }
+      
+      // Show loading
+      const originalBtnText = translateTextEl.textContent;
+      translateTextEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Translating...';
+      this.disabled = true;
+      
+      try {
+        const response = await fetch(`/listings/${listingId}/reviews/translate/${reviewId}`);
+        const data = await response.json();
+        
+        if (data.translatedText) {
+          reviewTextEl.textContent = data.translatedText;
+          translateTextEl.textContent = '<%= __('original_review') %>';
+          this.dataset.translated = 'true';
+        } else {
+          throw new Error('Translation failed');
+        }
+      } catch (error) {
+        console.error('Translation error:', error);
+        alert('<%= __('translation_error') %>');
+        translateTextEl.textContent = originalBtnText;
+      } finally {
+        this.disabled = false;
+      }
+    });
+  });
 });
 </script>
 
@@ -527,5 +581,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .review-card-wrapper {
   height: 100%;
+}
+
+.translate-btn {
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.translate-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.translate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
