@@ -105,6 +105,8 @@ jobs:
               /<source[^>]*src\s*=\s*['"']([^'"]*\.(mp4|mov|avi|mkv|webm|flv|wmv|m4v)(?:\?[^'"]*)?)['"'][^>]*>/gmi,
               // GitHub user-images URLs - handle numeric IDs and query params (images)
               /https:\/\/user-images\.githubusercontent\.com\/\d+\/[\w\-\.%]+\.(png|jpg|jpeg|gif|webp|bmp|tiff)(?:\?[^\s\)]*)?/gi,
+              // GitHub private-user-images URLs with JWT tokens (images)
+              /https:\/\/private-user-images\.githubusercontent\.com\/\d+\/[\w\-\.%]+\.(png|jpg|jpeg|gif|webp|bmp|tiff)(?:\?[^\s\)]*)?/gi,
               // GitHub user-attachments URLs for videos
               /https:\/\/user-attachments\.githubusercontent\.com\/[\w\-\.%\/]+\.(mp4|mov|avi|mkv|webm|flv|wmv|m4v)(?:\?[^\s\)]*)?/gi,
               // GitHub assets URLs - handle numeric asset IDs (images and videos)
