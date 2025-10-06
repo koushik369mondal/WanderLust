@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    target-branch: "main"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    open-pull-requests-limit: 8
+    reviewers:
+      - "koushik369mondal"
+    labels:
+      - "dependencies"
+      - "automated"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security-update"

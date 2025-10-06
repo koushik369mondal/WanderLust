@@ -9,9 +9,11 @@ jobs:
     name: "Verify Screenshot in PR Description"
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
+      pull-requests: write  # Changed from 'read' to 'write' to allow comments
+      issues: write         # Added to allow issue/PR comments
       statuses: write
       checks: write
+      contents: read        # Added for good measure
     
     steps:
       - name: "Check for screenshot in PR description"
@@ -59,15 +61,20 @@ jobs:
             if (shouldSkip) {
               console.log('⏭️ Skipping screenshot check based on PR title/description patterns');
               
-              await github.rest.repos.createCommitStatus({
-                owner,
-                repo,
-                sha: context.payload.pull_request.head.sha,
-                state: 'success',
-                target_url: `https://github.com/${owner}/${repo}/pull/${pr_number}`,
-                description: 'Screenshot check skipped for this PR type',
-                context: 'screenshot-check'
-              });
+              try {
+                await github.rest.repos.createCommitStatus({
+                  owner,
+                  repo,
+                  sha: context.payload.pull_request.head.sha,
+                  state: 'success',
+                  target_url: `https://github.com/${owner}/${repo}/pull/${pr_number}`,
+                  description: 'Screenshot check skipped for this PR type',
+                  context: 'screenshot-check'
+                });
+                console.log('✅ Successfully set skip status');
+              } catch (skipError) {
+                console.log('⚠️ Could not set skip status:', skipError.message);
+              }
               
               return;
             }
@@ -248,18 +255,24 @@ jobs:
             - \`refactor:\` (for code refactoring without visual changes)`;
             }
             
-            // Set the commit status
-            await github.rest.repos.createCommitStatus({
-              owner,
-              repo,
-              sha: context.payload.pull_request.head.sha,
-              state: status,
-              target_url: `https://github.com/${owner}/${repo}/pull/${pr_number}`,
-              description: description,
-              context: 'screenshot-check'
-            });
+            // Set the commit status (with error handling)
+            try {
+              await github.rest.repos.createCommitStatus({
+                owner,
+                repo,
+                sha: context.payload.pull_request.head.sha,
+                state: status,
+                target_url: `https://github.com/${owner}/${repo}/pull/${pr_number}`,
+                description: description,
+                context: 'screenshot-check'
+              });
+              console.log('✅ Successfully set commit status');
+            } catch (statusError) {
+              console.log('⚠️ Could not set commit status:', statusError.message);
+              console.log('ℹ️ This might be due to insufficient permissions');
+            }
             
-            // Add or update a comment with detailed feedback
+            // Add or update a comment with detailed feedback (with error handling)
             const commentBody = `${summary}
             
             ---
@@ -268,36 +281,41 @@ jobs:
             
             📚 **Learn more**: [Contributing Guidelines](../blob/main/CONTRIBUTION.md) | [Screenshot Requirements](../blob/main/CONTRIBUTION.md#screenshot-requirements)`;
             
-            // Check if we already have a comment from this bot
-            const comments = await github.rest.issues.listComments({
-              owner,
-              repo,
-              issue_number: pr_number
-            });
-            
-            const botComment = comments.data.find(comment => 
-              comment.user.type === 'Bot' && 
-              comment.body.includes('Screenshot Requirement:')
-            );
-            
-            if (botComment) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
+            try {
+              // Check if we already have a comment from this bot
+              const comments = await github.rest.issues.listComments({
                 owner,
                 repo,
-                comment_id: botComment.id,
-                body: commentBody
+                issue_number: pr_number
               });
-              console.log('💬 Updated existing screenshot check comment');
-            } else {
-              // Create new comment
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number: pr_number,
-                body: commentBody
-              });
-              console.log('💬 Created new screenshot check comment');
+              
+              const botComment = comments.data.find(comment => 
+                comment.user.type === 'Bot' && 
+                comment.body.includes('Screenshot Requirement:')
+              );
+              
+              if (botComment) {
+                // Update existing comment
+                await github.rest.issues.updateComment({
+                  owner,
+                  repo,
+                  comment_id: botComment.id,
+                  body: commentBody
+                });
+                console.log('💬 Updated existing screenshot check comment');
+              } else {
+                // Create new comment
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: pr_number,
+                  body: commentBody
+                });
+                console.log('💬 Created new screenshot check comment');
+              }
+            } catch (commentError) {
+              console.log('⚠️ Could not create/update comment:', commentError.message);
+              console.log('ℹ️ Check will continue without comment - status will still be set');
             }
             
             // Log final result

@@ -166,6 +166,25 @@ module.exports.showListing = async (req, res, next) => {
       })
       .populate("owner");
 
+
+    if (!listing) {
+      console.log(" Listing not found in database");
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
+    }
+
+    // Check if listing is in user's wishlist
+    let isInWishlist = false;
+    if (req.user) {
+      const Wishlist = require('../models/wishlist');
+      const wishlistItem = await Wishlist.findOne({
+        user: req.user._id,
+        listing: id
+      });
+      isInWishlist = !!wishlistItem;
+    }
+
+
     // Badge logic for show page
     const now = new Date();
     const createdAt = new Date(listing.createdAt);
@@ -180,11 +199,79 @@ module.exports.showListing = async (req, res, next) => {
     }
     listing.avgRating = avgRating;
     listing.isHighlyRatedBadge = avgRating >= 4.5;
+
+    // AI Recommendations - "You may also like"
+    let recommendations = [];
+    try {
+      // Create a unique seed based on listing ID for consistent but different results
+      const listingSeed = parseInt(id.slice(-6), 16) % 1000;
       
-    if (!listing) {
-      console.log(" Listing not found in database");
-      req.flash("error", "Listing not found!");
-      return res.redirect("/listings");
+      if (req.user) {
+        // Get user's review history for personalized recommendations
+        const Review = require('../models/review');
+        const userReviews = await Review.find({ author: req.user._id })
+          .populate('listing', 'category country')
+          .limit(10);
+        
+        if (userReviews.length > 0) {
+          const userCategories = [...new Set(userReviews.map(r => r.listing?.category).filter(Boolean))];
+          const userCountries = [...new Set(userReviews.map(r => r.listing?.country).filter(Boolean))];
+          
+          // Add randomization based on listing ID
+          const categoryQuery = userCategories.length > 0 ? 
+            { category: { $in: userCategories } } : 
+            { category: listing.category };
+          
+          recommendations = await Listing.aggregate([
+            { $match: { _id: { $ne: listing._id }, ...categoryQuery } },
+            { $sample: { size: 2 } }
+          ]);
+          
+          if (recommendations.length < 2 && userCountries.length > 0) {
+            const countryRecs = await Listing.aggregate([
+              { $match: { _id: { $ne: listing._id }, country: { $in: userCountries } } },
+              { $sample: { size: 2 - recommendations.length } }
+            ]);
+            recommendations = [...recommendations, ...countryRecs];
+          }
+        }
+      }
+      
+      // Smart fallback based on current listing attributes
+      if (recommendations.length < 4) {
+        // Mix of similar category and country with randomization
+        const similarCategory = await Listing.aggregate([
+          { $match: { _id: { $ne: listing._id }, category: listing.category } },
+          { $sample: { size: Math.min(2, 4 - recommendations.length) } }
+        ]);
+        recommendations = [...recommendations, ...similarCategory];
+        
+        if (recommendations.length < 4) {
+          const similarCountry = await Listing.aggregate([
+            { $match: { _id: { $ne: listing._id }, country: listing.country, category: { $ne: listing.category } } },
+            { $sample: { size: 4 - recommendations.length } }
+          ]);
+          recommendations = [...recommendations, ...similarCountry];
+        }
+      }
+      
+      // Final diverse fallback
+      if (recommendations.length < 4) {
+        const diverse = await Listing.aggregate([
+          { $match: { _id: { $ne: listing._id } } },
+          { $sample: { size: 4 - recommendations.length } }
+        ]);
+        recommendations = [...recommendations, ...diverse];
+      }
+      
+      // Remove duplicates and limit to 4
+      const uniqueRecs = recommendations.filter((rec, index, self) => 
+        index === self.findIndex(r => r._id.toString() === rec._id.toString())
+      ).slice(0, 4);
+      
+      recommendations = uniqueRecs;
+    } catch (recError) {
+      console.log('Recommendation error:', recError.message);
     }
     
     console.log("Found listing:", listing.title);
@@ -195,8 +282,10 @@ module.exports.showListing = async (req, res, next) => {
     const templatePath = path.join(__dirname, '../views/listings/show.ejs');
     console.log("Template path:", templatePath);
     
-    // Add error handling for template rendering
-    res.render("listings/show.ejs", { listing, currentUser: req.user }, (err, html) => {
+    // Add error handling for template rendering main
+    res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations }, (err, html) => {
+
+   
       if (err) {
         console.error(" TEMPLATE RENDERING ERROR:");
         console.error("Error message:", err.message);
