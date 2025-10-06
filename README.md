@@ -211,6 +211,14 @@ npm test           # Run tests (if available)
 
 We welcome contributions! Follow these steps:
 
+### 🏷️ Understanding Our Auto-Labeling System
+
+Before contributing, please read our **[Labeling Guide](LABELING_GUIDE.md)** to understand how Issues and Pull Requests are automatically assigned complexity levels:
+
+- 🌱 **Level1**: Beginner-friendly (documentation, typos, simple styling)
+- 🔧 **Level2**: Intermediate (features, UI/UX, components)  
+- ⚡ **Level3**: Advanced (bugs, backend, security, performance)
+
 ### 1. Create a Feature Branch
 
 ```bash
@@ -222,6 +230,7 @@ git checkout -b feature/your-feature-name
 - Write clean, well-commented code
 - Follow existing code style and conventions
 - Test your changes locally
+- Consider the complexity level when creating Issues/PRs
 
 ### 3. Commit Your Changes
 
