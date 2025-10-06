@@ -337,20 +337,33 @@ module.exports.createListing = async (req, res, next) => {
     // Set geometry from geocoding or use default coordinates
     if (response && response.body.features && response.body.features.length > 0) {
       newListing.geometry = response.body.features[0].geometry;
+      console.log(`Geocoded ${req.body.listing.location} to:`, response.body.features[0].geometry.coordinates);
     } else {
-      // Default coordinates based on country or use Delhi, India
+      // Default coordinates based on country
       const countryDefaults = {
-        'india': [77.2090, 28.6139],     // Delhi
-        'usa': [-74.006, 40.7128],       // New York
-        'uk': [-0.1276, 51.5074],        // London
-        'france': [2.3522, 48.8566],     // Paris
-        'germany': [13.4050, 52.5200],   // Berlin
-        'japan': [139.6917, 35.6895],    // Tokyo
-        'australia': [151.2093, -33.8688], // Sydney
+        'india': [77.2090, 28.6139],
+        'united states': [-95.7129, 37.0902],
+        'usa': [-95.7129, 37.0902],
+        'italy': [12.5674, 41.8719],
+        'mexico': [-102.5528, 23.6345],
+        'switzerland': [8.2275, 46.8182],
+        'tanzania': [34.8888, -6.3690],
+        'netherlands': [5.2913, 52.1326],
+        'fiji': [179.4144, -16.5780],
+        'united kingdom': [-3.4360, 55.3781],
+        'uk': [-3.4360, 55.3781],
+        'indonesia': [113.9213, -0.7893],
+        'canada': [-106.3468, 56.1304],
+        'thailand': [100.9925, 15.8700],
+        'united arab emirates': [53.8478, 23.4241],
+        'greece': [21.8243, 39.0742],
+        'costa rica': [-83.7534, 9.7489],
+        'japan': [138.2529, 36.2048],
+        'maldives': [73.2207, 3.2028]
       };
       
       const country = (req.body.listing.country || '').toLowerCase();
-      const defaultCoords = countryDefaults[country] || [77.2090, 28.6139]; // Default to Delhi
+      const defaultCoords = countryDefaults[country] || [77.2090, 28.6139];
       
       newListing.geometry = {
         type: "Point",
@@ -416,13 +429,25 @@ module.exports.updateListing = async (req, res) => {
       // Keep existing geometry or set default based on country
       if (!listing.geometry || !listing.geometry.coordinates) {
         const countryDefaults = {
-          'india': [77.2090, 28.6139],     // Delhi
-          'usa': [-74.006, 40.7128],       // New York
-          'uk': [-0.1276, 51.5074],        // London
-          'france': [2.3522, 48.8566],     // Paris
-          'germany': [13.4050, 52.5200],   // Berlin
-          'japan': [139.6917, 35.6895],    // Tokyo
-          'australia': [151.2093, -33.8688], // Sydney
+          'india': [77.2090, 28.6139],
+          'united states': [-95.7129, 37.0902],
+          'usa': [-95.7129, 37.0902],
+          'italy': [12.5674, 41.8719],
+          'mexico': [-102.5528, 23.6345],
+          'switzerland': [8.2275, 46.8182],
+          'tanzania': [34.8888, -6.3690],
+          'netherlands': [5.2913, 52.1326],
+          'fiji': [179.4144, -16.5780],
+          'united kingdom': [-3.4360, 55.3781],
+          'uk': [-3.4360, 55.3781],
+          'indonesia': [113.9213, -0.7893],
+          'canada': [-106.3468, 56.1304],
+          'thailand': [100.9925, 15.8700],
+          'united arab emirates': [53.8478, 23.4241],
+          'greece': [21.8243, 39.0742],
+          'costa rica': [-83.7534, 9.7489],
+          'japan': [138.2529, 36.2048],
+          'maldives': [73.2207, 3.2028]
         };
         
         const country = (listing.country || '').toLowerCase();
