@@ -148,6 +148,7 @@
             overflow: hidden;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
         }
 
         .listing-card:hover {
@@ -157,6 +158,7 @@
 
         .listing-image-container {
             height: 18rem;
+            position: relative;
         }
 
         .listing-card .card-body {
@@ -205,6 +207,62 @@
         .badge-featured-review {
             background-color: #17a2b8;
             color: white;
+        }
+
+        /* Comparison checkbox styles - UPDATED POSITION */
+        .compare-checkbox {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255,255,255,0.95);
+            border-radius: 0.4rem;
+            padding: 0.2rem 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #007bff;
+            border: 1px solid #007bff;
+            transition: all 0.3s ease;
+        }
+
+        .compare-checkbox:hover {
+            background: rgba(255,255,255,1);
+            box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+        }
+
+        .compare-checkbox input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Floating Compare Button */
+        #compare-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            z-index: 9999;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+
+        #compare-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.5);
         }
         
     </style>
@@ -365,7 +423,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3">
         <% for(let listing of allListings) { %>
             <div class="col mb-4">
-                <a href="/listings/<%= listing._id %>" class="listing-link">
+                <a href="/listings/<%= listing._id %>" class="listing-link" style="position: relative;">
                     <div class="card listing-card h-100">
                         <div class="listing-badges">
         <% if (listing.isNewBadge) { %>
@@ -386,6 +444,12 @@
             <span class="badge badge-featured-review">Featured Review</span>
         <% } %>
     </div>
+                        <!-- Compare Checkbox - MOVED TO BOTTOM LEFT OF CARD -->
+                        <label class="compare-checkbox" title="Select to compare">
+                            <input type="checkbox" class="compare-checkbox-input" data-id="<%= listing._id %>" />
+                            Compare
+                        </label>
+
                         <div class="listing-image-container">
                             <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
                                 alt="listing_image" />
@@ -404,6 +468,7 @@
                                     <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                 </span>
                             </p>
+                            
                         </div>
                     </div>
                 </a>
@@ -411,8 +476,82 @@
             <% } %>
     </div>
 
+    <!-- Floating Compare Button -->
+    <button id="compare-btn">Compare Selected (0)</button>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Comparison feature code ---
+
+            const compareCheckboxes = document.querySelectorAll('.compare-checkbox-input');
+            const compareBtn = document.getElementById('compare-btn');
+            const MAX_COMPARE = 3;
+            let selectedListings = new Set();
+
+            // Load previously selected listings from localStorage
+            function loadSelectedListings() {
+                const saved = localStorage.getItem('selectedListings');
+                if (saved) {
+                    const ids = JSON.parse(saved);
+                    ids.forEach(id => {
+                        const checkbox = document.querySelector(`.compare-checkbox-input[data-id="${id}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            selectedListings.add(id);
+                        }
+                    });
+                    updateCompareButton();
+                }
+            }
+
+            // Save selected listings to localStorage
+            function saveSelectedListings() {
+                localStorage.setItem('selectedListings', JSON.stringify(Array.from(selectedListings)));
+            }
+
+            compareCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    
+                    if (this.checked) {
+                        if (selectedListings.size >= MAX_COMPARE) {
+                            alert(`You can compare up to ${MAX_COMPARE} listings at a time.`);
+                            this.checked = false;
+                            return;
+                        }
+                        selectedListings.add(id);
+                    } else {
+                        selectedListings.delete(id);
+                    }
+                    
+                    updateCompareButton();
+                    saveSelectedListings();
+                });
+            });
+
+            function updateCompareButton() {
+                const count = selectedListings.size;
+                if (count >= 2) {
+                    compareBtn.style.display = 'block';
+                    compareBtn.textContent = `Compare Selected (${count})`;
+                } else {
+                    compareBtn.style.display = 'none';
+                }
+            }
+
+            compareBtn.addEventListener('click', function() {
+                if (selectedListings.size < 2) {
+                    alert('Please select at least two listings to compare.');
+                    return;
+                }
+                const ids = Array.from(selectedListings).join(',');
+                window.location.href = `/listings/compare?ids=${encodeURIComponent(ids)}`;
+            });
+
+            // Load saved selections on page load
+            loadSelectedListings();
+
             // Search term highlighting
             const searchQuery = '<%= searchQuery || "" %>';
             if (searchQuery) {

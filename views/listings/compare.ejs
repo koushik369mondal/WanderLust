@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - TravelNest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .comparison-header {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .comparison-row {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s ease;
+        }
+        .comparison-row:hover {
+            background-color: #f8f9fa;
+        }
+        .comparison-label {
+            flex: 0 0 200px;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            font-weight: 600;
+            color: #495057;
+            border-right: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        .comparison-value {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .comparison-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+            width: 100%;
+            max-width: 300px;
+        }
+        .comparison-card:hover {
+            transform: translateY(-5px);
+        }
+        .amenity-badge {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+            display: inline-block;
+        }
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .price-breakdown {
+            text-align: left;
+        }
+        .base-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .tax-price {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .total-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="comparison-header">
+                    <h1 class="h2 mb-3">
+                        <i class="fas fa-chart-bar me-2"></i>Listing Comparison
+                    </h1>
+                    <p class="mb-0 fs-5">Compare properties side-by-side to make the best choice</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Content -->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="comparison-table">
+                    <!-- Listing Cards Row -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Properties</strong>
+                        </div>
+                        <% listings.forEach((listing, index) => { %>
+                        <div class="comparison-value">
+                            <div class="comparison-card card">
+                                <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" 
+                                     class="card-img-top" 
+                                     alt="<%= listing.title %>" 
+                                     style="height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= listing.title %></h5>
+                                    <p class="card-text text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i> 
+                                        <%= listing.location %>, <%= listing.country %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Price Comparison -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Price Details</strong>
+                        </div>
+                        <% listings.forEach(listing => { %>
+                        <div class="comparison-value">
+                            <div class="price-breakdown">
+                                <div class="base-price">₹<%= listing.price.toLocaleString() %> / night</div>
+                                <div class="tax-price">+18% GST: ₹<%= (listing.price * 0.18).toLocaleString() %></div>
+                                <div class="total-price mt-2">Total: ₹<%= listing.priceWithTax.toLocaleString() %></div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Rating Comparison -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Ratings & Reviews</strong>
+                        </div>
+                        <% listings.forEach(listing => { %>
+                        <div class="comparison-value">
+                            <div class="text-center">
+                                <div class="rating-stars">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <% if (i <= Math.floor(listing.avgRating)) { %>
+                                            <i class="fas fa-star"></i>
+                                        <% } else if (i === Math.ceil(listing.avgRating) && listing.avgRating % 1 !== 0) { %>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        <% } else { %>
+                                            <i class="far fa-star"></i>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                                <div class="rating-text">
+                                    <span class="fw-bold fs-5"><%= listing.avgRating %></span>/5 
+                                    <br>
+                                    <small class="text-muted">(<%= listing.reviewCount %> reviews)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Location Details -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Location</strong>
+                        </div>
+                        <% listings.forEach(listing => { %>
+                        <div class="comparison-value">
+                            <div class="location-info text-center">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <span><%= listing.location %>, <%= listing.country %></span>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Amenities Comparison -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Amenities</strong>
+                        </div>
+                        <% listings.forEach(listing => { %>
+                        <div class="comparison-value">
+                            <div class="amenities-list text-center">
+                                <% if (listing.amenities && listing.amenities.length > 0) { %>
+                                    <% listing.amenities.slice(0, 6).forEach(amenity => { %>
+                                        <span class="amenity-badge d-inline-block mb-1"><%= amenity %></span>
+                                    <% }); %>
+                                    <% if (listing.amenities.length > 6) { %>
+                                        <span class="amenity-badge d-inline-block mb-1">+<%= listing.amenities.length - 6 %> more</span>
+                                    <% } %>
+                                <% } else { %>
+                                    <span class="text-muted">No amenities listed</span>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Description</strong>
+                        </div>
+                        <% listings.forEach(listing => { %>
+                        <div class="comparison-value">
+                            <p class="description-text text-center">
+                                <%= listing.description ? listing.description.substring(0, 120) + '...' : 'No description available' %>
+                            </p>
+                        </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="comparison-row">
+                        <div class="comparison-label">
+                            <strong>Actions</strong>
+                        </div>
+                        <% listings.forEach(listing => { %>
+                        <div class="comparison-value">
+                            <div class="action-buttons text-center">
+                                <a href="/listings/<%= listing._id %>" class="btn btn-primary btn-sm me-2 mb-2">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                                <a href="/listings/<%= listing._id %>/book" class="btn btn-success btn-sm mb-2">
+                                    <i class="fas fa-calendar-check me-1"></i>Book Now
+                                </a>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Listings -->
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="/listings" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Listings
+                </a>
+                <button id="clear-comparison" class="btn btn-outline-secondary btn-lg ms-3">
+                    <i class="fas fa-times me-2"></i>Clear Comparison
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('clear-comparison').addEventListener('click', function() {
+            localStorage.removeItem('selectedListings');
+            window.location.href = '/listings';
+        });
+    </script>
+</body>
+</html>

@@ -51,6 +51,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const newsletterRouter = require("./routes/newsletter.js");
+const compareRoutes = require('./routes/compare'); //for comparison of listings
 
 // Check for MongoDB connection string and provide a fallback for development
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -171,6 +172,8 @@ app.use((req, res, next) => {
     next();
 });
 
+// Routes - Compare routes must come BEFORE listing routes
+app.use("/listings", compareRoutes); // for comparison of listings
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
