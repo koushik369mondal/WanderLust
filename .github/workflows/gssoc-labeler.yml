@@ -150,26 +150,35 @@ jobs:
 
             // Remove conflicting level labels
             async function removeOldLevelLabels(itemNumber, newLevel) {
-              const existingLabels = context.eventName === 'issues' 
-                ? context.payload.issue.labels 
-                : context.payload.pull_request.labels;
-              
-              const levelLabels = existingLabels.filter(label => 
-                label.name.startsWith('Level') && label.name !== newLevel
-              );
-              
-              for (const label of levelLabels) {
-                try {
-                  await github.rest.issues.removeLabel({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: itemNumber,
-                    name: label.name
-                  });
-                  console.log(`🗑️ Removed old label: ${label.name}`);
-                } catch (error) {
-                  console.log(`⚠️ Could not remove ${label.name}`);
+              try {
+                // Get current labels from the API for both issues and PRs
+                const { data: currentItem } = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: itemNumber
+                });
+                
+                const existingLabels = currentItem.labels || [];
+                
+                const levelLabels = existingLabels.filter(label => 
+                  label.name.startsWith('Level') && label.name !== newLevel
+                );
+                
+                for (const label of levelLabels) {
+                  try {
+                    await github.rest.issues.removeLabel({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      issue_number: itemNumber,
+                      name: label.name
+                    });
+                    console.log(`🗑️ Removed old label: ${label.name}`);
+                  } catch (error) {
+                    console.log(`⚠️ Could not remove ${label.name}: ${error.message}`);
+                  }
                 }
+              } catch (error) {
+                console.log(`⚠️ Error fetching existing labels: ${error.message}`);
               }
             }
 
@@ -209,17 +218,30 @@ jobs:
               itemType = 'PR';
               
               console.log(`🔀 Processing PR #${itemNumber}: "${context.payload.pull_request.title}"`);
+              console.log(`🔍 PR Action: ${context.payload.action}`);
               
               try {
-                // Fetch files changed for the PR
-                const files = await github.paginate(github.rest.pulls.listFiles, {
+                console.log(`📁 Fetching files for PR #${itemNumber}...`);
+                
+                // Fetch files changed for the PR with proper error handling
+                const filesResponse = await github.rest.pulls.listFiles({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   pull_number: itemNumber,
                   per_page: 100
                 });
                 
-                level = getLevelForPR(files, context.payload.pull_request);
+                const files = filesResponse.data || [];
+                console.log(`📊 Found ${files.length} files in PR #${itemNumber}`);
+                
+                if (files.length === 0) {
+                  console.log(`⚠️ No files found in PR, using default Level2`);
+                  level = 'Level2';
+                } else {
+                  level = getLevelForPR(files, context.payload.pull_request);
+                }
+                
+                console.log(`🎯 Determined level: ${level} for PR #${itemNumber}`);
                 
                 // Remove conflicting labels first
                 await removeOldLevelLabels(itemNumber, level);
@@ -232,29 +254,41 @@ jobs:
                   labels: ['GSSoC\'25', level]
                 });
                 
-                console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level}`);
+                console.log(`✅ Successfully labeled PR #${itemNumber} with GSSoC'25 + ${level}`);
                 
               } catch (error) {
-                console.log(`⚠️ Error analyzing PR: ${error.message}`);
+                console.log(`⚠️ Error analyzing PR #${itemNumber}:`, error.message);
+                console.log(`📝 Error details:`, error.status, error.response?.data);
+                
                 level = 'Level2'; // Default fallback
+                console.log(`🔄 Using fallback level: ${level}`);
                 
                 try {
+                  // Remove old labels even in fallback mode
+                  await removeOldLevelLabels(itemNumber, level);
+                  
                   await github.rest.issues.addLabels({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     issue_number: itemNumber,
                     labels: ['GSSoC\'25', level]
                   });
-                  console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level} (fallback)`);
+                  console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level} (fallback mode)`);
                 } catch (fallbackError) {
-                  console.log(`❌ Error with fallback labeling: ${fallbackError.message}`);
+                  console.log(`❌ Critical error with fallback labeling:`, fallbackError.message);
+                  console.log(`📝 Fallback error details:`, fallbackError.status, fallbackError.response?.data);
                 }
               }
             }
 
             // Final summary
             console.log('🎯 AUTO-LABELER SUMMARY');
-            console.log(`${itemType} #${itemNumber} → ${level}`);
+            console.log(`📋 Event: ${context.eventName}`);
+            console.log(`🔢 ${itemType} #${itemNumber} → ${level || 'Unknown'}`);
             console.log('✅ GSSoC\'25 label applied');
             console.log('✅ Complexity level determined and applied');
             console.log('✅ High priority workflow completed');
+            
+            if (!level) {
+              console.log('⚠️ WARNING: Level was not determined properly');
+            }
