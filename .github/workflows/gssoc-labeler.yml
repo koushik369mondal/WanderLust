@@ -1,167 +1,260 @@
-﻿name: " HIGH PRIORITY: GSSoC'25 Auto-Labeler"
+﻿name: "🚀 HIGH PRIORITY: GSSoC'25 Auto-Labeler"
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, reopened]
   pull_request:
-    types: [opened, edited, synchronize]
+    types: [opened, edited, synchronize, reopened]
 
 jobs:
-  priority-auto-label:
-    name: " Priority Auto-Label (GSSoC'25 + Complexity)"
+  auto-label-gssoc:
+    name: "🏷️ Apply GSSoC'25 and Smart Level Labels"
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
       contents: read
-    
+
     steps:
-      - name: " Checkout Repository"
+      - name: "🔄 Checkout Repository"
         uses: actions/checkout@v4
         
-      - name: " Analyze and Apply Smart Labels"
+      - name: "🎯 Classify and Label Issue or PR"
         uses: actions/github-script@v7
         with:
           script: |
-            console.log(' HIGH PRIORITY AUTO-LABELER STARTED');
+            console.log('🚀 HIGH PRIORITY AUTO-LABELER STARTED');
+            console.log(`Event: ${context.eventName}`);
             
-            const { owner, repo } = context.repo;
-            const isIssue = context.eventName === 'issues';
-            const isPR = context.eventName === 'pull_request';
-            
-            let itemNumber, itemTitle, itemBody, itemLabels;
-            
-            if (isIssue) {
-              itemNumber = context.payload.issue.number;
-              itemTitle = context.payload.issue.title || '';
-              itemBody = context.payload.issue.body || '';
-              itemLabels = context.payload.issue.labels?.map(l => l.name) || [];
-            } else if (isPR) {
-              itemNumber = context.payload.pull_request.number;
-              itemTitle = context.payload.pull_request.title || '';
-              itemBody = context.payload.pull_request.body || '';
-              itemLabels = context.payload.pull_request.labels?.map(l => l.name) || [];
-            }
-            
-            // Ensure required labels exist
-            const requiredLabels = [
-              { name: 'GSSoC\'25', description: 'Part of GirlScript Summer of Code 2025', color: 'ff6b35' },
-              { name: 'Level1', description: 'Beginner level task', color: '28a745' },
-              { name: 'Level2', description: 'Intermediate level task', color: '0366d6' },
-              { name: 'Level3', description: 'Advanced level task', color: 'd73a49' }
-            ];
-            
-            for (const label of requiredLabels) {
+            // Utility to create label if missing
+            async function ensureLabel(name, description, color) {
               try {
                 await github.rest.issues.createLabel({
-                  owner, repo,
-                  name: label.name,
-                  description: label.description,
-                  color: label.color
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name,
+                  description,
+                  color
                 });
-              } catch (error) {
-                if (error.status !== 422) {
-                  console.log(`Error creating label ${label.name}:`, error.message);
+                console.log(`✅ Created ${name} label`);
+              } catch (e) {
+                if (e.status === 422) {
+                  console.log(`ℹ️ ${name} label already exists`);
+                } else {
+                  console.log(`⚠️ Error creating ${name} label:`, e.message);
                 }
               }
             }
-            
-            // Always add GSSoC'25 label
-            let labelsToAdd = ['GSSoC\'25'];
-            
-            // Determine complexity level
-            let complexityLevel = 'Level1';
-            let complexityScore = 0;
-            
-            const titleLower = itemTitle.toLowerCase();
-            const bodyLower = itemBody.toLowerCase();
-            
-            // Complexity analysis
-            const level3Keywords = ['bug', 'error', 'database', 'security', 'api', 'backend', 'architecture'];
-            const level2Keywords = ['feature', 'enhancement', 'functionality', 'frontend', 'ui'];
-            const level1Keywords = ['documentation', 'readme', 'typo', 'style', 'css'];
-            
-            for (const keyword of level3Keywords) {
-              if (titleLower.includes(keyword) || bodyLower.includes(keyword)) {
-                complexityScore += 8;
+
+            // Enhanced complexity analysis for Issues
+            function getLevelForIssue(issue) {
+              const title = (issue.title || '').toLowerCase();
+              const body = (issue.body || '').toLowerCase();
+              const content = title + ' ' + body;
+              
+              let complexityScore = 0;
+              
+              // Level 3 indicators (Advanced)
+              const level3Keywords = [
+                'bug', 'error', 'crash', 'broken', 'fix', 'database', 'schema', 
+                'migration', 'auth', 'security', 'api', 'backend', 'server',
+                'deploy', 'docker', 'ci/cd', 'workflow', 'breaking change',
+                'architecture', 'refactor', 'performance', 'optimization'
+              ];
+              
+              // Level 2 indicators (Intermediate)
+              const level2Keywords = [
+                'feature', 'enhancement', 'functionality', 'component',
+                'integration', 'improvement', 'update', 'modify', 'change',
+                'frontend', 'ui', 'interface', 'design', 'controller', 'route'
+              ];
+              
+              // Level 1 indicators (Beginner)
+              const level1Keywords = [
+                'documentation', 'readme', 'docs', 'typo', 'text', 'comment',
+                'style', 'css', 'color', 'font', 'image', 'icon', 'minor'
+              ];
+              
+              // Score based on keywords
+              for (const keyword of level3Keywords) {
+                if (content.includes(keyword)) complexityScore += 8;
               }
-            }
-            
-            for (const keyword of level2Keywords) {
-              if (titleLower.includes(keyword) || bodyLower.includes(keyword)) {
-                complexityScore += 4;
+              
+              for (const keyword of level2Keywords) {
+                if (content.includes(keyword)) complexityScore += 4;
               }
-            }
-            
-            for (const keyword of level1Keywords) {
-              if (titleLower.includes(keyword) || bodyLower.includes(keyword)) {
-                complexityScore += 1;
+              
+              for (const keyword of level1Keywords) {
+                if (content.includes(keyword)) complexityScore += 1;
               }
+              
+              // Additional scoring factors
+              const bodyLength = (issue.body || '').length;
+              if (bodyLength > 1000) complexityScore += 5;
+              else if (bodyLength > 500) complexityScore += 3;
+              else if (bodyLength > 200) complexityScore += 1;
+              
+              console.log(`📊 Issue complexity score: ${complexityScore}`);
+              
+              // Determine level
+              if (complexityScore >= 25) return "Level3";
+              if (complexityScore >= 10) return "Level2";
+              return "Level1";
             }
-            
-            if (isPR) {
-              try {
-                const files = await github.rest.pulls.listFiles({
-                  owner, repo, pull_number: itemNumber
-                });
+
+            // Enhanced complexity analysis for PRs
+            function getLevelForPR(files, prData) {
+              const filesChanged = files.length;
+              const additions = files.reduce((sum, file) => sum + file.additions, 0);
+              const deletions = files.reduce((sum, file) => sum + file.deletions, 0);
+              const totalChanges = additions + deletions;
+              
+              let complexityScore = 0;
+              
+              // File-based complexity analysis
+              for (const file of files) {
+                const filename = file.filename;
                 
-                // Analyze files for complexity
-                for (const file of files.data) {
-                  if (/^(app\.js|schema\.js|package\.json)$/.test(file.filename)) {
-                    complexityScore += 10;
-                  } else if (/controllers\/|routes\/|middleware\.js/.test(file.filename)) {
-                    complexityScore += 5;
-                  } else if (/\.md$|\.css$|images\//.test(file.filename)) {
-                    complexityScore += 1;
-                  }
+                if (/^(app\.js|schema\.js|package\.json|package-lock\.json)$/.test(filename)) {
+                  complexityScore += 15;
+                } else if (/^models\/.*\.js$/.test(filename)) {
+                  complexityScore += 12;
+                } else if (/^(controllers\/|routes\/|middleware\.js)/.test(filename)) {
+                  complexityScore += 8;
+                } else if (/^(views\/|public\/)/.test(filename)) {
+                  complexityScore += 3;
+                } else if (/\.(md|txt)$/.test(filename)) {
+                  complexityScore += 1;
+                } else {
+                  complexityScore += 2;
                 }
-                
-                if (files.data.length > 10) complexityScore += 15;
-                else if (files.data.length > 5) complexityScore += 8;
-                
-              } catch (error) {
-                complexityScore = 5;
               }
+              
+              // Volume-based scoring
+              if (filesChanged > 15) complexityScore += 20;
+              else if (filesChanged > 10) complexityScore += 15;
+              else if (filesChanged > 5) complexityScore += 8;
+              
+              if (totalChanges > 1000) complexityScore += 15;
+              else if (totalChanges > 500) complexityScore += 10;
+              else if (totalChanges > 200) complexityScore += 5;
+              
+              console.log(`📊 PR complexity score: ${complexityScore}`);
+              console.log(`📁 Files: ${filesChanged}, 📝 Changes: ${totalChanges}`);
+              
+              // Determine level
+              if (complexityScore >= 40) return "Level3";
+              if (complexityScore >= 15) return "Level2";
+              return "Level1";
             }
-            
-            // Determine final level
-            if (complexityScore >= 25) {
-              complexityLevel = 'Level3';
-            } else if (complexityScore >= 10) {
-              complexityLevel = 'Level2';
-            } else {
-              complexityLevel = 'Level1';
-            }
-            
-            labelsToAdd.push(complexityLevel);
-            
+
             // Remove conflicting level labels
-            const existingLevelLabels = itemLabels.filter(label => label.startsWith('Level'));
-            for (const oldLabel of existingLevelLabels) {
-              if (oldLabel !== complexityLevel) {
+            async function removeOldLevelLabels(itemNumber, newLevel) {
+              const existingLabels = context.eventName === 'issues' 
+                ? context.payload.issue.labels 
+                : context.payload.pull_request.labels;
+              
+              const levelLabels = existingLabels.filter(label => 
+                label.name.startsWith('Level') && label.name !== newLevel
+              );
+              
+              for (const label of levelLabels) {
                 try {
                   await github.rest.issues.removeLabel({
-                    owner, repo, issue_number: itemNumber, name: oldLabel
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: itemNumber,
+                    name: label.name
                   });
+                  console.log(`🗑️ Removed old label: ${label.name}`);
                 } catch (error) {
-                  console.log(`Could not remove ${oldLabel}`);
+                  console.log(`⚠️ Could not remove ${label.name}`);
                 }
               }
             }
-            
-            // Apply new labels
-            try {
-              const labelsToApply = labelsToAdd.filter(label => !itemLabels.includes(label));
+
+            // Ensure all required labels exist
+            await ensureLabel('GSSoC\'25', 'Part of GirlScript Summer of Code 2025', 'ff6b35');
+            await ensureLabel('Level1', 'Beginner level - Good for newcomers', '28a745');
+            await ensureLabel('Level2', 'Intermediate level - Some experience needed', '0366d6');
+            await ensureLabel('Level3', 'Advanced level - Significant experience required', 'd73a49');
+
+            let level, itemNumber, itemType;
+
+            if (context.eventName === 'issues') {
+              itemNumber = context.payload.issue.number;
+              itemType = 'Issue';
+              level = getLevelForIssue(context.payload.issue);
               
-              if (labelsToApply.length > 0) {
+              console.log(`📋 Processing Issue #${itemNumber}: "${context.payload.issue.title}"`);
+              
+              // Remove conflicting labels first
+              await removeOldLevelLabels(itemNumber, level);
+              
+              // Add new labels
+              try {
                 await github.rest.issues.addLabels({
-                  owner, repo, issue_number: itemNumber, labels: labelsToApply
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: itemNumber,
+                  labels: ['GSSoC\'25', level]
                 });
-                console.log(` Applied labels: ${labelsToApply.join(', ')}`);
+                console.log(`✅ Labeled Issue #${itemNumber} with GSSoC'25 + ${level}`);
+              } catch (error) {
+                console.log(`❌ Error labeling issue: ${error.message}`);
               }
               
-              console.log(` ${isIssue ? 'Issue' : 'PR'} #${itemNumber}  ${complexityLevel}`);
+            } else if (context.eventName === 'pull_request') {
+              itemNumber = context.payload.pull_request.number;
+              itemType = 'PR';
               
-            } catch (error) {
-              console.error(' Error applying labels:', error);
+              console.log(`🔀 Processing PR #${itemNumber}: "${context.payload.pull_request.title}"`);
+              
+              try {
+                // Fetch files changed for the PR
+                const files = await github.paginate(github.rest.pulls.listFiles, {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: itemNumber,
+                  per_page: 100
+                });
+                
+                level = getLevelForPR(files, context.payload.pull_request);
+                
+                // Remove conflicting labels first
+                await removeOldLevelLabels(itemNumber, level);
+                
+                // Add new labels
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: itemNumber,
+                  labels: ['GSSoC\'25', level]
+                });
+                
+                console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level}`);
+                
+              } catch (error) {
+                console.log(`⚠️ Error analyzing PR: ${error.message}`);
+                level = 'Level2'; // Default fallback
+                
+                try {
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: itemNumber,
+                    labels: ['GSSoC\'25', level]
+                  });
+                  console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level} (fallback)`);
+                } catch (fallbackError) {
+                  console.log(`❌ Error with fallback labeling: ${fallbackError.message}`);
+                }
+              }
             }
+
+            // Final summary
+            console.log('🎯 AUTO-LABELER SUMMARY');
+            console.log(`${itemType} #${itemNumber} → ${level}`);
+            console.log('✅ GSSoC\'25 label applied');
+            console.log('✅ Complexity level determined and applied');
+            console.log('✅ High priority workflow completed');
