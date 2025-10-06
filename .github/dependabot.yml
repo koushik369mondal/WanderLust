@@ -25,3 +25,15 @@ updates:
           - "*"
         update-types:
           - "security-update"
+      production-dependencies:
+        patterns:
+          - "express*"
+          - "mongoose*"
+          - "passport*"
+          - "cloudinary*"
+          - "multer*"
+          - "ejs*"
+          - "bootstrap*"
+        update-types:
+          - "minor"
+          - "patch"
