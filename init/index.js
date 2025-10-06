@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ debug: false });
 
 const MONGO_URL = process.env.ATLAS_DB_URL;
 
 main()
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("✅ Database connected");
   })
   .catch((err) => {
-    console.log(err);
+    console.error("❌ Database connection failed:", err.message);
   });
 async function main() {
   await mongoose.connect(MONGO_URL);
@@ -30,7 +30,7 @@ const initDB = async () => {
     },
   }));
   await Listing.insertMany(initData.data);
-  console.log("data was initialized");
+  console.log("✅ Sample data initialized");
 };
 
 initDB();

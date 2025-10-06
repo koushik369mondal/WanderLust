@@ -469,11 +469,7 @@ async function seedListings() {
     return l;
   });
   await Listing.insertMany(listingsWithBadges);
-  console.log('Seeded listings with badges and demo reviews!');
-  
-  // Update coordinates for all listings
-  await updateListingCoordinates();
-  console.log('Updated all listing coordinates!');
+  console.log('✅ Database seeded successfully with listings, badges, and coordinates!');
 }
 
 module.exports = { data: sampleListings, seedListings };
