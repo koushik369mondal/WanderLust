@@ -28,4 +28,10 @@ router.delete(
     wrapAsync(reviewController.destroyReview)
 );
 
+// Translate Review Route
+router.get(
+    "/translate/:reviewId",
+    wrapAsync(reviewController.translateReview)
+);
+
 module.exports = router;
