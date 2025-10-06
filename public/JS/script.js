@@ -116,15 +116,50 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
 
-                    this.searchInput.addEventListener("blur", () => {
-                        // Delay hiding to allow click on suggestions
-                        setTimeout(() => this.hideSuggestions(), 200);
+                    this.searchInput.addEventListener("blur", (e) => {
+                        // Only hide if not clicking on suggestions
+                        if (!this.suggestionsContainer.contains(e.relatedTarget)) {
+                            setTimeout(() => this.hideSuggestions(), 200);
+                        }
                     });
 
-                    // Hide suggestions on Escape
+                    // Prevent suggestions from losing focus when clicked
+                    this.suggestionsContainer.addEventListener("mousedown", (e) => {
+                        e.preventDefault();
+                    });
+
+                    // Handle keyboard navigation
                     this.searchInput.addEventListener("keydown", (e) => {
-                        if (e.key === "Escape") {
-                            this.hideSuggestions();
+                        const suggestions = this.suggestionsContainer.querySelectorAll('.search-suggestion-item');
+                        const currentActive = this.suggestionsContainer.querySelector('.search-suggestion-item.active');
+                        let activeIndex = currentActive ? Array.from(suggestions).indexOf(currentActive) : -1;
+
+                        switch (e.key) {
+                            case "Escape":
+                                this.hideSuggestions();
+                                break;
+                            case "ArrowDown":
+                                e.preventDefault();
+                                if (suggestions.length > 0) {
+                                    if (currentActive) currentActive.classList.remove('active');
+                                    activeIndex = (activeIndex + 1) % suggestions.length;
+                                    suggestions[activeIndex].classList.add('active');
+                                }
+                                break;
+                            case "ArrowUp":
+                                e.preventDefault();
+                                if (suggestions.length > 0) {
+                                    if (currentActive) currentActive.classList.remove('active');
+                                    activeIndex = activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1;
+                                    suggestions[activeIndex].classList.add('active');
+                                }
+                                break;
+                            case "Enter":
+                                if (currentActive) {
+                                    e.preventDefault();
+                                    currentActive.click();
+                                }
+                                break;
                         }
                     });
                 }
@@ -162,6 +197,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             this.suggestionsContainer.innerHTML = '';
+            // Reset any active states
+            this.activeIndex = -1;
+            // Reset any active states
+            this.activeIndex = -1;
             
             suggestions.forEach(suggestion => {
                 const item = document.createElement('div');
@@ -172,10 +211,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     <small class="search-suggestion-type">${suggestion.type}</small>
                 `;
                 
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     this.searchInput.value = suggestion.value;
                     this.hideSuggestions();
-                    this.searchForm.submit();
+                    // Use window.location instead of form.submit() for better reliability
+                    window.location.href = `/listings?search=${encodeURIComponent(suggestion.value)}`;
+                });
+                
+                // Also handle mousedown to prevent blur
+                item.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
                 });
                 
                 this.suggestionsContainer.appendChild(item);

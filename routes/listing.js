@@ -25,9 +25,6 @@ router.get("/search/suggestions", wrapAsync(listingsController.getSearchSuggesti
 // New Route - This must come BEFORE the /:id route
 router.get("/new", isLoggedIn, listingsController.renderNewForm);
 
-router.get("/search", wrapAsync(listingsController.searchListings));
-
-
 router
     .route("/:id")
     .get(wrapAsync(listingsController.showListing))
