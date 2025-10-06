@@ -374,6 +374,52 @@
   </div>
   <% } %>
   
+  <!-- Weather Section -->
+  <% if (typeof weatherData !== 'undefined' && weatherData) { %>
+  <div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0"><i class="fa-solid fa-cloud-sun me-2"></i>Current Weather</h4>
+      </div>
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-4 text-center">
+            <div style="font-size: 4rem;"><%= weatherData.icon ? (weatherData.icon.includes('d') ? '☀️' : '🌙') : '🌤️' %></div>
+            <h2 class="mb-0"><%= weatherData.temperature %>°C</h2>
+            <p class="text-muted mb-0"><%= weatherData.description %></p>
+          </div>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fa-solid fa-thermometer-half me-2 text-primary"></i>
+                  <span>Feels like: <strong><%= weatherData.feelsLike %>°C</strong></span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-droplet me-2 text-info"></i>
+                  <span>Humidity: <strong><%= weatherData.humidity %>%</strong></span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fa-solid fa-wind me-2 text-success"></i>
+                  <span>Wind: <strong><%= weatherData.windSpeed %> m/s</strong></span>
+                </div>
+                <% if (typeof bestTimeToVisit !== 'undefined' && bestTimeToVisit) { %>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-calendar-check me-2 text-warning"></i>
+                  <span class="small">Best time: <strong><%= bestTimeToVisit %></strong></span>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
   <!-- Map Section -->
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="card">

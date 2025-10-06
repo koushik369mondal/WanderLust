@@ -2,6 +2,7 @@ const User = require("../models/user");
 
 const Listing = require("../models/listing");
 const SearchLog = require("../models/searchLog");
+const weatherService = require("../services/weatherService");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
@@ -202,6 +203,22 @@ module.exports.showListing = async (req, res, next) => {
     listing.avgRating = avgRating;
     listing.isHighlyRatedBadge = avgRating >= 4.5;
 
+    // Get weather data for the listing
+    let weatherData = null;
+    let forecast = null;
+    let bestTimeToVisit = null;
+    
+    if (listing.geometry && listing.geometry.coordinates) {
+      const [lon, lat] = listing.geometry.coordinates;
+      try {
+        weatherData = await weatherService.getCurrentWeather(lat, lon);
+        forecast = await weatherService.getForecast(lat, lon);
+        bestTimeToVisit = weatherService.getBestTimeToVisit(listing.location, listing.country);
+      } catch (error) {
+        console.log('Weather service error:', error.message);
+      }
+    }
+
     // AI Recommendations - "You may also like"
     let recommendations = [];
     try {
@@ -285,7 +302,7 @@ module.exports.showListing = async (req, res, next) => {
     console.log("Template path:", templatePath);
     
     // Add error handling for template rendering main
-    res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations }, (err, html) => {
+    res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations, weatherData, forecast, bestTimeToVisit }, (err, html) => {
 
    
       if (err) {

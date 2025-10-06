@@ -205,6 +205,7 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 app.use("/newsletter", newsletterRouter);
+app.use("/weather", require("./routes/weather.js"));
 app.use("/chatbot", require("./routes/chatbot.js"));
 
 app.get("/about", (req, res) => {
