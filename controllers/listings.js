@@ -11,7 +11,7 @@ const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : nul
 
 
 module.exports.index = async (req, res) => {
-  const { category, search } = req.query;
+  const { category, search, q } = req.query;
   const filter = {};
   let searchQuery = null;
 
@@ -20,9 +20,10 @@ module.exports.index = async (req, res) => {
     filter.category = category;
   }
 
-  // Search functionality
-  if (search && search.trim()) {
-    searchQuery = search.trim();
+  // Search functionality - handle both 'search' and 'q' parameters
+  const searchTerm = search || q;
+  if (searchTerm && searchTerm.trim()) {
+    searchQuery = searchTerm.trim();
     // Create a case-insensitive regex search across multiple fields
     const searchRegex = new RegExp(searchQuery, 'i');
     filter.$or = [
@@ -80,7 +81,8 @@ module.exports.index = async (req, res) => {
     category: req.query.category,
     searchQuery: searchQuery,
     totalResults: allListings.length,
-    hasSearch: !!searchQuery
+    hasSearch: !!searchQuery,
+    noResults: searchQuery && allListings.length === 0
   });
 
 };
@@ -495,24 +497,3 @@ module.exports.unlikeListing = async (req, res) => {
     res.redirect(`/listings/${id}`);
 };
 
-module.exports.searchListings = async (req, res) => {
-    const { q } = req.query; //by query params
-    let allListings = [];
-    let noResults = false;
-
-    if (q) {
-        allListings = await Listing.find({
-            $or: [
-                { title: { $regex: q, $options: "i" } },
-                { category: { $regex: q, $options: "i" } },
-                { location: { $regex: q, $options: "i" } },
-                { country: { $regex: q, $options: "i" } }
-            ]
-        });
-        if(allListings.length === 0) {
-            noResults = true;
-        }
-    }
-//rendering on idnex pg only
-    res.render("listings/index.ejs", { allListings, category: null, searchQuery: q, noResults });
-};

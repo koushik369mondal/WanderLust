@@ -128,17 +128,24 @@
 
   .search-suggestions {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 2px);
     left: 0;
-    right: 0;
-    z-index: 1000;
+    right: 60px; /* Account for search button width */
+    z-index: 1050;
     max-height: 300px;
     overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 8px;
-    background: white;
+    background: var(--bg-primary, white);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     display: none;
+    margin-top: 2px;
+  }
+
+  [data-theme="dark"] .search-suggestions {
+    background: var(--bg-secondary, #2d3748);
+    border-color: var(--border-color, #4a5568);
+    color: var(--text-primary, white);
   }
 
   .search-suggestions.show {
@@ -157,6 +164,24 @@
 
   .search-suggestion-item:hover {
     background-color: #f8f9fa;
+  }
+
+  [data-theme="dark"] .search-suggestion-item {
+    border-bottom-color: var(--border-color, #4a5568);
+    color: var(--text-primary, white);
+  }
+
+  [data-theme="dark"] .search-suggestion-item:hover {
+    background-color: var(--bg-tertiary, #4a5568);
+  }
+
+  .search-suggestion-item.active {
+    background-color: #e3f2fd;
+  }
+
+  [data-theme="dark"] .search-suggestion-item.active {
+    background-color: var(--accent-color, #fe424d);
+    color: white;
   }
 
   .search-suggestion-item:last-child {
@@ -209,14 +234,12 @@
 
       </div>
       <div class="navbar-nav ms-auto">
-        <form class="d-flex search-form-container" role="search" method="GET" action="/listings">
-          <div class="position-relative">
-            <input class="form-control me-2 search-inp" type="search" name="search" 
-                   placeholder="<%= __('search_destinations') %>" 
-                   value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-                   autocomplete="off" />
-            <div class="search-suggestions dropdown-menu" id="searchSuggestions"></div>
-          </div>
+        <form class="d-flex search-form-container position-relative" role="search" method="GET" action="/listings">
+          <input class="form-control me-2 search-inp" type="search" name="search" 
+                 placeholder="<%= __('search_destinations') %>" 
+                 value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+                 autocomplete="off" />
+          <div class="search-suggestions" id="searchSuggestions"></div>
           <button class="btn search-btn" type="submit">
           <i class="fa-solid fa-magnifying-glass"></i><%= __('search') %>
           </button>
