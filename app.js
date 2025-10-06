@@ -43,6 +43,7 @@ const passport = require("passport");
 const helmet = require("helmet");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const i18n = require('i18n');
 // Import OAuth strategies
 require("./config/passport");
 const Listing = require("./models/listing");
@@ -115,6 +116,23 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false, // Disable for compatibility with external resources
 }));
 
+// i18n configuration
+i18n.configure({
+    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur'],
+    directory: path.join(__dirname, 'locales'),
+    defaultLocale: 'en',
+    queryParameter: 'lang',
+    cookie: 'lang',
+    autoReload: true,
+    updateFiles: false,
+    api: {
+        '__': '__',
+        '__n': '__n'
+    }
+});
+
+app.use(i18n.init);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
@@ -170,6 +188,15 @@ app.use((req, res, next) => {
     res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
     res.locals.searchQuery = req.query.search || '';
+    
+    // Language switching helper
+    res.locals.buildLangUrl = (lang) => {
+        const currentUrl = req.originalUrl.split('?')[0];
+        const params = new URLSearchParams(req.query);
+        params.set('lang', lang);
+        return currentUrl + '?' + params.toString();
+    };
+    
     next();
 });
 
