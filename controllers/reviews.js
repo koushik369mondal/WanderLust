@@ -28,7 +28,7 @@ module.exports.createReview = async (req, res) => {
     }
     
     req.flash("success", "New review created!");
-    res.redirect(`/listings/${listing._id}`);
+    res.redirect(`/listings/${listing._id}`);   
 };
 
 module.exports.destroyReview = async (req, res) => {

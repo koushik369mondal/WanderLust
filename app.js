@@ -125,6 +125,7 @@ app.use(helmet({
 }));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -239,6 +240,8 @@ app.use("/notifications", notificationRouter);
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
 });
+
+
 
 app.get("/privacy", (req, res) => {
   res.render("privacy", { title: "Privacy Policy" });

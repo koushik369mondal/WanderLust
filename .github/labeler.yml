@@ -5,8 +5,47 @@
 "GSSoC'25":
   - "**/*"  # All files - indicates this is part of GSSoC'25
 
+# Level assignment based on complexity and scope of changes
+# Level1: Simple changes like documentation, minor UI tweaks, small bug fixes
+"Level1":
+  - "*.md"                    # Documentation updates
+  - ".gitignore"              # Git configuration
+  - "*.txt"                   # Text files
+  - "public/images/**/*"      # Image assets only
+  - "views/**/*.ejs"          # Simple view changes (single file)
+  - "public/CSS/**/*"         # CSS styling changes
+  - "CONTRIBUTION.md"
+  - "CODE_OF_CONDUCT.md"
+  - "SECURITY.md"
+  - "SPARKLE_IMPROVEMENTS.md"
+
+# Level2: Moderate complexity changes affecting functionality or multiple components
 "Level2":
-  - "**/*"  # All files - indicates intermediate level
+  - "controllers/**/*"        # Controller logic changes
+  - "routes/**/*"            # Routing changes
+  - "public/JS/**/*"         # JavaScript functionality
+  - "views/includes/**/*"    # Shared template components
+  - "utils/**/*"             # Utility functions
+  - "middleware.js"          # Middleware modifications
+  - "cloudConfig.js"         # Cloud configuration
+  - "*.config.js"            # Configuration files
+  - "*.config.json"
+
+# Level3: Complex changes affecting core functionality, database, or architecture
+"Level3":
+  - "models/**/*"            # Database model changes
+  - "app.js"                 # Main application file
+  - "schema.js"              # Database schema
+  - "init/**/*"              # Database initialization/seeding
+  - "package.json"           # Dependency changes
+  - "package-lock.json"      # Lock file changes
+  - "**/*seed*"              # Database seeding
+  - "**/*migration*"         # Database migrations
+  - ".github/workflows/**/*" # CI/CD workflow changes
+  - "Dockerfile"             # Container configuration
+  - "docker-compose.yml"     # Docker orchestration
+  - "**/*auth*"              # Authentication changes
+  - "**/*security*"          # Security-related changes
 
 # Frontend changes
 "frontend":
@@ -112,8 +151,15 @@
   - "**/*optimize*"
   - "**/*cache*"
 
-# Small changes (usually safe to merge)
+# Small changes (usually safe to merge) - automatically gets Level1
 "minor":
   - "*.md"
-  - ".gitignore"
+  - ".gitignore" 
   - "*.txt"
+
+# Additional Level3 indicators for complex changes
+"Level3":
+  - "**/*test*"              # Test file changes (comprehensive testing)
+  - "jest.config.js"         # Testing configuration
+  - "cypress.json"           # End-to-end testing
+  - "cypress/**/*"           # Cypress test files

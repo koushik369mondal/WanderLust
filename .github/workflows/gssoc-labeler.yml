@@ -26,14 +26,14 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.payload.issue.number,
-                labels: ['GSSoC\'25', 'Level2']
+                labels: ['GSSoC\'25']
               });
               
-              console.log('Successfully added GSSoC\'25 and Level2 labels to issue #' + context.payload.issue.number);
+              console.log('Successfully added GSSoC\'25 label to issue #' + context.payload.issue.number);
             } catch (error) {
               console.error('Error adding labels to issue:', error);
               
-              // Try to create the labels if they don't exist
+              // Try to create the label if it doesn't exist
               try {
                 await github.rest.issues.createLabel({
                   owner: context.repo.owner,
@@ -43,34 +43,17 @@ jobs:
                   color: 'ff6b35'
                 });
                 console.log('Created GSSoC\'25 label');
-              } catch (createError) {
-                console.log('GSSoC\'25 label might already exist');
-              }
-              
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'Level2',
-                  description: 'Intermediate level task - suitable for contributors with some experience',
-                  color: '0366d6'
-                });
-                console.log('Created Level2 label');
-              } catch (createError) {
-                console.log('Level2 label might already exist');
-              }
-              
-              // Try adding labels again after creation
-              try {
+                
+                // Try adding label again after creation
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: context.payload.issue.number,
-                  labels: ['GSSoC\'25', 'Level2']
+                  labels: ['GSSoC\'25']
                 });
-                console.log('Successfully added labels after creation');
-              } catch (retryError) {
-                console.error('Failed to add labels even after creation:', retryError);
+                console.log('Successfully added GSSoC\'25 label after creation');
+              } catch (createError) {
+                console.error('Failed to create or add GSSoC\'25 label:', createError);
               }
             }
 
@@ -84,20 +67,36 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.payload.pull_request.number,
-                labels: ['GSSoC\'25', 'Level2']
+                labels: ['GSSoC\'25']
               });
               
-              console.log('Successfully added GSSoC\'25 and Level2 labels to PR #' + context.payload.pull_request.number);
+              console.log('Successfully added GSSoC\'25 label to PR #' + context.payload.pull_request.number);
             } catch (error) {
               console.error('Error adding labels to PR:', error);
               
-              // Try to create the labels if they don't exist
+              // Try to create the label if it doesn't exist
               try {
                 await github.rest.issues.createLabel({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   name: 'GSSoC\'25',
                   description: 'Part of GirlScript Summer of Code 2025',
+                  color: 'ff6b35'
+                });
+                console.log('Created GSSoC\'25 label');
+                
+                // Try adding label again after creation
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  labels: ['GSSoC\'25']
+                });
+                console.log('Successfully added GSSoC\'25 label after creation');
+              } catch (createError) {
+                console.error('Failed to create or add GSSoC\'25 label:', createError);
+              }
+            }
                   color: 'ff6b35'
                 });
                 console.log('Created GSSoC\'25 label');
@@ -156,7 +155,7 @@ jobs:
 
             ### 🏷️ **Your Issue Details:**
             - 🎯 **Program**: GSSoC'25
-            - 📊 **Level**: Level2 (Intermediate)
+            - 📊 **Level**: Will be assigned based on complexity
             - 🌍 **Project**: WanderLust - Travel Platform
 
             ### 📋 **Next Steps:**
@@ -172,7 +171,9 @@ jobs:
             - 📈 **Learning**: This is a great opportunity to grow your skills!
 
             ### 🌟 **Point System:**
-            - **Level2 Issues**: Worth more points for intermediate complexity
+            - **Level1**: Simple changes (docs, minor fixes) - Lower points
+            - **Level2**: Moderate complexity (features, API changes) - Medium points  
+            - **Level3**: Complex changes (architecture, database) - Higher points
             - **Quality Matters**: Well-implemented solutions earn bonus points
             - **Documentation**: Good documentation and tests are highly valued
 
@@ -206,14 +207,15 @@ jobs:
 
             ### 🏷️ **PR Classification:**
             - 🎯 **Program**: GSSoC'25  
-            - 📊 **Level**: Level2 (Intermediate)
+            - 📊 **Level**: Will be auto-assigned based on changes
             - 🔄 **Status**: Under Review
 
             ### 📝 **Review Process:**
             1. **Automated Checks** - CI/CD pipeline will run tests
-            2. **Code Review** - Maintainers will review your changes
-            3. **Feedback** - Address any requested changes
-            4. **Merge** - Approved PRs will be merged
+            2. **Auto-Labeling** - Level assigned based on file changes
+            3. **Code Review** - Maintainers will review your changes
+            4. **Feedback** - Address any requested changes
+            5. **Merge** - Approved PRs will be merged
 
             ### ✅ **PR Checklist:**
             - [ ] Code follows project style guidelines
@@ -222,12 +224,10 @@ jobs:
             - [ ] Linked to related issue (if applicable)
             - [ ] No merge conflicts
 
-            ### 🌟 **Scoring Criteria:**
-            - **Code Quality**: Clean, readable, and well-structured
-            - **Functionality**: Meets requirements and works correctly
-            - **Testing**: Proper test coverage
-            - **Documentation**: Clear comments and documentation
-            - **Best Practices**: Follows project conventions
+            ### 🌟 **Level Guidelines:**
+            - **Level1**: Documentation, minor UI, simple fixes
+            - **Level2**: Controllers, routes, moderate features
+            - **Level3**: Models, core app, database, complex features
 
             ### 💡 **Tips for Success:**
             - 🔍 Respond promptly to review feedback

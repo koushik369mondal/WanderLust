@@ -55,6 +55,12 @@ router.post("/profile/travel-goals", isLoggedIn, wrapAsync(userController.addTra
 router.patch("/profile/travel-goals/:goalId/complete", isLoggedIn, wrapAsync(userController.completeTravelGoal));
 router.delete("/profile/travel-goals/:goalId", isLoggedIn, wrapAsync(userController.deleteTravelGoal));
 
+// Smart Travel Recommendations Route
+router.get("/recommendations", (req, res) => {
+    console.log("Direct route handler called");
+    res.send("Direct route handler working!");
+});
+
 // Root route - redirect to listings
 router.get("/", (req, res) => {
     res.redirect("/listings");
