@@ -1,242 +1,167 @@
-name: "🏷️ GSSoC'25 Auto-Labeler"
+﻿name: " HIGH PRIORITY: GSSoC'25 Auto-Labeler"
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
   pull_request:
-    types: [opened]
+    types: [opened, edited, synchronize]
 
 jobs:
-  auto-label-gssoc:
-    name: "Apply GSSoC'25 Labels"
+  priority-auto-label:
+    name: " Priority Auto-Label (GSSoC'25 + Complexity)"
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
       contents: read
-
+    
     steps:
-      - name: "Auto-label issues with GSSoC'25"
-        if: github.event_name == 'issues'
+      - name: " Checkout Repository"
+        uses: actions/checkout@v4
+        
+      - name: " Analyze and Apply Smart Labels"
         uses: actions/github-script@v7
         with:
           script: |
-            try {
-              await github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.issue.number,
-                labels: ['GSSoC\'25']
-              });
-              
-              console.log('Successfully added GSSoC\'25 label to issue #' + context.payload.issue.number);
-            } catch (error) {
-              console.error('Error adding labels to issue:', error);
-              
-              // Try to create the label if it doesn't exist
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'GSSoC\'25',
-                  description: 'Part of GirlScript Summer of Code 2025',
-                  color: 'ff6b35'
-                });
-                console.log('Created GSSoC\'25 label');
-                
-                // Try adding label again after creation
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.issue.number,
-                  labels: ['GSSoC\'25']
-                });
-                console.log('Successfully added GSSoC\'25 label after creation');
-              } catch (createError) {
-                console.error('Failed to create or add GSSoC\'25 label:', createError);
-              }
-            }
-
-      - name: "Auto-label PRs with GSSoC'25"
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            try {
-              await github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                labels: ['GSSoC\'25']
-              });
-              
-              console.log('Successfully added GSSoC\'25 label to PR #' + context.payload.pull_request.number);
-            } catch (error) {
-              console.error('Error adding labels to PR:', error);
-              
-              // Try to create the label if it doesn't exist
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'GSSoC\'25',
-                  description: 'Part of GirlScript Summer of Code 2025',
-                  color: 'ff6b35'
-                });
-                console.log('Created GSSoC\'25 label');
-                
-                // Try adding label again after creation
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.pull_request.number,
-                  labels: ['GSSoC\'25']
-                });
-                console.log('Successfully added GSSoC\'25 label after creation');
-              } catch (createError) {
-                console.error('Failed to create or add GSSoC\'25 label:', createError);
-              }
-            }
-                  color: 'ff6b35'
-                });
-                console.log('Created GSSoC\'25 label');
-              } catch (createError) {
-                console.log('GSSoC\'25 label might already exist');
-              }
-              
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'Level2',
-                  description: 'Intermediate level task - suitable for contributors with some experience',
-                  color: '0366d6'
-                });
-                console.log('Created Level2 label');
-              } catch (createError) {
-                console.log('Level2 label might already exist');
-              }
-              
-              // Try adding labels again after creation
-              try {
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.pull_request.number,
-                  labels: ['GSSoC\'25', 'Level2']
-                });
-                console.log('Successfully added labels after creation');
-              } catch (retryError) {
-                console.error('Failed to add labels even after creation:', retryError);
-              }
-            }
-
-      - name: "Add welcome comment for GSSoC'25 contributors"
-        if: github.event_name == 'issues'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Check if this is a new contributor
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              creator: context.payload.issue.user.login,
-              state: 'all'
-            });
+            console.log(' HIGH PRIORITY AUTO-LABELER STARTED');
             
-            if (issues.data.length === 1) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.issue.number,
-                body: `## 🎉 Welcome to GSSoC'25! 🌟
-
-            Thank you for contributing to **WanderLust** as part of **GirlScript Summer of Code 2025**! 
-
-            ### 🏷️ **Your Issue Details:**
-            - 🎯 **Program**: GSSoC'25
-            - 📊 **Level**: Will be assigned based on complexity
-            - 🌍 **Project**: WanderLust - Travel Platform
-
-            ### 📋 **Next Steps:**
-            1. **Wait for Assignment** - A maintainer will review and assign this issue
-            2. **Read Guidelines** - Check our [Contributing Guide](CONTRIBUTION.md)
-            3. **Ask Questions** - Feel free to ask for clarification
-            4. **Stay Updated** - Watch this issue for updates
-
-            ### 💡 **GSSoC'25 Tips:**
-            - 🕒 **Time Management**: Plan your work effectively
-            - 🤝 **Communication**: Keep maintainers updated on progress
-            - 🔍 **Quality**: Focus on clean, well-documented code
-            - 📈 **Learning**: This is a great opportunity to grow your skills!
-
-            ### 🌟 **Point System:**
-            - **Level1**: Simple changes (docs, minor fixes) - Lower points
-            - **Level2**: Moderate complexity (features, API changes) - Medium points  
-            - **Level3**: Complex changes (architecture, database) - Higher points
-            - **Quality Matters**: Well-implemented solutions earn bonus points
-            - **Documentation**: Good documentation and tests are highly valued
-
-            **Happy Coding! Let's make WanderLust amazing together! 🚀✨**
-
-            *This is an automated message for GSSoC'25 participants. For questions, tag a maintainer.*`
-              });
-            }
-
-      - name: "Add welcome comment for GSSoC'25 PR contributors"
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Check if this is the contributor's first PR
-            const prs = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              creator: context.payload.pull_request.user.login,
-              state: 'all'
-            });
+            const { owner, repo } = context.repo;
+            const isIssue = context.eventName === 'issues';
+            const isPR = context.eventName === 'pull_request';
             
-            if (prs.data.length === 1) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                body: `## 🚀 First GSSoC'25 Pull Request! 🎉
-
-            Congratulations on submitting your first PR to **WanderLust** for **GSSoC'25**!
-
-            ### 🏷️ **PR Classification:**
-            - 🎯 **Program**: GSSoC'25  
-            - 📊 **Level**: Will be auto-assigned based on changes
-            - 🔄 **Status**: Under Review
-
-            ### 📝 **Review Process:**
-            1. **Automated Checks** - CI/CD pipeline will run tests
-            2. **Auto-Labeling** - Level assigned based on file changes
-            3. **Code Review** - Maintainers will review your changes
-            4. **Feedback** - Address any requested changes
-            5. **Merge** - Approved PRs will be merged
-
-            ### ✅ **PR Checklist:**
-            - [ ] Code follows project style guidelines
-            - [ ] Tests pass locally
-            - [ ] Documentation updated if needed
-            - [ ] Linked to related issue (if applicable)
-            - [ ] No merge conflicts
-
-            ### 🌟 **Level Guidelines:**
-            - **Level1**: Documentation, minor UI, simple fixes
-            - **Level2**: Controllers, routes, moderate features
-            - **Level3**: Models, core app, database, complex features
-
-            ### 💡 **Tips for Success:**
-            - 🔍 Respond promptly to review feedback
-            - 🧪 Ensure all tests pass
-            - 📚 Keep learning and improving
-            - 🤝 Engage with the community
-
-            **Thank you for contributing to GSSoC'25! 🌟**
-
-            *This is an automated message for GSSoC'25 participants. Good luck! 🍀*`
-              });
+            let itemNumber, itemTitle, itemBody, itemLabels;
+            
+            if (isIssue) {
+              itemNumber = context.payload.issue.number;
+              itemTitle = context.payload.issue.title || '';
+              itemBody = context.payload.issue.body || '';
+              itemLabels = context.payload.issue.labels?.map(l => l.name) || [];
+            } else if (isPR) {
+              itemNumber = context.payload.pull_request.number;
+              itemTitle = context.payload.pull_request.title || '';
+              itemBody = context.payload.pull_request.body || '';
+              itemLabels = context.payload.pull_request.labels?.map(l => l.name) || [];
+            }
+            
+            // Ensure required labels exist
+            const requiredLabels = [
+              { name: 'GSSoC\'25', description: 'Part of GirlScript Summer of Code 2025', color: 'ff6b35' },
+              { name: 'Level1', description: 'Beginner level task', color: '28a745' },
+              { name: 'Level2', description: 'Intermediate level task', color: '0366d6' },
+              { name: 'Level3', description: 'Advanced level task', color: 'd73a49' }
+            ];
+            
+            for (const label of requiredLabels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner, repo,
+                  name: label.name,
+                  description: label.description,
+                  color: label.color
+                });
+              } catch (error) {
+                if (error.status !== 422) {
+                  console.log(`Error creating label ${label.name}:`, error.message);
+                }
+              }
+            }
+            
+            // Always add GSSoC'25 label
+            let labelsToAdd = ['GSSoC\'25'];
+            
+            // Determine complexity level
+            let complexityLevel = 'Level1';
+            let complexityScore = 0;
+            
+            const titleLower = itemTitle.toLowerCase();
+            const bodyLower = itemBody.toLowerCase();
+            
+            // Complexity analysis
+            const level3Keywords = ['bug', 'error', 'database', 'security', 'api', 'backend', 'architecture'];
+            const level2Keywords = ['feature', 'enhancement', 'functionality', 'frontend', 'ui'];
+            const level1Keywords = ['documentation', 'readme', 'typo', 'style', 'css'];
+            
+            for (const keyword of level3Keywords) {
+              if (titleLower.includes(keyword) || bodyLower.includes(keyword)) {
+                complexityScore += 8;
+              }
+            }
+            
+            for (const keyword of level2Keywords) {
+              if (titleLower.includes(keyword) || bodyLower.includes(keyword)) {
+                complexityScore += 4;
+              }
+            }
+            
+            for (const keyword of level1Keywords) {
+              if (titleLower.includes(keyword) || bodyLower.includes(keyword)) {
+                complexityScore += 1;
+              }
+            }
+            
+            if (isPR) {
+              try {
+                const files = await github.rest.pulls.listFiles({
+                  owner, repo, pull_number: itemNumber
+                });
+                
+                // Analyze files for complexity
+                for (const file of files.data) {
+                  if (/^(app\.js|schema\.js|package\.json)$/.test(file.filename)) {
+                    complexityScore += 10;
+                  } else if (/controllers\/|routes\/|middleware\.js/.test(file.filename)) {
+                    complexityScore += 5;
+                  } else if (/\.md$|\.css$|images\//.test(file.filename)) {
+                    complexityScore += 1;
+                  }
+                }
+                
+                if (files.data.length > 10) complexityScore += 15;
+                else if (files.data.length > 5) complexityScore += 8;
+                
+              } catch (error) {
+                complexityScore = 5;
+              }
+            }
+            
+            // Determine final level
+            if (complexityScore >= 25) {
+              complexityLevel = 'Level3';
+            } else if (complexityScore >= 10) {
+              complexityLevel = 'Level2';
+            } else {
+              complexityLevel = 'Level1';
+            }
+            
+            labelsToAdd.push(complexityLevel);
+            
+            // Remove conflicting level labels
+            const existingLevelLabels = itemLabels.filter(label => label.startsWith('Level'));
+            for (const oldLabel of existingLevelLabels) {
+              if (oldLabel !== complexityLevel) {
+                try {
+                  await github.rest.issues.removeLabel({
+                    owner, repo, issue_number: itemNumber, name: oldLabel
+                  });
+                } catch (error) {
+                  console.log(`Could not remove ${oldLabel}`);
+                }
+              }
+            }
+            
+            // Apply new labels
+            try {
+              const labelsToApply = labelsToAdd.filter(label => !itemLabels.includes(label));
+              
+              if (labelsToApply.length > 0) {
+                await github.rest.issues.addLabels({
+                  owner, repo, issue_number: itemNumber, labels: labelsToApply
+                });
+                console.log(` Applied labels: ${labelsToApply.join(', ')}`);
+              }
+              
+              console.log(` ${isIssue ? 'Issue' : 'PR'} #${itemNumber}  ${complexityLevel}`);
+              
+            } catch (error) {
+              console.error(' Error applying labels:', error);
             }
