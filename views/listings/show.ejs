@@ -1,24 +1,30 @@
 <% layout('/layouts/boilerplate') %>
 <script>
-  // const mapToken = "<%= process.env.MAP_TOKEN %>";
   const mapToken = "<%= process.env.MAP_TOKEN || 'dummy_token' %>";
   const listing = <%- JSON.stringify(listing) %>;
   
+  console.log('🗺️ Listing data for map:', {
+    title: listing.title,
+    location: listing.location,
+    country: listing.country,
+    geometry: listing.geometry
+  });
+  
   // Ensure listing has proper structure for map
-  if (!listing.geometry) {
+  if (!listing.geometry || !listing.geometry.coordinates) {
+    console.warn('⚠️ No geometry coordinates found, will attempt geocoding');
     listing.geometry = {
       type: "Point",
-      coordinates: [77.2090, 28.6139] // Default to Delhi, India
+      coordinates: null // Set to null to trigger geocoding
     };
-  }
-  
-  // Make sure coordinates are valid numbers
-  if (!listing.geometry.coordinates || 
-      !Array.isArray(listing.geometry.coordinates) || 
-      listing.geometry.coordinates.length !== 2 ||
-      isNaN(listing.geometry.coordinates[0]) || 
-      isNaN(listing.geometry.coordinates[1])) {
-    listing.geometry.coordinates = [77.2090, 28.6139];
+  } else if (Array.isArray(listing.geometry.coordinates) && 
+             listing.geometry.coordinates.length === 2 &&
+             !isNaN(listing.geometry.coordinates[0]) && 
+             !isNaN(listing.geometry.coordinates[1])) {
+    console.log('✅ Valid coordinates found:', listing.geometry.coordinates);
+  } else {
+    console.warn('⚠️ Invalid coordinates format, will attempt geocoding');
+    listing.geometry.coordinates = null;
   }
 </script>
 
