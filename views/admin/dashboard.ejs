@@ -1,0 +1,450 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="admin-dashboard">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="sidebar-header">
+                    <h4><i class="fa-solid fa-chart-line me-2"></i>Admin Panel</h4>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="#overview" class="nav-item active">
+                        <i class="fa-solid fa-tachometer-alt"></i>
+                        Overview
+                    </a>
+                    <a href="#users" class="nav-item">
+                        <i class="fa-solid fa-users"></i>
+                        Users
+                    </a>
+                    <a href="#destinations" class="nav-item">
+                        <i class="fa-solid fa-map-marker-alt"></i>
+                        Destinations
+                    </a>
+                    <a href="#reviews" class="nav-item">
+                        <i class="fa-solid fa-star"></i>
+                        Reviews
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="dashboard-header">
+                    <h1>Analytics Dashboard</h1>
+                    <p class="text-muted">Monitor platform performance and user engagement</p>
+                </div>
+
+                <!-- Quick Stats Cards -->
+                <div class="row mb-4" id="quickStats">
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon users">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalUsers">-</h3>
+                                <p>Total Users</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon listings">
+                                <i class="fa-solid fa-map-marker-alt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalListings">-</h3>
+                                <p>Total Listings</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon reviews">
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalReviews">-</h3>
+                                <p>Total Reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon rating">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avgRating">-</h3>
+                                <p>Avg Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="row">
+                    <!-- User Growth Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-chart-line me-2"></i>User Growth</h5>
+                                <p class="text-muted">New users registered over time</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="userGrowthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Trends Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-comments me-2"></i>Review Trends</h5>
+                                <p class="text-muted">Reviews submitted over time</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="reviewTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Destinations Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-trophy me-2"></i>Top Destinations</h5>
+                                <p class="text-muted">Highest rated destinations</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topDestinationsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Contributors Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-medal me-2"></i>Top Contributors</h5>
+                                <p class="text-muted">Most active users</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topContributorsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-dashboard {
+    min-height: 100vh;
+    background: var(--bg-secondary);
+}
+
+.sidebar {
+    background: var(--bg-primary);
+    min-height: 100vh;
+    padding: 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h4 {
+    color: var(--accent-color);
+    margin: 0;
+    font-weight: 700;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: rgba(254, 66, 77, 0.1);
+    color: var(--accent-color);
+    border-left-color: var(--accent-color);
+}
+
+.nav-item i {
+    width: 20px;
+    margin-right: 0.75rem;
+}
+
+.main-content {
+    padding: 2rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-icon.users { background: linear-gradient(135deg, #667eea, #764ba2); }
+.stat-icon.listings { background: linear-gradient(135deg, #f093fb, #f5576c); }
+.stat-icon.reviews { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.stat-icon.rating { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.stat-content p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.chart-card {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    height: 400px;
+}
+
+.chart-header {
+    margin-bottom: 1rem;
+}
+
+.chart-header h5 {
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 600;
+}
+
+.chart-header p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .chart-card {
+        height: 350px;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load quick stats
+    async function loadQuickStats() {
+        try {
+            const response = await fetch('/admin/api/analytics/quick-stats');
+            const data = await response.json();
+            
+            document.getElementById('totalUsers').textContent = data.totalUsers.toLocaleString();
+            document.getElementById('totalListings').textContent = data.totalListings.toLocaleString();
+            document.getElementById('totalReviews').textContent = data.totalReviews.toLocaleString();
+            document.getElementById('avgRating').textContent = data.avgRating;
+        } catch (error) {
+            console.error('Error loading quick stats:', error);
+        }
+    }
+
+    // Load user growth chart
+    async function loadUserGrowthChart() {
+        try {
+            const response = await fetch('/admin/api/analytics/user-growth');
+            const data = await response.json();
+            
+            const ctx = document.getElementById('userGrowthChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.month),
+                    datasets: [{
+                        label: 'New Users',
+                        data: data.map(item => item.users),
+                        borderColor: '#fe424d',
+                        backgroundColor: 'rgba(254, 66, 77, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        } catch (error) {
+            console.error('Error loading user growth chart:', error);
+        }
+    }
+
+    // Load review trends chart
+    async function loadReviewTrendsChart() {
+        try {
+            const response = await fetch('/admin/api/analytics/review-trends');
+            const data = await response.json();
+            
+            const ctx = document.getElementById('reviewTrendsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.month),
+                    datasets: [{
+                        label: 'Reviews',
+                        data: data.map(item => item.reviews),
+                        borderColor: '#4facfe',
+                        backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        } catch (error) {
+            console.error('Error loading review trends chart:', error);
+        }
+    }
+
+    // Load top destinations chart
+    async function loadTopDestinationsChart() {
+        try {
+            const response = await fetch('/admin/api/analytics/top-destinations');
+            const data = await response.json();
+            
+            const ctx = document.getElementById('topDestinationsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item._id || 'Unknown'),
+                    datasets: [{
+                        label: 'Average Rating',
+                        data: data.map(item => item.avgRating),
+                        backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                        borderColor: '#f093fb',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 5 } }
+                }
+            });
+        } catch (error) {
+            console.error('Error loading top destinations chart:', error);
+        }
+    }
+
+    // Load top contributors chart
+    async function loadTopContributorsChart() {
+        try {
+            const response = await fetch('/admin/api/analytics/top-contributors');
+            const data = await response.json();
+            
+            const ctx = document.getElementById('topContributorsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.username),
+                    datasets: [{
+                        label: 'Total Contributions',
+                        data: data.map(item => item.totalContributions),
+                        backgroundColor: 'rgba(67, 233, 123, 0.8)',
+                        borderColor: '#43e97b',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        } catch (error) {
+            console.error('Error loading top contributors chart:', error);
+        }
+    }
+
+    // Load all data
+    loadQuickStats();
+    loadUserGrowthChart();
+    loadReviewTrendsChart();
+    loadTopDestinationsChart();
+    loadTopContributorsChart();
+});
+</script>

@@ -1,0 +1,218 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="vacation-slots-header mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h2 class="mb-1">
+                            <i class="fa-solid fa-calendar-check text-primary me-2"></i>
+                            My Vacation Slots
+                        </h2>
+                        <p class="text-muted mb-0">Your saved holiday dates for vacation planning</p>
+                    </div>
+                    <a href="/holiday" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-plus me-1"></i>
+                        Add More Slots
+                    </a>
+                </div>
+            </div>
+
+            <% if (vacationSlots && vacationSlots.length > 0) { %>
+                <div class="row">
+                    <% vacationSlots.forEach(slot => { %>
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="vacation-slot-card card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div class="vacation-date">
+                                            <h5 class="card-title mb-1"><%= slot.holidayName %></h5>
+                                            <p class="text-muted mb-0">
+                                                <i class="fa-solid fa-calendar me-1"></i>
+                                                <%= new Date(slot.date).toLocaleDateString('en-US', { 
+                                                    weekday: 'long', 
+                                                    year: 'numeric', 
+                                                    month: 'long', 
+                                                    day: 'numeric' 
+                                                }) %>
+                                            </p>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-danger remove-slot-btn" 
+                                                data-date="<%= slot.date %>" 
+                                                title="Remove vacation slot">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="vacation-details">
+                                        <div class="mb-2">
+                                            <span class="badge bg-primary me-2">
+                                                <i class="fa-solid fa-flag me-1"></i>
+                                                <%= slot.country %>
+                                            </span>
+                                            <span class="badge bg-secondary">
+                                                <%= slot.holidayType %>
+                                            </span>
+                                        </div>
+                                        
+                                        <% if (slot.notes && slot.notes.trim()) { %>
+                                            <div class="vacation-notes">
+                                                <small class="text-muted">
+                                                    <i class="fa-solid fa-note-sticky me-1"></i>
+                                                    <%= slot.notes %>
+                                                </small>
+                                            </div>
+                                        <% } %>
+                                        
+                                        <div class="vacation-meta mt-3">
+                                            <small class="text-muted">
+                                                <i class="fa-solid fa-clock me-1"></i>
+                                                Added <%= new Date(slot.markedAt).toLocaleDateString() %>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <% 
+                                                const today = new Date();
+                                                const slotDate = new Date(slot.date);
+                                                const diffTime = slotDate - today;
+                                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                            %>
+                                            <% if (diffDays > 0) { %>
+                                                <i class="fa-solid fa-hourglass-half me-1"></i>
+                                                <%= diffDays %> days to go
+                                            <% } else if (diffDays === 0) { %>
+                                                <i class="fa-solid fa-star me-1"></i>
+                                                Today!
+                                            <% } else { %>
+                                                <i class="fa-solid fa-check me-1"></i>
+                                                Past
+                                            <% } %>
+                                        </small>
+                                        <a href="/holiday/destinations/<%= slot.date %>" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fa-solid fa-map-location-dot me-1"></i>
+                                            Explore
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state text-center py-5">
+                    <div class="empty-icon mb-4">
+                        <i class="fa-solid fa-calendar-xmark fa-4x text-muted"></i>
+                    </div>
+                    <h4 class="text-muted mb-3">No Vacation Slots Yet</h4>
+                    <p class="text-muted mb-4">
+                        Start planning your perfect getaways by marking holidays as vacation slots!
+                    </p>
+                    <a href="/holiday" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-calendar-plus me-2"></i>
+                        Browse Holiday Calendar
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<style>
+.vacation-slot-card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+.vacation-slot-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.vacation-slots-header {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(25, 135, 84, 0.1));
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+.vacation-date h5 {
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+.vacation-notes {
+    background: rgba(13, 110, 253, 0.05);
+    padding: 0.5rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--bs-primary);
+}
+
+.remove-slot-btn:hover {
+    background-color: var(--bs-danger);
+    color: white;
+    border-color: var(--bs-danger);
+}
+
+.empty-state {
+    background: rgba(108, 117, 125, 0.05);
+    border-radius: 12px;
+    margin: 2rem 0;
+}
+
+.empty-icon {
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .vacation-slots-header {
+        padding: 1.5rem;
+    }
+    
+    .vacation-slots-header .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle remove vacation slot
+    document.querySelectorAll('.remove-slot-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const date = this.dataset.date;
+            
+            if (confirm('Are you sure you want to remove this vacation slot?')) {
+                try {
+                    const response = await fetch(`/holiday/vacation-slot/${date}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert(result.error || 'Failed to remove vacation slot');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to remove vacation slot');
+                }
+            }
+        });
+    });
+});
+</script>

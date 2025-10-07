@@ -322,6 +322,30 @@ module.exports.showWishlist = async (req, res) => {
     }
 };
 
+module.exports.showVacationSlots = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
+        // Sort vacation slots by date
+        const vacationSlots = user.vacationSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        res.render("users/vacation-slots.ejs", { 
+            vacationSlots,
+            name: user.username,
+            title: "My Vacation Slots"
+        });
+    } catch (error) {
+        console.error("Error loading vacation slots:", error);
+        req.flash("error", "Error loading vacation slots. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
 // Travel Goals Management
 module.exports.addTravelGoal = async (req, res) => {
     try {

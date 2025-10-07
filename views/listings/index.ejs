@@ -1,233 +1,126 @@
+
+
+
 <% layout('/layouts/boilerplate') %>
 
     <style>
-        /* Modern Filter Bar - Matching Navbar Design */
-        .main-filter-bar {
+         .main-filter-bar {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
+            gap: 1.5rem; /* Adds space between toggle and filters */
         }
 
         #filters {
-            flex-grow: 1;
+            flex-grow: 1; /* Allows the filter container to take up remaining space */
+        }
+        /* New gradient filter bar */
+        #filters {
             display: flex;
             align-items: center;
             overflow-x: auto;
-            padding: 0.75rem 1rem;
-            height: 4.5rem;
+            padding: 1rem;
+            margin-top: 10px;
             border-radius: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            background:var(--bg-primary);
+            color: white;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] #filters {
-            background: rgba(30, 30, 30, 0.95);
-            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .filters-container {
             display: flex;
             align-items: center;
             flex: 1;
-            justify-content: flex-start;
+            justify-content: space-evenly;
             gap: 0.5rem;
-            min-width: max-content;
-            flex-wrap: nowrap;
+            min-width: 0;
         }
 
         .filter {
             text-align: center;
-            color: var(--text-primary, #2d3748);
+            color: white;
             white-space: nowrap;
             flex-shrink: 0;
-            padding: 0.4rem 0.6rem;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             cursor: pointer;
-            font-weight: 500;
-            border: 2px solid transparent;
-            min-width: 70px;
-            max-width: 85px;
-        }
-
-        [data-theme="dark"] .filter {
-            color: var(--text-primary, white);
         }
 
         .filter:hover {
-            background-color: rgba(254, 66, 77, 0.1);
-            color: #fe424d;
+            background-color: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
         }
 
         .filter.active {
-            background-color: rgba(254, 66, 77, 0.1);
-            color: #fe424d;
-            border-color: rgba(254, 66, 77, 0.2);
-            box-shadow: 0 2px 8px rgba(254, 66, 77, 0.2);
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .filter i {
-            font-size: 1.1rem;
-            margin-bottom: 0.2rem;
-            display: block;
-        }
-
-        .filter p {
-            margin: 0;
-            font-size: 0.75rem;
-            font-weight: 500;
-            line-height: 1.1;
-        }
-
-        /* Tax Toggle - Modern Design */
+        /* tax toggle restyled */
         .tax-toggle {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.7);
             border-radius: 1rem;
-            padding: 0.75rem 1rem;
-            height: 4.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            color: var(--text-primary, #2d3748);
+            color: white;
+            margin-left: 1rem;
             white-space: nowrap;
-            transition: all 0.2s ease;
-            font-weight: 500;
         }
 
-        [data-theme="dark"] .tax-toggle {
-            background: rgba(30, 30, 30, 0.95);
-            border-color: var(--border-color, #4a5568);
-            color: var(--text-primary, white);
-        }
-
-        .tax-toggle:hover {
-            border-color: #fe424d;
-            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
-        }
-
-        .tax-toggle .form-check-input {
-            border: 2px solid #e2e8f0;
-            transition: all 0.2s ease;
-        }
-
-        .tax-toggle .form-check-input:checked {
-            background-color: #fe424d;
-            border-color: #fe424d;
-        }
-
-        .tax-toggle .form-check-input:focus {
-            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
-        }
-
-        .tax-toggle .form-check-label {
-            font-weight: 500;
-            color: inherit;
-        }
-
-        /* Hide scrollbar but keep functionality */
+        /* Hide scrollbar */
         #filters::-webkit-scrollbar {
             display: none;
         }
 
-        #filters {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Search Results Styling - Modern Design */
+        /* Search Results Styling */
         .search-results-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 15px;
             padding: 1.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #fe424d;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] .search-results-header {
-            background: rgba(30, 30, 30, 0.95);
-            border-color: rgba(255, 255, 255, 0.1);
-            border-left-color: #fe424d;
+            border-left: 4px solid #007bff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .search-results-header h4 {
             font-weight: 600;
-            color: var(--text-primary, #2c3e50);
+            color: #2c3e50;
         }
 
         .search-results-header .text-muted {
             font-size: 0.95rem;
-            color: var(--text-secondary, #666666);
-        }
-
-        .search-results-header .btn-outline-secondary {
-            border: 2px solid #e2e8f0;
-            color: var(--text-primary, #2d3748);
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .search-results-header .btn-outline-secondary:hover {
-            border-color: #fe424d;
-            color: #fe424d;
-            background-color: rgba(254, 66, 77, 0.1);
-        }
-
-        [data-theme="dark"] .search-results-header .btn-outline-secondary {
-            border-color: var(--border-color, #4a5568);
-            color: var(--text-primary, white);
         }
 
         .no-results-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
             border-radius: 20px;
             margin: 2rem 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] .no-results-container {
-            background: rgba(30, 30, 30, 0.95);
-            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .search-suggestions .btn-outline-primary {
-            border: 2px solid #fe424d;
-            color: #fe424d;
-            background: transparent;
-            border-radius: 8px;
+            border-radius: 20px;
             font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .search-suggestions .btn-outline-primary:hover {
-            background: #fe424d;
-            color: white;
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,123,255,0.3);
         }
 
-        /* Enhanced search input and button styling */
+        /* Enhanced search input in navbar */
         .search-inp:focus {
-            border-color: #fe424d;
-            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
         }
 
         .search-btn:hover {
-            background: #e53e3e;
-            transform: scale(1.02);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(254,66,77,0.3);
         }
 
         /* Search term highlighting */
@@ -237,71 +130,27 @@
             border-radius: 3px;
             font-weight: 600;
             color: #333;
-            box-shadow: 0 1px 3px rgba(255, 193, 7, 0.3);
+            box-shadow: 0 1px 3px rgba(255,193,7,0.3);
         }
 
-        /* Modern Alert Styling - Matching Navbar Design */
-        .alert {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #17a2b8;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] .alert {
-            background: rgba(30, 30, 30, 0.95);
-            border-color: rgba(255, 255, 255, 0.1);
-            border-left-color: #17a2b8;
-        }
-
-        .alert-info {
-            color: var(--text-primary, #2d3748);
-            border-left-color: #17a2b8;
-        }
-
-        .alert-link {
-            color: #fe424d;
-            font-weight: 500;
-            text-decoration: none;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .alert-link:hover {
-            background-color: rgba(254, 66, 77, 0.1);
-            color: #fe424d;
-        }
+        /* Enhanced listing card styles for search */
         .listing-location {
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
-            color: var(--text-secondary, #666666);
         }
 
         .listing-price {
             font-weight: 600;
-            color: var(--text-primary, #2d3748);
+            color: #2c3e50;
         }
 
-        /* Modern Card Design - Enhanced */
+        /* Card refinements */
         .listing-card {
             border: none !important;
             border-radius: 1.2rem !important;
             overflow: hidden;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-
-        [data-theme="dark"] .listing-card {
-            background: rgba(30, 30, 30, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .listing-card:hover {
@@ -311,42 +160,16 @@
 
         .listing-image-container {
             height: 18rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .listing-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .listing-card:hover .listing-image-container img {
-            transform: scale(1.05);
         }
 
         .listing-card .card-body {
-            padding: 1.25rem;
-            background: transparent;
+            padding: 1rem;
         }
 
-        .listing-title {
-            color: var(--text-primary, #2d3748) !important;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .listing-card .text-muted {
-            color: var(--text-secondary, #666666) !important;
-            font-weight: 500;
-        }
-
-        /* Modern Badge System */
         .listing-badges {
             position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
+            top: 0.5rem;
+            right: 0.5rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
@@ -357,136 +180,40 @@
             padding: 0.5rem 1rem;
             border-radius: 1rem;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: bold;
             text-transform: uppercase;
             display: inline-block;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .badge:hover {
-            transform: scale(1.05);
         }
 
         .badge-new {
-            background: rgba(40, 167, 69, 0.9);
+            background-color: #28a745;
             color: white;
-            border-color: rgba(40, 167, 69, 0.3);
         }
 
         .badge-featured {
-            background: rgba(0, 123, 255, 0.9);
+            background-color: #007bff;
             color: white;
-            border-color: rgba(0, 123, 255, 0.3);
         }
 
         .badge-discount {
-            background: rgba(220, 53, 69, 0.9);
+            background-color: #dc3545;
             color: white;
-            border-color: rgba(220, 53, 69, 0.3);
         }
 
         .badge-rated {
-            background: rgba(255, 193, 7, 0.9);
-            color: #212529;
-            border-color: rgba(255, 193, 7, 0.3);
+            background-color: #ffc107;
+            color: white;
         }
 
         .badge-featured-review {
-            background: rgba(23, 162, 184, 0.9);
+            background-color: #17a2b8;
             color: white;
-            border-color: rgba(23, 162, 184, 0.3);
         }
-
-        /* Comparison checkbox styles - Modern Design */
-        .compare-checkbox {
-            position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            user-select: none;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            color: var(--text-primary, #2d3748);
-            transition: all 0.2s ease;
-        }
-
-        .compare-checkbox:hover {
-            border-color: #fe424d;
-            color: #fe424d;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
-        }
-
-        .compare-checkbox input[type="checkbox"] {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.2s ease;
-        }
-
-        .compare-checkbox input[type="checkbox"]:checked {
-            background-color: #fe424d;
-            border-color: #fe424d;
-        }
-
-        /* Floating Compare Button - Modern Design */
-        #compare-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #fe424d;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: 2px solid #fe424d;
-            border-radius: 25px;
-            box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
-            font-weight: 700;
-            cursor: pointer;
-            display: none;
-            z-index: 9999;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-        }
-
-        #compare-btn:hover {
-            background: #e53e3e;
-            border-color: #e53e3e;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(254, 66, 77, 0.5);
-        /* Modern Tax Info Styling */
-        .tax-info {
-            color: var(--text-muted, #6c757d);
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-
-        /* Enhanced Link Styling */
-        .listing-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .listing-link:hover {
-            color: inherit;
-            text-decoration: none;
-        }
+        
+    </style>
 
 
-        }\n    </style><% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+<% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
     <div class="row mt-3">
         <div class="col-12">
             <div class="alert alert-info" role="alert">
@@ -573,14 +300,13 @@
         </div>
     </div>
     
-    <div class="tax-toggle">
+</div>
+<div class="tax-toggle">
         <div class="form-check-reverse form-switch">
             <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
             <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
         </div>
     </div>
-    
-</div>
     
 
     <!-- Search Results Header -->
@@ -642,7 +368,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3">
         <% for(let listing of allListings) { %>
             <div class="col mb-4">
-                <a href="/listings/<%= listing._id %>" class="listing-link" style="position: relative;">
+                <a href="/listings/<%= listing._id %>" class="listing-link">
                     <div class="card listing-card h-100">
                         <div class="listing-badges">
         <% if (listing.isNewBadge) { %>
@@ -663,12 +389,6 @@
             <span class="badge badge-featured-review">Featured Review</span>
         <% } %>
     </div>
-                        <!-- Compare Checkbox - MOVED TO BOTTOM LEFT OF CARD -->
-                        <label class="compare-checkbox" title="Select to compare">
-                            <input type="checkbox" class="compare-checkbox-input" data-id="<%= listing._id %>" />
-                            Compare
-                        </label>
-
                         <div class="listing-image-container">
                             <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
                                 alt="listing_image" />
@@ -683,11 +403,10 @@
                                     <%= listing.location %>, <%= listing.country %>
                                 </small><br />
                                 <span class="listing-price">
-                                    ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / <%= __('night') %>
+                                    ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
                                     <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                 </span>
                             </p>
-                            
                         </div>
                     </div>
                 </a>
@@ -695,82 +414,8 @@
             <% } %>
     </div>
 
-    <!-- Floating Compare Button -->
-    <button id="compare-btn">Compare Selected (0)</button>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Comparison feature code ---
-
-            const compareCheckboxes = document.querySelectorAll('.compare-checkbox-input');
-            const compareBtn = document.getElementById('compare-btn');
-            const MAX_COMPARE = 3;
-            let selectedListings = new Set();
-
-            // Load previously selected listings from localStorage
-            function loadSelectedListings() {
-                const saved = localStorage.getItem('selectedListings');
-                if (saved) {
-                    const ids = JSON.parse(saved);
-                    ids.forEach(id => {
-                        const checkbox = document.querySelector(`.compare-checkbox-input[data-id="${id}"]`);
-                        if (checkbox) {
-                            checkbox.checked = true;
-                            selectedListings.add(id);
-                        }
-                    });
-                    updateCompareButton();
-                }
-            }
-
-            // Save selected listings to localStorage
-            function saveSelectedListings() {
-                localStorage.setItem('selectedListings', JSON.stringify(Array.from(selectedListings)));
-            }
-
-            compareCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function(e) {
-                    e.stopPropagation();
-                    const id = this.dataset.id;
-                    
-                    if (this.checked) {
-                        if (selectedListings.size >= MAX_COMPARE) {
-                            alert(`You can compare up to ${MAX_COMPARE} listings at a time.`);
-                            this.checked = false;
-                            return;
-                        }
-                        selectedListings.add(id);
-                    } else {
-                        selectedListings.delete(id);
-                    }
-                    
-                    updateCompareButton();
-                    saveSelectedListings();
-                });
-            });
-
-            function updateCompareButton() {
-                const count = selectedListings.size;
-                if (count >= 2) {
-                    compareBtn.style.display = 'block';
-                    compareBtn.textContent = `Compare Selected (${count})`;
-                } else {
-                    compareBtn.style.display = 'none';
-                }
-            }
-
-            compareBtn.addEventListener('click', function() {
-                if (selectedListings.size < 2) {
-                    alert('Please select at least two listings to compare.');
-                    return;
-                }
-                const ids = Array.from(selectedListings).join(',');
-                window.location.href = `/listings/compare?ids=${encodeURIComponent(ids)}`;
-            });
-
-            // Load saved selections on page load
-            loadSelectedListings();
-
             // Search term highlighting
             const searchQuery = '<%= searchQuery || "" %>';
             if (searchQuery) {
@@ -795,13 +440,11 @@
             }
 
             function updatePriceDisplay(showWithTax) {
-                const priceElements = document.querySelectorAll('.listing-price');
+                const priceElements = document.querySelectorAll('.card-text');
                 
                 priceElements.forEach(function(element) {
                     const priceText = element.innerHTML;
-                    
-                    // Extract price using more specific regex for the ₹ symbol
-                    const priceMatch = priceText.match(/₹([\d,]+)/);
+                    const priceMatch = priceText.match(/([\d,]+)/);
                     
                     if (priceMatch) {
                         let basePrice = parseInt(priceMatch[1].replace(/,/g, ''));
@@ -825,11 +468,14 @@
                         }
                         
                         const formattedPrice = displayPrice.toLocaleString("en-IN");
-                        const nightText = priceText.includes('night') ? ' / night' : ' / <%= __("night") %>';
                         const taxInfo = showWithTax ? '' : '<i class="tax-info">&nbsp; &nbsp; +18% GST</i>';
                         
-                        // Update the price display while preserving the structure
-                        element.innerHTML = `₹${formattedPrice}${nightText}${taxInfo}`;
+                        // Get the title from the element
+                        const titleMatch = element.innerHTML.match(/<b>(.*?)<\/b>/);
+                        const title = titleMatch ? titleMatch[1] : 'N/A';
+                        
+                        // Update the price display
+                        element.innerHTML = <b>${title}</b><br />${formattedPrice} / night${taxInfo};
                     }
                 });
             }
@@ -894,7 +540,7 @@
                         let html = element.innerHTML;
                         
                         terms.forEach(term => {
-                            const regex = new RegExp(`(${term})`, 'gi');
+                            const regex = new RegExp((${term}), 'gi');
                             html = html.replace(regex, '<mark class="search-highlight">$1</mark>');
                         });
                         

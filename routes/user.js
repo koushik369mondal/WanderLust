@@ -45,6 +45,9 @@ router.post("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController
 router.get("/profile/wishlist/add/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
 router.delete("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.removeFromWishlist));
 
+// Vacation Slots Route
+router.get("/profile/vacation-slots", isLoggedIn, wrapAsync(userController.showVacationSlots));
+
 // Enhanced Profile Routes
 router
     .route("/profile")
