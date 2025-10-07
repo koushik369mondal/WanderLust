@@ -208,12 +208,123 @@
         .badge-featured-review {
             background-color: #17a2b8;
             color: white;
+            border-color: rgba(23, 162, 184, 0.3);
         }
-        
-    </style>
+
+        /* Comparison checkbox styles - Modern Design */
+        .compare-checkbox {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #2d3748;
+            transition: all 0.2s ease;
+        }
+
+        /* Dark mode styling for compare checkbox - keeping text consistent */
+        [data-theme="dark"] .compare-checkbox {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #e2e8f0;
+            color: #2d3748 !important;
+        }
+
+        .compare-checkbox:hover {
+            border-color: #fe424d;
+            color: #fe424d !important;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
+        }
+
+        /* Keep hover state consistent in dark mode */
+        [data-theme="dark"] .compare-checkbox:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: #fe424d;
+            color: #fe424d !important;
+        }
+
+        .compare-checkbox input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        /* Keep checkbox input consistent in dark mode */
+        [data-theme="dark"] .compare-checkbox input[type="checkbox"] {
+            background: white;
+            border-color: #e2e8f0;
+        }
+
+        .compare-checkbox input[type="checkbox"]:checked {
+            background-color: #fe424d;
+            border-color: #fe424d;
+        }
+
+        /* Ensure checked state is consistent in dark mode */
+        [data-theme="dark"] .compare-checkbox input[type="checkbox"]:checked {
+            background-color: #fe424d;
+            border-color: #fe424d;
+        }
+
+        /* Floating Compare Button - Modern Design */
+        #compare-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #fe424d;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #fe424d;
+            border-radius: 25px;
+            box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            z-index: 9999;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        #compare-btn:hover {
+            background: #e53e3e;
+            border-color: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(254, 66, 77, 0.5);
+        /* Modern Tax Info Styling */
+        .tax-info {
+            color: var(--text-muted, #6c757d);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        /* Enhanced Link Styling */
+        .listing-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .listing-link:hover {
+            color: inherit;
+            text-decoration: none;
+        }
 
 
-<% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+        }\n    </style><% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
     <div class="row mt-3">
         <div class="col-12">
             <div class="alert alert-info" role="alert">
