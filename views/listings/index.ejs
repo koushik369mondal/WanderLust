@@ -698,12 +698,22 @@
                                 </span>
                             </p>
                         </div>
+                        <div class="compare-checkbox">
+                            <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
+                            <span>Compare</span>
+                        </div>
                     </div>
                 </a>
             </div>
             <% } %>
         </div>
     </div>
+
+    <!-- Floating Compare Button -->
+    <button id="compare-btn" style="display: none;">
+        <i class="fas fa-balance-scale me-2"></i>
+        Compare (<span id="compare-count">0</span>)
+    </button>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1100,6 +1110,10 @@
                                         ` : ''}
                                     </p>
                                 </div>
+                                <div class="compare-checkbox">
+                                    <input type="checkbox" class="compare-item" data-id="${listing._id}">
+                                    <span>Compare</span>
+                                </div>
                             </div>
                         </a>
                     </div>
@@ -1112,6 +1126,9 @@
                 if (searchQuery) {
                     highlightSearchTerms(searchQuery);
                 }
+                
+                // Reinitialize comparison functionality for new listings
+                initializeComparison();
             }
             
             function showLoading(show) {
@@ -1136,5 +1153,165 @@
                 const newURL = `/listings${urlParams.toString() ? '?' + urlParams.toString() : ''}`;
                 window.history.replaceState({}, '', newURL);
             }
+            
+            // Comparison Functionality
+            let selectedListings = [];
+            
+            function updateCompareButton() {
+                const compareBtn = document.getElementById('compare-btn');
+                const countSpan = document.getElementById('compare-count');
+                
+                if (selectedListings.length > 0) {
+                    compareBtn.style.display = 'block';
+                    countSpan.textContent = selectedListings.length;
+                } else {
+                    compareBtn.style.display = 'none';
+                }
+            }
+            
+            // Initialize comparison functionality
+            function initializeComparison() {
+                console.log('Initializing comparison functionality...');
+                const checkboxes = document.querySelectorAll('.compare-item');
+                console.log('Found', checkboxes.length, 'comparison checkboxes');
+                
+                // Handle compare checkbox changes
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function(e) {
+                        console.log('Checkbox changed:', this.dataset.id, this.checked);
+                        const listingId = this.dataset.id;
+                        
+                        if (this.checked) {
+                            if (selectedListings.length < 3) {
+                                selectedListings.push(listingId);
+                                console.log('Added to comparison:', listingId);
+                            } else {
+                                this.checked = false;
+                                alert('You can compare up to 3 destinations at once.');
+                            }
+                        } else {
+                            selectedListings = selectedListings.filter(id => id !== listingId);
+                            console.log('Removed from comparison:', listingId);
+                        }
+                        
+                        updateCompareButton();
+                        console.log('Selected listings:', selectedListings);
+                    });
+                });
+                
+                // Prevent checkbox area clicks from triggering card link
+                document.querySelectorAll('.compare-checkbox').forEach(checkboxArea => {
+                    checkboxArea.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // If clicked on checkbox input, let it work normally
+                        if (e.target.classList.contains('compare-item')) {
+                            return;
+                        }
+                        
+                        // If clicked on label area, toggle the checkbox
+                        const checkbox = this.querySelector('.compare-item');
+                        if (checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+                
+                // Handle compare button click
+                const compareBtn = document.getElementById('compare-btn');
+                if (compareBtn) {
+                    compareBtn.addEventListener('click', function() {
+                        console.log('Compare button clicked, selected:', selectedListings);
+                        if (selectedListings.length < 2) {
+                            alert('Please select at least 2 destinations to compare.');
+                            return;
+                        }
+                        
+                        window.location.href = `/listings/compare?ids=${selectedListings.join(',')}`;
+                    });
+                }
+            }
+            
+            // Initialize comparison after DOM is ready
+            initializeComparison();
+            
+            function showComparisonModal(listings) {
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.id = 'comparisonModal';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Destination Comparison</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Feature</th>
+                                                ${listings.map(listing => `<th class="text-center">${listing.title}</th>`).join('')}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Location</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">${listing.location}, ${listing.country}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Price per Night</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">₹${listing.price.toLocaleString('en-IN')}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Rating</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">${listing.rating > 0 ? '★'.repeat(Math.round(listing.rating)) + ` ${listing.rating.toFixed(1)}` : 'No ratings'}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Best Value</strong></td>
+                                                ${(() => {
+                                                    const minPrice = Math.min(...listings.map(l => l.price));
+                                                    return listings.map(listing => `<td class="text-center">${listing.price === minPrice ? '<span class="badge bg-success">Best Price</span>' : ''}</td>`).join('');
+                                                })()}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Highest Rated</strong></td>
+                                                ${(() => {
+                                                    const maxRating = Math.max(...listings.map(l => l.rating));
+                                                    return listings.map(listing => `<td class="text-center">${listing.rating === maxRating && maxRating > 0 ? '<span class="badge bg-warning">Top Rated</span>' : ''}</td>`).join('');
+                                                })()}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="clearComparison()">Clear Selection</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                const bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.show();
+                
+                modal.addEventListener('hidden.bs.modal', function() {
+                    document.body.removeChild(modal);
+                });
+            }
+            
+            window.clearComparison = function() {
+                selectedListings = [];
+                document.querySelectorAll('.compare-item').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateCompareButton();
+                bootstrap.Modal.getInstance(document.getElementById('comparisonModal')).hide();
+            };
         });
     </script>
