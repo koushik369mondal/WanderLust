@@ -240,6 +240,48 @@ const userSchema = new Schema({
             maxlength: 200,
             default: "",
         }
+    }],
+    tripPlans: [{
+        destination: {
+            type: String,
+            required: true,
+        },
+        startDate: {
+            type: Date,
+            required: true,
+        },
+        endDate: {
+            type: Date,
+            required: true,
+        },
+        travelers: {
+            type: Number,
+            required: true,
+        },
+        budgetType: {
+            type: String,
+            enum: ['budget', 'moderate', 'luxury'],
+            required: true,
+        },
+        costs: {
+            flights: Number,
+            hotels: Number,
+            food: Number,
+            activities: Number
+        },
+        total: {
+            type: Number,
+            required: true,
+        },
+        status: {
+            type: String,
+            enum: ['planned', 'booked', 'completed'],
+            default: 'planned'
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        }
     }]
 });
 
