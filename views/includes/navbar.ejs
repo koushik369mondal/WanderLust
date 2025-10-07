@@ -1,112 +1,257 @@
 <style>
-  .search-btn {
-    background-color: #fe424d;
-    color: #fff;
-    border-radius: 25px;
-    padding: 0 1rem 0 1rem;
+  /* Base Navbar Styling */
+  .navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    padding: 0.75rem 0 !important;
+    transition: all 0.3s ease !important;
   }
 
-  .search-btn:hover {
-    background-color: #fe424d;
-    color: #fff;
+  [data-theme="dark"] .navbar {
+    background: rgba(30, 30, 30, 0.95) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
   }
 
-  .search-btn i {
-    display: inline;
-    margin-right: 0.5rem;
-  }
-
-  .search-inp {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 1rem;
-  }
-
-  /* Enhanced navbar brand styling */
+  /* Brand Styling */
   .navbar-brand {
-    font-size: 1.5rem;
-    color: var(--accent-color) !important;
-    text-decoration: none;
-    transition: all 0.3s ease;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #fe424d !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    transition: transform 0.2s ease !important;
   }
 
   .navbar-brand:hover {
-    color: var(--accent-color) !important;
-    transform: scale(1.05);
+    transform: scale(1.02) !important;
+    color: #fe424d !important;
   }
 
   .navbar-brand i {
-    color: #fe424d;
-    font-size: 1.4rem;
+    font-size: 1.4rem !important;
   }
 
-  /* Tablet view fixes */
-  @media (max-width: 991px) and (min-width: 768px) {
-    .navbar-nav .d-flex {
-      flex-wrap: nowrap;
-    }
+  /* Primary Navigation */
+  .navbar-nav .nav-link {
+    font-weight: 500 !important;
+    color: var(--text-primary, #2d3748) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
 
-    .search-inp {
-      min-width: 200px;
-    }
+  .navbar-nav .nav-link:hover {
+    background-color: rgba(254, 66, 77, 0.1) !important;
+    color: #fe424d !important;
+  }
 
-    .search-btn {
-      white-space: nowrap;
-    }
+  /* Search Bar Redesign */
+  .search-container {
+    position: relative !important;
+    max-width: 400px !important;
+    width: 100% !important;
+  }
+
+  .search-input {
+    width: 100% !important;
+    padding: 0.6rem 1rem 0.6rem 2.5rem !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 25px !important;
+    font-size: 0.95rem !important;
+    background: white !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .search-input:focus {
+    outline: none !important;
+    border-color: #fe424d !important;
+    box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1) !important;
+  }
+
+  [data-theme="dark"] .search-input {
+    background: var(--bg-secondary, #2d3748) !important;
+    border-color: var(--border-color, #4a5568) !important;
+    color: var(--text-primary, white) !important;
+  }
+
+  .search-icon {
+    position: absolute !important;
+    left: 0.8rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #6b7280 !important;
+    z-index: 10 !important;
+  }
+
+  .search-btn {
+    position: absolute !important;
+    right: 4px !important;
+    top: 4px !important;
+    bottom: 4px !important;
+    background: #fe424d !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 0 1rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .search-btn:hover {
+    background: #e53e3e !important;
+    transform: scale(1.02) !important;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+  }
+
+  .btn-outline-primary {
+    border: 2px solid #fe424d !important;
+    color: #fe424d !important;
+    background: transparent !important;
+    padding: 0.4rem 1rem !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-outline-primary:hover {
+    background: #fe424d !important;
+    color: white !important;
+  }
+
+  .btn-primary {
+    background: #fe424d !important;
+    border: 2px solid #fe424d !important;
+    color: white !important;
+    padding: 0.4rem 1rem !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-primary:hover {
+    background: #e53e3e !important;
+    border-color: #e53e3e !important;
+  }
+
+  /* Profile Dropdown */
+  .profile-dropdown .dropdown-toggle {
+    background: rgba(254, 66, 77, 0.1) !important;
+    border: 2px solid rgba(254, 66, 77, 0.2) !important;
+    color: #fe424d !important;
+    border-radius: 50px !important;
+    padding: 0.4rem 1rem !important;
+    font-weight: 500 !important;
+  }
+
+  .profile-dropdown .dropdown-toggle:hover {
+    background: rgba(254, 66, 77, 0.15) !important;
+  }
+
+  /* Utility Controls */
+  .utility-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .theme-toggle {
+    background: none !important;
+    border: 2px solid #e2e8f0 !important;
+    color: var(--text-primary, #4a5568) !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .theme-toggle:hover {
+    border-color: #fe424d !important;
+    color: #fe424d !important;
+  }
+
+  .language-dropdown .dropdown-toggle {
+    background: none !important;
+    border: 2px solid #e2e8f0 !important;
+    color: var(--text-primary, #4a5568) !important;
+    border-radius: 8px !important;
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .language-dropdown .dropdown-toggle:hover {
+    border-color: #fe424d !important;
+    color: #fe424d !important;
   }
 
   /* Mobile Responsiveness */
   @media (max-width: 767px) {
     .navbar-collapse {
-      background-color:var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: white !important;
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 12px !important;
+      margin-top: 1rem !important;
+      padding: 1.5rem !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
     }
 
-    .navbar-nav .d-flex {
-      flex-direction: column;
-      width: 100%;
-      margin-top: 0.5rem;
+    [data-theme="dark"] .navbar-collapse {
+      background: var(--bg-secondary, #2d3748) !important;
+      border-color: var(--border-color, #4a5568) !important;
     }
 
-    .search-inp {
-      width: 100%;
-      margin-bottom: 0.5rem;
-      margin-right: 0 !important;
-      padding: 0.5rem 1rem;
+    .search-container {
+      max-width: 100% !important;
+      margin: 1rem 0 !important;
     }
 
-    .search-btn {
-      width: 100%;
+    .action-buttons {
+      flex-direction: column !important;
+      width: 100% !important;
+      gap: 0.5rem !important;
+      margin-top: 1rem !important;
+    }
+
+    .action-buttons .btn,
+    .action-buttons .dropdown {
+      width: 100% !important;
+    }
+
+    .action-buttons .btn,
+    .action-buttons .dropdown .btn {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+
+    .utility-controls {
+      justify-content: center !important;
+      margin-top: 1rem !important;
+      padding-top: 1rem !important;
+      border-top: 1px solid #e2e8f0 !important;
     }
 
     .navbar-nav {
-      text-align: center;
+      margin-bottom: 1rem !important;
     }
 
-    .nav-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    #theme-toggle {
-      margin: 1rem auto 0.5rem auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .mobile-icon {
-      display: inline-block !important;
-    }
-
-    .desktop-hide-mobile {
-      display: none;
+    .navbar-nav .nav-link {
+      padding: 0.75rem 1rem !important;
+      margin: 0.25rem 0 !important;
     }
   }
 
@@ -127,92 +272,73 @@
   }
 
   .search-suggestions {
-    position: absolute;
-    top: calc(100% + 2px);
-    left: 0;
-    right: 60px; /* Account for search button width */
-    z-index: 1050;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: var(--bg-primary, white);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: none;
-    margin-top: 2px;
-  }
-
-  [data-theme="dark"] .search-suggestions {
-    background: var(--bg-secondary, #2d3748);
-    border-color: var(--border-color, #4a5568);
-    color: var(--text-primary, white);
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1050 !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    background: white !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    display: none !important;
   }
 
   .search-suggestions.show {
-    display: block;
+    display: block !important;
   }
 
   .search-suggestion-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: background-color 0.2s ease;
+    padding: 0.75rem 1rem !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid #f7fafc !important;
+    transition: background-color 0.2s ease !important;
   }
 
   .search-suggestion-item:hover {
-    background-color: #f8f9fa;
-  }
-
-  [data-theme="dark"] .search-suggestion-item {
-    border-bottom-color: var(--border-color, #4a5568);
-    color: var(--text-primary, white);
-  }
-
-  [data-theme="dark"] .search-suggestion-item:hover {
-    background-color: var(--bg-tertiary, #4a5568);
-  }
-
-  .search-suggestion-item.active {
-    background-color: #e3f2fd;
-  }
-
-  [data-theme="dark"] .search-suggestion-item.active {
-    background-color: var(--accent-color, #fe424d);
-    color: white;
+    background-color: rgba(254, 66, 77, 0.05) !important;
   }
 
   .search-suggestion-item:last-child {
-    border-bottom: none;
+    border-bottom: none !important;
   }
 
-  .search-suggestion-icon {
-    color: #6c757d;
-    width: 16px;
-    text-align: center;
+  /* Dropdown Improvements */
+  .dropdown-menu {
+    border: none !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 0.5rem 0 !important;
+    margin-top: 0.5rem !important;
   }
 
-  .search-suggestion-text {
-    flex: 1;
-    font-size: 0.95rem;
+  .dropdown-item {
+    padding: 0.6rem 1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
   }
 
-  .search-suggestion-type {
-    font-size: 0.8rem;
-    color: #6c757d;
-    text-transform: capitalize;
+  .dropdown-item:hover {
+    background-color: rgba(254, 66, 77, 0.1) !important;
+    color: #fe424d !important;
   }
   
   /* Language dropdown styling */
   .dropdown-item.active {
-    background-color: var(--accent-color);
-    color: white;
+    background-color: #fe424d !important;
+    color: white !important;
   }
-  
-  .dropdown-item:hover {
-    background-color: rgba(254, 66, 77, 0.1);
+
+  /* Animation for mobile toggle */
+  .navbar-toggler {
+    border: none !important;
+    padding: 0.5rem !important;
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: none !important;
   }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
@@ -221,124 +347,151 @@
       <i class="fa-regular fa-compass me-2"></i>
       <span class="fw-bold"><%= __('wanderlust') %></span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse-nav collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">
-          <span class="mobile-icon"><%= __('wanderlust') %></span>
-          <i class="fa-regular fa-compass mobile-icon"></i><%= __('all_listings') %>
-        </a>
-        <a class="nav-link" href="/listings/about">
-          <i class="fa-solid fa-info-circle me-1"></i>About
-        </a>
-        
+    <!-- Collapsible Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Primary Navigation -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings">
+            <i class="fa-regular fa-compass"></i>
+            <%= __('all_listings') %>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/listings/about">
+            <i class="fa-solid fa-info-circle"></i>
+            About
+          </a>
+        </li>
+
         <!-- Travel Tools Dropdown -->
-        <div class="nav-item dropdown">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-tools me-1"></i>Travel Tools
+            <i class="fa-solid fa-tools"></i>
+            Travel Tools
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/holiday">
-              <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
-            </a></li>
-            <li><a class="dropdown-item" href="/listings/compare">
-              <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
-            </a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/weather">
-              <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
-            </a></li>
+            <li>
+              <a class="dropdown-item" href="/holiday">
+                <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/listings/compare">
+                <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/weather">
+                <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+              </a>
+            </li>
           </ul>
-        </div>
-      </div>
-      <div class="navbar-nav ms-auto">
-        <form class="d-flex search-form-container position-relative" role="search" method="GET" action="/listings">
-          <input class="form-control me-2 search-inp" type="search" name="search" 
-                 placeholder="<%= __('search_destinations') %>" 
-                 value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-                 autocomplete="off" />
+        </li>
+      </ul>
+
+      <!-- Search Bar -->
+      <div class="search-container me-3">
+        <form role="search" method="GET" action="/listings">
+          <div class="position-relative">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input class="search-input" type="search" name="search" placeholder="<%= __('search_destinations') %>"
+              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off" />
+            <button class="search-btn" type="submit">
+              <%= __('search') %>
+            </button>
+          </div>
           <div class="search-suggestions" id="searchSuggestions"></div>
-          <button class="btn search-btn" type="submit">
-          <i class="fa-solid fa-magnifying-glass"></i><%= __('search') %>
-          </button>
         </form>
       </div>
-      <div class="navbar-nav ms-auto">
+
+      <!-- Authentication & Profile -->
+      <div class="action-buttons">
         <a class="nav-link" href="/listings/new"><%= __('add_new_listing') %></a>
         <% if(typeof currentUser==='undefined' || !currentUser) { %>
-          <a class="nav-link" href="/signup"><b><%= __('signup') %></b></a>
-          <a class="nav-link" href="/login"><b><%= __('login') %></b></a>
-          <% } %>
-            <% if(typeof currentUser !=='undefined' && currentUser) { %>
-
-    <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <span class="desktop-text"><%= __('profile') %></span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user me-2"></i>My Profile</a></li>
-
-            <li><a class="dropdown-item" href="/profile/wishlist"><i class="fa-solid fa-bookmark me-2"></i>My Wishlist</a></li>
-            <li><a class="dropdown-item" href="/profile/likes"><i class="fa-solid fa-heart me-2"></i>Liked Listings</a></li>
-        </ul>
-    </div>
-
-    <a class="nav-link" href="/logout"><b><%= __('logout') %></b></a>
-    
-<% } %>
+          <a class="btn btn-outline-primary" href="/login">
+            <i class="fa-solid fa-sign-in-alt me-1"></i>
+            <%= __('login') %>
+          </a>
+          <a class="btn btn-primary" href="/signup">
+            <i class="fa-solid fa-user-plus me-1"></i>
+            <%= __('signup') %>
+          </a>
+          <% } else { %>
+            <div class="profile-dropdown dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user me-1"></i>
+                <%= __('profile') %>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="/profile">
+                    <i class="fa-solid fa-user me-2"></i>My Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/profile/wishlist">
+                    <i class="fa-solid fa-bookmark me-2"></i>My Wishlist
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/profile/likes">
+                    <i class="fa-solid fa-heart me-2"></i>Liked Listings
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/profile/vacation-slots">
+                    <i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/logout">
+                    <i class="fa-solid fa-sign-out-alt me-2"></i>
+                    <%= __('logout') %>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <% } %>
       </div>
 
-      <div class="d-flex justify-content-center align-items-center gap-2">
+      <!-- Utility Controls -->
+      <div class="utility-controls">
         <!-- Language Dropdown -->
-        <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-globe me-1"></i>
-            <span class="d-none d-md-inline"><%= __('language') %></span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
-            <li><a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('english') %>
-            </a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('hindi') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('bengali') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'te' ? 'active' : '' %>" href="<%= buildLangUrl('te') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('telugu') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'mr' ? 'active' : '' %>" href="<%= buildLangUrl('mr') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('marathi') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'ta' ? 'active' : '' %>" href="<%= buildLangUrl('ta') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('tamil') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'gu' ? 'active' : '' %>" href="<%= buildLangUrl('gu') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('gujarati') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'kn' ? 'active' : '' %>" href="<%= buildLangUrl('kn') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('kannada') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'ml' ? 'active' : '' %>" href="<%= buildLangUrl('ml') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('malayalam') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'pa' ? 'active' : '' %>" href="<%= buildLangUrl('pa') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('punjabi') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'or' ? 'active' : '' %>" href="<%= buildLangUrl('or') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('odia') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('assamese') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'ur' ? 'active' : '' %>" href="<%= buildLangUrl('ur') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('urdu') %>
-            </a></li>
+        <div class="language-dropdown dropdown">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
+                English</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
+                हिंदी</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
+                বাংলা</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
+                অসমীয়া</a>
+            </li>
           </ul>
         </div>
         
