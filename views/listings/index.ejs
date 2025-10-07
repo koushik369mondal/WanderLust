@@ -418,15 +418,29 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
-            color: var(--text-primary, #2d3748);
+            color: #2d3748;
             transition: all 0.2s ease;
+        }
+
+        /* Dark mode styling for compare checkbox - keeping text consistent */
+        [data-theme="dark"] .compare-checkbox {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #e2e8f0;
+            color: #2d3748 !important;
         }
 
         .compare-checkbox:hover {
             border-color: #fe424d;
-            color: #fe424d;
+            color: #fe424d !important;
             background: rgba(255, 255, 255, 1);
             box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
+        }
+
+        /* Keep hover state consistent in dark mode */
+        [data-theme="dark"] .compare-checkbox:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: #fe424d;
+            color: #fe424d !important;
         }
 
         .compare-checkbox input[type="checkbox"] {
@@ -435,9 +449,22 @@
             height: 16px;
             border: 2px solid #e2e8f0;
             transition: all 0.2s ease;
+            background: white;
+        }
+
+        /* Keep checkbox input consistent in dark mode */
+        [data-theme="dark"] .compare-checkbox input[type="checkbox"] {
+            background: white;
+            border-color: #e2e8f0;
         }
 
         .compare-checkbox input[type="checkbox"]:checked {
+            background-color: #fe424d;
+            border-color: #fe424d;
+        }
+
+        /* Ensure checked state is consistent in dark mode */
+        [data-theme="dark"] .compare-checkbox input[type="checkbox"]:checked {
             background-color: #fe424d;
             border-color: #fe424d;
         }
