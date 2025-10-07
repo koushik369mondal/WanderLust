@@ -210,6 +210,14 @@
             color: white;
             border-color: rgba(23, 162, 184, 0.3);
         }
+        /* --- FIX FOR ISSUE #236: Dark Mode Compare Button Contrast --- */
+        @media (prefers-color-scheme: dark) {
+            .compare-btn {
+                /* FIX: Force text and border to be visible against the dark card */
+                color: #fff !important; 
+                border-color: #fff !important;
+            }
+        }
 
         /* Comparison checkbox styles - Modern Design */
         .compare-checkbox {
@@ -518,6 +526,9 @@
                                     <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                 </span>
                             </p>
+                            <a href="#" class="btn btn-sm btn-outline-danger compare-btn">
+    Compare
+</a>
                         </div>
                     </div>
                 </a>
