@@ -1,151 +1,268 @@
 <style>
-  .search-btn {
-    background-color: #fe424d;
-    color: #fff;
-    border-radius: 25px;
-    padding: 0 1rem 0 1rem;
-  }
-
-  .search-btn:hover {
-    background-color: #fe424d;
-    color: #fff;
-  }
-
-  .search-btn i {
-    display: inline;
-    margin-right: 0.5rem;
-  }
-
-  .search-inp {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 1rem;
-  }
-
-  /* Enhanced navbar brand styling */
-  .navbar-brand {
-    font-size: 1.5rem;
-    color: var(--accent-color) !important;
-    text-decoration: none;
+  /* Base Navbar Styling */
+  .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 0.75rem 0;
     transition: all 0.3s ease;
   }
 
+  [data-theme="dark"] .navbar {
+    background: rgba(30, 30, 30, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Brand Styling */
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fe424d !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+
   .navbar-brand:hover {
-    color: var(--accent-color) !important;
-    transform: scale(1.05);
+    transform: scale(1.02);
+    color: #fe424d !important;
   }
 
   .navbar-brand i {
-    color: #fe424d;
     font-size: 1.4rem;
   }
 
-  /* Tablet view fixes */
-  @media (max-width: 991px) and (min-width: 768px) {
-    .navbar-nav .d-flex {
-      flex-wrap: nowrap;
-    }
-
-    .search-inp {
-      min-width: 200px;
-    }
-
-    .search-btn {
-      white-space: nowrap;
-    }
-  }
-
-  /* Mobile Responsiveness */
-  @media (max-width: 767px) {
-    .navbar-collapse {
-      background-color:var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-nav .d-flex {
-      flex-direction: column;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .search-inp {
-      width: 100%;
-      margin-bottom: 0.5rem;
-      margin-right: 0 !important;
-      padding: 0.5rem 1rem;
-    }
-
-    .search-btn {
-      width: 100%;
-    }
-
-    .navbar-nav {
-      text-align: center;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    #theme-toggle {
-      margin: 1rem auto 0.5rem auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .mobile-icon {
-      display: inline-block !important;
-    }
-
-    .desktop-hide-mobile {
-      display: none;
-    }
-  }
-
-  .mobile-icon {
-    display: none;
-  }
-
-  /* Desktop view - hide mobile icons */
-  @media (min-width: 768px) {
-    .mobile-icon {
-      display: none !important;
-    }
-  }
-
-  /* Search suggestions styling */
-  .search-form-container {
-    position: relative;
-  }
-
-  .search-suggestions {
-    position: absolute;
-    top: calc(100% + 2px);
-    left: 0;
-    right: 60px; /* Account for search button width */
-    z-index: 1050;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
+  /* Primary Navigation */
+  .navbar-nav .nav-link {
+    font-weight: 500;
+    color: var(--text-primary, #2d3748) !important;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
-    background: var(--bg-primary, white);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: none;
-    margin-top: 2px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  [data-theme="dark"] .search-suggestions {
+  .navbar-nav .nav-link:hover {
+    background-color: rgba(254, 66, 77, 0.1);
+    color: #fe424d !important;
+  }
+
+  /* Search Bar Redesign */
+  .search-container {
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    background: white;
+    transition: all 0.2s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #fe424d;
+    box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
+  }
+
+  [data-theme="dark"] .search-input {
     background: var(--bg-secondary, #2d3748);
     border-color: var(--border-color, #4a5568);
     color: var(--text-primary, white);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    z-index: 10;
+  }
+
+  .search-btn {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    bottom: 4px;
+    background: #fe424d;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .search-btn:hover {
+    background: #e53e3e;
+    transform: scale(1.02);
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .btn-outline-primary {
+    border: 2px solid #fe424d;
+    color: #fe424d;
+    background: transparent;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline-primary:hover {
+    background: #fe424d;
+    color: white;
+  }
+
+  .btn-primary {
+    background: #fe424d;
+    border: 2px solid #fe424d;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: #e53e3e;
+    border-color: #e53e3e;
+  }
+
+  /* Profile Dropdown */
+  .profile-dropdown .dropdown-toggle {
+    background: rgba(254, 66, 77, 0.1);
+    border: 2px solid rgba(254, 66, 77, 0.2);
+    color: #fe424d;
+    border-radius: 50px;
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+  }
+
+  .profile-dropdown .dropdown-toggle:hover {
+    background: rgba(254, 66, 77, 0.15);
+  }
+
+  /* Utility Controls */
+  .utility-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .theme-toggle {
+    background: none;
+    border: 2px solid #e2e8f0;
+    color: var(--text-primary, #4a5568);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: #fe424d;
+    color: #fe424d;
+  }
+
+  .language-dropdown .dropdown-toggle {
+    background: none;
+    border: 2px solid #e2e8f0;
+    color: var(--text-primary, #4a5568);
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .language-dropdown .dropdown-toggle:hover {
+    border-color: #fe424d;
+    color: #fe424d;
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 991px) {
+    .navbar-collapse {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-top: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] .navbar-collapse {
+      background: var(--bg-secondary, #2d3748);
+      border-color: var(--border-color, #4a5568);
+    }
+
+    .search-container {
+      max-width: 100%;
+      margin: 1rem 0;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      width: 100%;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .action-buttons .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .utility-controls {
+      justify-content: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .navbar-nav {
+      margin-bottom: 1rem;
+    }
+
+    .navbar-nav .nav-link {
+      padding: 0.75rem 1rem;
+      margin: 0.25rem 0;
+    }
+  }
+
+  /* Search Suggestions */
+  .search-suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: none;
   }
 
   .search-suggestions.show {
@@ -153,177 +270,178 @@
   }
 
   .search-suggestion-item {
-    padding: 12px 16px;
+    padding: 0.75rem 1rem;
     cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    border-bottom: 1px solid #f7fafc;
     transition: background-color 0.2s ease;
   }
 
   .search-suggestion-item:hover {
-    background-color: #f8f9fa;
-  }
-
-  [data-theme="dark"] .search-suggestion-item {
-    border-bottom-color: var(--border-color, #4a5568);
-    color: var(--text-primary, white);
-  }
-
-  [data-theme="dark"] .search-suggestion-item:hover {
-    background-color: var(--bg-tertiary, #4a5568);
-  }
-
-  .search-suggestion-item.active {
-    background-color: #e3f2fd;
-  }
-
-  [data-theme="dark"] .search-suggestion-item.active {
-    background-color: var(--accent-color, #fe424d);
-    color: white;
+    background-color: rgba(254, 66, 77, 0.05);
   }
 
   .search-suggestion-item:last-child {
     border-bottom: none;
   }
 
-  .search-suggestion-icon {
-    color: #6c757d;
-    width: 16px;
-    text-align: center;
+  /* Dropdown Improvements */
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
   }
 
-  .search-suggestion-text {
-    flex: 1;
-    font-size: 0.95rem;
+  .dropdown-item {
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
   }
 
-  .search-suggestion-type {
-    font-size: 0.8rem;
-    color: #6c757d;
-    text-transform: capitalize;
-  }
-  
-  /* Language dropdown styling */
-  .dropdown-item.active {
-    background-color: var(--accent-color);
-    color: white;
-  }
-  
   .dropdown-item:hover {
     background-color: rgba(254, 66, 77, 0.1);
+    color: #fe424d;
+  }
+
+  .dropdown-item.active {
+    background-color: #fe424d;
+    color: white;
+  }
+
+  /* Animation for mobile toggle */
+  .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: none;
   }
 </style>
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
-      <i class="fa-regular fa-compass me-2"></i>
-      <span class="fw-bold"><%= __('wanderlust') %></span>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container-fluid px-3">
+    <!-- Brand -->
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-regular fa-compass"></i>
+      <span>
+        <%= __('wanderlust') %>
+      </span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse-nav collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">
-          <span class="mobile-icon"><%= __('wanderlust') %></span>
-          <i class="fa-regular fa-compass mobile-icon"></i><%= __('all_listings') %>
-        </a>
-        <a class="nav-link" href="/listings/about">
-          <i class="fa-solid fa-info-circle me-1"></i>About
-        </a>
-      </div>
-      <div class="navbar-nav ms-auto">
-        <form class="d-flex search-form-container position-relative" role="search" method="GET" action="/listings">
-          <input class="form-control me-2 search-inp" type="search" name="search" 
-                 placeholder="<%= __('search_destinations') %>" 
-                 value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-                 autocomplete="off" />
+    <!-- Collapsible Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Primary Navigation -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings">
+            <i class="fa-regular fa-compass"></i>
+            <%= __('all_listings') %>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/listings/about">
+            <i class="fa-solid fa-info-circle"></i>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/listings/new">
+            <i class="fa-solid fa-plus"></i>
+            <%= __('add_new_listing') %>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Search Bar -->
+      <div class="search-container me-3">
+        <form role="search" method="GET" action="/listings">
+          <div class="position-relative">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input class="search-input" type="search" name="search" placeholder="<%= __('search_destinations') %>"
+              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off" />
+            <button class="search-btn" type="submit">
+              <%= __('search') %>
+            </button>
+          </div>
           <div class="search-suggestions" id="searchSuggestions"></div>
-          <button class="btn search-btn" type="submit">
-          <i class="fa-solid fa-magnifying-glass"></i><%= __('search') %>
-          </button>
         </form>
       </div>
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new"><%= __('add_new_listing') %></a>
+
+      <!-- Authentication & Profile -->
+      <div class="action-buttons">
         <% if(typeof currentUser==='undefined' || !currentUser) { %>
-          <a class="nav-link" href="/signup"><b><%= __('signup') %></b></a>
-          <a class="nav-link" href="/login"><b><%= __('login') %></b></a>
-          <% } %>
-            <% if(typeof currentUser !=='undefined' && currentUser) { %>
-
-    <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <span class="desktop-text"><%= __('profile') %></span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user me-2"></i>My Profile</a></li>
-
-            <li><a class="dropdown-item" href="/profile/wishlist"><i class="fa-solid fa-bookmark me-2"></i>My Wishlist</a></li>
-            <li><a class="dropdown-item" href="/profile/likes"><i class="fa-solid fa-heart me-2"></i>Liked Listings</a></li>
-        </ul>
-    </div>
-
-    <a class="nav-link" href="/logout"><b><%= __('logout') %></b></a>
-    
-<% } %>
+          <a class="btn btn-outline-primary" href="/login">
+            <i class="fa-solid fa-sign-in-alt me-1"></i>
+            <%= __('login') %>
+          </a>
+          <a class="btn btn-primary" href="/signup">
+            <i class="fa-solid fa-user-plus me-1"></i>
+            <%= __('signup') %>
+          </a>
+          <% } else { %>
+            <div class="profile-dropdown dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-user me-1"></i>
+                <%= __('profile') %>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="/profile">
+                    <i class="fa-solid fa-user me-2"></i>My Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/profile/wishlist">
+                    <i class="fa-solid fa-bookmark me-2"></i>My Wishlist
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/profile/likes">
+                    <i class="fa-solid fa-heart me-2"></i>Liked Listings
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/logout">
+                    <i class="fa-solid fa-sign-out-alt me-2"></i>
+                    <%= __('logout') %>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <% } %>
       </div>
 
-      <div class="d-flex justify-content-center align-items-center gap-2">
+      <!-- Utility Controls -->
+      <div class="utility-controls">
         <!-- Language Dropdown -->
-        <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-globe me-1"></i>
-            <span class="d-none d-md-inline"><%= __('language') %></span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
-            <li><a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('english') %>
-            </a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('hindi') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('bengali') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'te' ? 'active' : '' %>" href="<%= buildLangUrl('te') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('telugu') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'mr' ? 'active' : '' %>" href="<%= buildLangUrl('mr') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('marathi') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'ta' ? 'active' : '' %>" href="<%= buildLangUrl('ta') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('tamil') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'gu' ? 'active' : '' %>" href="<%= buildLangUrl('gu') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('gujarati') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'kn' ? 'active' : '' %>" href="<%= buildLangUrl('kn') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('kannada') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'ml' ? 'active' : '' %>" href="<%= buildLangUrl('ml') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('malayalam') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'pa' ? 'active' : '' %>" href="<%= buildLangUrl('pa') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('punjabi') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'or' ? 'active' : '' %>" href="<%= buildLangUrl('or') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('odia') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('assamese') %>
-            </a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'ur' ? 'active' : '' %>" href="<%= buildLangUrl('ur') %>">
-              <i class="fa-solid fa-flag me-2"></i><%= __('urdu') %>
-            </a></li>
+        <div class="language-dropdown dropdown">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>"
+                href="<%= buildLangUrl('en') %>">🇺🇸 English</a></li>
+            <li><a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>"
+                href="<%= buildLangUrl('hi') %>">🇮🇳 हिंदी</a></li>
+            <li><a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>"
+                href="<%= buildLangUrl('bn') %>">🇧🇩 বাংলা</a></li>
+            <li><a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>"
+                href="<%= buildLangUrl('as') %>">🇮🇳 অসমীয়া</a></li>
           </ul>
         </div>
-        
-        <button id="theme-toggle" class="btn btn-outline-secondary">
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="theme-toggle">
           <i id="theme-icon" class="fa-solid fa-moon"></i>
         </button>
       </div>
