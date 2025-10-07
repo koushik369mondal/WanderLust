@@ -58,8 +58,7 @@ const cityCoordinates = {
 async function updateListingCoordinates() {
   try {
     const listings = await Listing.find({});
-
-    console.log(`Found ${listings.length} listings to update`);
+    let updateCount = 0;
 
     for (const listing of listings) {
       let coordinates = [77.2090, 28.6139]; // Default Delhi
@@ -68,13 +67,11 @@ async function updateListingCoordinates() {
       const locationKey = (listing.location || '').toLowerCase();
       if (cityCoordinates[locationKey]) {
         coordinates = cityCoordinates[locationKey];
-        console.log(`Using city coordinates for ${listing.location}: ${coordinates}`);
       } else {
         // Fall back to country coordinates
         const countryKey = (listing.country || '').toLowerCase();
         if (countryCoordinates[countryKey]) {
           coordinates = countryCoordinates[countryKey];
-          console.log(`Using country coordinates for ${listing.country}: ${coordinates}`);
         }
       }
 
@@ -85,13 +82,13 @@ async function updateListingCoordinates() {
           coordinates: coordinates
         }
       });
-
-      console.log(`Updated ${listing.title} with coordinates: ${coordinates}`);
+      
+      updateCount++;
     }
 
-    console.log('Coordinate update completed!');
+    console.log(`✅ Updated coordinates for ${updateCount} listings`);
   } catch (error) {
-    console.error('Error updating coordinates:', error);
+    console.error('❌ Error updating coordinates:', error);
   }
 }
 

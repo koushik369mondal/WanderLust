@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV != "production") {
-    require("dotenv").config();
+    require("dotenv").config({ debug: false });
 }
 
 // Suppress util.isArray deprecation warning from lodash
@@ -47,7 +47,6 @@ const i18n = require('i18n');
 // Import OAuth strategies
 require("./config/passport");
 const Listing = require("./models/listing");
-require("dotenv").config();
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
@@ -83,7 +82,7 @@ async function main() {
         // Initialize badge system
         const BadgeDefinition = require('./models/badgeDefinition');
         await BadgeDefinition.initializeDefaults();
-        console.log('Badge system initialized✅');
+        // Badge system initialized
     } catch (error) {
         console.error('MongoDB connection error:', error);
         process.exit(1);
