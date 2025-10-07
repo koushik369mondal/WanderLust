@@ -148,6 +148,165 @@ module.exports.getSearchSuggestions = async (req, res) => {
   }
 };
 
+// Advanced filtering with MongoDB aggregation
+module.exports.getFilteredListings = async (req, res) => {
+  try {
+    // Handle countries request
+    if (req.query.getCountries) {
+      const countries = await Listing.distinct('country');
+      return res.json({ success: true, countries: countries.sort() });
+    }
+    
+    const {
+      search,
+      category,
+      country,
+      minPrice,
+      maxPrice,
+      minRating,
+      sortBy,
+      page = 1,
+      limit = 12
+    } = req.query;
+
+    // Build aggregation pipeline
+    const pipeline = [];
+
+    // Match stage - filtering
+    const matchStage = {};
+    
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      matchStage.$or = [
+        { title: searchRegex },
+        { description: searchRegex },
+        { location: searchRegex },
+        { country: searchRegex }
+      ];
+    }
+    
+    if (category) matchStage.category = category;
+    if (country) matchStage.country = country;
+    if (minPrice || maxPrice) {
+      matchStage.price = {};
+      if (minPrice) matchStage.price.$gte = parseInt(minPrice);
+      if (maxPrice) matchStage.price.$lte = parseInt(maxPrice);
+    }
+
+    pipeline.push({ $match: matchStage });
+
+    // Add reviews for rating calculation
+    pipeline.push({
+      $lookup: {
+        from: 'reviews',
+        localField: '_id',
+        foreignField: 'listing',
+        as: 'reviews'
+      }
+    });
+
+    // Calculate average rating
+    pipeline.push({
+      $addFields: {
+        avgRating: {
+          $cond: {
+            if: { $gt: [{ $size: '$reviews' }, 0] },
+            then: { $avg: '$reviews.rating' },
+            else: 0
+          }
+        },
+        reviewCount: { $size: '$reviews' },
+        popularity: {
+          $add: [
+            { $size: '$reviews' },
+            { $ifNull: [{ $size: '$likes' }, 0] }
+          ]
+        }
+      }
+    });
+
+    // Filter by minimum rating
+    if (minRating) {
+      pipeline.push({
+        $match: { avgRating: { $gte: parseFloat(minRating) } }
+      });
+    }
+
+    // Sorting
+    let sortStage = {};
+    switch (sortBy) {
+      case 'price-low':
+        sortStage = { price: 1 };
+        break;
+      case 'price-high':
+        sortStage = { price: -1 };
+        break;
+      case 'rating':
+        sortStage = { avgRating: -1, reviewCount: -1 };
+        break;
+      case 'popularity':
+        sortStage = { popularity: -1, avgRating: -1 };
+        break;
+      case 'newest':
+        sortStage = { createdAt: -1 };
+        break;
+      default:
+        sortStage = { createdAt: -1 };
+    }
+    pipeline.push({ $sort: sortStage });
+
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    pipeline.push({ $skip: skip });
+    pipeline.push({ $limit: parseInt(limit) });
+
+    // Execute aggregation
+    const listings = await Listing.aggregate(pipeline);
+
+    // Get total count for pagination
+    const countPipeline = pipeline.slice(0, -2); // Remove skip and limit
+    countPipeline.push({ $count: 'total' });
+    const countResult = await Listing.aggregate(countPipeline);
+    const totalCount = countResult[0]?.total || 0;
+
+    // Add badges to listings
+    const now = new Date();
+    listings.forEach(listing => {
+      const createdAt = new Date(listing.createdAt);
+      const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
+      
+      listing.isNewBadge = daysOld <= 7;
+      listing.isFeaturedBadge = !!listing.isFeatured;
+      listing.isDiscountBadge = !!listing.hasDiscount;
+      listing.isHighlyRatedBadge = listing.avgRating >= 4.5 && listing.reviewCount > 0;
+    });
+
+    res.json({
+      success: true,
+      listings,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(totalCount / parseInt(limit)),
+        totalCount,
+        hasNext: skip + parseInt(limit) < totalCount,
+        hasPrev: parseInt(page) > 1
+      },
+      filters: {
+        search,
+        category,
+        country,
+        minPrice,
+        maxPrice,
+        minRating,
+        sortBy
+      }
+    });
+  } catch (error) {
+    console.error('Filter listings error:', error);
+    res.status(500).json({ success: false, error: 'Failed to filter listings' });
+  }
+};
+
 module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
