@@ -296,6 +296,9 @@
                 <li>
                   <a class="dropdown-item" href="/profile/vacation-slots">
                     <i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots
+                    <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length > 0) { %>
+                      <span class="badge bg-primary ms-2"><%= currentUser.vacationSlots.length %></span>
+                    <% } %>
                   </a>
                 </li>
                 <li>
