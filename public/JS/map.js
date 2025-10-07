@@ -7,32 +7,41 @@ if (!mapToken) {
 
     // Function to get coordinates
     async function getCoordinates() {
-        // Check if listing has valid geometry coordinates (not [0,0])
+        console.log('🔍 Getting coordinates for listing:', listing.title);
+        console.log('📍 Current geometry:', listing.geometry);
+        
+        // Check if listing has valid geometry coordinates
         if (listing.geometry && 
             listing.geometry.coordinates && 
             Array.isArray(listing.geometry.coordinates) && 
             listing.geometry.coordinates.length === 2 &&
             !isNaN(listing.geometry.coordinates[0]) && 
-            !isNaN(listing.geometry.coordinates[1]) &&
-            !(listing.geometry.coordinates[0] === 0 && listing.geometry.coordinates[1] === 0)) {
+            !isNaN(listing.geometry.coordinates[1])) {
+            console.log('✅ Using stored coordinates:', listing.geometry.coordinates);
             return listing.geometry.coordinates;
         }
 
+        console.log('⚠️ No valid stored coordinates, attempting geocoding...');
+        
         // If no valid coordinates, try to geocode the location
         if (listing.location && listing.country) {
             try {
                 const query = `${listing.location}, ${listing.country}`;
+                console.log('🌍 Geocoding query:', query);
+                
                 const response = await fetch(
                     `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapToken}&limit=1`
                 );
                 const data = await response.json();
                 
                 if (data.features && data.features.length > 0) {
-                    console.log(`Geocoded ${query} to:`, data.features[0].center);
+                    console.log('✅ Geocoding successful for', query, ':', data.features[0].center);
                     return data.features[0].center;
+                } else {
+                    console.warn('❌ No geocoding results for:', query);
                 }
             } catch (error) {
-                console.warn('Geocoding failed:', error);
+                console.warn('❌ Geocoding failed:', error);
             }
         }
 
@@ -57,12 +66,15 @@ if (!mapToken) {
         };
         
         const coords = countryCoordinates[listing.country] || [77.2090, 28.6139]; // Default to Delhi, India
-        console.log(`Using fallback coordinates for ${listing.country}:`, coords);
+        console.log('🌏 Using fallback coordinates for', listing.country || 'Unknown Country', ':', coords);
         return coords;
     }
 
     // Initialize map with coordinates
     getCoordinates().then(coordinates => {
+        console.log('🗺️ Final coordinates for map:', coordinates);
+        console.log('📍 Map will center on:', coordinates);
+        
         const map = new mapboxgl.Map({
             container: "map",
             style: 'mapbox://styles/mapbox/streets-v12',
@@ -72,11 +84,11 @@ if (!mapToken) {
 
         // Add error handling for map load
         map.on('error', (e) => {
-            console.error('Mapbox error:', e);
+            console.error('❌ Mapbox error:', e);
         });
 
         map.on('load', () => {
-            console.log('Map loaded successfully');
+            console.log('✅ Map loaded successfully');
         });
 
         // Create marker
@@ -88,8 +100,10 @@ if (!mapToken) {
                 )
             )
             .addTo(map);
+            
+        console.log('📍 Marker placed at:', coordinates);
     }).catch(error => {
-        console.error('Failed to get coordinates:', error);
+        console.error('❌ Failed to get coordinates:', error);
         document.getElementById('map').innerHTML = 
             '<p>Unable to load map for this location</p>';
     });

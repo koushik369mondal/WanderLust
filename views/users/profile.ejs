@@ -1301,30 +1301,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const vacationSlotsTab = document.getElementById('vacation-slots-tab');
     const vacationSlotsList = document.getElementById('vacationSlotsList');
     
-    if (vacationSlotsTab) {
-        vacationSlotsTab.addEventListener('click', function() {
-            loadVacationSlots();
-        });
-    }
+    vacationSlotsTab.addEventListener('click', function() {
+        loadVacationSlots();
+    });
     
     function loadVacationSlots() {
         fetch('/holiday/vacation-slots')
-            .then(response => {
-                if (response.status === 401) {
-                    vacationSlotsList.innerHTML = `
-                        <div class="text-center py-4">
-                            <i class="fa-solid fa-lock fa-2x text-warning mb-3"></i>
-                            <p>Please login to view vacation slots</p>
-                        </div>
-                    `;
-                    return;
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data) {
-                    displayVacationSlots(data.vacationSlots || []);
-                }
+                displayVacationSlots(data.vacationSlots || []);
             })
             .catch(error => {
                 console.error('Error loading vacation slots:', error);
@@ -1392,18 +1377,12 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/holiday/vacation-slot/${date}`, {
             method: 'DELETE'
         })
-        .then(response => {
-            if (response.status === 401) {
-                alert('Please login to remove vacation slots');
-                return;
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            if (data && data.success) {
+            if (data.success) {
                 loadVacationSlots(); // Reload the list
-            } else if (data) {
-                alert(data.error || 'Failed to remove vacation slot');
+            } else {
+                alert('Failed to remove vacation slot');
             }
         })
         .catch(error => {

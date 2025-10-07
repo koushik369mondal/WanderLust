@@ -115,18 +115,14 @@ router.get("/api/:country", async (req, res) => {
 
 // Add vacation slot to user profile
 router.post("/vacation-slot", async (req, res) => {
-    if (!req.user) {
-        return res.status(401).json({ error: "Please login to save vacation slots" });
-    }
     try {
+        if (!req.user) {
+            return res.status(401).json({ error: "Please login to save vacation slots" });
+        }
 
         const { holidayName, date, country, holidayType } = req.body;
-        console.log('=== SAVING VACATION SLOT ===');
-        console.log('Request body:', req.body);
-        console.log('User ID:', req.user ? req.user._id : 'No user');
-        console.log('Data:', { holidayName, date, country, holidayType });
-        
         const User = require("../models/user");
+        
         const user = await User.findById(req.user._id);
         
         // Check if already exists
@@ -144,9 +140,6 @@ router.post("/vacation-slot", async (req, res) => {
         });
         
         await user.save();
-        console.log('=== VACATION SLOT SAVED ===');
-        console.log('User ID:', req.user._id);
-        console.log('Total vacation slots:', user.vacationSlots.length);
         res.json({ success: true, message: "Vacation slot saved successfully" });
     } catch (error) {
         console.error("Error saving vacation slot:", error);
@@ -156,10 +149,10 @@ router.post("/vacation-slot", async (req, res) => {
 
 // Remove vacation slot
 router.delete("/vacation-slot/:date", async (req, res) => {
-    if (!req.user) {
-        return res.status(401).json({ error: "Please login to remove vacation slots" });
-    }
     try {
+        if (!req.user) {
+            return res.status(401).json({ error: "Please login" });
+        }
 
         const { date } = req.params;
         const User = require("../models/user");
@@ -176,17 +169,16 @@ router.delete("/vacation-slot/:date", async (req, res) => {
 
 // Get user's vacation slots
 router.get("/vacation-slots", async (req, res) => {
-    if (!req.user) {
-        return res.json({ vacationSlots: [] });
-    }
     try {
+        if (!req.user) {
+            return res.status(401).json({ error: "Please login" });
+        }
+
         const User = require("../models/user");
         const user = await User.findById(req.user._id);
         
-        console.log('User vacation slots:', user.vacationSlots); // Debug log
         res.json({ vacationSlots: user.vacationSlots || [] });
     } catch (error) {
-        console.error('Error fetching vacation slots:', error);
         res.status(500).json({ error: "Failed to fetch vacation slots" });
     }
 });

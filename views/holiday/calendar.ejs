@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     ${isLongWeekend ? '<div class="mb-2"><i class="fa-solid fa-star me-1" style="color: gold;"></i><small class="fw-bold">🎉 Long Weekend Opportunity!</small></div>' : ''}
                     
-                    <button class="btn-mark-vacation" data-date="${holiday.date}">
+                    <button class="btn-mark-vacation" onclick="toggleVacation('${holiday.date}', this)">
                         ${isMarked ? '✓ Marked for Vacation' : 'Mark as Vacation Slot'}
                     </button>
                     
@@ -471,14 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
         holidays.forEach(holiday => {
             loadDestinations(holiday.date);
         });
-        
-        // Add event listeners to vacation buttons
-        document.querySelectorAll('.btn-mark-vacation').forEach(button => {
-            button.addEventListener('click', function() {
-                const date = this.getAttribute('data-date');
-                toggleVacation(date, this);
-            });
-        });
     }
 
     function loadDestinations(date) {
@@ -499,48 +491,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    function toggleVacation(date, button) {
-        console.log('Toggle vacation clicked for date:', date);
-        // alert('Button clicked! Date: ' + date); // Test alert
+    window.toggleVacation = function(date, button) {
         const card = button.closest('.holiday-card');
         const isMarked = markedVacations.includes(date);
-        
-        // Disable button during request
-        button.disabled = true;
-        button.style.opacity = '0.6';
         
         if (isMarked) {
             // Remove from server
             fetch(`/holiday/vacation-slot/${date}`, {
                 method: 'DELETE'
             })
-            .then(response => {
-                if (response.status === 401) {
-                    alert('Please login to manage vacation slots');
-                    return;
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data && data.success) {
+                if (data.success) {
                     markedVacations = markedVacations.filter(d => d !== date);
                     card.classList.remove('marked-vacation');
                     button.textContent = 'Mark as Vacation Slot';
                     localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
                     loadHolidays(countrySelect.value);
-                    console.log('Vacation slot removed successfully');
-                } else if (data) {
-                    alert(data.error || 'Failed to remove vacation slot');
+                } else {
+                    alert('Failed to remove vacation slot');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Please login to manage vacation slots');
-            })
-            .finally(() => {
-                // Re-enable button
-                button.disabled = false;
-                button.style.opacity = '1';
             });
         } else {
             // Add to server
@@ -560,36 +534,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     holidayType
                 })
             })
-            .then(response => {
-                if (response.status === 401) {
-                    alert('Please login to save vacation slots');
-                    return;
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data && data.success) {
+                if (data.success) {
                     markedVacations.push(date);
                     card.classList.add('marked-vacation');
                     button.textContent = '✓ Marked for Vacation';
                     localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
                     loadHolidays(countrySelect.value);
-                    console.log('Vacation slot saved successfully');
-                } else if (data) {
+                } else {
                     alert(data.error || 'Failed to save vacation slot');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Please login to save vacation slots');
-            })
-            .finally(() => {
-                // Re-enable button
-                button.disabled = false;
-                button.style.opacity = '1';
             });
         }
-    }
+    };
 
     countrySelect.addEventListener('change', function() {
         loadHolidays(this.value);

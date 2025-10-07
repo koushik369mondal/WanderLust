@@ -77,7 +77,13 @@ main()
     });
 async function main() {
     try {
-        await mongoose.connect(dbUrl);
+        await mongoose.connect(dbUrl, {
+            ssl: process.env.ATLAS_DB_URL ? true : false, // Only use SSL for Atlas connections
+            tlsAllowInvalidCertificates: true, // Only for development, remove in production
+            tlsAllowInvalidHostnames: true,    // Only for development, remove in production
+            serverSelectionTimeoutMS: 5000,    // Timeout after 5s instead of 30s
+            socketTimeoutMS: 45000,            // Close sockets after 45s of inactivity
+        });
         console.log('Successfully connected to MongoDB✅');
         
         // Initialize badge system
@@ -242,7 +248,9 @@ app.use((err, req, res, next) => {
 });
 
 
-app.listen(8080, () => {
+const { seedListings } = require('./init/data');
+app.listen(8080, async () => {
+    await seedListings();
     console.log("Server is running on port 8080");
     console.log("Visit: http://localhost:8080/listings");
 });
