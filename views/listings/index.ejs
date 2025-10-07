@@ -14,7 +14,8 @@
             display: flex;
             align-items: center;
             overflow-x: auto;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
+            height: 4.5rem;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -32,9 +33,10 @@
             display: flex;
             align-items: center;
             flex: 1;
-            justify-content: space-evenly;
-            gap: 0.75rem;
-            min-width: 0;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            min-width: max-content;
+            flex-wrap: nowrap;
         }
 
         .filter {
@@ -42,12 +44,14 @@
             color: var(--text-primary, #2d3748);
             white-space: nowrap;
             flex-shrink: 0;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.6rem;
             border-radius: 8px;
             transition: all 0.2s ease;
             cursor: pointer;
             font-weight: 500;
             border: 2px solid transparent;
+            min-width: 70px;
+            max-width: 85px;
         }
 
         [data-theme="dark"] .filter {
@@ -68,15 +72,16 @@
         }
 
         .filter i {
-            font-size: 1.2rem;
-            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
             display: block;
         }
 
         .filter p {
             margin: 0;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 500;
+            line-height: 1.1;
         }
 
         /* Tax Toggle - Modern Design */
@@ -86,6 +91,7 @@
             border: 2px solid #e2e8f0;
             border-radius: 1rem;
             padding: 0.75rem 1rem;
+            height: 4.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -567,13 +573,14 @@
         </div>
     </div>
     
-</div>
-<div class="tax-toggle">
+    <div class="tax-toggle">
         <div class="form-check-reverse form-switch">
             <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
             <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
         </div>
     </div>
+    
+</div>
     
 
     <!-- Search Results Header -->
