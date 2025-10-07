@@ -293,6 +293,16 @@
                     <i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots
                   </a>
                 </li>
+                <% if (currentUser && currentUser.isAdmin) { %>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/admin/dashboard">
+                    <i class="fa-solid fa-chart-line me-2"></i>Admin Dashboard
+                  </a>
+                </li>
+                <% } %>
                 <li>
                   <hr class="dropdown-divider">
                 </li>

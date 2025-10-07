@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     ${isLongWeekend ? '<div class="mb-2"><i class="fa-solid fa-star me-1" style="color: gold;"></i><small class="fw-bold">🎉 Long Weekend Opportunity!</small></div>' : ''}
                     
-                    <button class="btn-mark-vacation" onclick="toggleVacation('${holiday.date}', this)">
+                    <button class="btn-mark-vacation" data-date="${holiday.date}">
                         ${isMarked ? '✓ Marked for Vacation' : 'Mark as Vacation Slot'}
                     </button>
                     
