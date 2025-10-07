@@ -227,7 +227,13 @@
       margin-top: 1rem;
     }
 
-    .action-buttons .btn {
+    .action-buttons .btn,
+    .action-buttons .dropdown {
+      width: 100%;
+    }
+
+    .action-buttons .btn,
+    .action-buttons .dropdown .btn {
       width: 100%;
       justify-content: center;
     }
@@ -331,46 +337,10 @@
     </a>
 
     <!-- Mobile Toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-
-    <div class="collapse-nav collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">
-          <span class="mobile-icon"><%= __('wanderlust') %></span>
-          <i class="fa-regular fa-compass mobile-icon"></i><%= __('all_listings') %>
-        </a>
-        <a class="nav-link" href="/listings/about">
-          <i class="fa-solid fa-info-circle me-1"></i>About
-        </a>
-        
-        <!-- Travel Tools Dropdown -->
-        <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-tools me-1"></i>Travel Tools
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/holiday">
-              <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
-            </a></li>
-            <li><a class="dropdown-item" href="/listings/compare">
-              <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
-            </a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/weather">
-              <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
-            </a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="navbar-nav ms-auto">
-        <form class="d-flex search-form-container position-relative" role="search" method="GET" action="/listings">
-          <input class="form-control me-2 search-inp" type="search" name="search" 
-                 placeholder="<%= __('search_destinations') %>" 
-                 value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-                 autocomplete="off" />
 
     <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navbarContent">
@@ -388,11 +358,33 @@
             About
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/listings/new">
-            <i class="fa-solid fa-plus"></i>
-            <%= __('add_new_listing') %>
+
+        <!-- Travel Tools Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-tools"></i>
+            Travel Tools
           </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="/holiday">
+                <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/listings/compare">
+                <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/weather">
+                <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
 
@@ -407,7 +399,6 @@
               <%= __('search') %>
             </button>
           </div>
-
           <div class="search-suggestions" id="searchSuggestions"></div>
         </form>
       </div>
@@ -425,7 +416,7 @@
           </a>
           <% } else { %>
             <div class="profile-dropdown dropdown">
-              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-user me-1"></i>
                 <%= __('profile') %>
               </button>
@@ -463,18 +454,26 @@
       <div class="utility-controls">
         <!-- Language Dropdown -->
         <div class="language-dropdown dropdown">
-          <button class="btn dropdown-toggle" data-bs-toggle="dropdown">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-globe"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>"
-                href="<%= buildLangUrl('en') %>">🇺🇸 English</a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>"
-                href="<%= buildLangUrl('hi') %>">🇮🇳 हिंदी</a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>"
-                href="<%= buildLangUrl('bn') %>">🇧🇩 বাংলা</a></li>
-            <li><a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>"
-                href="<%= buildLangUrl('as') %>">🇮🇳 অসমীয়া</a></li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
+                English</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
+                हिंदी</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
+                বাংলা</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
+                অসমীয়া</a>
+            </li>
           </ul>
         </div>
 
