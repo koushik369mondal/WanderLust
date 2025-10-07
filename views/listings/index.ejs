@@ -733,11 +733,13 @@
             }
 
             function updatePriceDisplay(showWithTax) {
-                const priceElements = document.querySelectorAll('.card-text');
+                const priceElements = document.querySelectorAll('.listing-price');
                 
                 priceElements.forEach(function(element) {
                     const priceText = element.innerHTML;
-                    const priceMatch = priceText.match(/([\d,]+)/);
+                    
+                    // Extract price using more specific regex for the ₹ symbol
+                    const priceMatch = priceText.match(/₹([\d,]+)/);
                     
                     if (priceMatch) {
                         let basePrice = parseInt(priceMatch[1].replace(/,/g, ''));
@@ -761,14 +763,11 @@
                         }
                         
                         const formattedPrice = displayPrice.toLocaleString("en-IN");
+                        const nightText = priceText.includes('night') ? ' / night' : ' / <%= __("night") %>';
                         const taxInfo = showWithTax ? '' : '<i class="tax-info">&nbsp; &nbsp; +18% GST</i>';
                         
-                        // Get the title from the element
-                        const titleMatch = element.innerHTML.match(/<b>(.*?)<\/b>/);
-                        const title = titleMatch ? titleMatch[1] : 'N/A';
-                        
-                        // Update the price display
-                        element.innerHTML = `<b>${title}</b><br />${formattedPrice} / night${taxInfo}`;
+                        // Update the price display while preserving the structure
+                        element.innerHTML = `₹${formattedPrice}${nightText}${taxInfo}`;
                     }
                 });
             }
