@@ -335,6 +335,43 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
+
+    <div class="collapse-nav collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">
+          <span class="mobile-icon"><%= __('wanderlust') %></span>
+          <i class="fa-regular fa-compass mobile-icon"></i><%= __('all_listings') %>
+        </a>
+        <a class="nav-link" href="/listings/about">
+          <i class="fa-solid fa-info-circle me-1"></i>About
+        </a>
+        
+        <!-- Travel Tools Dropdown -->
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-tools me-1"></i>Travel Tools
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/holiday">
+              <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
+            </a></li>
+            <li><a class="dropdown-item" href="/listings/compare">
+              <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
+            </a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/weather">
+              <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+            </a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <form class="d-flex search-form-container position-relative" role="search" method="GET" action="/listings">
+          <input class="form-control me-2 search-inp" type="search" name="search" 
+                 placeholder="<%= __('search_destinations') %>" 
+                 value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+                 autocomplete="off" />
+
     <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navbarContent">
       <!-- Primary Navigation -->
@@ -370,6 +407,7 @@
               <%= __('search') %>
             </button>
           </div>
+
           <div class="search-suggestions" id="searchSuggestions"></div>
         </form>
       </div>

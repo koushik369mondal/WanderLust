@@ -1,0 +1,541 @@
+<% layout("/layouts/boilerplate") %>
+<link rel="stylesheet" href="/CSS/holiday.css">
+
+<style>
+.holiday-calendar {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.country-selector {
+    background: var(--bg-primary);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.holiday-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.holiday-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.holiday-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.holiday-grid::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 10px;
+}
+
+.holiday-grid::-webkit-scrollbar-thumb:hover {
+    background: #e63946;
+}
+
+.holiday-card {
+    background: var(--bg-primary);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--accent-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.holiday-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), #ff6b6b, #4ecdc4);
+}
+
+.holiday-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.holiday-date {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vacation-slot .holiday-date,
+.long-weekend .holiday-date {
+    color: white;
+}
+
+.holiday-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.holiday-type {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+    padding: 4px 12px;
+    background: rgba(254, 66, 77, 0.1);
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.vacation-slot .holiday-type,
+.long-weekend .holiday-type {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.vacation-slot {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b) !important;
+    color: white !important;
+    border-left-color: #fff !important;
+    animation: pulse 2s infinite;
+}
+
+.vacation-slot::before {
+    background: linear-gradient(90deg, #fff, #ffeb3b, #4caf50) !important;
+}
+
+.long-weekend {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d) !important;
+    color: white !important;
+    border-left-color: #fff !important;
+}
+
+.long-weekend::before {
+    background: linear-gradient(90deg, #fff, #00bcd4, #009688) !important;
+}
+
+.destinations-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.destination-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.destination-tag {
+    background: rgba(254, 66, 77, 0.1);
+    color: var(--accent-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.destination-tag:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: scale(1.05);
+}
+
+.destination-tag {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.destination-tag:hover {
+    text-decoration: none;
+}
+
+.vacation-slot .destination-tag,
+.long-weekend .destination-tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.vacation-slot .destination-tag:hover,
+.long-weekend .destination-tag:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.btn-mark-vacation {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(254, 66, 77, 0.3);
+}
+
+.vacation-slot .btn-mark-vacation,
+.long-weekend .btn-mark-vacation {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+}
+
+.btn-mark-vacation:hover {
+    background: #e63946;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(254, 66, 77, 0.4);
+}
+
+.vacation-slot .btn-mark-vacation:hover,
+.long-weekend .btn-mark-vacation:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.marked-vacation {
+    background: linear-gradient(135deg, var(--accent-color), #ff6b6b) !important;
+    color: white !important;
+    border-left-color: #fff !important;
+    animation: pulse 2s infinite;
+}
+
+.marked-vacation::before {
+    background: linear-gradient(90deg, #fff, #ffeb3b, #4caf50) !important;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 4px 20px rgba(254, 66, 77, 0.3); }
+    50% { box-shadow: 0 8px 30px rgba(254, 66, 77, 0.5); }
+    100% { box-shadow: 0 4px 20px rgba(254, 66, 77, 0.3); }
+}
+
+@media (max-width: 768px) {
+    .holiday-grid {
+        grid-template-columns: 1fr;
+        max-height: 70vh;
+    }
+    
+    .holiday-card {
+        padding: 20px;
+    }
+    
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .country-selector {
+        padding: 20px;
+    }
+    
+    .destination-tags {
+        justify-content: center;
+    }
+}
+</style>
+
+<div class="holiday-calendar">
+    <div class="text-center mb-4">
+        <h1><i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar & Travel Planner</h1>
+        <p class="text-muted">Plan your perfect vacation around holidays and discover ideal destinations</p>
+    </div>
+
+    <div class="country-selector">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <label for="countrySelect" class="form-label fw-bold">🌍 Select Country:</label>
+                <select class="form-select form-select-lg" id="countrySelect">
+                    <option value="US">🇺🇸 United States</option>
+                    <option value="IN">🇮🇳 India</option>
+                    <option value="GB">🇬🇧 United Kingdom</option>
+                    <option value="CA">🇨🇦 Canada</option>
+                    <option value="AU">🇦🇺 Australia</option>
+                    <option value="DE">🇩🇪 Germany</option>
+                    <option value="FR">🇫🇷 France</option>
+                    <option value="IT">🇮🇹 Italy</option>
+                    <option value="ES">🇪🇸 Spain</option>
+                    <option value="JP">🇯🇵 Japan</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <i class="fa-solid fa-info-circle me-1"></i>
+                        View holidays and plan your trips around long weekends
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-container" id="holidayStats" style="display: none;">
+            <div class="stat-item">
+                <span class="stat-number" id="totalHolidays">0</span>
+                <div class="stat-label">Total Holidays</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="longWeekends">0</span>
+                <div class="stat-label">Long Weekends</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="markedVacations">0</span>
+                <div class="stat-label">Marked Vacations</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="upcomingHolidays">0</span>
+                <div class="stat-label">Upcoming</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="holidayResults">
+        <div class="loading">
+            <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+            <p class="mt-3">Loading holidays...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const countrySelect = document.getElementById('countrySelect');
+    const holidayResults = document.getElementById('holidayResults');
+    let markedVacations = JSON.parse(localStorage.getItem('markedVacations') || '[]');
+
+    function loadHolidays(country) {
+        holidayResults.innerHTML = `
+            <div class="loading">
+                <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+                <p class="mt-3">Loading holidays for ${country}...</p>
+            </div>
+        `;
+
+        fetch(`/holiday/api/${country}`)
+            .then(response => response.json())
+            .then(data => {
+                displayHolidays(data.holidays, data.country);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                holidayResults.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                        Failed to load holidays. Please try again.
+                    </div>
+                `;
+            });
+    }
+
+    function displayHolidays(holidays, country) {
+        const statsContainer = document.getElementById('holidayStats');
+        
+        if (holidays.length === 0) {
+            holidayResults.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fa-solid fa-info-circle me-2"></i>
+                    No holidays found for ${country}. Try selecting a different country.
+                </div>
+            `;
+            statsContainer.style.display = 'none';
+            return;
+        }
+        
+        // Calculate stats
+        const today = new Date();
+        const longWeekendCount = holidays.filter(h => {
+            const date = new Date(h.date);
+            const day = date.getDay();
+            return day === 1 || day === 5; // Monday or Friday
+        }).length;
+        
+        const upcomingCount = holidays.filter(h => new Date(h.date) > today).length;
+        const markedCount = holidays.filter(h => markedVacations.includes(h.date)).length;
+        
+        // Update stats
+        document.getElementById('totalHolidays').textContent = holidays.length;
+        document.getElementById('longWeekends').textContent = longWeekendCount;
+        document.getElementById('markedVacations').textContent = markedCount;
+        document.getElementById('upcomingHolidays').textContent = upcomingCount;
+        statsContainer.style.display = 'grid';
+
+        const holidayGrid = holidays.map(holiday => {
+            const isMarked = markedVacations.includes(holiday.date);
+            const holidayDate = new Date(holiday.date);
+            const dayOfWeek = holidayDate.getDay();
+            const isLongWeekend = dayOfWeek === 1 || dayOfWeek === 5; // Monday or Friday
+            const isUpcoming = holidayDate > new Date();
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const formattedDate = `${monthNames[holidayDate.getMonth()]} ${holidayDate.getDate()}, ${holidayDate.getFullYear()}`;
+            
+            return `
+                <div class="holiday-card ${isMarked ? 'marked-vacation' : ''} ${isLongWeekend ? 'long-weekend' : ''} ${!isUpcoming ? 'past-holiday' : ''}" data-date="${holiday.date}">
+                    <div class="holiday-date">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <div>
+                            <div>${formattedDate}</div>
+                            <small style="font-size: 0.8rem; opacity: 0.8;">${new Date(holiday.date).toLocaleDateString('en-US', { weekday: 'long' })}</small>
+                        </div>
+                        ${!isUpcoming ? '<span class="badge bg-secondary ms-auto">Past</span>' : ''}
+                        ${isUpcoming ? '<span class="badge bg-success ms-auto">Upcoming</span>' : ''}
+                    </div>
+                    <div class="holiday-name">${holiday.name}</div>
+                    <div class="holiday-type">
+                        <i class="fa-solid fa-tag me-1"></i>
+                        ${holiday.type}
+                    </div>
+                    ${isLongWeekend ? '<div class="mb-2"><i class="fa-solid fa-star me-1" style="color: gold;"></i><small class="fw-bold">🎉 Long Weekend Opportunity!</small></div>' : ''}
+                    
+                    <button class="btn-mark-vacation" onclick="toggleVacation('${holiday.date}', this)">
+                        ${isMarked ? '✓ Marked for Vacation' : 'Mark as Vacation Slot'}
+                    </button>
+                    
+                    <div class="destinations-section">
+                        <div class="d-flex align-items-center">
+                            <i class="fa-solid fa-map-marker-alt me-2"></i>
+                            <strong>Popular Destinations:</strong>
+                        </div>
+                        <div class="destination-tags" id="destinations-${holiday.date}">
+                            <div class="text-muted"><i class="fa-solid fa-spinner fa-spin me-1"></i>Loading from listings...</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        holidayResults.innerHTML = `
+            <div class="mb-4">
+                <h3><i class="fa-solid fa-flag me-2"></i>Holidays in ${country} (${holidays.length} holidays)</h3>
+                <p class="text-muted">✨ Scroll to see all holidays • Click "Mark as Vacation Slot" to save for trip planning</p>
+            </div>
+            <div class="holiday-grid">
+                ${holidayGrid}
+            </div>
+        `;
+
+        // Load destinations for each holiday
+        holidays.forEach(holiday => {
+            loadDestinations(holiday.date);
+        });
+    }
+
+    function loadDestinations(date) {
+        fetch(`/holiday/destinations/${date}`)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById(`destinations-${date}`);
+                if (container && data.destinations.length > 0) {
+                    container.innerHTML = data.destinations.map(dest => 
+                        `<a href="/listings?search=${encodeURIComponent(dest)}" class="destination-tag text-decoration-none">${dest}</a>`
+                    ).join('');
+                } else if (container) {
+                    container.innerHTML = '<span class="text-muted">No listings found</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading destinations:', error);
+            });
+    }
+
+    window.toggleVacation = function(date, button) {
+        const card = button.closest('.holiday-card');
+        const isMarked = markedVacations.includes(date);
+        
+        if (isMarked) {
+            markedVacations = markedVacations.filter(d => d !== date);
+            card.classList.remove('marked-vacation');
+            button.textContent = 'Mark as Vacation Slot';
+        } else {
+            markedVacations.push(date);
+            card.classList.add('marked-vacation');
+            button.textContent = '✓ Marked for Vacation';
+        }
+        
+        localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
+        
+        // Update stats
+        const currentCountry = countrySelect.value;
+        loadHolidays(currentCountry);
+    };
+
+    countrySelect.addEventListener('change', function() {
+        loadHolidays(this.value);
+    });
+    
+    // Add smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+
+    // Load initial holidays
+    loadHolidays(countrySelect.value);
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            const grid = document.querySelector('.holiday-grid');
+            if (grid && grid.contains(document.activeElement)) {
+                e.preventDefault();
+                const cards = Array.from(grid.querySelectorAll('.holiday-card'));
+                const currentIndex = cards.indexOf(document.activeElement);
+                const nextIndex = e.key === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
+                if (cards[nextIndex]) {
+                    cards[nextIndex].focus();
+                }
+            }
+        }
+    });
+});
+</script>
