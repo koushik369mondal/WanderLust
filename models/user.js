@@ -209,6 +209,33 @@ const userSchema = new Schema({
         relatedId: {
             type: Schema.Types.ObjectId,
         }
+    }],
+    vacationSlots: [{
+        holidayName: {
+            type: String,
+            required: true,
+        },
+        date: {
+            type: String,
+            required: true,
+        },
+        country: {
+            type: String,
+            required: true,
+        },
+        holidayType: {
+            type: String,
+            required: true,
+        },
+        markedAt: {
+            type: Date,
+            default: Date.now,
+        },
+        notes: {
+            type: String,
+            maxlength: 200,
+            default: "",
+        }
     }]
 });
 

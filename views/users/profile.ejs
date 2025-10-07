@@ -558,6 +558,71 @@
         letter-spacing: 0.5px;
     }
 
+    /* Vacation Slots Styles */
+    .vacation-slot-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--accent-border-color);
+    }
+
+    .vacation-slot-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+    }
+
+    .vacation-slot-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .vacation-slot-name {
+        font-weight: 600;
+        color: var(--header-text-color);
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .vacation-slot-date {
+        color: var(--accent-border-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .vacation-slot-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+    }
+
+    .vacation-slot-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .btn-remove-slot {
+        background: transparent;
+        border: 1px solid #dc3545;
+        color: #dc3545;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-remove-slot:hover {
+        background: #dc3545;
+        color: white;
+    }
+
     .completion-progress {
         margin-top: 1rem;
     }
@@ -628,6 +693,12 @@
                     <button class="nav-link" id="travel-goals-tab" data-bs-toggle="tab" data-bs-target="#travel-goals-section"
                         type="button" role="tab">
                         <i class="fa-solid fa-target me-2"></i>Travel Goals
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="vacation-slots-tab" data-bs-toggle="tab" data-bs-target="#vacation-slots-section"
+                        type="button" role="tab">
+                        <i class="fa-solid fa-calendar-check me-2"></i>Vacation Slots
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -1144,6 +1215,27 @@
                     </div>
                 </div>
 
+                <!-- Vacation Slots Tab -->
+                <div class="tab-pane fade" id="vacation-slots-section" role="tabpanel">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h5><i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="vacationSlotsList">
+                                        <div class="text-center py-4">
+                                            <i class="fa-solid fa-spinner fa-spin fa-2x text-muted mb-3"></i>
+                                            <p>Loading vacation slots...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Activity Tab -->
                 <div class="tab-pane fade" id="activity-section" role="tabpanel">
                     <div class="row">
@@ -1202,3 +1294,122 @@
         </div>
     </div>
 </div>
+
+<script>
+// Load vacation slots when tab is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const vacationSlotsTab = document.getElementById('vacation-slots-tab');
+    const vacationSlotsList = document.getElementById('vacationSlotsList');
+    
+    if (vacationSlotsTab) {
+        vacationSlotsTab.addEventListener('click', function() {
+            loadVacationSlots();
+        });
+    }
+    
+    function loadVacationSlots() {
+        fetch('/holiday/vacation-slots')
+            .then(response => {
+                if (response.status === 401) {
+                    vacationSlotsList.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fa-solid fa-lock fa-2x text-warning mb-3"></i>
+                            <p>Please login to view vacation slots</p>
+                        </div>
+                    `;
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    displayVacationSlots(data.vacationSlots || []);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading vacation slots:', error);
+                vacationSlotsList.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                        <p>Failed to load vacation slots</p>
+                    </div>
+                `;
+            });
+    }
+    
+    function displayVacationSlots(slots) {
+        if (slots.length === 0) {
+            vacationSlotsList.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fa-solid fa-calendar-plus fa-3x text-muted mb-3"></i>
+                    <h5>No vacation slots marked</h5>
+                    <p class="text-muted">Visit the <a href="/holiday" class="text-decoration-none">Holiday Calendar</a> to mark holidays as vacation slots!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const slotsHtml = slots.map(slot => {
+            const date = new Date(slot.date);
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            return `
+                <div class="vacation-slot-item" data-date="${slot.date}">
+                    <div class="vacation-slot-header">
+                        <h6 class="vacation-slot-name">${slot.holidayName}</h6>
+                        <div class="vacation-slot-actions">
+                            <button class="btn btn-remove-slot" onclick="removeVacationSlot('${slot.date}')">
+                                <i class="fa-solid fa-trash me-1"></i>Remove
+                            </button>
+                        </div>
+                    </div>
+                    <div class="vacation-slot-date">${formattedDate}</div>
+                    <div class="vacation-slot-meta">
+                        <span><i class="fa-solid fa-flag me-1"></i>${slot.country}</span>
+                        <span><i class="fa-solid fa-tag me-1"></i>${slot.holidayType}</span>
+                        <span><i class="fa-solid fa-clock me-1"></i>Marked ${new Date(slot.markedAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        vacationSlotsList.innerHTML = `
+            <div class="mb-3">
+                <p class="text-muted">You have marked ${slots.length} holiday${slots.length > 1 ? 's' : ''} as vacation slots</p>
+            </div>
+            ${slotsHtml}
+        `;
+    }
+    
+    window.removeVacationSlot = function(date) {
+        if (!confirm('Remove this vacation slot?')) return;
+        
+        fetch(`/holiday/vacation-slot/${date}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.status === 401) {
+                alert('Please login to remove vacation slots');
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                loadVacationSlots(); // Reload the list
+            } else if (data) {
+                alert(data.error || 'Failed to remove vacation slot');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to remove vacation slot');
+        });
+    };
+});
+</script>

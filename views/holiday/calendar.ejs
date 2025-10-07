@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     ${isLongWeekend ? '<div class="mb-2"><i class="fa-solid fa-star me-1" style="color: gold;"></i><small class="fw-bold">🎉 Long Weekend Opportunity!</small></div>' : ''}
                     
-                    <button class="btn-mark-vacation" onclick="toggleVacation('${holiday.date}', this)">
+                    <button class="btn-mark-vacation" data-date="${holiday.date}">
                         ${isMarked ? '✓ Marked for Vacation' : 'Mark as Vacation Slot'}
                     </button>
                     
@@ -471,6 +471,14 @@ document.addEventListener('DOMContentLoaded', function() {
         holidays.forEach(holiday => {
             loadDestinations(holiday.date);
         });
+        
+        // Add event listeners to vacation buttons
+        document.querySelectorAll('.btn-mark-vacation').forEach(button => {
+            button.addEventListener('click', function() {
+                const date = this.getAttribute('data-date');
+                toggleVacation(date, this);
+            });
+        });
     }
 
     function loadDestinations(date) {
@@ -491,26 +499,97 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    window.toggleVacation = function(date, button) {
+    function toggleVacation(date, button) {
+        console.log('Toggle vacation clicked for date:', date);
+        // alert('Button clicked! Date: ' + date); // Test alert
         const card = button.closest('.holiday-card');
         const isMarked = markedVacations.includes(date);
         
+        // Disable button during request
+        button.disabled = true;
+        button.style.opacity = '0.6';
+        
         if (isMarked) {
-            markedVacations = markedVacations.filter(d => d !== date);
-            card.classList.remove('marked-vacation');
-            button.textContent = 'Mark as Vacation Slot';
+            // Remove from server
+            fetch(`/holiday/vacation-slot/${date}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    alert('Please login to manage vacation slots');
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    markedVacations = markedVacations.filter(d => d !== date);
+                    card.classList.remove('marked-vacation');
+                    button.textContent = 'Mark as Vacation Slot';
+                    localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
+                    loadHolidays(countrySelect.value);
+                    console.log('Vacation slot removed successfully');
+                } else if (data) {
+                    alert(data.error || 'Failed to remove vacation slot');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Please login to manage vacation slots');
+            })
+            .finally(() => {
+                // Re-enable button
+                button.disabled = false;
+                button.style.opacity = '1';
+            });
         } else {
-            markedVacations.push(date);
-            card.classList.add('marked-vacation');
-            button.textContent = '✓ Marked for Vacation';
+            // Add to server
+            const holidayName = card.querySelector('.holiday-name').textContent;
+            const holidayType = card.querySelector('.holiday-type').textContent;
+            const country = countrySelect.options[countrySelect.selectedIndex].text.split(' ')[1];
+            
+            fetch('/holiday/vacation-slot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    holidayName,
+                    date,
+                    country,
+                    holidayType
+                })
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    alert('Please login to save vacation slots');
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    markedVacations.push(date);
+                    card.classList.add('marked-vacation');
+                    button.textContent = '✓ Marked for Vacation';
+                    localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
+                    loadHolidays(countrySelect.value);
+                    console.log('Vacation slot saved successfully');
+                } else if (data) {
+                    alert(data.error || 'Failed to save vacation slot');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Please login to save vacation slots');
+            })
+            .finally(() => {
+                // Re-enable button
+                button.disabled = false;
+                button.style.opacity = '1';
+            });
         }
-        
-        localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
-        
-        // Update stats
-        const currentCountry = countrySelect.value;
-        loadHolidays(currentCountry);
-    };
+    }
 
     countrySelect.addEventListener('change', function() {
         loadHolidays(this.value);
@@ -519,8 +598,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
 
-    // Load initial holidays
-    loadHolidays(countrySelect.value);
+    // Load user's vacation slots from server
+    fetch('/holiday/vacation-slots')
+        .then(response => response.json())
+        .then(data => {
+            if (data.vacationSlots) {
+                markedVacations = data.vacationSlots.map(slot => slot.date);
+                localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
+            }
+        })
+        .catch(error => {
+            console.log('Not logged in or error loading vacation slots');
+        })
+        .finally(() => {
+            // Load initial holidays
+            loadHolidays(countrySelect.value);
+        });
     
     // Add keyboard navigation
     document.addEventListener('keydown', function(e) {

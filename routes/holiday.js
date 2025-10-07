@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
+const { isLoggedIn } = require("../middleware");
 
 // Holiday Calendar page
 router.get("/", (req, res) => {
@@ -109,6 +110,84 @@ router.get("/api/:country", async (req, res) => {
     } catch (error) {
         console.error("Holiday API Error:", error.message);
         res.status(500).json({ error: "Failed to fetch holidays" });
+    }
+});
+
+// Add vacation slot to user profile
+router.post("/vacation-slot", async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: "Please login to save vacation slots" });
+    }
+    try {
+
+        const { holidayName, date, country, holidayType } = req.body;
+        console.log('=== SAVING VACATION SLOT ===');
+        console.log('Request body:', req.body);
+        console.log('User ID:', req.user ? req.user._id : 'No user');
+        console.log('Data:', { holidayName, date, country, holidayType });
+        
+        const User = require("../models/user");
+        const user = await User.findById(req.user._id);
+        
+        // Check if already exists
+        const existingSlot = user.vacationSlots.find(slot => slot.date === date);
+        if (existingSlot) {
+            return res.status(400).json({ error: "Holiday already marked as vacation slot" });
+        }
+        
+        user.vacationSlots.push({
+            holidayName,
+            date,
+            country,
+            holidayType,
+            markedAt: new Date()
+        });
+        
+        await user.save();
+        console.log('=== VACATION SLOT SAVED ===');
+        console.log('User ID:', req.user._id);
+        console.log('Total vacation slots:', user.vacationSlots.length);
+        res.json({ success: true, message: "Vacation slot saved successfully" });
+    } catch (error) {
+        console.error("Error saving vacation slot:", error);
+        res.status(500).json({ error: "Failed to save vacation slot" });
+    }
+});
+
+// Remove vacation slot
+router.delete("/vacation-slot/:date", async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: "Please login to remove vacation slots" });
+    }
+    try {
+
+        const { date } = req.params;
+        const User = require("../models/user");
+        
+        const user = await User.findById(req.user._id);
+        user.vacationSlots = user.vacationSlots.filter(slot => slot.date !== date);
+        
+        await user.save();
+        res.json({ success: true, message: "Vacation slot removed" });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to remove vacation slot" });
+    }
+});
+
+// Get user's vacation slots
+router.get("/vacation-slots", async (req, res) => {
+    if (!req.user) {
+        return res.json({ vacationSlots: [] });
+    }
+    try {
+        const User = require("../models/user");
+        const user = await User.findById(req.user._id);
+        
+        console.log('User vacation slots:', user.vacationSlots); // Debug log
+        res.json({ vacationSlots: user.vacationSlots || [] });
+    } catch (error) {
+        console.error('Error fetching vacation slots:', error);
+        res.status(500).json({ error: "Failed to fetch vacation slots" });
     }
 });
 

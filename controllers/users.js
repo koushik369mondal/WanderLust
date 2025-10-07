@@ -569,6 +569,28 @@ async function getPopularRecommendations(userId) {
     return await Listing.aggregate(pipeline);
 }
 
+// Show vacation slots page
+module.exports.showVacationSlots = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
+        res.render("users/vacation-slots.ejs", { 
+            vacationSlots: user.vacationSlots || [],
+            name: user.username,
+            title: "My Vacation Slots"
+        });
+    } catch (error) {
+        console.error("Error loading vacation slots:", error);
+        req.flash("error", "Error loading vacation slots. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
 // Get additional recommendations when we need more
 async function getAdditionalRecommendations(userId, existingRecommendations) {
     const Listing = require("../models/listing");
