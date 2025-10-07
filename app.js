@@ -208,6 +208,7 @@ app.use("/", userRouter);
 app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
 app.use("/chatbot", require("./routes/chatbot.js"));
+app.use("/holiday", require("./routes/holiday.js"));
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
