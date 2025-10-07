@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV != "production") {
-    require("dotenv").config({ debug: false });
+    require("dotenv").config();
 }
 
 // Suppress util.isArray deprecation warning from lodash
@@ -47,6 +47,7 @@ const i18n = require('i18n');
 // Import OAuth strategies
 require("./config/passport");
 const Listing = require("./models/listing");
+require("dotenv").config();
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
@@ -88,7 +89,7 @@ async function main() {
         // Initialize badge system
         const BadgeDefinition = require('./models/badgeDefinition');
         await BadgeDefinition.initializeDefaults();
-        // Badge system initialized
+        console.log('Badge system initialized✅');
     } catch (error) {
         console.error('MongoDB connection error:', error);
         process.exit(1);
@@ -208,6 +209,7 @@ app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
 app.use("/chatbot", require("./routes/chatbot.js"));
 app.use("/holiday", require("./routes/holiday.js"));
+app.use("/admin", require("./routes/admin.js"));
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
@@ -221,6 +223,27 @@ app.get("/privacy", (req, res) => {
 
 app.get("/terms", (req, res) => {
   res.render("termCondition", { title: "Term & Condition" });
+});
+
+// Direct admin access route (temporary)
+app.get('/direct-admin', async (req, res) => {
+    try {
+        const admin = await User.findOne({ username: 'admin' });
+        if (admin) {
+            req.login(admin, (err) => {
+                if (err) {
+                    console.log('Login error:', err);
+                    return res.send('Login failed');
+                }
+                console.log('Admin logged in successfully');
+                res.redirect('/admin/dashboard');
+            });
+        } else {
+            res.send('Admin user not found');
+        }
+    } catch (error) {
+        res.send('Error: ' + error.message);
+    }
 });
 
 app.get('/debug-listings', async (req, res) => {
