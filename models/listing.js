@@ -38,6 +38,14 @@ const listingSchema = new Schema({
       ref: "Review",
     },
   ],
+  aiSummary: {
+    type: String,
+    default: null,
+  },
+  aiSummaryLastUpdated: {
+    type: Date,
+    default: null,
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
