@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
+     username: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
@@ -283,10 +287,13 @@ const userSchema = new Schema({
             default: Date.now,
         }
     }]
-});
+}, { strict: false });
 
-// Indexes for better performance
-userSchema.index({ username: 1 });
+
+// Apply passport-local-mongoose plugin before indexes
+userSchema.plugin(passportLocalMongoose);
+
+// Indexes for better performance (username index handled by plugin)
 userSchema.index({ email: 1 });
 userSchema.index({ 'travelStats.totalReviews': -1 });
 userSchema.index({ 'badges.earnedAt': -1 });
@@ -346,7 +353,5 @@ userSchema.methods.awardBadge = function(badgeData) {
     }
     return false;
 };
-
-userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', userSchema);

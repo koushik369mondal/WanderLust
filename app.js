@@ -229,37 +229,54 @@ app.get("/terms", (req, res) => {
 // Direct admin access route (temporary)
 app.get('/direct-admin', async (req, res) => {
     try {
-        const admin = await User.findOne({ username: 'admin' });
-        if (admin) {
-            req.login(admin, (err) => {
-                if (err) {
-                    console.log('Login error:', err);
-                    return res.send('Login failed');
-                }
-                console.log('Admin logged in successfully');
-                res.redirect('/admin/dashboard');
+        let admin = await User.findOne({ username: 'admin' });
+        if (!admin) {
+            // Create admin if doesn't exist
+            admin = new User({
+                username: 'admin',
+                email: 'admin@wanderlust.com',
+                isAdmin: true
             });
-        } else {
-            res.send('Admin user not found');
+            await User.register(admin, '@Admin123');
+            console.log('Admin user created');
         }
+        
+        req.login(admin, (err) => {
+            if (err) {
+                console.log('Login error:', err);
+                return res.send('Login failed: ' + err.message);
+            }
+            console.log('Admin logged in successfully');
+            res.redirect('/admin/dashboard');
+        });
     } catch (error) {
         res.send('Error: ' + error.message);
     }
 });
 
-app.get('/debug-listings', async (req, res) => {
-  const Listing = require('./models/listing');
-  const listings = await Listing.find({}, {
-    title: 1,
-    createdAt: 1,
-    isFeatured: 1,
-    hasDiscount: 1,
-    avgRating: 1,
-    hasFeaturedReview: 1,
-    discountPrice: 1
-  });
-  res.json(listings);
+// Test admin login route
+app.get('/test-admin-login', async (req, res) => {
+    try {
+        const admin = await User.findOne({ username: 'admin' });
+        if (admin) {
+            admin.authenticate('@Admin123', (err, user, passwordErr) => {
+                if (err || passwordErr) {
+                    res.json({ success: false, error: err || passwordErr });
+                } else if (user) {
+                    res.json({ success: true, message: 'Authentication successful' });
+                } else {
+                    res.json({ success: false, error: 'Authentication failed' });
+                }
+            });
+        } else {
+            res.json({ success: false, error: 'Admin user not found' });
+        }
+    } catch (error) {
+        res.json({ success: false, error: error.message });
+    }
 });
+
+
 
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
