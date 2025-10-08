@@ -31,6 +31,15 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_
 
 const express = require("express");
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
@@ -43,7 +52,6 @@ const passport = require("passport");
 const helmet = require("helmet");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
-const i18n = require('i18n');
 // Import OAuth strategies
 require("./config/passport");
 const Listing = require("./models/listing");
@@ -52,7 +60,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const newsletterRouter = require("./routes/newsletter.js");
-const compareRoutes = require('./routes/compare'); //for comparison of listings
+const notificationRouter = require("./routes/notifications.js");
 
 // Check for MongoDB connection string and provide a fallback for development
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -116,25 +124,7 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false, // Disable for compatibility with external resources
 }));
 
-// i18n configuration
-i18n.configure({
-    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur'],
-    directory: path.join(__dirname, 'locales'),
-    defaultLocale: 'en',
-    queryParameter: 'lang',
-    cookie: 'lang',
-    autoReload: true,
-    updateFiles: false,
-    api: {
-        '__': '__',
-        '__n': '__n'
-    }
-});
-
-app.use(i18n.init);
-
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -188,35 +178,67 @@ app.use((req, res, next) => {
     res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
     res.locals.searchQuery = req.query.search || '';
-    
-    // Language switching helper
-    res.locals.buildLangUrl = (lang) => {
-        const currentUrl = req.originalUrl.split('?')[0];
-        const params = new URLSearchParams(req.query);
-        params.set('lang', lang);
-        return currentUrl + '?' + params.toString();
-    };
-    
     next();
 });
 
-// Routes - Compare routes must come BEFORE listing routes
-app.use("/listings", compareRoutes); // for comparison of listings
+// Initialize notification system with Socket.io
+const notificationController = require('./controllers/notifications');
+notificationController.setSocketIO(io);
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+    console.log('User connected to notification system:', socket.id);
+
+    // Handle user authentication for notifications
+    socket.on('authenticate', (userId) => {
+        if (userId) {
+            socket.join(`user_${userId}`);
+            console.log(`User ${userId} joined their notification room`);
+        }
+    });
+
+    // Handle notification read acknowledgment
+    socket.on('notification_read', async (data) => {
+        try {
+            const { notificationId, userId } = data;
+            await notificationController.markAsRead({ params: { id: notificationId }, user: { _id: userId } }, {
+                json: (response) => {
+                    socket.emit('notification_read_response', response);
+                }
+            });
+        } catch (error) {
+            console.error('Error handling notification read:', error);
+        }
+    });
+
+    // Handle request for unread count
+    socket.on('get_unread_count', async (userId) => {
+        try {
+            const Notification = require('./models/notification');
+            const unreadCount = await Notification.getUnreadCount(userId);
+            socket.emit('unread_count_update', unreadCount);
+        } catch (error) {
+            console.error('Error getting unread count:', error);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected from notification system:', socket.id);
+    });
+});
+
+// Make io available globally for other parts of the application
+global.io = io;
+
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 app.use("/newsletter", newsletterRouter);
-app.use("/weather", require("./routes/weather.js"));
-app.use("/chatbot", require("./routes/chatbot.js"));
-app.use("/holiday", require("./routes/holiday.js"));
-app.use("/admin", require("./routes/admin.js"));
-app.use("/trip-planner", require("./routes/tripPlanner.js"));
+app.use("/notifications", notificationRouter);
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
 });
-
-
 
 app.get("/privacy", (req, res) => {
   res.render("privacy", { title: "Privacy Policy" });
@@ -224,27 +246,6 @@ app.get("/privacy", (req, res) => {
 
 app.get("/terms", (req, res) => {
   res.render("termCondition", { title: "Term & Condition" });
-});
-
-// Direct admin access route (temporary)
-app.get('/direct-admin', async (req, res) => {
-    try {
-        const admin = await User.findOne({ username: 'admin' });
-        if (admin) {
-            req.login(admin, (err) => {
-                if (err) {
-                    console.log('Login error:', err);
-                    return res.send('Login failed');
-                }
-                console.log('Admin logged in successfully');
-                res.redirect('/admin/dashboard');
-            });
-        } else {
-            res.send('Admin user not found');
-        }
-    } catch (error) {
-        res.send('Error: ' + error.message);
-    }
 });
 
 app.get('/debug-listings', async (req, res) => {
@@ -272,8 +273,9 @@ app.use((err, req, res, next) => {
 
 
 const { seedListings } = require('./init/data');
-app.listen(8080, async () => {
+server.listen(8080, async () => {
     await seedListings();
     console.log("Server is running on port 8080");
     console.log("Visit: http://localhost:8080/listings");
+    console.log("Real-time notifications enabled ✅");
 });

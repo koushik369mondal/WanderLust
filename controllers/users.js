@@ -39,6 +39,17 @@ module.exports.signup = async (req, res) => {
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
         console.log(registeredUser);
+        
+        // Send welcome notification
+        try {
+            const NotificationService = require("../services/notificationService");
+            const notificationService = new NotificationService(global.io);
+            await notificationService.createWelcomeNotification(registeredUser._id);
+        } catch (notificationError) {
+            console.error('Error sending welcome notification:', notificationError);
+            // Don't fail registration if notification fails
+        }
+        
         req.login(registeredUser, (err) => {
             if (err) {
                 return next(err);
@@ -236,24 +247,19 @@ module.exports.addToWishlist = async (req, res) => {
             return res.redirect(`/listings/${listingId}`);
         }
 
-        // For GET requests (quick add), use default values
-        const isQuickAdd = req.method === 'GET';
-        
         const wishlistItem = new Wishlist({
             user: req.user._id,
             listing: listingId,
             notes: notes || "",
             priority: priority || 'medium',
-            isPrivate: isQuickAdd ? false : (isPrivate === 'on')
+            isPrivate: isPrivate === 'on'
         });
 
         await wishlistItem.save();
 
         // Log activity
         const user = await User.findById(req.user._id);
-        if (user && user.logActivity) {
-            await user.logActivity('wishlist_add', 'Added listing to wishlist', listingId);
-        }
+        await user.logActivity('wishlist_add', 'Added listing to wishlist', listingId);
 
         req.flash("success", "Added to your wishlist!");
         res.redirect(`/listings/${listingId}`);
@@ -267,7 +273,6 @@ module.exports.addToWishlist = async (req, res) => {
 module.exports.removeFromWishlist = async (req, res) => {
     try {
         const { listingId } = req.params;
-        const { redirect } = req.query;
 
         await Wishlist.findOneAndDelete({
             user: req.user._id,
@@ -276,18 +281,10 @@ module.exports.removeFromWishlist = async (req, res) => {
 
         // Log activity
         const user = await User.findById(req.user._id);
-        if (user && user.logActivity) {
-            await user.logActivity('wishlist_remove', 'Removed listing from wishlist', listingId);
-        }
+        await user.logActivity('wishlist_remove', 'Removed listing from wishlist', listingId);
 
         req.flash("success", "Removed from your wishlist!");
-        
-        // Redirect based on where the request came from
-        if (redirect === 'listing') {
-            res.redirect(`/listings/${listingId}`);
-        } else {
-            res.redirect("/profile/wishlist");
-        }
+        res.redirect("/profile/wishlist");
     } catch (error) {
         console.error("Error removing from wishlist:", error);
         req.flash("error", "Error removing from wishlist. Please try again.");
@@ -318,30 +315,6 @@ module.exports.showWishlist = async (req, res) => {
     } catch (error) {
         console.error("Error loading wishlist:", error);
         req.flash("error", "Error loading wishlist. Please try again.");
-        res.redirect("/profile");
-    }
-};
-
-module.exports.showVacationSlots = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id);
-        
-        if (!user) {
-            req.flash("error", "User not found.");
-            return res.redirect("/listings");
-        }
-
-        // Sort vacation slots by date
-        const vacationSlots = user.vacationSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        res.render("users/vacation-slots.ejs", { 
-            vacationSlots,
-            name: user.username,
-            title: "My Vacation Slots"
-        });
-    } catch (error) {
-        console.error("Error loading vacation slots:", error);
-        req.flash("error", "Error loading vacation slots. Please try again.");
         res.redirect("/profile");
     }
 };
@@ -421,220 +394,3 @@ module.exports.googleCallback = (req, res) => {
     req.flash("success", "Welcome to Wanderlust!");
     res.redirect("/listings");
 };
-
-// Smart Travel Recommendations - Working Version
-module.exports.getRecommendations = async (req, res) => {
-    console.log("getRecommendations called - sending simple response");
-    res.send("Recommendations route is working! Server is responding correctly.");
-};
-
-// Helper function to analyze user preferences from reviews
-function analyzeUserPreferences(reviews) {
-    const preferences = {
-        categories: {},
-        countries: {},
-        locations: {},
-        avgRating: 0,
-        totalReviews: reviews.length
-    };
-    
-    let totalRating = 0;
-    
-    reviews.forEach(review => {
-        if (review.listing) {
-            // Count category preferences
-            if (review.listing.category) {
-                preferences.categories[review.listing.category] = 
-                    (preferences.categories[review.listing.category] || 0) + 1;
-            }
-            
-            // Count country preferences
-            if (review.listing.country) {
-                preferences.countries[review.listing.country] = 
-                    (preferences.countries[review.listing.country] || 0) + 1;
-            }
-            
-            // Count location preferences
-            if (review.listing.location) {
-                preferences.locations[review.listing.location] = 
-                    (preferences.locations[review.listing.location] || 0) + 1;
-            }
-            
-            totalRating += review.rating;
-        }
-    });
-    
-    preferences.avgRating = preferences.totalReviews > 0 ? totalRating / preferences.totalReviews : 0;
-    
-    return preferences;
-}
-
-// Get personalized recommendations based on user preferences
-async function getPersonalizedRecommendations(preferences, userId) {
-    const Listing = require("../models/listing");
-    
-    // Build aggregation pipeline for personalized recommendations
-    const pipeline = [
-        // Exclude listings already reviewed by user
-        {
-            $lookup: {
-                from: 'reviews',
-                localField: '_id',
-                foreignField: 'listing',
-                as: 'userReviews',
-                pipeline: [
-                    { $match: { author: userId } }
-                ]
-            }
-        },
-        {
-            $match: {
-                'userReviews': { $size: 0 } // Exclude listings user has already reviewed
-            }
-        },
-        // Add scoring based on preferences
-        {
-            $addFields: {
-                preferenceScore: {
-                    $add: [
-                        // Category preference score
-                        {
-                            $cond: [
-                                { $in: ['$category', Object.keys(preferences.categories)] },
-                                { $multiply: [preferences.categories['$category'] || 0, 3] },
-                                0
-                            ]
-                        },
-                        // Country preference score
-                        {
-                            $cond: [
-                                { $in: ['$country', Object.keys(preferences.countries)] },
-                                { $multiply: [preferences.countries['$country'] || 0, 2] },
-                                0
-                            ]
-                        },
-                        // Location preference score
-                        {
-                            $cond: [
-                                { $in: ['$location', Object.keys(preferences.locations)] },
-                                { $multiply: [preferences.locations['$location'] || 0, 1] },
-                                0
-                            ]
-                        },
-                        // Rating bonus for high-rated listings
-                        { $multiply: ['$avgRating', 0.5] }
-                    ]
-                }
-            }
-        },
-        // Sort by preference score and rating
-        {
-            $sort: {
-                preferenceScore: -1,
-                avgRating: -1,
-                'reviews': -1
-            }
-        },
-        // Limit results
-        { $limit: 5 }
-    ];
-    
-    return await Listing.aggregate(pipeline);
-}
-
-// Get popular destinations (fallback for new users or when personalized recommendations are insufficient)
-async function getPopularRecommendations(userId) {
-    const Listing = require("../models/listing");
-    
-    const pipeline = [
-        // Exclude listings already reviewed by user (if logged in)
-        ...(userId ? [
-            {
-                $lookup: {
-                    from: 'reviews',
-                    localField: '_id',
-                    foreignField: 'listing',
-                    as: 'userReviews',
-                    pipeline: [
-                        { $match: { author: userId } }
-                    ]
-                }
-            },
-            {
-                $match: {
-                    'userReviews': { $size: 0 }
-                }
-            }
-        ] : []),
-        // Add popularity score
-        {
-            $addFields: {
-                popularityScore: {
-                    $add: [
-                        { $multiply: ['$avgRating', 2] }, // Weight rating heavily
-                        { $size: '$reviews' }, // Number of reviews
-                        { $cond: ['$isFeatured', 1, 0] }, // Featured bonus
-                        { $cond: ['$hasDiscount', 0.5, 0] } // Discount bonus
-                    ]
-                }
-            }
-        },
-        // Sort by popularity
-        {
-            $sort: {
-                popularityScore: -1,
-                avgRating: -1,
-                createdAt: -1
-            }
-        },
-        { $limit: 5 }
-    ];
-    
-    return await Listing.aggregate(pipeline);
-}
-
-// Get additional recommendations when we need more
-async function getAdditionalRecommendations(userId, existingRecommendations) {
-    const Listing = require("../models/listing");
-    
-    const existingIds = existingRecommendations.map(rec => rec._id);
-    
-    const pipeline = [
-        // Exclude already recommended listings
-        {
-            $match: {
-                _id: { $nin: existingIds }
-            }
-        },
-        // Exclude listings already reviewed by user (if logged in)
-        ...(userId ? [
-            {
-                $lookup: {
-                    from: 'reviews',
-                    localField: '_id',
-                    foreignField: 'listing',
-                    as: 'userReviews',
-                    pipeline: [
-                        { $match: { author: userId } }
-                    ]
-                }
-            },
-            {
-                $match: {
-                    'userReviews': { $size: 0 }
-                }
-            }
-        ] : []),
-        // Sort by rating and review count
-        {
-            $sort: {
-                avgRating: -1,
-                'reviews': -1,
-                createdAt: -1
-            }
-        },
-        { $limit: 5 - existingRecommendations.length }
-    ];
-    
-    return await Listing.aggregate(pipeline);
-}

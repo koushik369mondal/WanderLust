@@ -184,179 +184,71 @@
   <div class="container-fluid">
     <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
       <i class="fa-regular fa-compass me-2"></i>
-      <span class="fw-bold"><%= __('wanderlust') %></span>
+      <span class="fw-bold">WanderLust</span>
     </a>
-
-    <!-- Mobile Toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Collapsible Content -->
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <!-- Primary Navigation -->
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/listings">
-            <i class="fa-regular fa-compass"></i>
-            <%= __('all_listings') %>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/listings/about">
-            <i class="fa-solid fa-info-circle"></i>
-            About
-          </a>
-        </li>
-
-        <!-- Travel Tools Dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-tools"></i>
-            Travel Tools
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="/trip-planner">
-                <i class="fa-solid fa-route me-2"></i>Trip Planner
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/holiday">
-                <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/listings/compare">
-                <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li>
-              <a class="dropdown-item" href="/weather">
-                <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-
-      <!-- Search Bar -->
-      <div class="search-container me-3">
-        <form role="search" method="GET" action="/listings">
+    <div class="collapse-nav collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">
+          <span class="mobile-icon">WanderLust</span>
+          <i class="fa-regular fa-compass mobile-icon"></i>Explore All
+        </a>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <form class="d-flex search-form-container" role="search" method="GET" action="/listings">
           <div class="position-relative">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input class="search-input" type="search" name="search" placeholder="<%= __('search_destinations') %>"
-              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off" />
-            <button class="search-btn" type="submit">
-              <%= __('search') %>
-            </button>
+            <input class="form-control me-2 search-inp" type="search" name="search" 
+                   placeholder="Search destinations, cities, properties..." 
+                   value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+                   autocomplete="off" />
+            <div class="search-suggestions dropdown-menu" id="searchSuggestions"></div>
           </div>
-          <div class="search-suggestions" id="searchSuggestions"></div>
+          <button class="btn search-btn" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i>Search
+          </button>
         </form>
       </div>
-
-      <!-- Authentication & Profile -->
-      <div class="action-buttons">
-        <a class="nav-link" href="/listings/new"><%= __('add_new_listing') %></a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Airbnb your home</a>
         <% if(typeof currentUser==='undefined' || !currentUser) { %>
-          <a class="btn btn-outline-primary" href="/login">
-            <i class="fa-solid fa-sign-in-alt me-1"></i>
-            <%= __('login') %>
-          </a>
-          <a class="btn btn-primary" href="/signup">
-            <i class="fa-solid fa-user-plus me-1"></i>
-            <%= __('signup') %>
-          </a>
-          <% } else { %>
-            <div class="profile-dropdown dropdown">
-              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa-solid fa-user me-1"></i>
-                <%= __('profile') %>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <a class="dropdown-item" href="/profile">
-                    <i class="fa-solid fa-user me-2"></i>My Profile
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/profile/wishlist">
-                    <i class="fa-solid fa-bookmark me-2"></i>My Wishlist
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/profile/likes">
-                    <i class="fa-solid fa-heart me-2"></i>Liked Listings
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/profile/vacation-slots">
-                    <i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots
-                    <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length > 0) { %>
-                      <span class="badge bg-primary ms-2"><%= currentUser.vacationSlots.length %></span>
-                    <% } %>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/trip-planner/my-trips">
-                    <i class="fa-solid fa-suitcase-rolling me-2"></i>My Trip Plans
-                  </a>
-                </li>
-                <% if (currentUser && currentUser.isAdmin) { %>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/admin/dashboard">
-                    <i class="fa-solid fa-chart-line me-2"></i>Admin Dashboard
-                  </a>
-                </li>
-                <% } %>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/logout">
-                    <i class="fa-solid fa-sign-out-alt me-2"></i>
-                    <%= __('logout') %>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <% } %>
+          <a class="nav-link" href="/signup"><b>Sign up</b></a>
+          <a class="nav-link" href="/login"><b>Log in</b></a>
+          <% } %>
+            <% if(typeof currentUser !=='undefined' && currentUser) { %>
+
+    <!-- Notification Bell -->
+    <div class="nav-item notification-badge" id="notificationIcon">
+        <a class="nav-link position-relative" href="/notifications" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span id="notificationCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle d-none" 
+                  style="font-size: 0.7rem; min-width: 18px; height: 18px; line-height: 16px; border-radius: 50%;">
+            </span>
+        </a>
+    </div>
+
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="desktop-text">Profile</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item" href="/profile/wishlist"><i class="fa-solid fa-bookmark me-2"></i>My Wishlist</a></li>
+            <li><a class="dropdown-item" href="/profile/likes"><i class="fa-solid fa-heart me-2"></i>Liked Listings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/notifications"><i class="fa-solid fa-bell me-2"></i>Notifications</a></li>
+            <li><a class="dropdown-item" href="/notifications/settings"><i class="fa-solid fa-cog me-2"></i>Notification Settings</a></li>
+        </ul>
+    </div>
+
+    <a class="nav-link" href="/logout"><b>Log out</b></a>
+    
+<% } %>
       </div>
 
-      <!-- Utility Controls -->
-      <div class="utility-controls">
-        <!-- Language Dropdown -->
-        <div class="language-dropdown dropdown">
-          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-globe"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
-                English</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
-                हिंदी</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
-                বাংলা</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
-                অসমীয়া</a>
-            </li>
-          </ul>
-        </div>
-        
+      <div class="d-flex justify-content-center">
         <button id="theme-toggle" class="btn btn-outline-secondary">
           <i id="theme-icon" class="fa-solid fa-moon"></i>
         </button>

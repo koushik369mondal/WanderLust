@@ -190,13 +190,34 @@ const userSchema = new Schema({
             default: true,
         }
     },
+    notificationSettings: {
+        email: {
+            newReview: { type: Boolean, default: true },
+            badgeEarned: { type: Boolean, default: true },
+            wishlistDiscount: { type: Boolean, default: true },
+            systemAnnouncements: { type: Boolean, default: true },
+            newsletter: { type: Boolean, default: true }
+        },
+        push: {
+            newReview: { type: Boolean, default: true },
+            badgeEarned: { type: Boolean, default: true },
+            wishlistDiscount: { type: Boolean, default: true },
+            systemAnnouncements: { type: Boolean, default: false },
+            newsletter: { type: Boolean, default: false }
+        },
+        inApp: {
+            newReview: { type: Boolean, default: true },
+            newRating: { type: Boolean, default: true },
+            listingLiked: { type: Boolean, default: true },
+            badgeEarned: { type: Boolean, default: true },
+            wishlistDiscount: { type: Boolean, default: true },
+            systemAnnouncements: { type: Boolean, default: true },
+            newsletter: { type: Boolean, default: true }
+        }
+    },
     lastActive: {
         type: Date,
         default: Date.now,
-    },
-    isAdmin: {
-        type: Boolean,
-        default: false,
     },
     activityLog: [{
         action: {
@@ -212,75 +233,6 @@ const userSchema = new Schema({
         },
         relatedId: {
             type: Schema.Types.ObjectId,
-        }
-    }],
-    vacationSlots: [{
-        holidayName: {
-            type: String,
-            required: true,
-        },
-        date: {
-            type: String,
-            required: true,
-        },
-        country: {
-            type: String,
-            required: true,
-        },
-        holidayType: {
-            type: String,
-            required: true,
-        },
-        markedAt: {
-            type: Date,
-            default: Date.now,
-        },
-        notes: {
-            type: String,
-            maxlength: 200,
-            default: "",
-        }
-    }],
-    tripPlans: [{
-        destination: {
-            type: String,
-            required: true,
-        },
-        startDate: {
-            type: Date,
-            required: true,
-        },
-        endDate: {
-            type: Date,
-            required: true,
-        },
-        travelers: {
-            type: Number,
-            required: true,
-        },
-        budgetType: {
-            type: String,
-            enum: ['budget', 'moderate', 'luxury'],
-            required: true,
-        },
-        costs: {
-            flights: Number,
-            hotels: Number,
-            food: Number,
-            activities: Number
-        },
-        total: {
-            type: Number,
-            required: true,
-        },
-        status: {
-            type: String,
-            enum: ['planned', 'booked', 'completed'],
-            default: 'planned'
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
         }
     }]
 });
