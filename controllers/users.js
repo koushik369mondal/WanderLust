@@ -593,12 +593,162 @@ async function getPopularRecommendations(userId) {
     return await Listing.aggregate(pipeline);
 }
 
+// Achievements Controller
+module.exports.showAchievements = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
+        // Get all badge definitions
+        const BadgeDefinition = require("../models/badgeDefinition");
+        const allBadges = await BadgeDefinition.find({ isActive: true });
+
+        // Update user stats and check for new badges
+        await BadgeService.updateUserStats(req.user._id);
+        await BadgeService.checkAndAwardBadges(req.user._id);
+
+        // Get updated user with latest badges
+        const updatedUser = await User.findById(req.user._id);
+
+        // Calculate progress for each badge
+        const badgesWithProgress = allBadges.map(badge => {
+            const hasBadge = updatedUser.badges.some(userBadge => userBadge.name === badge.name);
+            let progress = 0;
+            let currentValue = 0;
+
+            if (!hasBadge) {
+                switch (badge.criteria.type) {
+                    case 'profile_completion':
+                        currentValue = updatedUser.profileCompletion || 0;
+                        break;
+                    case 'listing_count':
+                        currentValue = (updatedUser.travelStats && updatedUser.travelStats.totalListings) || 0;
+                        break;
+                    case 'review_count':
+                        currentValue = (updatedUser.travelStats && updatedUser.travelStats.totalReviews) || 0;
+                        break;
+                    case 'destination_count':
+                        currentValue = (updatedUser.favoriteDestinations && updatedUser.favoriteDestinations.length) || 0;
+                        break;
+                    case 'social_engagement':
+                        const socialLinks = updatedUser.socialLinks || {};
+                        currentValue = Object.values(socialLinks).filter(link => link && link.trim() !== '').length;
+                        break;
+                    case 'time_based':
+                        currentValue = Math.floor((new Date() - updatedUser.joinDate) / (1000 * 60 * 60 * 24));
+                        break;
+                }
+                progress = Math.min((currentValue / badge.criteria.threshold) * 100, 100);
+            } else {
+                progress = 100;
+            }
+
+            return {
+                ...badge.toObject(),
+                earned: hasBadge,
+                progress: Math.round(progress),
+                currentValue
+            };
+        });
+
+        // Group badges by category
+        const badgesByCategory = badgesWithProgress.reduce((acc, badge) => {
+            if (!acc[badge.category]) acc[badge.category] = [];
+            acc[badge.category].push(badge);
+            return acc;
+        }, {});
+
+        res.render("users/achievements.ejs", {
+            user: updatedUser,
+            badgesByCategory,
+            BadgeService,
+            title: "My Achievements"
+        });
+    } catch (error) {
+        console.error("Error loading achievements:", error);
+        req.flash("error", "Error loading achievements. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
+// Leaderboard Controller
+module.exports.showLeaderboard = async (req, res) => {
+    try {
+        // Calculate points for each user based on badges and activities
+        const users = await User.find({})
+            .select('username badges travelStats joinDate avatar')
+            .lean();
+
+        // Define points for badge rarities
+        const rarityPoints = { common: 1, rare: 5, epic: 10, legendary: 25 };
+
+        // Calculate scores
+        const leaderboardData = users.map(user => {
+            let badgePoints = 0;
+            const userBadges = user.badges || [];
+            userBadges.forEach(badge => {
+                // Assuming rarity is stored or can be determined
+                // For now, use a simple count, but ideally use rarity
+                badgePoints += rarityPoints[badge.category === 'milestone' ? 'rare' : 'common'] || 1;
+            });
+
+            const userTravelStats = user.travelStats || { totalListings: 0, totalReviews: 0 };
+            const userFavoriteDestinations = user.favoriteDestinations || [];
+
+            const activityPoints = (userTravelStats.totalListings || 0) * 2 +
+                                 (userTravelStats.totalReviews || 0) * 1 +
+                                 userFavoriteDestinations.length * 3;
+
+            const totalPoints = badgePoints + activityPoints;
+
+            return {
+                _id: user._id,
+                username: user.username,
+                avatar: user.avatar?.url || '/images/default-avatar.png',
+                badgesCount: userBadges.length,
+                totalPoints,
+                travelStats: userTravelStats
+            };
+        });
+
+        // Sort by total points descending
+        leaderboardData.sort((a, b) => b.totalPoints - a.totalPoints);
+
+        // Add ranks
+        leaderboardData.forEach((user, index) => {
+            user.rank = index + 1;
+        });
+
+        // Find current user's position
+        const currentUserRank = leaderboardData.find(user => user._id.toString() === req.user._id.toString());
+
+        // Get top 10 and current user if not in top 10
+        let displayUsers = leaderboardData.slice(0, 10);
+        if (currentUserRank && currentUserRank.rank > 10) {
+            displayUsers.push(currentUserRank);
+        }
+
+        res.render("users/leaderboard.ejs", {
+            leaderboard: displayUsers,
+            currentUserRank,
+            title: "Travel Leaderboard"
+        });
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        req.flash("error", "Error loading leaderboard. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
 // Get additional recommendations when we need more
 async function getAdditionalRecommendations(userId, existingRecommendations) {
     const Listing = require("../models/listing");
-    
+
     const existingIds = existingRecommendations.map(rec => rec._id);
-    
+
     const pipeline = [
         // Exclude already recommended listings
         {
@@ -635,6 +785,6 @@ async function getAdditionalRecommendations(userId, existingRecommendations) {
         },
         { $limit: 5 - existingRecommendations.length }
     ];
-    
+
     return await Listing.aggregate(pipeline);
 }
