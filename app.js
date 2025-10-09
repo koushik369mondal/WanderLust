@@ -110,7 +110,8 @@ app.use(helmet({
             imgSrc: ["'self'", "data:", "https:", "http:", "https://api.mapbox.com", "https://*.tiles.mapbox.com", "https://lh3.googleusercontent.com"],
             connectSrc: ["'self'", "https:", "http:", "https://api.mapbox.com", "https://events.mapbox.com", "https://accounts.google.com"],
             workerSrc: ["'self'", "blob:"],
-            childSrc: ["'self'", "blob:"],
+            childSrc: ["'self'", "blob:", "https://open.spotify.com"],
+            frameSrc: ["'self'", "https://open.spotify.com"],
         },
     },
     crossOriginEmbedderPolicy: false, // Disable for compatibility with external resources
@@ -212,6 +213,12 @@ app.use("/chatbot", require("./routes/chatbot.js"));
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
+
+app.get("/tripPlanner/mood-fixing", (req, res) => {
+  res.render("tripPlanner/moodFixing", {
+    title: "Mood Fixing - Travel Tools"
+  });
+});
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
