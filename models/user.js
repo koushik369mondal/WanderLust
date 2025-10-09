@@ -277,6 +277,33 @@ const userSchema = new Schema({
             type: Number,
             required: true,
         },
+        packingList: {
+            categories: {
+                clothing: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                toiletries: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                gadgets: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                activityGear: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                healthEssentials: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }]
+            },
+            generatedAt: Date,
+            weatherConsidered: { type: Boolean, default: false },
+            fallback: { type: Boolean, default: false }
+        },
         status: {
             type: String,
             enum: ['planned', 'booked', 'completed'],
