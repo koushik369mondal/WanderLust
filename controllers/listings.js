@@ -5,8 +5,8 @@ const SearchLog = require("../models/searchLog");
 const weatherService = require("../services/weatherService");
 const aiSummarizationService = require("../services/aiSummarizationService");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
+//const mapToken = process.env.MAP_TOKEN;
+//npm run devconst geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
 
 
