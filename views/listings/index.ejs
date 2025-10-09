@@ -224,6 +224,32 @@
             color: white;
             border-color: rgba(23, 162, 184, 0.3);
         }
+        /* --- FIX FOR ISSUE #236: Dark Mode Compare Button Contrast --- */
+        @media (prefers-color-scheme: dark) {
+            .compare-btn {
+                /* FIX: Force text and border to be visible against the dark card */
+                color: #fff !important; 
+                border-color: #fff !important;
+            }
+        }/* FIX for Issue #257: Text Contrast over Images (Location, Price, GST) */
+.listing-location, 
+.listing-price, 
+.tax-info {
+    /* Set the text color to white for maximum contrast in both Light and Dark Modes */
+    color: white !important; 
+    
+    /* Add a strong shadow to make the white text pop over any light part of the image */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), 
+                 -1px -1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 700 !important; /* Ensure text is bold for better visibility */
+}
+
+/* Ensure the smaller location text also benefits */
+.listing-location {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+        
 
         /* Comparison checkbox styles - Modern Design */
         .compare-checkbox {
@@ -697,6 +723,9 @@
                                     <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                 </span>
                             </p>
+                            <a href="#" class="btn btn-sm btn-outline-danger compare-btn">
+    Compare
+</a>
                         </div>
                         <div class="compare-checkbox">
                             <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
