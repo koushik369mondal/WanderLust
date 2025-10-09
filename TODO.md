@@ -1,33 +1,30 @@
-# Mood Fixing Feature Implementation
+# Holiday Calendar Enhancement TODO
 
-## ✅ Completed Tasks
-- [x] Create moodFixing.ejs view with mood selection UI and Spotify embeds
-- [x] Add route for /trip-planner/mood-fixing in routes/tripPlanner.js
-- [x] Add Mood Fixing link to Travel Tools dropdown in navbar.ejs
-- [x] Implement mood-based playlist mapping with 6 moods (Calm, Adventure, Spiritual, Party, Relax, Romantic)
-- [x] Add interactive JavaScript for mood selection and playlist loading
-- [x] Style the UI with gradient backgrounds, animations, and responsive design
-- [x] Add "Now Playing" section with mood badge and player controls
-- [x] Include share functionality for playlists
-- [x] Add recommended playlists section
+## Backend Changes
+- [ ] Modify `/api/:country` endpoint to accept optional year parameter (`/api/:country/:year`)
+- [ ] Update holiday fetching logic to use requested year
+- [ ] Enhance holiday data to include categories (National, Religious, Cultural, Regional)
+- [ ] Add festival highlighting flags in response
+- [ ] Update fallback data to be dynamic by year
 
-## 🧪 Testing Tasks
-- [ ] Test the Mood Fixing page loads correctly
-- [ ] Verify mood selection changes background and loads playlists
-- [ ] Check Spotify embeds work properly
-- [ ] Test responsive design on mobile devices
-- [ ] Verify navbar link works
+## Frontend Changes
+- [ ] Add year selector dropdown in calendar.ejs
+- [ ] Add search/filter input for month or event name
+- [ ] Implement categorized view (group by type)
+- [ ] Add icons/markers for festivals
+- [ ] Add reminder toggle feature
+- [ ] Update fetch calls to include selected year
+- [ ] Update stats and holiday display for categories
 
-## 🚀 Future Enhancements (Optional)
-- [ ] Integrate OpenWeatherMap API for weather-based mood detection
-- [ ] Add more curated playlists for different moods
-- [ ] Implement user playlist history/saving
-- [ ] Add volume controls and playlist queue
-- [ ] Create mood-based recommendations based on user location/destination
+## Integration & Features
+- [ ] Connect with itinerary generator (link to trip planner)
+- [ ] Implement offline caching for holiday data
+- [ ] Implement reminder notifications (client-side)
 
-## 📝 Notes
-- Used Spotify Embed Widgets for simplicity (no API key required)
-- Implemented 6 core moods with distinct colors and playlist mappings
-- Added smooth animations and interactive UI elements
-- Made fully responsive for mobile and desktop
-- Integrated seamlessly with existing Travel Tools section
+## Testing
+- [ ] Test dynamic year selection
+- [ ] Test search/filter functionality
+- [ ] Test categorized view
+- [ ] Test reminder toggle
+- [ ] Test offline caching
+- [ ] Test integration with trip planner
