@@ -207,6 +207,7 @@ app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
+app.use("/packing-list", require("./routes/packingList.js"));
 app.use("/chatbot", require("./routes/chatbot.js"));
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
