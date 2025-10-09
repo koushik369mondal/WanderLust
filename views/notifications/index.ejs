@@ -1,0 +1,238 @@
+<% layout("/layouts/boilerplate") %>
+<link rel="stylesheet" href="/CSS/notifications.css">
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8 mx-auto">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-bell text-primary me-2"></i>
+                        Notifications
+                    </h2>
+                    <p class="text-muted mb-0">
+                        <% if (unreadCount > 0) { %>
+                            You have <%= unreadCount %> unread notification<%= unreadCount !== 1 ? 's' : '' %>
+                        <% } else { %>
+                            You're all caught up!
+                        <% } %>
+                    </p>
+                </div>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-filter me-1"></i> Filter
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/notifications">All</a></li>
+                        <li><a class="dropdown-item" href="/notifications?status=unread">Unread</a></li>
+                        <li><a class="dropdown-item" href="/notifications?status=read">Read</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/notifications?type=new_review">Reviews</a></li>
+                        <li><a class="dropdown-item" href="/notifications?type=badge_earned">Badges</a></li>
+                        <li><a class="dropdown-item" href="/notifications?type=wishlist_item_discount">Wishlist</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <% if (unreadCount > 0) { %>
+            <div class="mb-4">
+                <button id="markAllRead" class="btn btn-primary btn-sm">
+                    <i class="fas fa-check-double me-1"></i>
+                    Mark All as Read
+                </button>
+            </div>
+            <% } %>
+
+            <!-- Notifications List -->
+            <div id="notificationsList">
+                <% if (notifications && notifications.length > 0) { %>
+                    <% notifications.forEach(notification => { %>
+                        <div class="notification-item <%= notification.status %> <%= notification.priority %>" 
+                             data-id="<%= notification._id %>" 
+                             data-url="<%= notification.data.url || '/' %>">
+                            
+                            <!-- Notification Icon -->
+                            <div class="notification-icon">
+                                <% 
+                                let iconClass = 'fas fa-bell';
+                                let iconColor = 'text-primary';
+                                
+                                switch(notification.type) {
+                                    case 'new_review':
+                                        iconClass = 'fas fa-star';
+                                        iconColor = 'text-warning';
+                                        break;
+                                    case 'badge_earned':
+                                        iconClass = 'fas fa-trophy';
+                                        iconColor = 'text-success';
+                                        break;
+                                    case 'listing_liked':
+                                        iconClass = 'fas fa-heart';
+                                        iconColor = 'text-danger';
+                                        break;
+                                    case 'wishlist_item_discount':
+                                        iconClass = 'fas fa-tag';
+                                        iconColor = 'text-info';
+                                        break;
+                                    case 'system_announcement':
+                                        iconClass = 'fas fa-bullhorn';
+                                        iconColor = 'text-secondary';
+                                        break;
+                                    case 'welcome':
+                                        iconClass = 'fas fa-hand-paper';
+                                        iconColor = 'text-success';
+                                        break;
+                                }
+                                %>
+                                <i class="<%= iconClass %> <%= iconColor %>"></i>
+                            </div>
+
+                            <!-- Notification Content -->
+                            <div class="notification-content">
+                                <div class="notification-header">
+                                    <h6 class="notification-title mb-1"><%= notification.title %></h6>
+                                    <span class="notification-time text-muted">
+                                        <%= notification.timeAgo || new Date(notification.createdAt).toLocaleDateString() %>
+                                    </span>
+                                </div>
+                                
+                                <p class="notification-message mb-2"><%= notification.message %></p>
+                                
+                                <% if (notification.sender) { %>
+                                <div class="notification-sender">
+                                    <small class="text-muted">
+                                        From: <strong><%= notification.sender.username %></strong>
+                                    </small>
+                                </div>
+                                <% } %>
+                            </div>
+
+                            <!-- Notification Actions -->
+                            <div class="notification-actions">
+                                <% if (notification.status === 'unread') { %>
+                                <button class="btn btn-sm btn-outline-primary mark-read-btn" 
+                                        data-id="<%= notification._id %>">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <% } %>
+                                
+                                <button class="btn btn-sm btn-outline-danger dismiss-btn" 
+                                        data-id="<%= notification._id %>">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                
+                                <% if (notification.data.url && notification.data.url !== '/') { %>
+                                <a href="<%= notification.data.url %>" 
+                                   class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <% } %>
+                            </div>
+
+                            <!-- Priority Indicator -->
+                            <% if (notification.priority === 'high' || notification.priority === 'urgent') { %>
+                            <div class="priority-indicator <%= notification.priority %>"></div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="text-center py-5">
+                        <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">No notifications yet</h4>
+                        <p class="text-muted">When you have notifications, they'll appear here.</p>
+                        <a href="/listings" class="btn btn-primary">
+                            <i class="fas fa-compass me-2"></i>
+                            Explore Listings
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Pagination -->
+            <% if (pagination && notifications.length > 0) { %>
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <% if (pagination.page > 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= pagination.page - 1 %>">Previous</a>
+                    </li>
+                    <% } %>
+                    
+                    <li class="page-item active">
+                        <span class="page-link">Page <%= pagination.page %></span>
+                    </li>
+                    
+                    <% if (pagination.hasMore) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= pagination.page + 1 %>">Next</a>
+                    </li>
+                    <% } %>
+                </ul>
+            </nav>
+            <% } %>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2"></i>
+                        Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/notifications/settings" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-cog me-2"></i>
+                            Notification Settings
+                        </a>
+                        
+                        <button id="testNotification" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-flask me-2"></i>
+                            Send Test Notification
+                        </button>
+                        
+                        <a href="/notifications/stats" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            View Statistics
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Quick Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="stat-item">
+                                <h4 class="text-primary mb-0"><%= unreadCount %></h4>
+                                <small class="text-muted">Unread</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-item">
+                                <h4 class="text-secondary mb-0"><%= notifications.length %></h4>
+                                <small class="text-muted">Recent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Toast Container -->
+<div id="notificationToastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+</div>
+
+<script src="/JS/notifications.js"></script>

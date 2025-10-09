@@ -22,7 +22,7 @@
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
 </head>
 
-<body>
+<body <% if(typeof currentUser !== 'undefined' && currentUser) { %>data-user-id="<%= currentUser._id %>"<% } %>>
   <!-- Loading Spinner Component -->
   <div id="global-loading" class="loading-overlay" style="display: none;">
     <div class="loading-spinner"></div>
@@ -37,7 +37,6 @@
     </div>
 
     <%- include("../includes/footer.ejs") %>
-    <%- include("../includes/chatbot.ejs") %>
 
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -112,6 +111,12 @@
       </script>
       <div id="cursor-glow"></div>
       <div id="page-glow" class="page-glow"></div>
+
+  <!-- Socket.io for real-time notifications -->
+  <script src="/socket.io/socket.io.js"></script>
+  
+  <!-- Notification System -->
+  <script src="/JS/notifications.js"></script>
 
 </body>
 

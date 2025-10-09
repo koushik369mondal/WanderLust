@@ -4,7 +4,7 @@ const aiSummarizationService = require("../services/aiSummarizationService");
 const translate = require('google-translate-api-x');
 
 module.exports.createReview = async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
+    let listing = await Listing.findById(req.params.id).populate('owner');
     let newReview = new Review(req.body.review);
     newReview.author = req.user._id;
 
@@ -12,6 +12,23 @@ module.exports.createReview = async (req, res) => {
 
     await newReview.save();
     await listing.save();
+    
+    // Send notification to listing owner (if not reviewing own listing)
+    if (listing.owner._id.toString() !== req.user._id.toString()) {
+        try {
+            const NotificationService = require("../services/notificationService");
+            const notificationService = new NotificationService(global.io);
+            await notificationService.createNewReviewNotification(
+                listing.owner._id,
+                req.user._id,
+                listing._id,
+                newReview._id
+            );
+        } catch (notificationError) {
+            console.error('Error sending review notification:', notificationError);
+        }
+    }
+    
 
     // Regenerate AI summary after adding review
     try {
@@ -57,26 +74,4 @@ module.exports.destroyReview = async (req, res) => {
 
     req.flash("success", "Review deleted!");
     res.redirect(`/listings/${id}`);
-};
-
-module.exports.translateReview = async (req, res) => {
-    try {
-        const { reviewId } = req.params;
-        const review = await Review.findById(reviewId); 
-        
-        if (!review) {
-            return res.status(404).json({ error: 'Review not found' });
-        }
-
-        const targetLang = req.getLocale();
-        if (targetLang === 'en') {
-            return res.json({ translatedText: review.comment });
-        }
-
-        const result = await translate(review.comment, { to: targetLang });
-        res.json({ translatedText: result.text });
-    } catch (error) {
-        console.error('Translation error:', error);
-        res.status(500).json({ error: 'Translation failed' });
-    }
 };

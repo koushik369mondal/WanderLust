@@ -39,6 +39,17 @@ module.exports.signup = async (req, res) => {
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
         console.log(registeredUser);
+        
+        // Send welcome notification
+        try {
+            const NotificationService = require("../services/notificationService");
+            const notificationService = new NotificationService(global.io);
+            await notificationService.createWelcomeNotification(registeredUser._id);
+        } catch (notificationError) {
+            console.error('Error sending welcome notification:', notificationError);
+            // Don't fail registration if notification fails
+        }
+        
         req.login(registeredUser, (err) => {
             if (err) {
                 return next(err);
@@ -236,24 +247,19 @@ module.exports.addToWishlist = async (req, res) => {
             return res.redirect(`/listings/${listingId}`);
         }
 
-        // For GET requests (quick add), use default values
-        const isQuickAdd = req.method === 'GET';
-        
         const wishlistItem = new Wishlist({
             user: req.user._id,
             listing: listingId,
             notes: notes || "",
             priority: priority || 'medium',
-            isPrivate: isQuickAdd ? false : (isPrivate === 'on')
+            isPrivate: isPrivate === 'on'
         });
 
         await wishlistItem.save();
 
         // Log activity
         const user = await User.findById(req.user._id);
-        if (user && user.logActivity) {
-            await user.logActivity('wishlist_add', 'Added listing to wishlist', listingId);
-        }
+        await user.logActivity('wishlist_add', 'Added listing to wishlist', listingId);
 
         req.flash("success", "Added to your wishlist!");
         res.redirect(`/listings/${listingId}`);
@@ -267,7 +273,6 @@ module.exports.addToWishlist = async (req, res) => {
 module.exports.removeFromWishlist = async (req, res) => {
     try {
         const { listingId } = req.params;
-        const { redirect } = req.query;
 
         await Wishlist.findOneAndDelete({
             user: req.user._id,
@@ -276,18 +281,10 @@ module.exports.removeFromWishlist = async (req, res) => {
 
         // Log activity
         const user = await User.findById(req.user._id);
-        if (user && user.logActivity) {
-            await user.logActivity('wishlist_remove', 'Removed listing from wishlist', listingId);
-        }
+        await user.logActivity('wishlist_remove', 'Removed listing from wishlist', listingId);
 
         req.flash("success", "Removed from your wishlist!");
-        
-        // Redirect based on where the request came from
-        if (redirect === 'listing') {
-            res.redirect(`/listings/${listingId}`);
-        } else {
-            res.redirect("/profile/wishlist");
-        }
+        res.redirect("/profile/wishlist");
     } catch (error) {
         console.error("Error removing from wishlist:", error);
         req.flash("error", "Error removing from wishlist. Please try again.");
@@ -318,30 +315,6 @@ module.exports.showWishlist = async (req, res) => {
     } catch (error) {
         console.error("Error loading wishlist:", error);
         req.flash("error", "Error loading wishlist. Please try again.");
-        res.redirect("/profile");
-    }
-};
-
-module.exports.showVacationSlots = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id);
-        
-        if (!user) {
-            req.flash("error", "User not found.");
-            return res.redirect("/listings");
-        }
-
-        // Sort vacation slots by date
-        const vacationSlots = user.vacationSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        res.render("users/vacation-slots.ejs", { 
-            vacationSlots,
-            name: user.username,
-            title: "My Vacation Slots"
-        });
-    } catch (error) {
-        console.error("Error loading vacation slots:", error);
-        req.flash("error", "Error loading vacation slots. Please try again.");
         res.redirect("/profile");
     }
 };
@@ -420,6 +393,7 @@ module.exports.deleteTravelGoal = async (req, res) => {
 module.exports.googleCallback = (req, res) => {
     req.flash("success", "Welcome to Wanderlust!");
     res.redirect("/listings");
+};
 };
 
 // Smart Travel Recommendations - Working Version
