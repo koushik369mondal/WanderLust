@@ -199,6 +199,73 @@
       </div>
       <div class="navbar-nav ms-auto">
         <form class="d-flex search-form-container" role="search" method="GET" action="/listings">
+    <!-- Collapsible Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Primary Navigation -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings">
+            <i class="fa-regular fa-compass"></i>
+            <%= __('all_listings') %>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/listings/about">
+            <i class="fa-solid fa-info-circle"></i>
+            About
+          </a>
+        </li>
+
+        <!-- Travel Tools Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-tools"></i>
+            Travel Tools
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="/trip-planner">
+                <i class="fa-solid fa-route me-2"></i>Trip Planner
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/holiday">
+                <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/listings/compare">
+                <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/weather">
+                <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/achievements">
+                <i class="fa-solid fa-trophy me-2"></i>Achievements
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/leaderboard">
+                <i class="fa-solid fa-chart-line me-2"></i>Leaderboard
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Search Bar -->
+      <div class="search-container me-3">
+        <form role="search" method="GET" action="/listings">
           <div class="position-relative">
             <input class="form-control me-2 search-inp" type="search" name="search" 
                    placeholder="Search destinations, cities, properties..." 
@@ -249,6 +316,33 @@
       </div>
 
       <div class="d-flex justify-content-center">
+      <!-- Utility Controls -->
+      <div class="utility-controls">
+        <!-- Language Dropdown -->
+        <div class="language-dropdown dropdown">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
+                English</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
+                हिंदी</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
+                বাংলা</a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
+                অসমীয়া</a>
+            </li>
+          </ul>
+        </div>
+
         <button id="theme-toggle" class="btn btn-outline-secondary">
           <i id="theme-icon" class="fa-solid fa-moon"></i>
         </button>

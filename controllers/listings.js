@@ -1,11 +1,12 @@
-const User = require("../models/user"); 
+const User = require("../models/user");
 
 const Listing = require("../models/listing");
 const SearchLog = require("../models/searchLog");
 const weatherService = require("../services/weatherService");
+const aiSummarizationService = require("../services/aiSummarizationService");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
+//const mapToken = process.env.MAP_TOKEN;
+//npm run devconst geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
 
 
@@ -361,6 +362,21 @@ module.exports.showListing = async (req, res, next) => {
     }
     listing.avgRating = avgRating;
     listing.isHighlyRatedBadge = avgRating >= 4.5;
+
+    // Generate or retrieve AI summary
+    let aiSummary = listing.aiSummary;
+    if (aiSummarizationService.needsUpdate(listing.aiSummaryLastUpdated, listing.reviews.length)) {
+      try {
+        aiSummary = await aiSummarizationService.generateSummary(listing.reviews, listing.title);
+        listing.aiSummary = aiSummary;
+        listing.aiSummaryLastUpdated = new Date();
+        await listing.save();
+        console.log('AI summary generated for listing:', listing.title);
+      } catch (error) {
+        console.log('AI summary generation failed:', error.message);
+        aiSummary = listing.aiSummary || null;
+      }
+    }
 
     // Get weather data for the listing
     let weatherData = null;

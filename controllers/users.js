@@ -394,3 +394,371 @@ module.exports.googleCallback = (req, res) => {
     req.flash("success", "Welcome to Wanderlust!");
     res.redirect("/listings");
 };
+};
+
+// Smart Travel Recommendations - Working Version
+module.exports.getRecommendations = async (req, res) => {
+    console.log("getRecommendations called - sending simple response");
+    res.send("Recommendations route is working! Server is responding correctly.");
+};
+
+// Helper function to analyze user preferences from reviews
+function analyzeUserPreferences(reviews) {
+    const preferences = {
+        categories: {},
+        countries: {},
+        locations: {},
+        avgRating: 0,
+        totalReviews: reviews.length
+    };
+    
+    let totalRating = 0;
+    
+    reviews.forEach(review => {
+        if (review.listing) {
+            // Count category preferences
+            if (review.listing.category) {
+                preferences.categories[review.listing.category] = 
+                    (preferences.categories[review.listing.category] || 0) + 1;
+            }
+            
+            // Count country preferences
+            if (review.listing.country) {
+                preferences.countries[review.listing.country] = 
+                    (preferences.countries[review.listing.country] || 0) + 1;
+            }
+            
+            // Count location preferences
+            if (review.listing.location) {
+                preferences.locations[review.listing.location] = 
+                    (preferences.locations[review.listing.location] || 0) + 1;
+            }
+            
+            totalRating += review.rating;
+        }
+    });
+    
+    preferences.avgRating = preferences.totalReviews > 0 ? totalRating / preferences.totalReviews : 0;
+    
+    return preferences;
+}
+
+// Get personalized recommendations based on user preferences
+async function getPersonalizedRecommendations(preferences, userId) {
+    const Listing = require("../models/listing");
+    
+    // Build aggregation pipeline for personalized recommendations
+    const pipeline = [
+        // Exclude listings already reviewed by user
+        {
+            $lookup: {
+                from: 'reviews',
+                localField: '_id',
+                foreignField: 'listing',
+                as: 'userReviews',
+                pipeline: [
+                    { $match: { author: userId } }
+                ]
+            }
+        },
+        {
+            $match: {
+                'userReviews': { $size: 0 } // Exclude listings user has already reviewed
+            }
+        },
+        // Add scoring based on preferences
+        {
+            $addFields: {
+                preferenceScore: {
+                    $add: [
+                        // Category preference score
+                        {
+                            $cond: [
+                                { $in: ['$category', Object.keys(preferences.categories)] },
+                                { $multiply: [preferences.categories['$category'] || 0, 3] },
+                                0
+                            ]
+                        },
+                        // Country preference score
+                        {
+                            $cond: [
+                                { $in: ['$country', Object.keys(preferences.countries)] },
+                                { $multiply: [preferences.countries['$country'] || 0, 2] },
+                                0
+                            ]
+                        },
+                        // Location preference score
+                        {
+                            $cond: [
+                                { $in: ['$location', Object.keys(preferences.locations)] },
+                                { $multiply: [preferences.locations['$location'] || 0, 1] },
+                                0
+                            ]
+                        },
+                        // Rating bonus for high-rated listings
+                        { $multiply: ['$avgRating', 0.5] }
+                    ]
+                }
+            }
+        },
+        // Sort by preference score and rating
+        {
+            $sort: {
+                preferenceScore: -1,
+                avgRating: -1,
+                'reviews': -1
+            }
+        },
+        // Limit results
+        { $limit: 5 }
+    ];
+    
+    return await Listing.aggregate(pipeline);
+}
+
+// Get popular destinations (fallback for new users or when personalized recommendations are insufficient)
+async function getPopularRecommendations(userId) {
+    const Listing = require("../models/listing");
+    
+    const pipeline = [
+        // Exclude listings already reviewed by user (if logged in)
+        ...(userId ? [
+            {
+                $lookup: {
+                    from: 'reviews',
+                    localField: '_id',
+                    foreignField: 'listing',
+                    as: 'userReviews',
+                    pipeline: [
+                        { $match: { author: userId } }
+                    ]
+                }
+            },
+            {
+                $match: {
+                    'userReviews': { $size: 0 }
+                }
+            }
+        ] : []),
+        // Add popularity score
+        {
+            $addFields: {
+                popularityScore: {
+                    $add: [
+                        { $multiply: ['$avgRating', 2] }, // Weight rating heavily
+                        { $size: '$reviews' }, // Number of reviews
+                        { $cond: ['$isFeatured', 1, 0] }, // Featured bonus
+                        { $cond: ['$hasDiscount', 0.5, 0] } // Discount bonus
+                    ]
+                }
+            }
+        },
+        // Sort by popularity
+        {
+            $sort: {
+                popularityScore: -1,
+                avgRating: -1,
+                createdAt: -1
+            }
+        },
+        { $limit: 5 }
+    ];
+    
+    return await Listing.aggregate(pipeline);
+}
+
+// Achievements Controller
+module.exports.showAchievements = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
+        // Get all badge definitions
+        const BadgeDefinition = require("../models/badgeDefinition");
+        const allBadges = await BadgeDefinition.find({ isActive: true });
+
+        // Update user stats and check for new badges
+        await BadgeService.updateUserStats(req.user._id);
+        await BadgeService.checkAndAwardBadges(req.user._id);
+
+        // Get updated user with latest badges
+        const updatedUser = await User.findById(req.user._id);
+
+        // Calculate progress for each badge
+        const badgesWithProgress = allBadges.map(badge => {
+            const hasBadge = updatedUser.badges.some(userBadge => userBadge.name === badge.name);
+            let progress = 0;
+            let currentValue = 0;
+
+            if (!hasBadge) {
+                switch (badge.criteria.type) {
+                    case 'profile_completion':
+                        currentValue = updatedUser.profileCompletion || 0;
+                        break;
+                    case 'listing_count':
+                        currentValue = (updatedUser.travelStats && updatedUser.travelStats.totalListings) || 0;
+                        break;
+                    case 'review_count':
+                        currentValue = (updatedUser.travelStats && updatedUser.travelStats.totalReviews) || 0;
+                        break;
+                    case 'destination_count':
+                        currentValue = (updatedUser.favoriteDestinations && updatedUser.favoriteDestinations.length) || 0;
+                        break;
+                    case 'social_engagement':
+                        const socialLinks = updatedUser.socialLinks || {};
+                        currentValue = Object.values(socialLinks).filter(link => link && link.trim() !== '').length;
+                        break;
+                    case 'time_based':
+                        currentValue = Math.floor((new Date() - updatedUser.joinDate) / (1000 * 60 * 60 * 24));
+                        break;
+                }
+                progress = Math.min((currentValue / badge.criteria.threshold) * 100, 100);
+            } else {
+                progress = 100;
+            }
+
+            return {
+                ...badge.toObject(),
+                earned: hasBadge,
+                progress: Math.round(progress),
+                currentValue
+            };
+        });
+
+        // Group badges by category
+        const badgesByCategory = badgesWithProgress.reduce((acc, badge) => {
+            if (!acc[badge.category]) acc[badge.category] = [];
+            acc[badge.category].push(badge);
+            return acc;
+        }, {});
+
+        res.render("users/achievements.ejs", {
+            user: updatedUser,
+            badgesByCategory,
+            BadgeService,
+            title: "My Achievements"
+        });
+    } catch (error) {
+        console.error("Error loading achievements:", error);
+        req.flash("error", "Error loading achievements. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
+// Leaderboard Controller
+module.exports.showLeaderboard = async (req, res) => {
+    try {
+        // Calculate points for each user based on badges and activities
+        const users = await User.find({})
+            .select('username badges travelStats joinDate avatar')
+            .lean();
+
+        // Define points for badge rarities
+        const rarityPoints = { common: 1, rare: 5, epic: 10, legendary: 25 };
+
+        // Calculate scores
+        const leaderboardData = users.map(user => {
+            let badgePoints = 0;
+            const userBadges = user.badges || [];
+            userBadges.forEach(badge => {
+                // Assuming rarity is stored or can be determined
+                // For now, use a simple count, but ideally use rarity
+                badgePoints += rarityPoints[badge.category === 'milestone' ? 'rare' : 'common'] || 1;
+            });
+
+            const userTravelStats = user.travelStats || { totalListings: 0, totalReviews: 0 };
+            const userFavoriteDestinations = user.favoriteDestinations || [];
+
+            const activityPoints = (userTravelStats.totalListings || 0) * 2 +
+                                 (userTravelStats.totalReviews || 0) * 1 +
+                                 userFavoriteDestinations.length * 3;
+
+            const totalPoints = badgePoints + activityPoints;
+
+            return {
+                _id: user._id,
+                username: user.username,
+                avatar: user.avatar?.url || '/images/default-avatar.png',
+                badgesCount: userBadges.length,
+                totalPoints,
+                travelStats: userTravelStats
+            };
+        });
+
+        // Sort by total points descending
+        leaderboardData.sort((a, b) => b.totalPoints - a.totalPoints);
+
+        // Add ranks
+        leaderboardData.forEach((user, index) => {
+            user.rank = index + 1;
+        });
+
+        // Find current user's position
+        const currentUserRank = leaderboardData.find(user => user._id.toString() === req.user._id.toString());
+
+        // Get top 10 and current user if not in top 10
+        let displayUsers = leaderboardData.slice(0, 10);
+        if (currentUserRank && currentUserRank.rank > 10) {
+            displayUsers.push(currentUserRank);
+        }
+
+        res.render("users/leaderboard.ejs", {
+            leaderboard: displayUsers,
+            currentUserRank,
+            title: "Travel Leaderboard"
+        });
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        req.flash("error", "Error loading leaderboard. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
+// Get additional recommendations when we need more
+async function getAdditionalRecommendations(userId, existingRecommendations) {
+    const Listing = require("../models/listing");
+
+    const existingIds = existingRecommendations.map(rec => rec._id);
+
+    const pipeline = [
+        // Exclude already recommended listings
+        {
+            $match: {
+                _id: { $nin: existingIds }
+            }
+        },
+        // Exclude listings already reviewed by user (if logged in)
+        ...(userId ? [
+            {
+                $lookup: {
+                    from: 'reviews',
+                    localField: '_id',
+                    foreignField: 'listing',
+                    as: 'userReviews',
+                    pipeline: [
+                        { $match: { author: userId } }
+                    ]
+                }
+            },
+            {
+                $match: {
+                    'userReviews': { $size: 0 }
+                }
+            }
+        ] : []),
+        // Sort by rating and review count
+        {
+            $sort: {
+                avgRating: -1,
+                'reviews': -1,
+                createdAt: -1
+            }
+        },
+        { $limit: 5 - existingRecommendations.length }
+    ];
+
+    return await Listing.aggregate(pipeline);
+}

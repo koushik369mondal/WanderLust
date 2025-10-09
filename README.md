@@ -58,6 +58,7 @@
 - 🔍 **Smart Search & Filters** - Find destinations by location, price, or features
 - 💾 **Data Caching** - Optimized performance with 10-minute weather caching
 - 🌍 **Multi-Country Support** - Global destinations with localized information
+- 📊 **Admin Analytics Dashboard** - Comprehensive platform metrics and insights
 
 ## 🌟 GSSoC 2025 Participation
 
@@ -75,6 +76,8 @@
 - **Cloud Storage:** Cloudinary (for image uploads)
 - **Maps:** Mapbox API
 - **Authentication:** Passport.js
+- **Analytics:** Chart.js (for admin dashboard)
+- **Data Visualization:** Interactive charts and real-time metrics
 
 ## 📋 Prerequisites
 
@@ -219,22 +222,29 @@ npm start
 ```bash
 WanderLust/
 ├── models/          # Database models (Listing, Review, User)
-├── routes/          # Express routes
+├── routes/          # Express routes (including admin analytics)
 ├── views/           # EJS templates
+│   └── admin/       # Admin dashboard views
 ├── public/          # Static files (CSS, JS, images)
+│   ├── CSS/         # Stylesheets (including admin-dashboard.css)
+│   └── JS/          # JavaScript files (including admin-dashboard.js)
 ├── middleware/      # Custom middleware functions
 ├── utils/           # Utility functions
 ├── init/            # Database initialization
+├── docs/            # Documentation (including ADMIN_DASHBOARD.md)
 ├── .env.example     # Environment variables template
+├── createAdmin.js   # Admin user creation script
 └── app.js           # Main application file
 ```
 
 ## 📝 Available Scripts
 
 ```bash
-npm start          # Start the application
-npm run dev        # Start with nodemon (auto-restart)
-npm test           # Run tests (if available)
+npm start                    # Start the application
+npm run dev                  # Start with nodemon (auto-restart)
+npm test                     # Run tests (if available)
+node createAdmin.js          # Create admin user for dashboard access
+node test-admin-dashboard.js # Test admin dashboard functionality
 ```
 
 ## 🤝 Contributing
@@ -350,6 +360,44 @@ git push origin feature/your-feature-name
 - 🗓️ **Calendar Integration** - Export to Google Calendar/iCal
 - 🌍 **Multi-Country Planning** - Compare holidays across regions
 
+## 📊 Admin Analytics Dashboard
+
+### Quick Setup
+1. **Create Admin User**
+   ```bash
+   node createAdmin.js
+   ```
+
+2. **Access Dashboard**
+   ```
+   URL: http://localhost:8080/admin/dashboard
+   Username: admin
+   Password: admin123
+   ```
+
+3. **Test Dashboard**
+   ```bash
+   node test-admin-dashboard.js
+   ```
+
+### Dashboard Features
+- 📈 **User Growth Trends** - Track new user registrations over time
+- ⭐ **Top Rated Destinations** - Highest rated locations by users
+- 🥇 **Most Active Contributors** - Users with most listings and reviews
+- 💬 **Review Activity** - Review submission patterns and trends
+- 🎯 **Popular Categories** - Distribution of listing categories
+- 💰 **Platform Value Trends** - Pricing trends and listing values
+
+### Key Metrics
+- Real-time user statistics
+- Monthly growth indicators
+- Platform engagement metrics
+- Revenue and pricing analytics
+- Interactive Chart.js visualizations
+- Auto-refresh every 5 minutes
+
+For detailed documentation, see [Admin Dashboard Guide](docs/ADMIN_DASHBOARD.md)
+
 ## 🐛 Common Issues & Solutions
 
 | Issue                       | Solution                                |
@@ -360,6 +408,8 @@ git push origin feature/your-feature-name
 | Maps not loading            | Check your `MAP_TOKEN` in `.env`        |
 | Weather not displaying      | Verify `WEATHER_API_KEY` in `.env`      |
 | Holiday calendar empty      | Check `HOLIDAY_API_KEY` in `.env`       |
+| Admin dashboard not loading | Run `node createAdmin.js` first        |
+| Charts not displaying       | Check browser console for JS errors     |
 | Slow loading times          | Weather caching active - wait 10 mins   |
 
 ## 📜 Code of Conduct
