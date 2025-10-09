@@ -7,6 +7,7 @@ on:
 permissions:
   issues: write
   contents: read
+  repository-projects: write
 
 jobs:
   update-status:
@@ -25,58 +26,143 @@ jobs:
             let status = "";
 
             if (context.payload.action === "opened") {
-              status = "To do";
+              status = "Todo";
             } else if (context.payload.action === "assigned") {
-              status = "In progress";
+              status = "In Progress";
             } else if (context.payload.action === "closed") {
               status = "Done";
             }
 
-            if (!status) return;
+            if (!status) {
+              console.log("⚠️ No valid status found for action:", context.payload.action);
+              return;
+            }
 
             console.log(`🎯 Processing issue #${issue.number}: ${issue.title}`);
             console.log(`📋 Action: ${context.payload.action} → Status: ${status}`);
 
             try {
-              // Get all project items for this issue
-              const projects = await github.rest.projects.listForRepo({
-                owner,
-                repo
-              });
+              // First, try to find organization projects (GitHub Projects V2)
+              console.log("🔍 Searching for GitHub Projects V2...");
+              
+              // Get repository projects using GraphQL
+              const query = `
+                query($owner: String!, $repo: String!) {
+                  repository(owner: $owner, name: $repo) {
+                    projectsV2(first: 10) {
+                      nodes {
+                        id
+                        title
+                        number
+                      }
+                    }
+                  }
+                  organization(login: $owner) {
+                    projectsV2(first: 20) {
+                      nodes {
+                        id
+                        title
+                        number
+                      }
+                    }
+                  }
+                }
+              `;
 
-              if (!projects.data.length) {
-                console.log("⚠️ No projects found for this repo.");
-                return;
+              let projects = [];
+              
+              try {
+                const result = await github.graphql(query, {
+                  owner: owner,
+                  repo: repo
+                });
+                
+                // Combine repository and organization projects
+                projects = [
+                  ...(result.repository?.projectsV2?.nodes || []),
+                  ...(result.organization?.projectsV2?.nodes || [])
+                ];
+                
+                console.log(`📂 Found ${projects.length} GitHub Projects V2`);
+                projects.forEach(p => console.log(`   - ${p.title} (${p.number})`));
+                
+              } catch (graphqlError) {
+                console.log("⚠️ GraphQL query failed:", graphqlError.message);
               }
 
-              console.log(`📂 Found ${projects.data.length} project(s)`);
-
-              const project = projects.data.find(p => p.name === "Wanderlust");
-              if (!project) {
-                console.log("⚠️ Project 'Wanderlust' not found.");
-                console.log("Available projects:", projects.data.map(p => p.name));
-                return;
+              // If no V2 projects found, fall back to Classic Projects
+              if (projects.length === 0) {
+                console.log("🔄 Falling back to Classic Projects...");
+                
+                try {
+                  const classicProjects = await github.rest.projects.listForRepo({
+                    owner,
+                    repo
+                  });
+                  
+                  if (classicProjects.data.length > 0) {
+                    console.log(`📂 Found ${classicProjects.data.length} Classic Project(s)`);
+                    
+                    const project = classicProjects.data.find(p => 
+                      p.name.toLowerCase().includes("wanderlust") || 
+                      p.name.toLowerCase().includes("todo") ||
+                      p.name.toLowerCase().includes("kanban")
+                    );
+                    
+                    if (project) {
+                      console.log(`✅ Using Classic Project: ${project.name}`);
+                      await handleClassicProject(project, issue, status);
+                      return;
+                    }
+                  }
+                } catch (classicError) {
+                  console.log("⚠️ Classic Projects API failed:", classicError.message);
+                }
               }
 
-              console.log(`✅ Found project: ${project.name} (ID: ${project.id})`);
+              // Handle GitHub Projects V2
+              if (projects.length > 0) {
+                const targetProject = projects.find(p => 
+                  p.title.toLowerCase().includes("wanderlust") || 
+                  p.title.toLowerCase().includes("todo") ||
+                  p.title.toLowerCase().includes("main")
+                ) || projects[0]; // Use first project as fallback
+                
+                console.log(`✅ Using Project V2: ${targetProject.title}`);
+                await handleProjectV2(targetProject, issue, status);
+              } else {
+                console.log("⚠️ No projects found. Please create a GitHub Project Board.");
+                console.log("💡 Go to: https://github.com/" + owner + "/" + repo + "/projects");
+              }
 
-              // Find the issue card in the project
+              console.log(`🎉 Project status workflow completed for issue #${issue.number}`);
+
+            } catch (error) {
+              console.error(`❌ Error updating project status:`, error.message);
+              console.error(`📝 Full error:`, error);
+            }
+
+            // Function to handle Classic Projects
+            async function handleClassicProject(project, issue, status) {
+              console.log(`🔧 Handling Classic Project: ${project.name}`);
+              
               const columns = await github.rest.projects.listColumns({
                 project_id: project.id
               });
 
               console.log(`📋 Available columns:`, columns.data.map(c => c.name));
 
-              const column = columns.data.find(c => c.name === status);
+              const column = columns.data.find(c => 
+                c.name.toLowerCase() === status.toLowerCase() ||
+                c.name.toLowerCase().includes(status.toLowerCase())
+              );
+              
               if (!column) {
-                console.log(`⚠️ Column '${status}' not found.`);
-                console.log("Available columns:", columns.data.map(c => c.name));
+                console.log(`⚠️ Column '${status}' not found in Classic Project`);
                 return;
               }
 
-              console.log(`✅ Target column found: ${column.name} (ID: ${column.id})`);
-
-              // Search for the issue card across all columns
+              // Search for existing card
               let issueCard = null;
               for (const col of columns.data) {
                 const cards = await github.rest.projects.listCards({
@@ -89,13 +175,11 @@ jobs:
                 
                 if (card) {
                   issueCard = card;
-                  console.log(`🔍 Found issue card in column: ${col.name}`);
                   break;
                 }
               }
 
               if (issueCard) {
-                // Move existing card to the correct column
                 await github.rest.projects.moveCard({
                   card_id: issueCard.id,
                   position: "top",
@@ -103,19 +187,50 @@ jobs:
                 });
                 console.log(`✅ Moved issue #${issue.number} to '${status}' column`);
               } else {
-                // Create new card if it doesn't exist
-                console.log(`📝 Issue card not found, creating new card in '${status}' column`);
                 await github.rest.projects.createCard({
                   column_id: column.id,
                   content_id: issue.id,
                   content_type: "Issue"
                 });
-                console.log(`✅ Created new card for issue #${issue.number} in '${status}' column`);
+                console.log(`✅ Created new card for issue #${issue.number}`);
               }
+            }
 
-              console.log(`🎉 Successfully updated project status for issue #${issue.number}`);
+            // Function to handle GitHub Projects V2
+            async function handleProjectV2(project, issue, status) {
+              console.log(`🔧 Handling Project V2: ${project.title}`);
+              
+              // Add issue to project V2 using GraphQL
+              const addItemMutation = `
+                mutation($projectId: ID!, $contentId: ID!) {
+                  addProjectV2ItemByContentId(input: {
+                    projectId: $projectId
+                    contentId: $contentId
+                  }) {
+                    item {
+                      id
+                    }
+                  }
+                }
+              `;
 
-            } catch (error) {
-              console.error(`❌ Error updating project status:`, error.message);
-              console.error(`📝 Error details:`, error);
+              try {
+                const result = await github.graphql(addItemMutation, {
+                  projectId: project.id,
+                  contentId: issue.node_id
+                });
+                
+                console.log(`✅ Added issue #${issue.number} to Project V2: ${project.title}`);
+                
+                // Note: Setting status field in V2 projects requires additional GraphQL queries
+                // to find the status field ID and option values, which is more complex
+                console.log(`ℹ️ Status update for V2 projects requires manual configuration`);
+                
+              } catch (v2Error) {
+                if (v2Error.message.includes("already exists")) {
+                  console.log(`ℹ️ Issue #${issue.number} already exists in project`);
+                } else {
+                  console.log(`⚠️ Error adding to Project V2:`, v2Error.message);
+                }
+              }
             }
