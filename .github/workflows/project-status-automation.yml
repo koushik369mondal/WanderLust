@@ -1,0 +1,121 @@
+name: Auto Update Project Status
+
+on:
+  issues:
+    types: [opened, assigned, closed]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set project status based on issue event
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            let status = "";
+
+            if (context.payload.action === "opened") {
+              status = "To do";
+            } else if (context.payload.action === "assigned") {
+              status = "In progress";
+            } else if (context.payload.action === "closed") {
+              status = "Done";
+            }
+
+            if (!status) return;
+
+            console.log(`🎯 Processing issue #${issue.number}: ${issue.title}`);
+            console.log(`📋 Action: ${context.payload.action} → Status: ${status}`);
+
+            try {
+              // Get all project items for this issue
+              const projects = await github.rest.projects.listForRepo({
+                owner,
+                repo
+              });
+
+              if (!projects.data.length) {
+                console.log("⚠️ No projects found for this repo.");
+                return;
+              }
+
+              console.log(`📂 Found ${projects.data.length} project(s)`);
+
+              const project = projects.data.find(p => p.name === "Wanderlust");
+              if (!project) {
+                console.log("⚠️ Project 'Wanderlust' not found.");
+                console.log("Available projects:", projects.data.map(p => p.name));
+                return;
+              }
+
+              console.log(`✅ Found project: ${project.name} (ID: ${project.id})`);
+
+              // Find the issue card in the project
+              const columns = await github.rest.projects.listColumns({
+                project_id: project.id
+              });
+
+              console.log(`📋 Available columns:`, columns.data.map(c => c.name));
+
+              const column = columns.data.find(c => c.name === status);
+              if (!column) {
+                console.log(`⚠️ Column '${status}' not found.`);
+                console.log("Available columns:", columns.data.map(c => c.name));
+                return;
+              }
+
+              console.log(`✅ Target column found: ${column.name} (ID: ${column.id})`);
+
+              // Search for the issue card across all columns
+              let issueCard = null;
+              for (const col of columns.data) {
+                const cards = await github.rest.projects.listCards({
+                  column_id: col.id
+                });
+                
+                const card = cards.data.find(c => 
+                  c.content_url && c.content_url.includes(`/issues/${issue.number}`)
+                );
+                
+                if (card) {
+                  issueCard = card;
+                  console.log(`🔍 Found issue card in column: ${col.name}`);
+                  break;
+                }
+              }
+
+              if (issueCard) {
+                // Move existing card to the correct column
+                await github.rest.projects.moveCard({
+                  card_id: issueCard.id,
+                  position: "top",
+                  column_id: column.id
+                });
+                console.log(`✅ Moved issue #${issue.number} to '${status}' column`);
+              } else {
+                // Create new card if it doesn't exist
+                console.log(`📝 Issue card not found, creating new card in '${status}' column`);
+                await github.rest.projects.createCard({
+                  column_id: column.id,
+                  content_id: issue.id,
+                  content_type: "Issue"
+                });
+                console.log(`✅ Created new card for issue #${issue.number} in '${status}' column`);
+              }
+
+              console.log(`🎉 Successfully updated project status for issue #${issue.number}`);
+
+            } catch (error) {
+              console.error(`❌ Error updating project status:`, error.message);
+              console.error(`📝 Error details:`, error);
+            }
