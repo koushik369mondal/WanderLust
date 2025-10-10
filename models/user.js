@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
+     username: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
@@ -240,11 +244,83 @@ const userSchema = new Schema({
             maxlength: 200,
             default: "",
         }
+    }],
+    tripPlans: [{
+        destination: {
+            type: String,
+            required: true,
+        },
+        startDate: {
+            type: Date,
+            required: true,
+        },
+        endDate: {
+            type: Date,
+            required: true,
+        },
+        travelers: {
+            type: Number,
+            required: true,
+        },
+        budgetType: {
+            type: String,
+            enum: ['budget', 'moderate', 'luxury'],
+            required: true,
+        },
+        costs: {
+            flights: Number,
+            hotels: Number,
+            food: Number,
+            activities: Number
+        },
+        total: {
+            type: Number,
+            required: true,
+        },
+        packingList: {
+            categories: {
+                clothing: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                toiletries: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                gadgets: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                activityGear: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }],
+                healthEssentials: [{
+                    item: String,
+                    packed: { type: Boolean, default: false }
+                }]
+            },
+            generatedAt: Date,
+            weatherConsidered: { type: Boolean, default: false },
+            fallback: { type: Boolean, default: false }
+        },
+        status: {
+            type: String,
+            enum: ['planned', 'booked', 'completed'],
+            default: 'planned'
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        }
     }]
-});
+}, { strict: false });
 
-// Indexes for better performance
-userSchema.index({ username: 1 });
+
+// Apply passport-local-mongoose plugin before indexes
+userSchema.plugin(passportLocalMongoose);
+
+// Indexes for better performance (username index handled by plugin)
 userSchema.index({ email: 1 });
 userSchema.index({ 'travelStats.totalReviews': -1 });
 userSchema.index({ 'badges.earnedAt': -1 });
@@ -304,7 +380,5 @@ userSchema.methods.awardBadge = function(badgeData) {
     }
     return false;
 };
-
-userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', userSchema);

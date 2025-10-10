@@ -467,6 +467,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
+        // Add event listeners to vacation buttons
+        document.querySelectorAll('.btn-mark-vacation').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const date = this.dataset.date;
+                toggleVacation(date, this);
+            });
+        });
+
         // Load destinations for each holiday
         holidays.forEach(holiday => {
             loadDestinations(holiday.date);
@@ -492,6 +500,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.toggleVacation = function(date, button) {
+        // Check if user is logged in
+        if (!document.querySelector('a[href="/logout"]')) {
+            alert('Please login to save vacation slots');
+            window.location.href = '/login';
+            return;
+        }
+        
         const card = button.closest('.holiday-card');
         const isMarked = markedVacations.includes(date);
         

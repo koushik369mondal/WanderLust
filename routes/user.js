@@ -59,6 +59,12 @@ router.post("/profile/travel-goals", isLoggedIn, wrapAsync(userController.addTra
 router.patch("/profile/travel-goals/:goalId/complete", isLoggedIn, wrapAsync(userController.completeTravelGoal));
 router.delete("/profile/travel-goals/:goalId", isLoggedIn, wrapAsync(userController.deleteTravelGoal));
 
+// Achievements Route
+router.get("/achievements", isLoggedIn, wrapAsync(userController.showAchievements));
+
+// Leaderboard Route
+router.get("/leaderboard", isLoggedIn, wrapAsync(userController.showLeaderboard));
+
 // Smart Travel Recommendations Route
 router.get("/recommendations", (req, res) => {
     console.log("Direct route handler called");
