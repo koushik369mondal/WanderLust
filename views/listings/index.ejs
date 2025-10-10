@@ -1,10 +1,7 @@
-
-
-
 <% layout('/layouts/boilerplate') %>
 
     <style>
-         .controls-bar {
+          .controls-bar {
             background: var(--bg-primary);
             border-radius: 15px;
             padding: 1rem;
@@ -132,7 +129,7 @@
             box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
         }
         .search-btn {
-        padding-top: 0.5rem;   
+        padding-top: 0.5rem;  
         padding-bottom: 0.5rem;
 }
 
@@ -471,7 +468,6 @@
     </div>
 <% } %>
 
-<!-- Category Filters Row -->
 <div id="filters">
     <div class="filters-container">
         <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
@@ -543,7 +539,6 @@
     </div>
 </div>
 
-<!-- Controls Row -->
 <div class="controls-bar mt-3">
     <div class="row">
         <div class="col-md-6">
@@ -562,10 +557,8 @@
     </div>
 </div>
 
-<!-- Active Filters Display -->
 <div class="active-filters mb-3" id="activeFilters" style="display: none;"></div>
 
-<!-- Advanced Filters Bar -->
 <div class="advanced-filters-container mb-4" style="display: none;">
     <div class="filters-panel">
         <div class="row g-3">
@@ -620,7 +613,6 @@
     </div>
 </div>
 
-<!-- Loading Indicator -->
 <div class="loading-indicator text-center my-4" id="loadingIndicator" style="display: none;">
     <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -628,8 +620,7 @@
     <p class="mt-2">Filtering listings...</p>
 </div>
 
-<!-- Search Results Header -->
-    <% if (searchQuery) { %>
+<% if (searchQuery) { %>
         <div class="search-results-header mt-4 mb-3">
             <div class="container-fluid">
                 <div class="row align-items-center">
@@ -656,7 +647,6 @@
         </div>
     <% } %>
 
-    <!-- No Results Message -->
     <% if (searchQuery && totalResults === 0) { %>
         <div class="no-results-container text-center py-5">
             <div class="container">
@@ -684,65 +674,77 @@
         </div>
     <% } %>
 
-    <div class="listings-container" id="listingsContainer">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
-        <% for(let listing of allListings) { %>
-            <div class="col mb-4">
-                <a href="/listings/<%= listing._id %>" class="listing-link">
-                    <div class="card listing-card h-100">
-                        <div class="listing-badges">
-        <% if (listing.isNewBadge) { %>
-            <span class="badge badge-new">New</span>
-        <% } %>
-        <% if (listing.isFeaturedBadge) { %>
-            <span class="badge badge-featured">Featured</span>
-        <% } %>
-        <% if (listing.isDiscountBadge) { %>
-            <span class="badge badge-discount">Discount</span>
-        <% } %>
-        <% if (listing.isHighlyRatedBadge) { %>
-            <span class="badge badge-rated highly-rated-badge" 
-                data-title="<%= listing.title.replace(/"/g, '&quot;') %>" 
-                data-avg="<%= listing.avgRating ? listing.avgRating.toFixed(2) : '0.00' %>">Highly Rated</span>
-        <% } %>
-        <% if (listing.hasFeaturedReview) { %>
-            <span class="badge badge-featured-review">Featured Review</span>
-        <% } %>
-    </div>
-                        <div class="listing-image-container">
-                            <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
-                                alt="listing_image" />
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">
-                                <b class="listing-title">
-                                    <%= listing.title %>
-                                </b><br />
-                                <small class="text-muted listing-location">
-                                    <i class="fas fa-map-marker-alt me-1"></i>
-                                    <%= listing.location %>, <%= listing.country %>
-                                </small><br />
-                                <span class="listing-price">
-                                    ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
-                                    <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
-                                </span>
-                            </p>
-                            <!-- <a href="#" class="btn btn-sm btn-outline-danger compare-btn">
-    Compare
-</a> -->
-                        </div>
-                        <div class="compare-checkbox">
-                            <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
-                            <span>Compare</span>
-                        </div>
+    <% if (allListings && allListings.length > 0) { %>
+        <div class="listings-container" id="listingsContainer">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
+                <% for(let listing of allListings) { %>
+                    <div class="col mb-4">
+                        <a href="/listings/<%= listing._id %>" class="listing-link">
+                            <div class="card listing-card h-100">
+                                <div class="listing-badges">
+                                    <% if (listing.isNewBadge) { %>
+                                        <span class="badge badge-new">New</span>
+                                    <% } %>
+                                    <% if (listing.isFeaturedBadge) { %>
+                                        <span class="badge badge-featured">Featured</span>
+                                    <% } %>
+                                    <% if (listing.isDiscountBadge) { %>
+                                        <span class="badge badge-discount">Discount</span>
+                                    <% } %>
+                                    <% if (listing.isHighlyRatedBadge) { %>
+                                        <span class="badge badge-rated highly-rated-badge" 
+                                            data-title="<%= listing.title.replace(/"/g, '&quot;') %>" 
+                                            data-avg="<%= listing.avgRating ? listing.avgRating.toFixed(2) : '0.00' %>">Highly Rated</span>
+                                    <% } %>
+                                    <% if (listing.hasFeaturedReview) { %>
+                                        <span class="badge badge-featured-review">Featured Review</span>
+                                    <% } %>
+                                </div>
+                                <div class="listing-image-container">
+                                    <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
+                                        alt="listing_image" />
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <b class="listing-title">
+                                            <%= listing.title %>
+                                        </b><br />
+                                        <small class="text-muted listing-location">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            <%= listing.location %>, <%= listing.country %>
+                                        </small><br />
+                                        <span class="listing-price">
+                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
+                                            <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="compare-checkbox">
+                                    <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
+                                    <span>Compare</span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
+                <% } %>
+            </div>
+        </div>
+    <% } else if (!searchQuery) { %>
+        <div class="row mt-4">
+            <div class="col-12 text-center py-5 no-results-container">
+                <i class="fas fa-home fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted mb-3">Welcome to WanderLust!</h3>
+                <p class="text-muted mb-4">
+                    It looks a bit empty here. Be the first to add a listing and get started!
+                </p>
+                <a href="/listings/new" class="btn btn-dark add-btn mt-2" style="padding: 1rem 2rem; font-size: 1.2rem;">
+                    <i class="fas fa-plus-circle me-2"></i>Create New Listing
                 </a>
             </div>
-            <% } %>
         </div>
-    </div>
+    <% } %>
 
-    <!-- Floating Compare Button -->
+
     <button id="compare-btn" style="display: none;">
         <i class="fas fa-balance-scale me-2"></i>
         Compare (<span id="compare-count">0</span>)
