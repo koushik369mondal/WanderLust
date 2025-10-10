@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     class SearchManager {
         constructor() {
             this.searchForm = document.querySelector('form[role="search"]');
-            this.searchInput = document.querySelector(".search-inp");
+            this.searchInput = document.querySelector(".search-input");
             this.suggestionsContainer = document.getElementById("searchSuggestions");
             this.debounceTimer = null;
             this.init();
