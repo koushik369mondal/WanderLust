@@ -36,8 +36,7 @@ const phrases = {
         "Switzerland": "Grüezi", // NEW (Swiss German)
         "Tanzania": "Hujambo", // NEW (Swahili)
         "Maldives": "Assalaamu Alaikum", // NEW (Dhivehi/Formal)
-        "Costa Rica": "Pura vida", // NEW (Common Greeting/Slogan)
-        "UAE": "Marhaban"
+        "Costa Rica": "Pura vida"
     },
 
     "Thank you": {
@@ -74,8 +73,7 @@ const phrases = {
         "Switzerland": "Danke", // NEW
         "Tanzania": "Asante", // NEW
         "Maldives": "Shukuriyaa", // NEW
-        "Costa Rica": "Gracias", // NEW
-        "UAE": "Shukran"	
+        "Costa Rica": "Gracias"	
     },
 
     "Excuse me": {
@@ -112,8 +110,8 @@ const phrases = {
         "Switzerland": "Entschuldigung", // NEW
         "Tanzania": "Samahani", // NEW
         "Maldives": "Ma’aaf kurey", // NEW
-        "Costa Rica": "Permiso", // NEW
-        "UAE": "Law samaḥt"	
+        "Costa Rica": "Permiso"// NEW
+        
     },
 
     "Yes": {
@@ -150,8 +148,7 @@ const phrases = {
         "Switzerland": "Ja", // NEW
         "Tanzania": "Ndio", // NEW
         "Maldives": "Aan", // NEW
-        "Costa Rica": "Sí",
-        "UAE": "Na'am"	 // NEW
+        "Costa Rica": "Sí"	 // NEW
     },
 
     "No": {
@@ -188,8 +185,8 @@ const phrases = {
         "Switzerland": "Nein", // NEW
         "Tanzania": "Hapana", // NEW
         "Maldives": "Noon", // NEW
-        "Costa Rica": "No" ,
-        "UAE": "Laa"	// NEW
+        "Costa Rica": "No" 
+        
     }
 };
 
