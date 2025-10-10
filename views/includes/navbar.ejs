@@ -218,6 +218,16 @@
           </a>
           <ul class="dropdown-menu">
             <li>
+              <a class="dropdown-item" href="/trip-planner">
+                <i class="fa-solid fa-route me-2"></i>Trip Planner
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/packing-list">
+                <i class="fa-solid fa-suitcase me-2"></i>Packing List Generator
+              </a>
+            </li>
+            <li>
               <a class="dropdown-item" href="/holiday">
                 <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
               </a>
@@ -228,11 +238,29 @@
               </a>
             </li>
             <li>
+              <a class="dropdown-item" href="/trip-planner/mood-fixing">
+                <i class="fa-solid fa-music me-2"></i>Mood Fixing
+              </a>
+            </li>
+            <li>
               <hr class="dropdown-divider">
             </li>
             <li>
               <a class="dropdown-item" href="/weather">
                 <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/achievements">
+                <i class="fa-solid fa-trophy me-2"></i>Achievements
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/leaderboard">
+                <i class="fa-solid fa-chart-line me-2"></i>Leaderboard
               </a>
             </li>
           </ul>
@@ -291,6 +319,14 @@
                 <li>
                   <a class="dropdown-item" href="/profile/vacation-slots">
                     <i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots
+                    <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length > 0) { %>
+                      <span class="badge bg-primary ms-2"><%= currentUser.vacationSlots.length %></span>
+                    <% } %>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/trip-planner/my-trips">
+                    <i class="fa-solid fa-suitcase-rolling me-2"></i>My Trip Plans
                   </a>
                 </li>
                 <% if (currentUser && currentUser.isAdmin) { %>
@@ -343,7 +379,7 @@
             </li>
           </ul>
         </div>
-        
+
         <button id="theme-toggle" class="btn btn-outline-secondary">
           <i id="theme-icon" class="fa-solid fa-moon"></i>
         </button>

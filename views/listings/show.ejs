@@ -376,6 +376,35 @@
         </div>
     </div>
 </div>
+
+<% if (typeof listing !== 'undefined' && listing.aiSummary) { %>
+<div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card ai-summary-card">
+      <div class="card-header">
+        <h4 class="mb-0">
+          <i class="fa-solid fa-brain me-2"></i>
+          <%= __('ai_insights') %>
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="ai-summary-content">
+          <div class="ai-summary-icon">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="ai-summary-text">
+            <p class="mb-0"><%= listing.aiSummary %></p>
+          </div>
+        </div>
+        <div class="ai-summary-footer">
+          <small class="text-muted">
+            <i class="fa-solid fa-info-circle me-1"></i>
+            <%= __('ai_generated_summary') %>
+          </small>
+        </div>
+      </div>
+    </div>
+</div>
+<% } %>
   <!-- AI Recommendations Section -->
   <% if (typeof recommendations !== 'undefined' && recommendations && recommendations.length > 0) { %>
   <div class="col-12 col-md-8 offset-md-2 mb-4">
@@ -691,5 +720,48 @@ document.addEventListener('DOMContentLoaded', function() {
 .translate-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* AI Summary Styles */
+.ai-summary-card {
+  border: 2px solid #e3f2fd;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1);
+}
+
+.ai-summary-card .card-header {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.ai-summary-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.ai-summary-icon {
+  font-size: 2rem;
+  color: #2196f3;
+  background: rgba(33, 150, 243, 0.1);
+  padding: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ai-summary-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #424242;
+  margin: 0;
+  font-weight: 500;
+}
+
+.ai-summary-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
 }
 </style>
