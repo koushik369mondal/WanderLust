@@ -333,20 +333,49 @@
     </div>
     <% } else { %>
     <div class="no-reviews-container">
-      <div class="no-reviews-content">
-        <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
-        <h5><%= __('no_reviews_yet') %></h5>
-        <p><%= __('be_first_to_review') %></p>
-        <% if (!currentUser) { %>
-        <a href="/login" class="btn btn-outline-primary">
-          <i class="fa-solid fa-sign-in-alt me-2"></i><%= __('login_to_review') %>
-        </a>
-        <% } %>
-      </div>
+      <div class="no-reviews-content">
+        <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
+        <h5><%= __('no_reviews_yet') %></h5>
+        <p><%= __('be_first_to_review') %></p>
+        <% if (!currentUser) { %>
+        <a href="/login" class="btn btn-outline-primary">
+          <i class="fa-solid fa-sign-in-alt me-2"></i><%= __('login_to_review') %>
+        </a>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  
+<% 
+    const country = listing.country;
+%>
+<div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card p-4">
+        <h4 class="mb-3"><i class="fa-solid fa-language me-2"></i>Travel Phrases for <%= country %></h4>
+        
+        <div class="row">
+            <% if (phrases) { %>
+                <% Object.keys(phrases).forEach(englishPhrase => { %>
+                    <% 
+                        // Find the translation for the current listing's country
+                        const translation = phrases[englishPhrase][country];
+                    %>
+                    <% if (translation) { %>
+                        <div class="col-md-6 mb-2">
+                            <p class="mb-0">
+                                <strong><%= englishPhrase %>:</strong> 
+                                <span class="text-primary fw-bold"><%= translation %></span>
+                            </p>
+                        </div>
+                    <% } %>
+                <% }) %>
+            <% } else { %>
+                <p class="text-muted">No phrases available for <%= country %> yet.</p>
+            <% } %>
+        </div>
     </div>
-    <% } %>
-  </div>
-  
+</div>
   <!-- AI Recommendations Section -->
   <% if (typeof recommendations !== 'undefined' && recommendations && recommendations.length > 0) { %>
   <div class="col-12 col-md-8 offset-md-2 mb-4">

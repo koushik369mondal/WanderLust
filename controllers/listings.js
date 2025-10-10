@@ -1,11 +1,12 @@
+const phrases = require('../utils/phrases');
 const User = require("../models/user"); 
 
 const Listing = require("../models/listing");
 const SearchLog = require("../models/searchLog");
 const weatherService = require("../services/weatherService");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
+//const mapToken = process.env.MAP_TOKEN;
+//const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
 
 
@@ -302,7 +303,7 @@ module.exports.showListing = async (req, res, next) => {
     console.log("Template path:", templatePath);
     
     // Add error handling for template rendering main
-    res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations, weatherData, forecast, bestTimeToVisit }, (err, html) => {
+    res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations, weatherData, forecast, bestTimeToVisit, phrases }, (err, html) => {
 
    
       if (err) {
