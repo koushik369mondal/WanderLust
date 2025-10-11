@@ -97,7 +97,7 @@
 .main-content {
     padding: 2rem;
     background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
+   
     min-height: 100vh;
 }
 
