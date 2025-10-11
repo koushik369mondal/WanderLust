@@ -1,30 +1,12 @@
-# Holiday Calendar Enhancement TODO
+# TODO: Fix Weather Dropdown
 
-## Backend Changes
-- [ ] Modify `/api/:country` endpoint to accept optional year parameter (`/api/:country/:year`)
-- [ ] Update holiday fetching logic to use requested year
-- [ ] Enhance holiday data to include categories (National, Religious, Cultural, Regional)
-- [ ] Add festival highlighting flags in response
-- [ ] Update fallback data to be dynamic by year
+## Current Issue
+The dropdown in the travel tool of the weather section is not populated with destinations because the 'destinations' variable is not passed to the view.
 
-## Frontend Changes
-- [ ] Add year selector dropdown in calendar.ejs
-- [ ] Add search/filter input for month or event name
-- [ ] Implement categorized view (group by type)
-- [ ] Add icons/markers for festivals
-- [ ] Add reminder toggle feature
-- [ ] Update fetch calls to include selected year
-- [ ] Update stats and holiday display for categories
+## Plan
+- Modify routes/weather.js to fetch unique locations from listings and pass them as 'destinations' to the weather.ejs view.
 
-## Integration & Features
-- [ ] Connect with itinerary generator (link to trip planner)
-- [ ] Implement offline caching for holiday data
-- [ ] Implement reminder notifications (client-side)
-
-## Testing
-- [ ] Test dynamic year selection
-- [ ] Test search/filter functionality
-- [ ] Test categorized view
-- [ ] Test reminder toggle
-- [ ] Test offline caching
-- [ ] Test integration with trip planner
+## Steps
+- [x] Edit routes/weather.js to add logic for fetching destinations using Listing.distinct('location')
+- [ ] Test the weather page to ensure dropdown is populated with locations
+- [ ] Verify that selecting a destination triggers the weather search functionality
