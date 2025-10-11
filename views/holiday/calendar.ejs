@@ -298,8 +298,8 @@
 
     <div class="country-selector">
         <div class="row align-items-center">
-            <div class="col-md-6">
-                <label for="countrySelect" class="form-label fw-bold">🌍 Select Country:</label>
+            <div class="col-md-3">
+                <label for="countrySelect" class="form-label fw-bold">🌍 Country:</label>
                 <select class="form-select form-select-lg" id="countrySelect">
                     <option value="US">🇺🇸 United States</option>
                     <option value="IN">🇮🇳 India</option>
@@ -313,12 +313,38 @@
                     <option value="JP">🇯🇵 Japan</option>
                 </select>
             </div>
+            <div class="col-md-3">
+                <label for="yearSelect" class="form-label fw-bold">📅 Year:</label>
+                <select class="form-select form-select-lg" id="yearSelect">
+                    <option value="2024">2024</option>
+                    <option value="2025" selected>2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                </select>
+            </div>
             <div class="col-md-6">
                 <div class="mt-3">
                     <small class="text-muted">
                         <i class="fa-solid fa-info-circle me-1"></i>
                         View holidays and plan your trips around long weekends
                     </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label for="searchInput" class="form-label fw-bold">🔍 Search Holidays:</label>
+                <input type="text" class="form-control form-control-lg" id="searchInput" placeholder="Search by holiday name...">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">🏷️ Filter by Category:</label>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-outline-primary btn-sm category-filter active" data-category="all">All</button>
+                    <button class="btn btn-outline-success btn-sm category-filter" data-category="National">National</button>
+                    <button class="btn btn-outline-warning btn-sm category-filter" data-category="Religious">Religious</button>
+                    <button class="btn btn-outline-info btn-sm category-filter" data-category="Regional">Regional</button>
                 </div>
             </div>
         </div>
@@ -354,21 +380,30 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const countrySelect = document.getElementById('countrySelect');
+    const yearSelect = document.getElementById('yearSelect');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilters = document.querySelectorAll('.category-filter');
     const holidayResults = document.getElementById('holidayResults');
     let markedVacations = JSON.parse(localStorage.getItem('markedVacations') || '[]');
+    let allHolidays = [];
+    let currentCountry = '';
+    let currentYear = '';
 
-    function loadHolidays(country) {
+    function loadHolidays(country, year) {
         holidayResults.innerHTML = `
             <div class="loading">
                 <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
-                <p class="mt-3">Loading holidays for ${country}...</p>
+                <p class="mt-3">Loading holidays for ${country} ${year}...</p>
             </div>
         `;
 
-        fetch(`/holiday/api/${country}`)
+        fetch(`/holiday/api/${country}/${year}`)
             .then(response => response.json())
             .then(data => {
-                displayHolidays(data.holidays, data.country);
+                allHolidays = data.holidays;
+                currentCountry = data.country;
+                currentYear = data.year;
+                displayHolidays(allHolidays, currentCountry, currentYear);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -381,20 +416,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    function displayHolidays(holidays, country) {
+    function displayHolidays(holidays, country, year) {
         const statsContainer = document.getElementById('holidayStats');
-        
+
         if (holidays.length === 0) {
             holidayResults.innerHTML = `
                 <div class="alert alert-info">
                     <i class="fa-solid fa-info-circle me-2"></i>
-                    No holidays found for ${country}. Try selecting a different country.
+                    No holidays found for ${country} ${year}. Try selecting a different country or year.
                 </div>
             `;
             statsContainer.style.display = 'none';
             return;
         }
-        
+
         // Calculate stats
         const today = new Date();
         const longWeekendCount = holidays.filter(h => {
@@ -402,10 +437,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const day = date.getDay();
             return day === 1 || day === 5; // Monday or Friday
         }).length;
-        
+
         const upcomingCount = holidays.filter(h => new Date(h.date) > today).length;
         const markedCount = holidays.filter(h => markedVacations.includes(h.date)).length;
-        
+
         // Update stats
         document.getElementById('totalHolidays').textContent = holidays.length;
         document.getElementById('longWeekends').textContent = longWeekendCount;
@@ -421,9 +456,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const isUpcoming = holidayDate > new Date();
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             const formattedDate = `${monthNames[holidayDate.getMonth()]} ${holidayDate.getDate()}, ${holidayDate.getFullYear()}`;
-            
+
             return `
-                <div class="holiday-card ${isMarked ? 'marked-vacation' : ''} ${isLongWeekend ? 'long-weekend' : ''} ${!isUpcoming ? 'past-holiday' : ''}" data-date="${holiday.date}">
+                <div class="holiday-card ${isMarked ? 'marked-vacation' : ''} ${isLongWeekend ? 'long-weekend' : ''} ${!isUpcoming ? 'past-holiday' : ''}" data-date="${holiday.date}" data-category="${holiday.category}" data-name="${holiday.name.toLowerCase()}">
                     <div class="holiday-date">
                         <i class="fa-solid fa-calendar-day"></i>
                         <div>
@@ -432,18 +467,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         ${!isUpcoming ? '<span class="badge bg-secondary ms-auto">Past</span>' : ''}
                         ${isUpcoming ? '<span class="badge bg-success ms-auto">Upcoming</span>' : ''}
+                        ${holiday.isFestival ? '<i class="fa-solid fa-star ms-2" style="color: gold;" title="Festival"></i>' : ''}
                     </div>
-                    <div class="holiday-name">${holiday.name}</div>
+                    <div class="holiday-name">${holiday.name} ${holiday.isFestival ? '<i class="fa-solid fa-fire" style="color: orange;"></i>' : ''}</div>
                     <div class="holiday-type">
                         <i class="fa-solid fa-tag me-1"></i>
-                        ${holiday.type}
+                        ${holiday.category} - ${holiday.type}
                     </div>
                     ${isLongWeekend ? '<div class="mb-2"><i class="fa-solid fa-star me-1" style="color: gold;"></i><small class="fw-bold">🎉 Long Weekend Opportunity!</small></div>' : ''}
-                    
+
                     <button class="btn-mark-vacation" data-date="${holiday.date}">
                         ${isMarked ? '✓ Marked for Vacation' : 'Mark as Vacation Slot'}
                     </button>
-                    
+
                     <div class="destinations-section">
                         <div class="d-flex align-items-center">
                             <i class="fa-solid fa-map-marker-alt me-2"></i>
@@ -459,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         holidayResults.innerHTML = `
             <div class="mb-4">
-                <h3><i class="fa-solid fa-flag me-2"></i>Holidays in ${country} (${holidays.length} holidays)</h3>
+                <h3><i class="fa-solid fa-flag me-2"></i>Holidays in ${country} ${year} (${holidays.length} holidays)</h3>
                 <p class="text-muted">✨ Scroll to see all holidays • Click "Mark as Vacation Slot" to save for trip planning</p>
             </div>
             <div class="holiday-grid">
@@ -479,6 +515,19 @@ document.addEventListener('DOMContentLoaded', function() {
         holidays.forEach(holiday => {
             loadDestinations(holiday.date);
         });
+    }
+
+    function filterHolidays() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeCategory = document.querySelector('.category-filter.active').dataset.category;
+
+        let filtered = allHolidays.filter(holiday => {
+            const matchesSearch = holiday.name.toLowerCase().includes(searchTerm);
+            const matchesCategory = activeCategory === 'all' || holiday.category === activeCategory;
+            return matchesSearch && matchesCategory;
+        });
+
+        displayHolidays(filtered, currentCountry, currentYear);
     }
 
     function loadDestinations(date) {
@@ -522,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     card.classList.remove('marked-vacation');
                     button.textContent = 'Mark as Vacation Slot';
                     localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
-                    loadHolidays(countrySelect.value);
+                    filterHolidays();
                 } else {
                     alert('Failed to remove vacation slot');
                 }
@@ -533,8 +582,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             // Add to server
-            const holidayName = card.querySelector('.holiday-name').textContent;
-            const holidayType = card.querySelector('.holiday-type').textContent;
+            const holidayName = card.querySelector('.holiday-name').textContent.trim();
+            const holidayType = card.querySelector('.holiday-type').textContent.trim();
             const country = countrySelect.options[countrySelect.selectedIndex].text.split(' ')[1];
             
             fetch('/holiday/vacation-slot', {
@@ -556,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     card.classList.add('marked-vacation');
                     button.textContent = '✓ Marked for Vacation';
                     localStorage.setItem('markedVacations', JSON.stringify(markedVacations));
-                    loadHolidays(countrySelect.value);
+                    filterHolidays();
                 } else {
                     alert(data.error || 'Failed to save vacation slot');
                 }
@@ -568,8 +617,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // Event listeners
     countrySelect.addEventListener('change', function() {
-        loadHolidays(this.value);
+        loadHolidays(this.value, yearSelect.value);
+    });
+
+    yearSelect.addEventListener('change', function() {
+        loadHolidays(countrySelect.value, this.value);
+    });
+
+    searchInput.addEventListener('input', filterHolidays);
+
+    categoryFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            categoryFilters.forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+            filterHolidays();
+        });
     });
     
     // Add smooth scroll behavior
@@ -589,7 +653,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .finally(() => {
             // Load initial holidays
-            loadHolidays(countrySelect.value);
+            loadHolidays(countrySelect.value, yearSelect.value);
         });
     
     // Add keyboard navigation

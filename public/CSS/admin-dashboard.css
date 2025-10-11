@@ -124,14 +124,18 @@
 .stat-card {
     background: rgba(255,255,255,0.95);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 1.25rem 1.25rem 1.75rem 1.25rem;
     box-shadow: var(--admin-shadow);
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
     border: 1px solid rgba(255,255,255,0.2);
     backdrop-filter: blur(10px);
-    height: 120px;
+    height: 170px;
+    width: 150px;
+    overflow: hidden;
 }
 
 .stat-card:hover {
@@ -140,14 +144,14 @@
 }
 
 .stat-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem;
-    font-size: 1.75rem;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
     color: white;
     position: relative;
     overflow: hidden;
@@ -200,26 +204,37 @@
 }
 
 .stat-content {
-    flex: 1;
+    flex: none;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .stat-content h3 {
-    font-size: 2.25rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: var(--admin-primary);
     margin: 0;
-    line-height: 1;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .stat-content p {
     color: var(--admin-secondary);
     margin: 0.25rem 0 0 0;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .growth-indicator {
-    display: block;
+    display: inline-block;
     font-size: 0.75rem;
     margin-top: 0.5rem;
     color: var(--admin-secondary);
@@ -227,7 +242,11 @@
     padding: 0.25rem 0.5rem;
     border-radius: 12px;
     background: rgba(0,0,0,0.05);
-    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: middle;
 }
 
 .growth-indicator.positive {
@@ -338,8 +357,7 @@
     
     .stat-card {
         margin-bottom: 1rem;
-        height: auto;
-        min-height: 100px;
+        height: 120px;
     }
     
     .stat-content h3 {
