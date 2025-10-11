@@ -1,3 +1,5 @@
+
+
 // Using built-in fetch instead of axios
 
 class WeatherService {
@@ -46,7 +48,7 @@ class WeatherService {
     async getForecast(lat, lon) {
         const cacheKey = `forecast_${lat}_${lon}`;
         const cached = this.cache.get(cacheKey);
-
+        
         if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
             return cached.data;
         }
@@ -73,40 +75,6 @@ class WeatherService {
         } catch (error) {
             console.error('Forecast API error:', error.message);
             return [];
-        }
-    }
-
-    async getWeatherByLocation(location) {
-        try {
-            // First, geocode the location to get coordinates
-            const geocodeUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${this.apiKey}`;
-            const geocodeResponse = await fetch(geocodeUrl);
-            const geocodeData = await geocodeResponse.json();
-
-            if (!geocodeData || geocodeData.length === 0) {
-                throw new Error('Location not found');
-            }
-
-            const { lat, lon, name, country } = geocodeData[0];
-
-            // Get current weather for the coordinates
-            const weatherData = await this.getCurrentWeather(lat, lon);
-            const forecastData = await this.getForecast(lat, lon);
-
-            return {
-                location: {
-                    name,
-                    country,
-                    lat,
-                    lon
-                },
-                current: weatherData,
-                forecast: forecastData,
-                bestTimeToVisit: this.getBestTimeToVisit(name, country)
-            };
-        } catch (error) {
-            console.error('Weather by location error:', error.message);
-            throw error;
         }
     }
 
