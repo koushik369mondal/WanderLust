@@ -4,6 +4,9 @@ const SearchLog = require("../models/searchLog");
 // Keep your new utility import below the core model imports
 const phrases = require('../utils/phrases'); 
 
+const aiSummarizationService = require('../services/aiSummarizationService');
+const weatherService = require('../services/weatherService');
+
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 // const mapToken = process.env.MAP_TOKEN; 
 // const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
