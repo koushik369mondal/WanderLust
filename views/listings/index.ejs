@@ -164,6 +164,8 @@
 
         .listing-card .card-body {
             padding: 1rem;
+            min-height: 140px; 
+
         }
 
         .listing-badges {
@@ -488,7 +490,7 @@
         <% for(let listing of allListings) { %>
             <div class="col mb-4">
                 <a href="/listings/<%= listing._id %>" class="listing-link">
-                    <div class="card listing-card h-100">
+                    <div class="card listing-card h-100 d-flex flex-column">
                         <div class="listing-badges">
         <% if (listing.isNewBadge) { %>
             <span class="badge badge-new">New</span>
@@ -512,8 +514,8 @@
                             <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
                                 alt="listing_image" />
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">
+                            <div class="card-body d-flex flex-column">                            
+                                <p class="card-text">
                                 <b class="listing-title">
                                     <%= listing.title %>
                                 </b><br />

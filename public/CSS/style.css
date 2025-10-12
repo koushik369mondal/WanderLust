@@ -118,7 +118,61 @@ body {
   transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     transform 0.2s ease;
 }
+/* FINAL FIX: Vibrant Red Shimmer Logo Enhancement */
 
+/* Animation for the subtle pulsing glow */
+@keyframes neonGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px #FF6347; /* White base, Tomato Red glow */
+    }
+    50% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 1), 0 0 20px #FF6347; /* Brighter white, more intense Tomato Red */
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px #FF6347;
+    }
+}
+
+.logo-text-bubble {
+    /* 1. Vibrant Red Background Color */
+    background: linear-gradient(135deg, #E74C3C, #C0392B); /* Deep, rich red gradient */
+    
+    /* 2. White Text Styling (Bold, Shimmer, and Shadow) */
+    font-weight: 900 !important; /* Maximum boldness */
+    font-size: 1.4rem; /* Prominent size */
+    color: white !important; /* Crisp white text */
+    
+    /* Subtle text shadow for depth, using a dark shade for contrast */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+    
+    /* 3. Bubble/Pill Shape and Glow */
+    padding: 0.3rem 0.8rem;
+    border-radius: 25px; /* Consistent rounding */
+    display: inline-block;
+    margin-left: 0.5rem;
+    transition: all 0.3s ease;
+    
+    /* Initial subtle glow for the 'shimmer' */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Soft white initial glow */
+    animation: neonGlow 2s infinite alternate; /* Apply the pulsing animation with red glow */
+}
+
+.logo-text-bubble:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #C0392B, #E74C3C); /* Slightly shift gradient on hover */
+}
+
+/* Ensure the compass icon scales and matches the brand color */
+.navbar-brand i.fa-compass {
+    color: white !important; /* Keep compass white for coherence */
+    font-size: 1.4rem;
+    margin-right: 0.2rem; /* Give a little space between compass and bubble */
+}
+
+.logo-text-bubble:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #FFC107, #FFD700);
+}
 .nav-link:hover {
   color: var(--accent-color) !important;
   transform: translateY(-1px);

@@ -358,8 +358,8 @@
         <div class="row">
           <% recommendations.slice(0, 4).forEach(rec => { %>
           <div class="col-md-6 col-lg-3 mb-3">
-            <div class="card h-100">
-              <img src="<%= rec.image && rec.image.url ? rec.image.url : 'https://via.placeholder.com/300' %>" 
+            <div class="card h-100 d-flex flex-column">
+                <img src="<%= rec.image && rec.image.url ? rec.image.url : 'https://via.placeholder.com/300' %>" 
                    class="card-img-top" style="height: 150px; object-fit: cover;" alt="<%= rec.title %>">
               <div class="card-body p-2">
                 <h6 class="card-title mb-1"><%= rec.title %></h6>
@@ -369,7 +369,7 @@
                 <p class="card-text small mb-2">
                   <strong>₹<%= rec.price ? rec.price.toLocaleString('en-IN') : 'N/A' %></strong>/night
                 </p>
-                <a href="/listings/<%= rec._id %>" class="btn btn-sm btn-primary w-100"><%= __('view_details') %></a>
+                <a href="/listings/<%= rec._id %>" class="btn btn-sm btn-primary w-100 mt-auto"><%= __('view_details') %></a>
               </div>
             </div>
           </div>
