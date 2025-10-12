@@ -86,9 +86,11 @@
           <% } %>
         </div>
       <% } %>
-      <p class="card-text">
+<div class="description-bubble-container mt-3 mb-3">
+    <p class="listing-description" style="color: white !important; font-weight: 700 !important; font-size: 1.15rem; line-height: 1.7;">
         <%= listing.description || "No description available" %>
-      </p>
+    </p>
+</div>
       <p class="card-text">
         &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A"
         %>
@@ -721,47 +723,72 @@ document.addEventListener('DOMContentLoaded', function() {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
-/* AI Summary Styles */
-.ai-summary-card {
-  border: 2px solid #e3f2fd;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
-  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1);
+/* FIX 1: Description Bubble Enhancement (Level 3) */
+.description-bubble-container {
+    /* Spacing */
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    /* Bubbly Design & Transparency (Dark Mode Default) */
+    background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+    backdrop-filter: blur(5px);
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    
+    /* Light/Blue Shadow for Dark Mode */
+    box-shadow: 0 4px 15px rgba(0, 200, 255, 0.4),
+                0 0 0 2px rgba(255, 255, 255, 0.3) inset;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    /* Layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
-.ai-summary-card .card-header {
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-  color: white;
-  border-bottom: none;
+/* Final FIX: Combined Styles for Bubble and Footer Contrast */
+
+/* 1. Description Bubble Text (Dark Mode Default) */
+.description-bubble-container .listing-description {
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1); /* Strong shadow for pop */
+    margin: 0 !important;
 }
 
-.ai-summary-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  padding: 10px 0;
+/* 2. Footer Text (Category, Season, Tip) (Dark Mode Default) */
+/* Targets the text using the parent container (.show-card) for maximum specificity */
+.show-card .col-md-4 h5,
+.show-card .col-md-4 p {
+    /* FORCED WHITE TEXT for Dark Mode */
+    color: #e6e4e4 !important; 
+    
+    /* Strong shadow to guarantee readability over images */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
 }
 
-.ai-summary-icon {
-  font-size: 2rem;
-  color: #2196f3;
-  background: rgba(33, 150, 243, 0.1);
-  padding: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
+/* 3. LIGHT MODE OVERRIDES (Dynamic Shadow/Color Flip) */
+@media (prefers-color-scheme: light) {
+    /* Light Mode Bubble Background Adjustments */
+    .description-bubble-container {
+        background-color: rgba(0, 0, 0, 0.1);
+        /* Dark Shadow for Light Mode Bubble */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+                    0 0 0 2px rgba(0, 0, 0, 0.1) inset;
+    }
+    
+    /* Set all text (Bubble and Footer) to dark gray for contrast */
+    .description-bubble-container .listing-description,
+    .show-card .col-md-4 h5,
+    .show-card .col-md-4 p {
+        color: #ffffff !important;
+        text-shadow: none;
+    }
 }
 
-.ai-summary-text p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #424242;
-  margin: 0;
-  font-weight: 500;
-}
-
-.ai-summary-footer {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #e0e0e0;
-}
 </style>
