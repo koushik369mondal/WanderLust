@@ -1,17 +1,30 @@
-
-
-
 <% layout('/layouts/boilerplate') %>
 
     <style>
-         .main-filter-bar {
+          .controls-bar {
+            background: var(--bg-primary);
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .controls-bar .btn {
+            height: 50px;
             display: flex;
             align-items: center;
-            gap: 1.5rem; /* Adds space between toggle and filters */
+            justify-content: center;
         }
-
-        #filters {
-            flex-grow: 1; /* Allows the filter container to take up remaining space */
+        
+        #showAdvancedFilters {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+        
+        #showAdvancedFilters:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            color: white;
         }
         /* New gradient filter bar */
         #filters {
@@ -58,17 +71,15 @@
 
         /* tax toggle restyled */
         .tax-toggle {
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--border-color);
             border-radius: 1rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            color: white;
-            margin-left: 1rem;
-            white-space: nowrap;
+            color: var(--text-primary);
+            height: 50px;
         }
 
         /* Hide scrollbar */
@@ -117,6 +128,10 @@
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
         }
+        .search-btn {
+        padding-top: 0.5rem;  
+        padding-bottom: 0.5rem;
+}
 
         .search-btn:hover {
             transform: translateY(-1px);
@@ -219,7 +234,25 @@
                 color: #fff !important; 
                 border-color: #fff !important;
             }
-        }
+        }/* FIX for Issue #257: Text Contrast over Images (Location, Price, GST) */
+.listing-location, 
+.listing-price, 
+.tax-info {
+    /* Set the text color to white for maximum contrast in both Light and Dark Modes */
+    color: white !important; 
+    
+    /* Add a strong shadow to make the white text pop over any light part of the image */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), 
+                 -1px -1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 700 !important; /* Ensure text is bold for better visibility */
+}
+
+/* Ensure the smaller location text also benefits */
+.listing-location {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+        
 
         /* Comparison checkbox styles - Modern Design */
         .compare-checkbox {
@@ -334,7 +367,96 @@
         }
 
 
-        }\n    </style><% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+        }
+        
+        /* Advanced Filters Styling */
+        .advanced-filters-container {
+            background: var(--bg-primary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        .filters-panel .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .filters-panel .form-control,
+        .filters-panel .form-select {
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        .filters-panel .form-control:focus,
+        .filters-panel .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.15);
+        }
+        
+        /* Active Filters */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-tag {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-tag .remove-filter {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .filter-tag .remove-filter:hover {
+            color: #ffcccc;
+        }
+        
+        /* Loading Indicator */
+        .loading-indicator {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        /* Fade Animation */
+        .listings-container {
+            transition: opacity 0.3s ease;
+        }
+        
+        .listings-container.loading {
+            opacity: 0.5;
+        }
+        
+        /* Responsive Filters */
+        @media (max-width: 768px) {
+            .advanced-filters-container {
+                padding: 1rem;
+            }
+            
+            .filters-panel .row {
+                margin: 0;
+            }
+            
+            .filters-panel .col-md-3,
+            .filters-panel .col-md-2 {
+                margin-bottom: 1rem;
+            }
+        }
+    </style><% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
     <div class="row mt-3">
         <div class="col-12">
             <div class="alert alert-info" role="alert">
@@ -348,90 +470,159 @@
     </div>
 <% } %>
 
-<div class="main-filter-bar">
-
-    <div id="filters">
-        <div class="filters-container">
-            <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Trending') ? 'active' : '' %>">
-                    <i class="fa-solid fa-fire"></i>
-                    <p>Trending</p>
-                </div>
-            </a>
-            <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Rooms') ? 'active' : '' %>">
-                    <i class="fa-solid fa-bed"></i>
-                    <p>Rooms</p>
-                </div>
-            </a>
-            <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Iconic Cities') ? 'active' : '' %>">
-                    <i class="fa-solid fa-mountain-city"></i>
-                    <p>Iconic Cities</p>
-                </div>
-            </a>
-            <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Mountains') ? 'active' : '' %>">
-                    <i class="fa-solid fa-mountain"></i>
-                    <p>Mountains</p>
-                </div>
-            </a>
-            <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Castles') ? 'active' : '' %>">
-                    <i class="fa-solid fa-chess-rook"></i>
-                    <p>Castles</p>
-                </div>
-            </a>
-            <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Amazing pool') ? 'active' : '' %>">
-                    <i class="fa-solid fa-person-swimming"></i>
-                    <p>Amazing pool</p>
-                </div>
-            </a>
-            <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Camping') ? 'active' : '' %>">
-                    <i class="fa-solid fa-tents"></i>
-                    <p>Camping</p>
-                </div>
-            </a>
-            <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Farms') ? 'active' : '' %>">
-                    <i class="fa-solid fa-tractor"></i>
-                    <p>Farms</p>
-                </div>
-            </a>
-            <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Arctic') ? 'active' : '' %>">
-                    <i class="fa-solid fa-snowflake"></i>
-                    <p>Arctic</p>
-                </div>
-            </a>
-            <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Domes') ? 'active' : '' %>">
-                    <i class="fa-solid fa-igloo"></i>
-                    <p>Domes</p>
-                </div>
-            </a>
-            <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
-                <div class="filter <%= (category === 'Boats') ? 'active' : '' %>">
-                    <i class="fa-solid fa-ship"></i>
-                    <p>Boats</p>
-                </div>
-            </a>
-        </div>
+<div id="filters">
+    <div class="filters-container">
+        <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Trending') ? 'active' : '' %>">
+                <i class="fa-solid fa-fire"></i>
+                <p>Trending</p>
+            </div>
+        </a>
+        <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Rooms') ? 'active' : '' %>">
+                <i class="fa-solid fa-bed"></i>
+                <p>Rooms</p>
+            </div>
+        </a>
+        <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Iconic Cities') ? 'active' : '' %>">
+                <i class="fa-solid fa-mountain-city"></i>
+                <p>Iconic Cities</p>
+            </div>
+        </a>
+        <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Mountains') ? 'active' : '' %>">
+                <i class="fa-solid fa-mountain"></i>
+                <p>Mountains</p>
+            </div>
+        </a>
+        <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Castles') ? 'active' : '' %>">
+                <i class="fa-solid fa-chess-rook"></i>
+                <p>Castles</p>
+            </div>
+        </a>
+        <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Amazing pool') ? 'active' : '' %>">
+                <i class="fa-solid fa-person-swimming"></i>
+                <p>Amazing pool</p>
+            </div>
+        </a>
+        <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Camping') ? 'active' : '' %>">
+                <i class="fa-solid fa-tents"></i>
+                <p>Camping</p>
+            </div>
+        </a>
+        <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Farms') ? 'active' : '' %>">
+                <i class="fa-solid fa-tractor"></i>
+                <p>Farms</p>
+            </div>
+        </a>
+        <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Arctic') ? 'active' : '' %>">
+                <i class="fa-solid fa-snowflake"></i>
+                <p>Arctic</p>
+            </div>
+        </a>
+        <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Domes') ? 'active' : '' %>">
+                <i class="fa-solid fa-igloo"></i>
+                <p>Domes</p>
+            </div>
+        </a>
+        <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
+            <div class="filter <%= (category === 'Boats') ? 'active' : '' %>">
+                <i class="fa-solid fa-ship"></i>
+                <p>Boats</p>
+            </div>
+        </a>
     </div>
-    
 </div>
-<div class="tax-toggle">
-        <div class="form-check-reverse form-switch">
-            <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
-            <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
+
+<div class="controls-bar mt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-outline-primary w-100" id="showAdvancedFilters">
+                <i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters
+            </button>
+        </div>
+        <div class="col-md-6">
+            <div class="tax-toggle w-100">
+                <div class="form-check-reverse form-switch">
+                    <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
+                    <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
+                </div>
+            </div>
         </div>
     </div>
-    
+</div>
 
-    <!-- Search Results Header -->
-    <% if (searchQuery) { %>
+<div class="active-filters mb-3" id="activeFilters" style="display: none;"></div>
+
+<div class="advanced-filters-container mb-4" style="display: none;">
+    <div class="filters-panel">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Sort By</label>
+                <select class="form-select" id="sortBy">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="popularity">Most Popular</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Country</label>
+                <select class="form-select" id="countryFilter">
+                    <option value="">All Countries</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Min Price</label>
+                <input type="number" class="form-control" id="minPrice" placeholder="₹0">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Max Price</label>
+                <input type="number" class="form-control" id="maxPrice" placeholder="₹10000">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Min Rating</label>
+                <select class="form-select" id="minRating">
+                    <option value="">Any Rating</option>
+                    <option value="4.5">4.5+ Stars</option>
+                    <option value="4.0">4.0+ Stars</option>
+                    <option value="3.5">3.5+ Stars</option>
+                    <option value="3.0">3.0+ Stars</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <button class="btn btn-primary" id="applyFilters">
+                    <i class="fa-solid fa-filter me-2"></i>Apply Filters
+                </button>
+                <button class="btn btn-outline-secondary ms-2" id="clearFilters">
+                    <i class="fa-solid fa-times me-2"></i>Clear All
+                </button>
+                <button class="btn btn-outline-info ms-2" id="toggleFilters">
+                    <i class="fa-solid fa-chevron-up me-2"></i>Hide Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-indicator text-center my-4" id="loadingIndicator" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Filtering listings...</p>
+</div>
+
+<% if (searchQuery) { %>
         <div class="search-results-header mt-4 mb-3">
             <div class="container-fluid">
                 <div class="row align-items-center">
@@ -458,7 +649,6 @@
         </div>
     <% } %>
 
-    <!-- No Results Message -->
     <% if (searchQuery && totalResults === 0) { %>
         <div class="no-results-container text-center py-5">
             <div class="container">
@@ -533,13 +723,34 @@
 </a>
                         </div>
                     </div>
+                <% } %>
+            </div>
+        </div>
+    <% } else if (!searchQuery) { %>
+        <div class="row mt-4">
+            <div class="col-12 text-center py-5 no-results-container">
+                <i class="fas fa-home fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted mb-3">Welcome to WanderLust!</h3>
+                <p class="text-muted mb-4">
+                    It looks a bit empty here. Be the first to add a listing and get started!
+                </p>
+                <a href="/listings/new" class="btn btn-dark add-btn mt-2" style="padding: 1rem 2rem; font-size: 1.2rem;">
+                    <i class="fas fa-plus-circle me-2"></i>Create New Listing
                 </a>
             </div>
-            <% } %>
-    </div>
+        </div>
+    <% } %>
+
+
+    <button id="compare-btn" style="display: none;">
+        <i class="fas fa-balance-scale me-2"></i>
+        Compare (<span id="compare-count">0</span>)
+    </button>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing filters...');
+            
             // Search term highlighting
             const searchQuery = '<%= searchQuery || "" %>';
             if (searchQuery) {
@@ -564,11 +775,13 @@
             }
 
             function updatePriceDisplay(showWithTax) {
-                const priceElements = document.querySelectorAll('.card-text');
+                const priceElements = document.querySelectorAll('.listing-price');
                 
                 priceElements.forEach(function(element) {
                     const priceText = element.innerHTML;
-                    const priceMatch = priceText.match(/([\d,]+)/);
+                    
+                    // Extract price using more specific regex for the ₹ symbol
+                    const priceMatch = priceText.match(/₹([\d,]+)/);
                     
                     if (priceMatch) {
                         let basePrice = parseInt(priceMatch[1].replace(/,/g, ''));
@@ -592,14 +805,11 @@
                         }
                         
                         const formattedPrice = displayPrice.toLocaleString("en-IN");
+                        const nightText = priceText.includes('night') ? ' / night' : ' / <%= __("night") %>';
                         const taxInfo = showWithTax ? '' : '<i class="tax-info">&nbsp; &nbsp; +18% GST</i>';
                         
-                        // Get the title from the element
-                        const titleMatch = element.innerHTML.match(/<b>(.*?)<\/b>/);
-                        const title = titleMatch ? titleMatch[1] : 'N/A';
-                        
-                        // Update the price display
-                        element.innerHTML = <b>${title}</b><br />${formattedPrice} / night${taxInfo};
+                        // Update the price display while preserving the structure
+                        element.innerHTML = `₹${formattedPrice}${nightText}${taxInfo}`;
                     }
                 });
             }
@@ -644,9 +854,9 @@
             });
             
             // Attach event listener for test button
-            var testBtn = document.getElementById('test-modal-btn');
-            if (testBtn) {
-                testBtn.addEventListener('click', function() {
+            const testModalBtn = document.getElementById('test-modal-btn');
+            if (testModalBtn) {
+                testModalBtn.addEventListener('click', function() {
                     showRatedModal('Test Listing', 4.75);
                 });
             }
@@ -664,7 +874,7 @@
                         let html = element.innerHTML;
                         
                         terms.forEach(term => {
-                            const regex = new RegExp((${term}), 'gi');
+                            const regex = new RegExp(`(${term})`, 'gi');
                             html = html.replace(regex, '<mark class="search-highlight">$1</mark>');
                         });
                         
@@ -672,5 +882,467 @@
                     });
                 });
             }
+            
+            // Advanced Filtering Functionality
+            let currentFilters = {};
+            
+            // Show/Hide Advanced Filters
+            const advancedFiltersBtn = document.getElementById('showAdvancedFilters');
+            if (advancedFiltersBtn) {
+                advancedFiltersBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Advanced filters button clicked');
+                    const filtersContainer = document.querySelector('.advanced-filters-container');
+                    
+                    if (filtersContainer) {
+                        const isHidden = filtersContainer.style.display === 'none' || !filtersContainer.style.display;
+                        filtersContainer.style.display = isHidden ? 'block' : 'none';
+                        this.innerHTML = isHidden ? 
+                            '<i class="fa-solid fa-times me-2"></i>Hide Filters' :
+                            '<i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters';
+                        console.log('Filters toggled, display:', filtersContainer.style.display);
+                    }
+                });
+            } else {
+                console.error('Advanced filters button not found');
+            }
+            
+            const toggleFiltersBtn = document.getElementById('toggleFilters');
+            if (toggleFiltersBtn) {
+                toggleFiltersBtn.addEventListener('click', function() {
+                    const filtersContainer = document.querySelector('.advanced-filters-container');
+                    const showBtn = document.getElementById('showAdvancedFilters');
+                    if (filtersContainer) filtersContainer.style.display = 'none';
+                    if (showBtn) showBtn.innerHTML = '<i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters';
+                });
+            }
+            
+            // Load countries for filter dropdown
+            loadCountries();
+            
+            // Apply Filters
+            const applyFiltersBtn = document.getElementById('applyFilters');
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', applyFilters);
+            }
+            
+            // Clear Filters
+            const clearFiltersBtn = document.getElementById('clearFilters');
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', clearFilters);
+            }
+            
+            // Auto-apply on input change (debounced)
+            let filterTimeout;
+            ['sortBy', 'countryFilter', 'minPrice', 'maxPrice', 'minRating'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    clearTimeout(filterTimeout);
+                    filterTimeout = setTimeout(applyFilters, 500);
+                });
+            });
+            
+            async function loadCountries() {
+                try {
+                    const response = await fetch('/listings/api/filter?getCountries=true');
+                    const data = await response.json();
+                    
+                    if (data.success && data.countries) {
+                        const countrySelect = document.getElementById('countryFilter');
+                        data.countries.forEach(country => {
+                            const option = document.createElement('option');
+                            option.value = country;
+                            option.textContent = country;
+                            countrySelect.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading countries:', error);
+                }
+            }
+            
+            async function applyFilters() {
+                const filters = {
+                    search: new URLSearchParams(window.location.search).get('search') || '',
+                    category: new URLSearchParams(window.location.search).get('category') || '',
+                    sortBy: document.getElementById('sortBy').value,
+                    country: document.getElementById('countryFilter').value,
+                    minPrice: document.getElementById('minPrice').value,
+                    maxPrice: document.getElementById('maxPrice').value,
+                    minRating: document.getElementById('minRating').value
+                };
+                
+                // Remove empty filters
+                Object.keys(filters).forEach(key => {
+                    if (!filters[key]) delete filters[key];
+                });
+                
+                currentFilters = filters;
+                
+                showLoading(true);
+                updateActiveFilters();
+                
+                try {
+                    const queryString = new URLSearchParams(filters).toString();
+                    const response = await fetch(`/listings/api/filter?${queryString}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        updateListingsDisplay(data.listings);
+                        updateURL(filters);
+                    } else {
+                        console.error('Filter error:', data.error);
+                    }
+                } catch (error) {
+                    console.error('Filter request error:', error);
+                } finally {
+                    showLoading(false);
+                }
+            }
+            
+            function clearFilters() {
+                document.getElementById('sortBy').value = 'newest';
+                document.getElementById('countryFilter').value = '';
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                document.getElementById('minRating').value = '';
+                
+                currentFilters = {};
+                updateActiveFilters();
+                
+                // Keep search and category from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const search = urlParams.get('search');
+                const category = urlParams.get('category');
+                
+                let newURL = '/listings';
+                const params = [];
+                if (search) params.push(`search=${encodeURIComponent(search)}`);
+                if (category) params.push(`category=${encodeURIComponent(category)}`);
+                if (params.length > 0) newURL += '?' + params.join('&');
+                
+                window.location.href = newURL;
+            }
+            
+            function updateActiveFilters() {
+                const activeFiltersContainer = document.getElementById('activeFilters');
+                const filterTags = [];
+                
+                Object.entries(currentFilters).forEach(([key, value]) => {
+                    if (key === 'search' || key === 'category' || !value) return;
+                    
+                    let label = '';
+                    switch (key) {
+                        case 'sortBy':
+                            const sortLabels = {
+                                'newest': 'Newest First',
+                                'price-low': 'Price: Low to High',
+                                'price-high': 'Price: High to Low',
+                                'rating': 'Highest Rated',
+                                'popularity': 'Most Popular'
+                            };
+                            label = `Sort: ${sortLabels[value]}`;
+                            break;
+                        case 'country':
+                            label = `Country: ${value}`;
+                            break;
+                        case 'minPrice':
+                            label = `Min: ₹${value}`;
+                            break;
+                        case 'maxPrice':
+                            label = `Max: ₹${value}`;
+                            break;
+                        case 'minRating':
+                            label = `${value}+ Stars`;
+                            break;
+                    }
+                    
+                    if (label) {
+                        filterTags.push(`
+                            <span class="filter-tag">
+                                ${label}
+                                <span class="remove-filter" data-filter="${key}">×</span>
+                            </span>
+                        `);
+                    }
+                });
+                
+                if (filterTags.length > 0) {
+                    activeFiltersContainer.innerHTML = filterTags.join('');
+                    activeFiltersContainer.style.display = 'block';
+                    
+                    // Add remove filter functionality
+                    activeFiltersContainer.querySelectorAll('.remove-filter').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const filterKey = this.dataset.filter;
+                            document.getElementById(getFilterElementId(filterKey)).value = '';
+                            applyFilters();
+                        });
+                    });
+                } else {
+                    activeFiltersContainer.style.display = 'none';
+                }
+            }
+            
+            function getFilterElementId(filterKey) {
+                const mapping = {
+                    'sortBy': 'sortBy',
+                    'country': 'countryFilter',
+                    'minPrice': 'minPrice',
+                    'maxPrice': 'maxPrice',
+                    'minRating': 'minRating'
+                };
+                return mapping[filterKey];
+            }
+            
+            function updateListingsDisplay(listings) {
+                const listingsGrid = document.getElementById('listingsGrid');
+                
+                if (listings.length === 0) {
+                    listingsGrid.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No listings found</h4>
+                            <p class="text-muted">Try adjusting your filters or search criteria.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const listingsHTML = listings.map(listing => `
+                    <div class="col mb-4">
+                        <a href="/listings/${listing._id}" class="listing-link">
+                            <div class="card listing-card h-100">
+                                <div class="listing-badges">
+                                    ${listing.isNewBadge ? '<span class="badge badge-new">New</span>' : ''}
+                                    ${listing.isFeaturedBadge ? '<span class="badge badge-featured">Featured</span>' : ''}
+                                    ${listing.isDiscountBadge ? '<span class="badge badge-discount">Discount</span>' : ''}
+                                    ${listing.isHighlyRatedBadge ? '<span class="badge badge-rated">Highly Rated</span>' : ''}
+                                </div>
+                                <div class="listing-image-container">
+                                    <img src="${listing.image?.url || 'https://via.placeholder.com/300'}" 
+                                         class="card-img-top listing-image" alt="listing_image" />
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <b class="listing-title">${listing.title}</b><br />
+                                        <small class="text-muted listing-location">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            ${listing.location}, ${listing.country}
+                                        </small><br />
+                                        <span class="listing-price">
+                                            ₹${listing.price?.toLocaleString('en-IN') || 'N/A'} / night
+                                            <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+                                        </span>
+                                        ${listing.avgRating ? `
+                                            <br><small class="text-warning">
+                                                ${'★'.repeat(Math.round(listing.avgRating))} 
+                                                ${listing.avgRating.toFixed(1)} (${listing.reviewCount || 0} reviews)
+                                            </small>
+                                        ` : ''}
+                                    </p>
+                                </div>
+                                <div class="compare-checkbox">
+                                    <input type="checkbox" class="compare-item" data-id="${listing._id}">
+                                    <span>Compare</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                `).join('');
+                
+                listingsGrid.innerHTML = listingsHTML;
+                
+                // Re-apply search highlighting if needed
+                const searchQuery = new URLSearchParams(window.location.search).get('search');
+                if (searchQuery) {
+                    highlightSearchTerms(searchQuery);
+                }
+                
+                // Reinitialize comparison functionality for new listings
+                initializeComparison();
+            }
+            
+            function showLoading(show) {
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                const listingsContainer = document.getElementById('listingsContainer');
+                
+                if (show) {
+                    loadingIndicator.style.display = 'block';
+                    listingsContainer.classList.add('loading');
+                } else {
+                    loadingIndicator.style.display = 'none';
+                    listingsContainer.classList.remove('loading');
+                }
+            }
+            
+            function updateURL(filters) {
+                const urlParams = new URLSearchParams();
+                Object.entries(filters).forEach(([key, value]) => {
+                    if (value) urlParams.set(key, value);
+                });
+                
+                const newURL = `/listings${urlParams.toString() ? '?' + urlParams.toString() : ''}`;
+                window.history.replaceState({}, '', newURL);
+            }
+            
+            // Comparison Functionality
+            let selectedListings = [];
+            
+            function updateCompareButton() {
+                const compareBtn = document.getElementById('compare-btn');
+                const countSpan = document.getElementById('compare-count');
+                
+                if (selectedListings.length > 0) {
+                    compareBtn.style.display = 'block';
+                    countSpan.textContent = selectedListings.length;
+                } else {
+                    compareBtn.style.display = 'none';
+                }
+            }
+            
+            // Initialize comparison functionality
+            function initializeComparison() {
+                console.log('Initializing comparison functionality...');
+                const checkboxes = document.querySelectorAll('.compare-item');
+                console.log('Found', checkboxes.length, 'comparison checkboxes');
+                
+                // Handle compare checkbox changes
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function(e) {
+                        console.log('Checkbox changed:', this.dataset.id, this.checked);
+                        const listingId = this.dataset.id;
+                        
+                        if (this.checked) {
+                            if (selectedListings.length < 3) {
+                                selectedListings.push(listingId);
+                                console.log('Added to comparison:', listingId);
+                            } else {
+                                this.checked = false;
+                                alert('You can compare up to 3 destinations at once.');
+                            }
+                        } else {
+                            selectedListings = selectedListings.filter(id => id !== listingId);
+                            console.log('Removed from comparison:', listingId);
+                        }
+                        
+                        updateCompareButton();
+                        console.log('Selected listings:', selectedListings);
+                    });
+                });
+                
+                // Prevent checkbox area clicks from triggering card link
+                document.querySelectorAll('.compare-checkbox').forEach(checkboxArea => {
+                    checkboxArea.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // If clicked on checkbox input, let it work normally
+                        if (e.target.classList.contains('compare-item')) {
+                            return;
+                        }
+                        
+                        // If clicked on label area, toggle the checkbox
+                        const checkbox = this.querySelector('.compare-item');
+                        if (checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+                
+                // Handle compare button click
+                const compareBtn = document.getElementById('compare-btn');
+                if (compareBtn) {
+                    compareBtn.addEventListener('click', function() {
+                        console.log('Compare button clicked, selected:', selectedListings);
+                        if (selectedListings.length < 2) {
+                            alert('Please select at least 2 destinations to compare.');
+                            return;
+                        }
+                        
+                        window.location.href = `/listings/compare?ids=${selectedListings.join(',')}`;
+                    });
+                }
+            }
+            
+            // Initialize comparison after DOM is ready
+            initializeComparison();
+            
+            function showComparisonModal(listings) {
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.id = 'comparisonModal';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Destination Comparison</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Feature</th>
+                                                ${listings.map(listing => `<th class="text-center">${listing.title}</th>`).join('')}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Location</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">${listing.location}, ${listing.country}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Price per Night</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">₹${listing.price.toLocaleString('en-IN')}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Rating</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">${listing.rating > 0 ? '★'.repeat(Math.round(listing.rating)) + ` ${listing.rating.toFixed(1)}` : 'No ratings'}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Best Value</strong></td>
+                                                ${(() => {
+                                                    const minPrice = Math.min(...listings.map(l => l.price));
+                                                    return listings.map(listing => `<td class="text-center">${listing.price === minPrice ? '<span class="badge bg-success">Best Price</span>' : ''}</td>`).join('');
+                                                })()}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Highest Rated</strong></td>
+                                                ${(() => {
+                                                    const maxRating = Math.max(...listings.map(l => l.rating));
+                                                    return listings.map(listing => `<td class="text-center">${listing.rating === maxRating && maxRating > 0 ? '<span class="badge bg-warning">Top Rated</span>' : ''}</td>`).join('');
+                                                })()}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="clearComparison()">Clear Selection</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                const bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.show();
+                
+                modal.addEventListener('hidden.bs.modal', function() {
+                    document.body.removeChild(modal);
+                });
+            }
+            
+            window.clearComparison = function() {
+                selectedListings = [];
+                document.querySelectorAll('.compare-item').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateCompareButton();
+                bootstrap.Modal.getInstance(document.getElementById('comparisonModal')).hide();
+            };
         });
     </script>

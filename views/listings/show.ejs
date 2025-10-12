@@ -86,9 +86,11 @@
           <% } %>
         </div>
       <% } %>
-      <p class="card-text">
+<div class="description-bubble-container mt-3 mb-3">
+    <p class="listing-description" style="color: white !important; font-weight: 700 !important; font-size: 1.15rem; line-height: 1.7;">
         <%= listing.description || "No description available" %>
-      </p>
+    </p>
+</div>
       <p class="card-text">
         &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A"
         %>
@@ -333,20 +335,78 @@
     </div>
     <% } else { %>
     <div class="no-reviews-container">
-      <div class="no-reviews-content">
-        <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
-        <h5><%= __('no_reviews_yet') %></h5>
-        <p><%= __('be_first_to_review') %></p>
-        <% if (!currentUser) { %>
-        <a href="/login" class="btn btn-outline-primary">
-          <i class="fa-solid fa-sign-in-alt me-2"></i><%= __('login_to_review') %>
-        </a>
-        <% } %>
-      </div>
+      <div class="no-reviews-content">
+        <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
+        <h5><%= __('no_reviews_yet') %></h5>
+        <p><%= __('be_first_to_review') %></p>
+        <% if (!currentUser) { %>
+        <a href="/login" class="btn btn-outline-primary">
+          <i class="fa-solid fa-sign-in-alt me-2"></i><%= __('login_to_review') %>
+        </a>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  
+<% 
+    const country = listing.country;
+%>
+<div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card p-4">
+        <h4 class="mb-3"><i class="fa-solid fa-language me-2"></i>Travel Phrases for <%= country %></h4>
+        
+        <div class="row">
+            <% if (phrases) { %>
+                <% Object.keys(phrases).forEach(englishPhrase => { %>
+                    <% 
+                        // Find the translation for the current listing's country
+                        const translation = phrases[englishPhrase][country];
+                    %>
+                    <% if (translation) { %>
+                        <div class="col-md-6 mb-2">
+                            <p class="mb-0">
+                                <strong><%= englishPhrase %>:</strong> 
+                                <span class="text-primary fw-bold"><%= translation %></span>
+                            </p>
+                        </div>
+                    <% } %>
+                <% }) %>
+            <% } else { %>
+                <p class="text-muted">No phrases available for <%= country %> yet.</p>
+            <% } %>
+        </div>
     </div>
-    <% } %>
-  </div>
-  
+</div>
+
+<% if (typeof listing !== 'undefined' && listing.aiSummary) { %>
+<div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card ai-summary-card">
+      <div class="card-header">
+        <h4 class="mb-0">
+          <i class="fa-solid fa-brain me-2"></i>
+          <%= __('ai_insights') %>
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="ai-summary-content">
+          <div class="ai-summary-icon">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="ai-summary-text">
+            <p class="mb-0"><%= listing.aiSummary %></p>
+          </div>
+        </div>
+        <div class="ai-summary-footer">
+          <small class="text-muted">
+            <i class="fa-solid fa-info-circle me-1"></i>
+            <%= __('ai_generated_summary') %>
+          </small>
+        </div>
+      </div>
+    </div>
+</div>
+<% } %>
   <!-- AI Recommendations Section -->
   <% if (typeof recommendations !== 'undefined' && recommendations && recommendations.length > 0) { %>
   <div class="col-12 col-md-8 offset-md-2 mb-4">
@@ -663,4 +723,72 @@ document.addEventListener('DOMContentLoaded', function() {
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* FIX 1: Description Bubble Enhancement (Level 3) */
+.description-bubble-container {
+    /* Spacing */
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    /* Bubbly Design & Transparency (Dark Mode Default) */
+    background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+    backdrop-filter: blur(5px);
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    
+    /* Light/Blue Shadow for Dark Mode */
+    box-shadow: 0 4px 15px rgba(0, 200, 255, 0.4),
+                0 0 0 2px rgba(255, 255, 255, 0.3) inset;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    /* Layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Final FIX: Combined Styles for Bubble and Footer Contrast */
+
+/* 1. Description Bubble Text (Dark Mode Default) */
+.description-bubble-container .listing-description {
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1); /* Strong shadow for pop */
+    margin: 0 !important;
+}
+
+/* 2. Footer Text (Category, Season, Tip) (Dark Mode Default) */
+/* Targets the text using the parent container (.show-card) for maximum specificity */
+.show-card .col-md-4 h5,
+.show-card .col-md-4 p {
+    /* FORCED WHITE TEXT for Dark Mode */
+    color: #e6e4e4 !important; 
+    
+    /* Strong shadow to guarantee readability over images */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+}
+
+/* 3. LIGHT MODE OVERRIDES (Dynamic Shadow/Color Flip) */
+@media (prefers-color-scheme: light) {
+    /* Light Mode Bubble Background Adjustments */
+    .description-bubble-container {
+        background-color: rgba(0, 0, 0, 0.1);
+        /* Dark Shadow for Light Mode Bubble */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+                    0 0 0 2px rgba(0, 0, 0, 0.1) inset;
+    }
+    
+    /* Set all text (Bubble and Footer) to dark gray for contrast */
+    .description-bubble-container .listing-description,
+    .show-card .col-md-4 h5,
+    .show-card .col-md-4 p {
+        color: #ffffff !important;
+        text-shadow: none;
+    }
+}
+
 </style>

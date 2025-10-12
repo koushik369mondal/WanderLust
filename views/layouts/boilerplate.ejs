@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WanderLust</title>
   <link rel="icon" type="image/x-icon" href="/images/compass.png" />
+  <link rel="manifest" href="/manifest.json" />
   <link rel="stylesheet" href="/CSS/style.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
@@ -18,6 +19,7 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="/CSS/rating.css" />
   <link rel="stylesheet" href="/CSS/loading.css" />
+  <link rel="stylesheet" href="/CSS/packingList.css" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
 </head>
@@ -109,6 +111,41 @@
         //     particles.push(new Particle(e.clientX, e.clientY));
         //   }
         // });
+      </script>
+
+      <!-- Service Worker Registration -->
+      <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+              .then((registration) => {
+                console.log('Service Worker registered successfully:', registration.scope);
+                
+                // Register for background sync if supported
+                if ('serviceWorker' in navigator && 'SyncManager' in window) {
+                  registration.sync.register('sync-trips')
+                    .then(() => console.log('Background sync registered'))
+                    .catch((error) => console.log('Background sync registration failed:', error));
+                }
+              })
+              .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+              });
+          });
+        }
+
+        // Listen for sync completion messages from SW
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data.type === 'SYNC_REQUEST') {
+              console.log('Sync request received:', event.data.message);
+              // Update UI if needed
+              if (window.showToast) {
+                showToast('Syncing offline changes...', 'info');
+              }
+            }
+          });
+        }
       </script>
       <div id="cursor-glow"></div>
       <div id="page-glow" class="page-glow"></div>

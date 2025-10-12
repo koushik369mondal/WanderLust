@@ -8,7 +8,104 @@
 //
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
+    // ------------------
+    // SERVICE WORKER REGISTRATION
+    // ------------------
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered successfully:', registration.scope);
+
+                    // Handle updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New version available
+                                showUpdateToast();
+                            }
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        });
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showInstallPrompt();
+    });
+
+    function showInstallPrompt() {
+        const installToast = document.createElement('div');
+        installToast.className = 'toast align-items-center text-white bg-primary border-0 position-fixed';
+        installToast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        installToast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-mobile-screen-button me-2"></i>
+                    Install WanderLust for offline access!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="mt-2 pt-2 border-top">
+                <button class="btn btn-sm btn-light me-2" id="install-btn">Install</button>
+                <button class="btn btn-sm btn-outline-light" data-bs-dismiss="toast">Later</button>
+            </div>
+        `;
+        document.body.appendChild(installToast);
+
+        const toast = new bootstrap.Toast(installToast);
+        toast.show();
+
+        document.getElementById('install-btn').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+            toast.hide();
+        });
+    }
+
+    function showUpdateToast() {
+        const updateToast = document.createElement('div');
+        updateToast.className = 'toast align-items-center text-white bg-info border-0 position-fixed';
+        updateToast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        updateToast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-refresh me-2"></i>
+                    New version available! Refresh to update.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="mt-2 pt-2 border-top">
+                <button class="btn btn-sm btn-light me-2" id="refresh-btn">Refresh</button>
+                <button class="btn btn-sm btn-outline-light" data-bs-dismiss="toast">Later</button>
+            </div>
+        `;
+        document.body.appendChild(updateToast);
+
+        const toast = new bootstrap.Toast(updateToast);
+        toast.show();
+
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            window.location.reload();
+        });
+    }
+
     // ------------------
     // FORM VALIDATION
     // ------------------
@@ -87,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
     class SearchManager {
         constructor() {
             this.searchForm = document.querySelector('form[role="search"]');
-            this.searchInput = document.querySelector(".search-inp");
+            this.searchInput = document.querySelector(".search-input");
             this.suggestionsContainer = document.getElementById("searchSuggestions");
             this.debounceTimer = null;
             this.init();

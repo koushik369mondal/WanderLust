@@ -1,0 +1,73 @@
+<% layout('/layouts/boilerplate') %>
+
+  <main class="packing-list-result-container">
+    <div class="packing-list-header">
+      <h1>Your Personalized Packing List</h1>
+      <div class="trip-summary">
+        <span class="trip-detail">📍 <%= packingList.destination %></span>
+        <span class="trip-detail">📅 <%= packingList.duration %> days</span>
+        <span class="trip-detail">👥 <%= packingList.travelType %></span>
+        <% if (packingList.activities && packingList.activities.length > 0) { %>
+          <span class="trip-detail">🎯 <%= packingList.activities.join(', ') %></span>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="packing-list-actions">
+      <button id="save-list-btn" class="save-btn">💾 Save to My Trips</button>
+      <button id="print-list-btn" class="print-btn">🖨️ Print List</button>
+      <button id="download-pdf-btn" class="download-btn">📄 Download PDF</button>
+    </div>
+
+    <div class="packing-list-content">
+      <% const categories = [
+        { key: 'clothing', icon: '👕', title: 'Clothing' },
+        { key: 'toiletries', icon: '🧴', title: 'Toiletries' },
+        { key: 'gadgets', icon: '🔋', title: 'Gadgets' },
+        { key: 'activityGear', icon: '🏕️', title: 'Activity Gear' },
+        { key: 'healthEssentials', icon: '🩹', title: 'Health & Essentials' }
+      ] %>
+
+      <% categories.forEach(category => { %>
+        <% if (packingList.categories[category.key] && packingList.categories[category.key].length > 0) { %>
+          <div class="packing-category">
+            <h3><%= category.icon %> <%= category.title %></h3>
+            <div class="packing-items">
+              <% packingList.categories[category.key].forEach(item => { %>
+                <label class="packing-item">
+                  <input type="checkbox"
+                         class="item-checkbox"
+                         data-item="<%= item.item %>"
+                         data-category="<%= category.key %>">
+                  <span class="item-text"><%= item.item %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+      <% }) %>
+    </div>
+
+    <div class="packing-list-footer">
+      <p class="generation-info">
+        <% if (packingList.fallback) { %>
+          📝 This list was generated using our smart fallback system. For AI-powered recommendations, please ensure OpenAI API key is configured.
+        <% } else { %>
+          🤖 This list was generated using AI and considers weather conditions for <%= packingList.destination %>.
+        <% } %>
+      </p>
+      <p class="tips">
+        💡 Tip: Check items off as you pack to stay organized!
+      </p>
+    </div>
+  </main>
+
+  <!-- Hidden form for saving to trips -->
+  <form id="save-trip-form" action="/packing-list/save" method="POST" style="display: none;">
+    <input type="hidden" name="packingList" id="packing-list-data">
+    <input type="hidden" name="tripDetails[destination]" value="<%= packingList.destination %>">
+    <input type="hidden" name="tripDetails[travelers]" value="<%= packingList.travelType === 'solo' ? 1 : packingList.travelType === 'couple' ? 2 : 4 %>">
+    <input type="hidden" name="tripDetails[budgetType]" value="moderate">
+  </form>
+
+  <script src="/JS/packingList.js"></script>
