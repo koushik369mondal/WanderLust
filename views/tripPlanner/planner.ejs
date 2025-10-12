@@ -12,7 +12,7 @@
 
                 <!-- Trip Planning Form -->
                 <div class="trip-form-card">
-                    <form id="tripPlannerForm">
+                    <form id="tripPlannerForm" data-ajax="true">
                         <div class="row">
                             <!-- Destination -->
                             <div class="col-md-6 mb-4">
@@ -578,23 +578,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 600);
 
         try {
+            // UI debug log: payload, timestamp, and online status so we can match this request to server logs
+            try {
+                console.log('UI: Estimate request initiated', {
+                    time: new Date().toISOString(),
+                    payload: formData,
+                    online: navigator.onLine
+                });
+            } catch (uiLogErr) {
+                // ignore logging errors
+            }
+
             const response = await fetch('/trip-planner/api/estimate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
-            const data = await response.json();
-            
-            if (data.success) {
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (parseErr) {
+                console.error('Failed to parse JSON response from estimate API', parseErr);
+            }
+
+            if (!response.ok) {
+                const msg = (data && (data.error || data.message)) || `Request failed (${response.status})`;
+                console.error('Estimate API error:', response.status, msg, data);
+                alert('Failed to calculate trip cost: ' + msg);
+            } else if (data && data.success) {
                 currentEstimation = { ...formData, ...data.estimation };
                 displayResults(data.estimation);
             } else {
-                alert('Failed to calculate trip cost');
+                // API returned a successful HTTP response but reported failure
+                const msg = (data && (data.error || data.message)) || 'Unknown error from estimate service';
+                console.error('Estimate API returned unexpected payload', data);
+                alert('Failed to calculate trip cost: ' + msg);
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to calculate trip cost');
+            console.error('Error while calling estimate API:', error);
+            // Provide more actionable message for network errors
+            alert('Failed to calculate trip cost: Network error or server unreachable. Check console for details.');
         } finally {
             loadingState.style.display = 'none';
         }
