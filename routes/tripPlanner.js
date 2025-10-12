@@ -17,15 +17,25 @@ router.get("/", (req, res) => {
 // Enhanced API endpoint for cost estimation with mock external APIs
 router.post("/api/estimate", async (req, res) => {
     try {
+        // Log incoming request for debugging (body may contain user input)
+        console.log('Estimate API called from', req.ip, 'headers:', req.headers['content-type']);
+        console.log('Estimate request body:', req.body);
+
         const { destination, startDate, endDate, travelers, budgetType, departureCity } = req.body;
-        
+
+        // Basic validation so we can return early with a helpful message
+        if (!destination || !startDate || !endDate || !departureCity) {
+            console.warn('Estimate API: missing required fields', { destination, startDate, endDate, departureCity });
+            return res.status(400).json({ success: false, error: 'Missing required fields: destination, startDate, endDate, departureCity' });
+        }
+
         const days = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
         const startMonth = new Date(startDate).getMonth();
         
         // Use trip planner service for external API calls
         const flightData = await tripPlannerService.getFlightPrices(departureCity, destination, startDate, endDate, travelers);
         const hotelData = await tripPlannerService.getHotelPrices(destination, startDate, endDate, travelers, budgetType);
-        const activityData = await tripPlannerService.getActivityPrices(destination, days, travelers, [formData.tripType || 'leisure']);
+        const activityData = await tripPlannerService.getActivityPrices(destination, days, travelers, [req.body.tripType || 'leisure']);
         
         // Seasonal pricing multiplier
         const seasonalMultiplier = getSeasonalMultiplier(destination, startMonth);
@@ -55,6 +65,41 @@ router.post("/api/estimate", async (req, res) => {
         const recommendations = tripPlannerService.generateRecommendations(destination, budgetType, startMonth, days, travelers);
         const savingTips = tripPlannerService.generateSavingTips(budgetType, days, seasonalMultiplier, destination);
         
+        // Prepare estimation in USD, then convert to requested currency if necessary
+        const baseCurrency = 'USD';
+        let responseCosts = { ...adjustedCosts };
+        let responseTotal = grandTotal;
+        let responsePerPerson = travelers > 0 ? Math.round(grandTotal / travelers) : 0;
+        const requestedCurrency = req.body.currency || baseCurrency;
+
+        if (requestedCurrency && requestedCurrency !== baseCurrency) {
+            try {
+                const rates = await tripPlannerService.getExchangeRates(baseCurrency);
+                const conversionRate = rates[requestedCurrency] || 1;
+
+                // Convert each cost component
+                Object.keys(responseCosts).forEach(k => {
+                    responseCosts[k] = Math.round(responseCosts[k] * conversionRate);
+                });
+
+                responseTotal = Math.round(responseTotal * conversionRate);
+                responsePerPerson = travelers > 0 ? Math.round(responseTotal / travelers) : 0;
+            } catch (convErr) {
+                console.warn('Currency conversion failed, returning USD amounts:', convErr);
+            }
+        }
+
+        // Recompute breakdown percentages safely
+        const safeTotal = responseTotal || 1; // avoid division by zero
+        const breakdown = {
+            accommodation: Math.round((responseCosts.hotels / safeTotal) * 100),
+            flights: Math.round((responseCosts.flights / safeTotal) * 100),
+            food: Math.round((responseCosts.food / safeTotal) * 100),
+            activities: Math.round((responseCosts.activities / safeTotal) * 100),
+            transport: Math.round((responseCosts.transport / safeTotal) * 100),
+            insurance: Math.round((responseCosts.insurance / safeTotal) * 100)
+        };
+
         res.json({
             success: true,
             estimation: {
@@ -63,21 +108,14 @@ router.post("/api/estimate", async (req, res) => {
                 duration: days,
                 travelers,
                 budgetType,
-                costs: adjustedCosts,
-                total: grandTotal,
-                perPerson: Math.round(grandTotal / travelers),
-                currency: "USD",
+                costs: responseCosts,
+                total: responseTotal,
+                perPerson: responsePerPerson,
+                currency: requestedCurrency || baseCurrency,
                 seasonalMultiplier: seasonalMultiplier.toFixed(2),
                 recommendations,
                 savingTips,
-                breakdown: {
-                    accommodation: Math.round((adjustedCosts.hotels / grandTotal) * 100),
-                    flights: Math.round((adjustedCosts.flights / grandTotal) * 100),
-                    food: Math.round((adjustedCosts.food / grandTotal) * 100),
-                    activities: Math.round((adjustedCosts.activities / grandTotal) * 100),
-                    transport: Math.round((adjustedCosts.transport / grandTotal) * 100),
-                    insurance: Math.round((adjustedCosts.insurance / grandTotal) * 100)
-                },
+                breakdown,
                 externalData: {
                     flights: flightData,
                     hotels: hotelData,
@@ -87,7 +125,19 @@ router.post("/api/estimate", async (req, res) => {
         });
     } catch (error) {
         console.error('Trip estimation error:', error);
-        res.status(500).json({ error: "Failed to estimate trip cost" });
+        // Return consistent payload for client handling
+        res.status(500).json({ success: false, error: "Failed to estimate trip cost" });
+    }
+});
+
+// Temporary debug endpoint to verify POST connectivity and payloads
+router.post('/api/echo', (req, res) => {
+    try {
+        console.log('Echo API called. Body:', req.body);
+        res.json({ success: true, received: req.body });
+    } catch (err) {
+        console.error('Echo API error:', err);
+        res.status(500).json({ success: false, error: 'Echo failed' });
     }
 });
 
@@ -200,6 +250,28 @@ router.get("/my-trips", isLoggedIn, async (req, res) => {
         console.error('Load trips error:', error);
         req.flash("error", "Failed to load your trips");
         res.redirect("/listings");
+    }
+});
+
+// Get individual trip details
+router.get("/my-trips/:tripId", isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const trip = user.tripPlans.find(trip => trip._id.toString() === req.params.tripId);
+        
+        if (!trip) {
+            req.flash("error", "Trip not found");
+            return res.redirect("/trip-planner/my-trips");
+        }
+        
+        res.render("tripPlanner/tripDetail", {
+            title: `Trip to ${trip.destination}`,
+            trip: trip
+        });
+    } catch (error) {
+        console.error('Load trip detail error:', error);
+        req.flash("error", "Failed to load trip details");
+        res.redirect("/trip-planner/my-trips");
     }
 });
 
@@ -351,6 +423,12 @@ router.get("/api/currency/:from/:to", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Failed to get exchange rate" });
     }
+});
+
+router.get("/mood-fixing", (req, res) => {
+  res.render("tripPlanner/moodFixing", {
+    title: "Mood Fixing - Travel Tools"
+  });
 });
 
 module.exports = router;

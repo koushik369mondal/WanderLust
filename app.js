@@ -214,12 +214,6 @@ app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
 
-app.get("/tripPlanner/mood-fixing", (req, res) => {
-  res.render("tripPlanner/moodFixing", {
-    title: "Mood Fixing - Travel Tools"
-  });
-});
-
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
 });
