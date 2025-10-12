@@ -220,7 +220,14 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const tripId = '<%= trip._id %>';
-    const tripData = <%- JSON.stringify(trip) %>;
+    let tripData;
+    try {
+        // Prefer window.tripData if already parsed, otherwise fall back to the JSON script block
+        tripData = window.tripData || JSON.parse(document.getElementById('tripDataJSON') ? document.getElementById('tripDataJSON').textContent : '{}');
+    } catch (e) {
+        console.error('Failed to obtain tripData', e);
+        tripData = {};
+    }
 
     // Download for offline
     document.getElementById('downloadOfflineBtn').addEventListener('click', async () => {
@@ -249,11 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-download me-2"></i>Download for Offline Access';
         }
-                                <% } %>
-                            </div>
-                        </div>
+    });
+});
+</script>
 
-                        <!-- Trip Timeline -->
+<!-- Trip Timeline -->
                         <div class="action-card mt-4">
                             <h4 class="action-title">
                                 <i class="fa-solid fa-timeline text-primary me-2"></i>
@@ -512,9 +519,15 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 </style>
 
+<script type="application/json" id="tripDataJSON"><%- JSON.stringify(trip) %></script>
 <script>
-    // Make trip data available to JavaScript
-    window.tripData = <%- JSON.stringify(trip) %>;
+    // Parse trip data from JSON script block to avoid embedding EJS inside JS expressions
+    try {
+        window.tripData = JSON.parse(document.getElementById('tripDataJSON').textContent || '{}');
+    } catch (e) {
+        console.error('Failed to parse tripData JSON', e);
+        window.tripData = {};
+    }
 </script>
 
 <script>
