@@ -41,7 +41,7 @@
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
     "mongodb": "^6.20.0",
-    "mongoose": "^8.19.0",
+    "mongoose": "^8.19.1",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
     "openai": "^6.2.0",
