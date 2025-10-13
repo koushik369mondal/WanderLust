@@ -3,31 +3,52 @@ const Review = require("../models/review");
 const aiSummarizationService = require("../services/aiSummarizationService");
 const translate = require('google-translate-api-x');
 
+// Helper function to update ratings and AI summary in one go
+const updateListingDetails = async (listingId) => {
+    try {
+        const listing = await Listing.findById(listingId).populate({
+            path: "reviews",
+            populate: { path: "author" }, // Populate author for AI summary context
+        });
+
+        if (!listing) return;
+
+        // 1. Calculate Average Rating and Review Count
+        if (listing.reviews.length > 0) {
+            const totalRating = listing.reviews.reduce((sum, review) => sum + review.rating, 0);
+            listing.avgRating = parseFloat((totalRating / listing.reviews.length).toFixed(2));
+            listing.reviewCount = listing.reviews.length;
+        } else {
+            listing.avgRating = 0;
+            listing.reviewCount = 0;
+        }
+
+        // 2. Regenerate AI Summary
+        const newSummary = await aiSummarizationService.generateSummary(listing.reviews, listing.title);
+        listing.aiSummary = newSummary;
+        listing.aiSummaryLastUpdated = new Date();
+
+        // 3. Save all changes
+        await listing.save();
+        console.log(`Successfully updated details for listing: ${listingId}`);
+
+    } catch (error) {
+        console.error(`Failed to update listing details for ${listingId}:`, error.message);
+    }
+};
+
 module.exports.createReview = async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
+    const listing = await Listing.findById(req.params.id);
+    const newReview = new Review(req.body.review);
     newReview.author = req.user._id;
 
     listing.reviews.push(newReview);
 
     await newReview.save();
-    await listing.save();
+    await listing.save(); // Save the initial review link first
 
-    // Regenerate AI summary after adding review
-    try {
-      const populatedListing = await Listing.findById(req.params.id).populate({
-        path: "reviews",
-        populate: { path: "author" },
-      });
-      const newSummary = await aiSummarizationService.generateSummary(populatedListing.reviews, populatedListing.title);
-      await Listing.findByIdAndUpdate(req.params.id, {
-        aiSummary: newSummary,
-        aiSummaryLastUpdated: new Date()
-      });
-      console.log('AI summary updated after adding review');
-    } catch (error) {
-      console.log('AI summary update failed after adding review:', error.message);
-    }
+    // Call the helper to update ratings and summary
+    await updateListingDetails(req.params.id);
 
     req.flash("success", "New review created!");
     res.redirect(`/listings/${listing._id}`);
@@ -39,21 +60,8 @@ module.exports.destroyReview = async (req, res) => {
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
 
-    // Regenerate AI summary after removing review
-    try {
-      const populatedListing = await Listing.findById(id).populate({
-        path: "reviews",
-        populate: { path: "author" },
-      });
-      const newSummary = await aiSummarizationService.generateSummary(populatedListing.reviews, populatedListing.title);
-      await Listing.findByIdAndUpdate(id, {
-        aiSummary: newSummary,
-        aiSummaryLastUpdated: new Date()
-      });
-      console.log('AI summary updated after removing review');
-    } catch (error) {
-      console.log('AI summary update failed after removing review:', error.message);
-    }
+    // Call the helper to update ratings and summary
+    await updateListingDetails(id);
 
     req.flash("success", "Review deleted!");
     res.redirect(`/listings/${id}`);

@@ -705,7 +705,14 @@
                                         ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
                                         <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                     </span>
-                                </p>
+                                    <% if (listing.avgRating && listing.avgRating > 0) { %>
+                                        <br>
+                                        <small class="text-warning">
+                                            <%= '★'.repeat(Math.round(listing.avgRating)) %> 
+                                            <%= listing.avgRating.toFixed(1) %> (<%= listing.reviewCount %> <%= listing.reviewCount === 1 ? 'review' : 'reviews' %>)
+                                        </small>
+                                    <% } %>
+                                    </p>
                             </div>
                             <div class="compare-checkbox">
                                 <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">

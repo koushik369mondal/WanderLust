@@ -28,9 +28,7 @@
   }
 </script>
 
-
-
-<div class="row mt-3 m-1   ">
+<div class="row mt-3 m-1">
   
   <div class="card col-12 col-md-8 offset-md-2 show-card listing-card mb-3">
     <h3 class="d-flex justify-content-center mt-3"><%= listing.title %></h3>
@@ -40,17 +38,27 @@
       alt="listing_image"
     />
 
-    <div class="card-body ">
+    <div class="card-body">
       <p class="card-text">
         <%= __('owned_by') %> -
         <i>
-          <%= listing.owner && listing.owner.username ? listing.owner.username :
-          "Unknown" %>
+          <%= listing.owner && listing.owner.username ? listing.owner.username : "Unknown" %>
         </i>
       </p>
+
+      <% if (listing.avgRating && listing.avgRating > 0) { %>
+        <h5 class="card-text">
+          <i class="fa-solid fa-star" style="color: #ffc107;"></i>
+          <%= listing.avgRating.toFixed(1) %>
+          <span style="font-size: 1rem; color: #6c757d; font-weight: 400;">
+            &middot; <%= listing.reviewCount %> <%= listing.reviewCount === 1 ? __('review') : __('reviews') %>
+          </span>
+        </h5>
+      <% } %>
       <p class="card-text">
         <b><%= __('likes') %>:</b> <%= listing.likes ? listing.likes.length : 0 %>
       </p>
+      
       <% if (currentUser) { %>
         <div class="listing-actions d-flex gap-2 mb-3">
           <% if (listing.likes && listing.likes.some(id => id.toString() === currentUser._id.toString())) { %>
@@ -85,37 +93,30 @@
           <% } %>
         </div>
       <% } %>
-      <p class="card-text">
-        <%= listing.description || "No description available" %>
-      </p>
-      <p class="card-text">
-        &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A"
-        %>
-      </p>
-      <p class="card-text">
-        <%= listing.location || "Location not specified" %>
-      </p>
+      
+      <p class="card-text"><%= listing.description || "No description available" %></p>
+      <p class="card-text">&#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></p>
+      <p class="card-text"><%= listing.location || "Location not specified" %></p>
       <p class="card-text"><%= listing.country || "Country not specified" %></p>
       <hr />
-<div class="row">
-  <div class="col-md-4">
-    <h5>Category</h5>
-    <p><%= listing.category || "Not specified" %></p>
-  </div>
-  <div class="col-md-4">
-    <h5>Best Season to Visit</h5>
-    <p><%= listing.bestSeason || "Not specified" %></p>
-  </div>
-  <div class="col-md-4">
-    <h5>Travel Buddy Tip</h5>
-    <p>"<%= listing.travelTip || "No tip provided" %>"</p>
-  </div>
-</div>
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Category</h5>
+          <p><%= listing.category || "Not specified" %></p>
+        </div>
+        <div class="col-md-4">
+          <h5>Best Season to Visit</h5>
+          <p><%= listing.bestSeason || "Not specified" %></p>
+        </div>
+        <div class="col-md-4">
+          <h5>Travel Buddy Tip</h5>
+          <p>"<%= listing.travelTip || "No tip provided" %>"</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <% if(currentUser && listing.owner && listing.owner._id && listing.owner._id.equals(currentUser._id)) { %>
-    
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="d-flex gap-2 justify-content-center">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary">
@@ -129,6 +130,7 @@
     </div>
   </div>
   <% } %>
+
   <div class="col-12 col-md-8 offset-md-2 mb-3">
     <% if (currentUser) { %>
     <div class="review-section-divider">
@@ -156,49 +158,16 @@
           </label>
           <div class="rating-container">
             <fieldset class="starability-slot">
-              <input
-                type="radio"
-                id="no-rate"
-                class="input-no-rate"
-                name="review[rating]"
-                value="1"
-                checked
-                aria-label="No rating."
-              />
-              <input
-                type="radio"
-                id="first-rate1"
-                name="review[rating]"
-                value="1"
-              />
+              <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+              <input type="radio" id="first-rate1" name="review[rating]" value="1" />
               <label for="first-rate1" title="Poor - Needs improvement">1 star</label>
-              <input
-                type="radio"
-                id="first-rate2"
-                name="review[rating]"
-                value="2"
-              />
+              <input type="radio" id="first-rate2" name="review[rating]" value="2" />
               <label for="first-rate2" title="Fair - Below expectations">2 stars</label>
-              <input
-                type="radio"
-                id="first-rate3"
-                name="review[rating]"
-                value="3"
-              />
+              <input type="radio" id="first-rate3" name="review[rating]" value="3" />
               <label for="first-rate3" title="Good - Met expectations">3 stars</label>
-              <input
-                type="radio"
-                id="first-rate4"
-                name="review[rating]"
-                value="4"
-              />
+              <input type="radio" id="first-rate4" name="review[rating]" value="4" />
               <label for="first-rate4" title="Very Good - Exceeded expectations">4 stars</label>
-              <input
-                type="radio"
-                id="first-rate5"
-                name="review[rating]"
-                value="5"
-              />
+              <input type="radio" id="first-rate5" name="review[rating]" value="5" />
               <label for="first-rate5" title="Excellent - Outstanding experience">5 stars</label>
             </fieldset>
             <div class="rating-text" id="rating-text">Select a rating</div>
@@ -241,7 +210,6 @@
       <span class="divider-text"><%= __('traveler_stories') %></span>
       <div class="divider-line"></div>
     </div>
-    
     <% } %>
     
     <% if(listing.reviews && listing.reviews.length > 0) { %>
@@ -249,26 +217,21 @@
       <div class="reviews-header">
         <h5 class="reviews-title">
           <i class="fa-solid fa-comments me-2"></i>
-          <%= __('all_reviews') %> (<%= listing.reviews.length %>)
+          <%= __('all_reviews') %> (<%= listing.reviewCount %>)
         </h5>
-        <% if(listing.reviews.length > 0) { %>
+        
         <div class="reviews-summary">
-          <% 
-            let totalRating = listing.reviews.reduce((sum, review) => sum + review.rating, 0);
-            let avgRating = (totalRating / listing.reviews.length).toFixed(1);
-          %>
           <div class="avg-rating">
-            <span class="rating-number"><%= avgRating %></span>
+            <span class="rating-number"><%= listing.avgRating.toFixed(1) %></span>
             <div class="rating-stars">
               <% for(let i = 1; i <= 5; i++) { %>
-                <i class="fa-solid fa-star <%= i <= Math.round(avgRating) ? 'filled' : '' %>"></i>
+                <i class="fa-solid fa-star <%= i <= Math.round(listing.avgRating) ? 'filled' : '' %>"></i>
               <% } %>
             </div>
             <span class="rating-text"><%= __('average_rating') %></span>
           </div>
         </div>
-        <% } %>
-      </div>
+        </div>
       
       <div class="reviews-grid">
       <% for (let review of listing.reviews) { %>

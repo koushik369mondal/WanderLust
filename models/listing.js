@@ -13,17 +13,18 @@ const listingSchema = new Schema({
   location: String,
   country: String,
 
-  // BADGE FIELDS
+  // BADGE & RATING FIELDS
   isFeatured: { type: Boolean, default: false },
   hasDiscount: { type: Boolean, default: false },
   avgRating: { type: Number, default: 0 },
+  reviewCount: { type: Number, default: 0 }, // <-- ADDED FOR PERFORMANCE
   hasFeaturedReview: { type: Boolean, default: false },
   discountPrice: { type: Number },
   createdAt: { type: Date, default: Date.now },
 
   category: {
     type: String,
-    enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing pool', 'Camping', 'Farms', 'Arctic','Domes','Boats'], // This ensures only these values are accepted
+    enum: ['Trending', 'Rooms', 'Iconic Cities', 'Mountains', 'Castles', 'Amazing pool', 'Camping', 'Farms', 'Arctic','Domes','Boats'],
   },
   bestSeason: {
     type: String,
@@ -52,8 +53,8 @@ const listingSchema = new Schema({
   },
   geometry: {
     type: {
-      type: String, // Don't do `{ location: { type: String } }`
-      enum: ["Point"], // 'location.type' must be 'Point'
+      type: String, 
+      enum: ["Point"], 
       required: false,
     },
     coordinates: {
@@ -61,15 +62,6 @@ const listingSchema = new Schema({
       required: false,
     },
   },
-  // category: {
-  //     type: String,
-  //     enum: [
-  //         "mountains",
-  //         "arctic",
-  //         "farms",
-  //         "deserts",
-  //     ]
-  // }
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
