@@ -44,7 +44,7 @@
     "mongoose": "^8.19.1",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "openai": "^6.2.0",
+    "openai": "^6.3.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
