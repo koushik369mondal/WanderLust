@@ -454,19 +454,7 @@
                 margin-bottom: 1rem;
             }
         }
-    </style><% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="alert alert-info" role="alert">
-                <% if (noResults) { %>
-                    No listings found for: <strong>"<%= searchQuery %>"</strong>. <a href="/listings" class="alert-link">Clear search</a>.
-                <% } else { %>
-                    Showing results for: <strong>"<%= searchQuery %>"</strong>. <a href="/listings" class="alert-link">Clear search</a>.
-                <% } %>
-            </div>
-        </div>
-    </div>
-<% } %>
+    </style>
 
 <div id="filters">
     <div class="filters-container">
@@ -557,7 +545,7 @@
     </div>
 </div>
 
-<div class="active-filters mb-3" id="activeFilters" style="display: none;"></div>
+<div class="active-filters my-3" id="activeFilters" style="display: none;"></div>
 
 <div class="advanced-filters-container mb-4" style="display: none;">
     <div class="filters-panel">
@@ -621,128 +609,128 @@
 </div>
 
 <% if (searchQuery) { %>
-        <div class="search-results-header mt-4 mb-3">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4 class="mb-1">
-                            <i class="fas fa-search text-primary me-2"></i>
-                            Search Results for "<%= searchQuery %>"
-                        </h4>
-                        <p class="text-muted mb-0">
-                            <% if (totalResults > 0) { %>
-                                Found <%= totalResults %> <%= totalResults === 1 ? 'listing' : 'listings' %> matching your search
-                            <% } else { %>
-                                No listings found for your search. Try different keywords.
-                            <% } %>
-                        </p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <a href="/listings" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-1"></i>Clear Search
-                        </a>
-                    </div>
+    <div class="search-results-header mt-4 mb-3">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="mb-1">
+                        <i class="fas fa-search text-primary me-2"></i>
+                        Search Results for "<span class="search-highlight"><%= searchQuery %></span>"
+                    </h4>
+                    <p class="text-muted mb-0">
+                        <% if (totalResults > 0) { %>
+                            Found <%= totalResults %> <%= totalResults === 1 ? 'listing' : 'listings' %> matching your search
+                        <% } else { %>
+                            No listings found for your search. Try different keywords.
+                        <% } %>
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="/listings" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Clear Search
+                    </a>
                 </div>
             </div>
         </div>
-    <% } %>
+    </div>
+<% } %>
 
-    <% if (searchQuery && totalResults === 0) { %>
-        <div class="no-results-container text-center py-5">
-            <div class="container">
-                <i class="fas fa-search fa-4x text-muted mb-4"></i>
-                <h3 class="text-muted mb-3">No listings found</h3>
-                <p class="text-muted mb-4">
-                    We couldn't find any listings matching "<strong><%= searchQuery %></strong>". 
-                    Try searching for different destinations, property types, or amenities.
-                </p>
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="search-suggestions">
-                            <h5 class="mb-3">Try searching for:</h5>
-                            <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <a href="/listings?search=beach" class="btn btn-outline-primary btn-sm">Beach</a>
-                                <a href="/listings?search=cabin" class="btn btn-outline-primary btn-sm">Cabin</a>
-                                <a href="/listings?search=tokyo" class="btn btn-outline-primary btn-sm">Tokyo</a>
-                                <a href="/listings?search=mountains" class="btn btn-outline-primary btn-sm">Mountains</a>
-                                <a href="/listings?search=swimming" class="btn btn-outline-primary btn-sm">Swimming Pool</a>
-                            </div>
+<% if (searchQuery && totalResults === 0) { %>
+    <div class="no-results-container text-center py-5">
+        <div class="container">
+            <i class="fas fa-search fa-4x text-muted mb-4"></i>
+            <h3 class="text-muted mb-3">No listings found</h3>
+            <p class="text-muted mb-4">
+                We couldn't find any listings matching "<strong><%= searchQuery %></strong>". 
+                Try searching for different destinations, property types, or amenities.
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="search-suggestions">
+                        <h5 class="mb-3">Try searching for:</h5>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            <a href="/listings?search=beach" class="btn btn-outline-primary btn-sm">Beach</a>
+                            <a href="/listings?search=cabin" class="btn btn-outline-primary btn-sm">Cabin</a>
+                            <a href="/listings?search=tokyo" class="btn btn-outline-primary btn-sm">Tokyo</a>
+                            <a href="/listings?search=mountains" class="btn btn-outline-primary btn-sm">Mountains</a>
+                            <a href="/listings?search=pool" class="btn btn-outline-primary btn-sm">Swimming Pool</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <% } %>
+    </div>
+<% } %>
 
-    <% if (allListings && allListings.length > 0) { %>
-        <div class="listings-container" id="listingsContainer">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
-                <% for(let listing of allListings) { %>
-                    <div class="col mb-4">
-                        <a href="/listings/<%= listing._id %>" class="listing-link">
-                            <div class="card listing-card h-100">
-                                <div class="listing-badges">
-                                    <% if (listing.isNewBadge) { %>
-                                        <span class="badge badge-new">New</span>
-                                    <% } %>
-                                    <% if (listing.isFeaturedBadge) { %>
-                                        <span class="badge badge-featured">Featured</span>
-                                    <% } %>
-                                    <% if (listing.isDiscountBadge) { %>
-                                        <span class="badge badge-discount">Discount</span>
-                                    <% } %>
-                                    <% if (listing.isHighlyRatedBadge) { %>
-                                        <span class="badge badge-rated highly-rated-badge" 
-                                            data-title="<%= listing.title.replace(/"/g, '&quot;') %>" 
-                                            data-avg="<%= listing.avgRating ? listing.avgRating.toFixed(2) : '0.00' %>">Highly Rated</span>
-                                    <% } %>
-                                    <% if (listing.hasFeaturedReview) { %>
-                                        <span class="badge badge-featured-review">Featured Review</span>
-                                    <% } %>
-                                </div>
-                                <div class="listing-image-container">
-                                    <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
-                                        alt="listing_image" />
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">
-                                        <b class="listing-title">
-                                            <%= listing.title %>
-                                        </b><br />
-                                        <small class="text-muted listing-location">
-                                            <i class="fas fa-map-marker-alt me-1"></i>
-                                            <%= listing.location %>, <%= listing.country %>
-                                        </small><br />
-                                        <span class="listing-price">
-                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
-                                            <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
-                                        </span>
-                                    </p>
-                                </div>
-                                <div class="compare-checkbox">
-                                    <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
-                                    <span>Compare</span>
-                                </div>
+<% if (allListings && allListings.length > 0) { %>
+    <div class="listings-container" id="listingsContainer">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
+            <% for(let listing of allListings) { %>
+                <div class="col mb-4">
+                    <a href="/listings/<%= listing._id %>" class="listing-link">
+                        <div class="card listing-card h-100">
+                            <div class="listing-badges">
+                                <% if (listing.isNewBadge) { %>
+                                    <span class="badge badge-new">New</span>
+                                <% } %>
+                                <% if (listing.isFeaturedBadge) { %>
+                                    <span class="badge badge-featured">Featured</span>
+                                <% } %>
+                                <% if (listing.isDiscountBadge) { %>
+                                    <span class="badge badge-discount">Discount</span>
+                                <% } %>
+                                <% if (listing.isHighlyRatedBadge) { %>
+                                    <span class="badge badge-rated highly-rated-badge" 
+                                        data-title="<%= listing.title.replace(/"/g, '&quot;') %>" 
+                                        data-avg="<%= listing.avgRating ? listing.avgRating.toFixed(2) : '0.00' %>">Highly Rated</span>
+                                <% } %>
+                                <% if (listing.hasFeaturedReview) { %>
+                                    <span class="badge badge-featured-review">Featured Review</span>
+                                <% } %>
                             </div>
-                        </a>
-                    </div>
-                <% } %>
-            </div>
+                            <div class="listing-image-container">
+                                <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
+                                    alt="listing_image" />
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <b class="listing-title">
+                                        <%= listing.title %>
+                                    </b><br />
+                                    <small class="text-muted listing-location">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        <%= listing.location %>, <%= listing.country %>
+                                    </small><br />
+                                    <span class="listing-price">
+                                        ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
+                                        <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="compare-checkbox">
+                                <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
+                                <span>Compare</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% } %>
         </div>
-    <% } else if (!searchQuery) { %>
-        <div class="row mt-4">
-            <div class="col-12 text-center py-5 no-results-container">
-                <i class="fas fa-home fa-4x text-muted mb-4"></i>
-                <h3 class="text-muted mb-3">Welcome to WanderLust!</h3>
-                <p class="text-muted mb-4">
-                    It looks a bit empty here. Be the first to add a listing and get started!
-                </p>
-                <a href="/listings/new" class="btn btn-dark add-btn mt-2" style="padding: 1rem 2rem; font-size: 1.2rem;">
-                    <i class="fas fa-plus-circle me-2"></i>Create New Listing
-                </a>
-            </div>
+    </div>
+<% } else if (!searchQuery && allListings.length === 0) { %>
+    <div class="row mt-4">
+        <div class="col-12 text-center py-5 no-results-container">
+            <i class="fas fa-home fa-4x text-muted mb-4"></i>
+            <h3 class="text-muted mb-3">Welcome to WanderLust!</h3>
+            <p class="text-muted mb-4">
+                It looks a bit empty here. Be the first to add a listing and get started!
+            </p>
+            <a href="/listings/new" class="btn btn-dark add-btn mt-2" style="padding: 1rem 2rem; font-size: 1.2rem;">
+                <i class="fas fa-plus-circle me-2"></i>Create New Listing
+            </a>
         </div>
-    <% } %>
+    </div>
+<% } %>
 
 
     <button id="compare-btn" style="display: none;">
@@ -809,10 +797,10 @@
                         
                         const formattedPrice = displayPrice.toLocaleString("en-IN");
                         const nightText = priceText.includes('night') ? ' / night' : ' / <%= __("night") %>';
-                        const taxInfo = showWithTax ? '' : '<i class="tax-info">&nbsp; &nbsp; +18% GST</i>';
+                        const taxInfoHTML = showWithTax ? '' : '<i class="tax-info">&nbsp; &nbsp; +18% GST</i>';
                         
                         // Update the price display while preserving the structure
-                        element.innerHTML = `₹${formattedPrice}${nightText}${taxInfo}`;
+                        element.innerHTML = `₹${formattedPrice}${nightText}${taxInfoHTML}`;
                     }
                 });
             }
@@ -865,24 +853,21 @@
             }
 
             // Search term highlighting function
-            function highlightSearchTerms(searchQuery) {
-                if (!searchQuery || searchQuery.trim() === '') return;
+            function highlightSearchTerms(query) {
+                if (!query || query.trim() === '') return;
                 
-                const terms = searchQuery.toLowerCase().split(' ').filter(term => term.length > 2);
-                const selectors = ['.listing-title', '.listing-location'];
+                const terms = query.trim().split(/\s+/).filter(term => term.length > 2);
+                if (terms.length === 0) terms.push(query.trim()); // Highlight full query if no long words
                 
-                selectors.forEach(selector => {
-                    const elements = document.querySelectorAll(selector);
-                    elements.forEach(element => {
-                        let html = element.innerHTML;
-                        
-                        terms.forEach(term => {
-                            const regex = new RegExp(`(${term})`, 'gi');
-                            html = html.replace(regex, '<mark class="search-highlight">$1</mark>');
-                        });
-                        
-                        element.innerHTML = html;
+                const elements = document.querySelectorAll('.listing-title, .listing-location');
+                
+                elements.forEach(element => {
+                    let html = element.innerHTML;
+                    terms.forEach(term => {
+                        const regex = new RegExp(`(${term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+                        html = html.replace(regex, '<mark class="search-highlight">$1</mark>');
                     });
+                    element.innerHTML = html;
                 });
             }
             
@@ -894,7 +879,6 @@
             if (advancedFiltersBtn) {
                 advancedFiltersBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Advanced filters button clicked');
                     const filtersContainer = document.querySelector('.advanced-filters-container');
                     
                     if (filtersContainer) {
@@ -903,11 +887,8 @@
                         this.innerHTML = isHidden ? 
                             '<i class="fa-solid fa-times me-2"></i>Hide Filters' :
                             '<i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters';
-                        console.log('Filters toggled, display:', filtersContainer.style.display);
                     }
                 });
-            } else {
-                console.error('Advanced filters button not found');
             }
             
             const toggleFiltersBtn = document.getElementById('toggleFilters');
@@ -923,25 +904,22 @@
             // Load countries for filter dropdown
             loadCountries();
             
-            // Apply Filters
-            const applyFiltersBtn = document.getElementById('applyFilters');
-            if (applyFiltersBtn) {
-                applyFiltersBtn.addEventListener('click', applyFilters);
-            }
+            // Apply Filters Button
+            document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
             
-            // Clear Filters
-            const clearFiltersBtn = document.getElementById('clearFilters');
-            if (clearFiltersBtn) {
-                clearFiltersBtn.addEventListener('click', clearFilters);
-            }
+            // Clear Filters Button
+            document.getElementById('clearFilters')?.addEventListener('click', clearFilters);
             
             // Auto-apply on input change (debounced)
             let filterTimeout;
             ['sortBy', 'countryFilter', 'minPrice', 'maxPrice', 'minRating'].forEach(id => {
-                document.getElementById(id).addEventListener('change', function() {
-                    clearTimeout(filterTimeout);
-                    filterTimeout = setTimeout(applyFilters, 500);
-                });
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', () => {
+                        clearTimeout(filterTimeout);
+                        filterTimeout = setTimeout(applyFilters, 500);
+                    });
+                }
             });
             
             async function loadCountries() {
@@ -1012,7 +990,6 @@
                 currentFilters = {};
                 updateActiveFilters();
                 
-                // Keep search and category from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const search = urlParams.get('search');
                 const category = urlParams.get('category');
@@ -1036,34 +1013,20 @@
                     let label = '';
                     switch (key) {
                         case 'sortBy':
-                            const sortLabels = {
-                                'newest': 'Newest First',
-                                'price-low': 'Price: Low to High',
-                                'price-high': 'Price: High to Low',
-                                'rating': 'Highest Rated',
-                                'popularity': 'Most Popular'
-                            };
-                            label = `Sort: ${sortLabels[value]}`;
+                            const sortOption = document.querySelector(`#sortBy option[value="${value}"]`);
+                            if (sortOption) label = `Sort: ${sortOption.textContent}`;
                             break;
-                        case 'country':
-                            label = `Country: ${value}`;
-                            break;
-                        case 'minPrice':
-                            label = `Min: ₹${value}`;
-                            break;
-                        case 'maxPrice':
-                            label = `Max: ₹${value}`;
-                            break;
-                        case 'minRating':
-                            label = `${value}+ Stars`;
-                            break;
+                        case 'country': label = `Country: ${value}`; break;
+                        case 'minPrice': label = `Min: ₹${value}`; break;
+                        case 'maxPrice': label = `Max: ₹${value}`; break;
+                        case 'minRating': label = `${value}+ Stars`; break;
                     }
                     
                     if (label) {
                         filterTags.push(`
                             <span class="filter-tag">
                                 ${label}
-                                <span class="remove-filter" data-filter="${key}">×</span>
+                                <span class="remove-filter" data-filter="${key}" title="Remove filter">×</span>
                             </span>
                         `);
                     }
@@ -1071,9 +1034,8 @@
                 
                 if (filterTags.length > 0) {
                     activeFiltersContainer.innerHTML = filterTags.join('');
-                    activeFiltersContainer.style.display = 'block';
+                    activeFiltersContainer.style.display = 'flex';
                     
-                    // Add remove filter functionality
                     activeFiltersContainer.querySelectorAll('.remove-filter').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const filterKey = this.dataset.filter;
@@ -1088,11 +1050,8 @@
             
             function getFilterElementId(filterKey) {
                 const mapping = {
-                    'sortBy': 'sortBy',
-                    'country': 'countryFilter',
-                    'minPrice': 'minPrice',
-                    'maxPrice': 'maxPrice',
-                    'minRating': 'minRating'
+                    'sortBy': 'sortBy', 'country': 'countryFilter', 'minPrice': 'minPrice',
+                    'maxPrice': 'maxPrice', 'minRating': 'minRating'
                 };
                 return mapping[filterKey];
             }
@@ -1102,7 +1061,7 @@
                 
                 if (listings.length === 0) {
                     listingsGrid.innerHTML = `
-                        <div class="col-12 text-center py-5">
+                        <div class="col-12 text-center py-5 no-results-container">
                             <i class="fas fa-search fa-4x text-muted mb-3"></i>
                             <h4 class="text-muted">No listings found</h4>
                             <p class="text-muted">Try adjusting your filters or search criteria.</p>
@@ -1119,7 +1078,7 @@
                                     ${listing.isNewBadge ? '<span class="badge badge-new">New</span>' : ''}
                                     ${listing.isFeaturedBadge ? '<span class="badge badge-featured">Featured</span>' : ''}
                                     ${listing.isDiscountBadge ? '<span class="badge badge-discount">Discount</span>' : ''}
-                                    ${listing.isHighlyRatedBadge ? '<span class="badge badge-rated">Highly Rated</span>' : ''}
+                                    ${listing.isHighlyRatedBadge ? `<span class="badge badge-rated highly-rated-badge" data-avg="${listing.avgRating.toFixed(2)}">Highly Rated</span>` : ''}
                                 </div>
                                 <div class="listing-image-container">
                                     <img src="${listing.image?.url || 'https://via.placeholder.com/300'}" 
@@ -1132,11 +1091,11 @@
                                             <i class="fas fa-map-marker-alt me-1"></i>
                                             ${listing.location}, ${listing.country}
                                         </small><br />
-                                        <span class="listing-price">
+                                        <span class="listing-price" data-original-price="${listing.price}">
                                             ₹${listing.price?.toLocaleString('en-IN') || 'N/A'} / night
                                             <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                         </span>
-                                        ${listing.avgRating ? `
+                                        ${listing.avgRating > 0 ? `
                                             <br><small class="text-warning">
                                                 ${'★'.repeat(Math.round(listing.avgRating))} 
                                                 ${listing.avgRating.toFixed(1)} (${listing.reviewCount || 0} reviews)
@@ -1155,14 +1114,16 @@
                 
                 listingsGrid.innerHTML = listingsHTML;
                 
-                // Re-apply search highlighting if needed
-                const searchQuery = new URLSearchParams(window.location.search).get('search');
-                if (searchQuery) {
-                    highlightSearchTerms(searchQuery);
+                const currentSearchQuery = new URLSearchParams(window.location.search).get('search');
+                if (currentSearchQuery) {
+                    highlightSearchTerms(currentSearchQuery);
                 }
                 
-                // Reinitialize comparison functionality for new listings
                 initializeComparison();
+                // If tax toggle is on, re-apply it to the new prices
+                if(document.getElementById('switchCheckDefault')?.checked) {
+                    updatePriceDisplay(true);
+                }
             }
             
             function showLoading(show) {
@@ -1185,7 +1146,7 @@
                 });
                 
                 const newURL = `/listings${urlParams.toString() ? '?' + urlParams.toString() : ''}`;
-                window.history.replaceState({}, '', newURL);
+                window.history.pushState({ path: newURL }, '', newURL);
             }
             
             // Comparison Functionality
@@ -1203,149 +1164,53 @@
                 }
             }
             
-            // Initialize comparison functionality
             function initializeComparison() {
-                console.log('Initializing comparison functionality...');
                 const checkboxes = document.querySelectorAll('.compare-item');
-                console.log('Found', checkboxes.length, 'comparison checkboxes');
                 
-                // Handle compare checkbox changes
                 checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function(e) {
-                        console.log('Checkbox changed:', this.dataset.id, this.checked);
+                    checkbox.addEventListener('change', function() {
                         const listingId = this.dataset.id;
                         
                         if (this.checked) {
                             if (selectedListings.length < 3) {
                                 selectedListings.push(listingId);
-                                console.log('Added to comparison:', listingId);
                             } else {
                                 this.checked = false;
                                 alert('You can compare up to 3 destinations at once.');
                             }
                         } else {
                             selectedListings = selectedListings.filter(id => id !== listingId);
-                            console.log('Removed from comparison:', listingId);
                         }
-                        
                         updateCompareButton();
-                        console.log('Selected listings:', selectedListings);
                     });
                 });
                 
-                // Prevent checkbox area clicks from triggering card link
                 document.querySelectorAll('.compare-checkbox').forEach(checkboxArea => {
                     checkboxArea.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        
-                        // If clicked on checkbox input, let it work normally
-                        if (e.target.classList.contains('compare-item')) {
-                            return;
-                        }
-                        
-                        // If clicked on label area, toggle the checkbox
-                        const checkbox = this.querySelector('.compare-item');
-                        if (checkbox) {
-                            checkbox.checked = !checkbox.checked;
-                            checkbox.dispatchEvent(new Event('change'));
+                        if (e.target.tagName !== 'INPUT') {
+                            const checkbox = this.querySelector('.compare-item');
+                            if (checkbox) {
+                                checkbox.checked = !checkbox.checked;
+                                checkbox.dispatchEvent(new Event('change'));
+                            }
                         }
                     });
                 });
                 
-                // Handle compare button click
                 const compareBtn = document.getElementById('compare-btn');
                 if (compareBtn) {
-                    compareBtn.addEventListener('click', function() {
-                        console.log('Compare button clicked, selected:', selectedListings);
+                    compareBtn.onclick = function() {
                         if (selectedListings.length < 2) {
                             alert('Please select at least 2 destinations to compare.');
                             return;
                         }
-                        
                         window.location.href = `/listings/compare?ids=${selectedListings.join(',')}`;
-                    });
+                    };
                 }
             }
             
-            // Initialize comparison after DOM is ready
             initializeComparison();
-            
-            function showComparisonModal(listings) {
-                const modal = document.createElement('div');
-                modal.className = 'modal fade';
-                modal.id = 'comparisonModal';
-                modal.innerHTML = `
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Destination Comparison</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Feature</th>
-                                                ${listings.map(listing => `<th class="text-center">${listing.title}</th>`).join('')}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Location</strong></td>
-                                                ${listings.map(listing => `<td class="text-center">${listing.location}, ${listing.country}</td>`).join('')}
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Price per Night</strong></td>
-                                                ${listings.map(listing => `<td class="text-center">₹${listing.price.toLocaleString('en-IN')}</td>`).join('')}
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Rating</strong></td>
-                                                ${listings.map(listing => `<td class="text-center">${listing.rating > 0 ? '★'.repeat(Math.round(listing.rating)) + ` ${listing.rating.toFixed(1)}` : 'No ratings'}</td>`).join('')}
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Best Value</strong></td>
-                                                ${(() => {
-                                                    const minPrice = Math.min(...listings.map(l => l.price));
-                                                    return listings.map(listing => `<td class="text-center">${listing.price === minPrice ? '<span class="badge bg-success">Best Price</span>' : ''}</td>`).join('');
-                                                })()}
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Highest Rated</strong></td>
-                                                ${(() => {
-                                                    const maxRating = Math.max(...listings.map(l => l.rating));
-                                                    return listings.map(listing => `<td class="text-center">${listing.rating === maxRating && maxRating > 0 ? '<span class="badge bg-warning">Top Rated</span>' : ''}</td>`).join('');
-                                                })()}
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="clearComparison()">Clear Selection</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-                const bootstrapModal = new bootstrap.Modal(modal);
-                bootstrapModal.show();
-                
-                modal.addEventListener('hidden.bs.modal', function() {
-                    document.body.removeChild(modal);
-                });
-            }
-            
-            window.clearComparison = function() {
-                selectedListings = [];
-                document.querySelectorAll('.compare-item').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                updateCompareButton();
-                bootstrap.Modal.getInstance(document.getElementById('comparisonModal')).hide();
-            };
         });
     </script>
