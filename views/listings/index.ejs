@@ -232,25 +232,79 @@
                 color: #fff !important; 
                 border-color: #fff !important;
             }
-        }/* FIX for Issue #257: Text Contrast over Images (Location, Price, GST) */
-.listing-location, 
-.listing-price, 
-.tax-info {
-    /* Set the text color to white for maximum contrast in both Light and Dark Modes */
-    color: white !important; 
-    
-    /* Add a strong shadow to make the white text pop over any light part of the image */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), 
-                 -1px -1px 2px rgba(0, 0, 0, 0.8);
-    font-weight: 700 !important; /* Ensure text is bold for better visibility */
+/* FIX 1: Custom Styles for Suggestion Box Container */
+.suggestion-card-box {
+    /* Inherit existing card styles and apply glassmorphism */
+    background: rgba(255, 255, 255, 0.8) !important; 
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Ensure the smaller location text also benefits */
-.listing-location {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+/* FIX 2: Header and Text Contrast */
+.suggestion-title {
+    color: var(--accent-color); /* Use project accent color (Red) */
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for pop */
 }
-        
+
+.suggestion-subtitle, .recommendation-text, .recommendation-note {
+    color: var(--text-primary); /* Dark text for light mode */
+    text-align: center;
+}
+
+/* FIX 3: Tags Styling */
+.interest-tag {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.interest-tag:hover, .interest-tag.selected {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    box-shadow: 0 0 5px rgba(254, 66, 77, 0.4);
+}
+/* Styling for selected tags (to show state change) */
+.interest-tag.selected {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    box-shadow: 0 0 5px rgba(254, 66, 77, 0.5);
+}
+
+/* FIX 4: Centered Curvy Button (The final visual requirement) */
+.suggestion-button {
+    /* Alignment (small, curvy, centered) */
+    display: block !important; 
+    margin: 1.5rem auto !important; 
+    width: fit-content !important; /* Make it fit the content */
+
+    /* Curvy Shape & Size */
+    border-radius: 50px !important; /* Pill shape */
+    padding: 0.5rem 2rem !important;
+    font-size: 1rem !important;
+
+    /* Color (Override to ensure white text is visible) */
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    font-weight: 700;
+    
+    /* Ensure no unwanted hover classes interfere */
+    transition: transform 0.3s ease; 
+}
+
+/* Dark Mode Overrides (Minimalist) */
+[data-theme="dark"] .suggestion-card-box {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+}      
 
         /* Comparison checkbox styles - Modern Design */
         .compare-checkbox {
@@ -363,7 +417,6 @@
             color: inherit;
             text-decoration: none;
         }
-
 
         }
         
@@ -659,34 +712,109 @@
                 </div>
             </div>
         </div>
-    </div>
-<% } %>
+    <% } %>
+<div class="row mt-4 mb-4 justify-content-center">
+    <div class="col-12 col-md-8"> 
+        <div class="card suggestion-card-box p-4"> <div class="card-body"> 
+                
+                <h3 class="suggestion-title">
+                    Find Your Next Adventure
+                </h3>
+                
+                <p class="suggestion-subtitle text-muted">
+                    Tell us what you love, and we'll suggest your perfect spot.
+                </p>
 
-<% if (allListings && allListings.length > 0) { %>
-    <div class="listings-container" id="listingsContainer">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
-            <% for(let listing of allListings) { %>
-                <div class="col mb-4">
-                    <a href="/listings/<%= listing._id %>" class="listing-link">
-                        <div class="card listing-card h-100">
-                            <div class="listing-badges">
-                                <% if (listing.isNewBadge) { %>
-                                    <span class="badge badge-new">New</span>
-                                <% } %>
-                                <% if (listing.isFeaturedBadge) { %>
-                                    <span class="badge badge-featured">Featured</span>
-                                <% } %>
-                                <% if (listing.isDiscountBadge) { %>
-                                    <span class="badge badge-discount">Discount</span>
-                                <% } %>
-                                <% if (listing.isHighlyRatedBadge) { %>
-                                    <span class="badge badge-rated highly-rated-badge" 
-                                        data-title="<%= listing.title.replace(/"/g, '&quot;') %>" 
-                                        data-avg="<%= listing.avgRating ? listing.avgRating.toFixed(2) : '0.00' %>">Highly Rated</span>
-                                <% } %>
-                                <% if (listing.hasFeaturedReview) { %>
-                                    <span class="badge badge-featured-review">Featured Review</span>
-                                <% } %>
+                <div id="interest-input-area" class="d-flex flex-column align-items-center gap-3 mb-4">
+                    <h4 class="suggestion-label">
+                        What are you looking for?
+                    </h4>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-2 interest-tag-wrapper">
+                        <% ['Beach', 'Mountains', 'City', 'Snow', 'Adventure', 'Relaxation', 'Culture'].forEach(tag => { %>
+                            <span data-interest="<%= tag %>" 
+                                class="interest-tag">
+                                <%= tag %>
+                            </span>
+                        <% }); %>
+                    </div>
+                    
+                    <button id="suggest-btn" 
+                        class="btn btn-primary suggestion-button">
+                        Suggest My Vacation Spot
+                    </button>
+                </div>
+
+                <div id="suggestion-display" class="suggestion-display-area" style="display: none;">
+                    <h4 class="recommendation-header">
+                        ✨ Recommendation Found! ✨
+                    </h4>
+                    <div class="recommendation-content">
+                        <p class="recommendation-text">
+                            Based on your interests, we recommend:
+                        </p>
+                        <p id="suggested-spot" class="suggested-spot-result">
+                            The Swiss Alps (for Snow & Adventure)
+                        </p>
+                        <p class="recommendation-note">
+                            (Backend integration needed to make this dynamic)
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+  <% if (allListings && allListings.length > 0) { %>
+        <div class="listings-container" id="listingsContainer">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
+                <% for(let listing of allListings) { %>
+                    <div class="col mb-4">
+                        <a href="/listings/<%= listing._id %>" class="listing-link">
+                            <div class="card listing-card h-100">
+                                <div class="listing-badges">
+                                    <% if (listing.isNewBadge) { %>
+                                        <span class="badge badge-new">New</span>
+                                    <% } %>
+                                    <% if (listing.isFeaturedBadge) { %>
+                                        <span class="badge badge-featured">Featured</span>
+                                    <% } %>
+                                    <% if (listing.isDiscountBadge) { %>
+                                        <span class="badge badge-discount">Discount</span>
+                                    <% } %>
+                                    <% if (listing.isHighlyRatedBadge) { %>
+                                        <span class="badge badge-rated highly-rated-badge" 
+                                            data-title="<%= listing.title.replace(/"/g, '&quot;') %>" 
+                                            data-avg="<%= listing.avgRating ? listing.avgRating.toFixed(2) : '0.00' %>">Highly Rated</span>
+                                    <% } %>
+                                    <% if (listing.hasFeaturedReview) { %>
+                                        <span class="badge badge-featured-review">Featured Review</span>
+                                    <% } %>
+                                </div>
+                                <div class="listing-image-container">
+                                    <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
+                                        alt="listing_image" />
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <b class="listing-title">
+                                            <%= listing.title %>
+                                        </b><br />
+                                        <small class="text-muted listing-location">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            <%= listing.location %>, <%= listing.country %>
+                                        </small><br />
+                                        <span class="listing-price">
+                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
+                                            <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="compare-checkbox">
+                                    <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
+                                    <span>Compare</span>
+                                </div>
                             </div>
                             <div class="listing-image-container">
                                 <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" class="card-img-top listing-image"
@@ -1212,5 +1340,124 @@
             }
             
             initializeComparison();
+// START OF NEW SUGGESTION BOX JS LOGIC
+const tags = document.querySelectorAll('.interest-tag');
+const suggestBtn = document.getElementById('suggest-btn');
+const display = document.getElementById('suggestion-display');
+const suggestedSpot = document.getElementById('suggested-spot');
+const selectedInterests = new Set();
+
+// Simple logic for selecting/deselecting tags
+tags.forEach(tag => {
+    tag.addEventListener('click', () => {
+        const interest = tag.dataset.interest;
+        if (selectedInterests.has(interest)) {
+            selectedInterests.delete(interest);
+            // Remove the 'selected' class on uncheck
+            tag.classList.remove('selected'); 
+        } else {
+            selectedInterests.add(interest);
+            // Add the 'selected' class on check (This triggers the CSS change)
+            tag.classList.add('selected'); 
+        }
+    });
+});
+
+// Logic to show the static result (Future API call would go here)
+suggestBtn.addEventListener('click', () => {
+    if (selectedInterests.size > 0) {
+        // 1. Show the static result display
+        display.style.display = 'block'; 
+        
+        // 2. Update the text based on the selection 
+        suggestedSpot.textContent = `Processing ${selectedInterests.size} interests... (Backend Pending)`;
+        
+        // You can use the actual data attributes for a cleaner display
+        // Example: suggestedSpot.textContent = Array.from(selectedInterests).join(', ') + ' based selection...';
+
+    } else {
+        alert('Please select at least one interest!');
+        // Hide the display if the user unselects all tags
+        display.style.display = 'none'; 
+    }
+});
+// END OF NEW SUGGESTION BOX JS LOGIC            
+            function showComparisonModal(listings) {
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.id = 'comparisonModal';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Destination Comparison</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Feature</th>
+                                                ${listings.map(listing => `<th class="text-center">${listing.title}</th>`).join('')}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Location</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">${listing.location}, ${listing.country}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Price per Night</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">₹${listing.price.toLocaleString('en-IN')}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Rating</strong></td>
+                                                ${listings.map(listing => `<td class="text-center">${listing.rating > 0 ? '★'.repeat(Math.round(listing.rating)) + ` ${listing.rating.toFixed(1)}` : 'No ratings'}</td>`).join('')}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Best Value</strong></td>
+                                                ${(() => {
+                                                    const minPrice = Math.min(...listings.map(l => l.price));
+                                                    return listings.map(listing => `<td class="text-center">${listing.price === minPrice ? '<span class="badge bg-success">Best Price</span>' : ''}</td>`).join('');
+                                                })()}
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Highest Rated</strong></td>
+                                                ${(() => {
+                                                    const maxRating = Math.max(...listings.map(l => l.rating));
+                                                    return listings.map(listing => `<td class="text-center">${listing.rating === maxRating && maxRating > 0 ? '<span class="badge bg-warning">Top Rated</span>' : ''}</td>`).join('');
+                                                })()}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="clearComparison()">Clear Selection</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                const bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.show();
+                
+                modal.addEventListener('hidden.bs.modal', function() {
+                    document.body.removeChild(modal);
+                });
+            }
+            
+            window.clearComparison = function() {
+                selectedListings = [];
+                document.querySelectorAll('.compare-item').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateCompareButton();
+                bootstrap.Modal.getInstance(document.getElementById('comparisonModal')).hide();
+            };
         });
+        
     </script>
