@@ -1,238 +1,239 @@
 <% layout('/layouts/boilerplate') %>
 
     <style>
-          .controls-bar {
-            background: var(--bg-primary);
-            border-radius: 15px;
-            padding: 1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .controls-bar .btn {
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #showAdvancedFilters {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: white;
-        }
-        
-        #showAdvancedFilters:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-            color: white;
-        }
-        /* New gradient filter bar */
-        #filters {
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            padding: 1rem;
-            margin-top: 10px;
-            border-radius: 20px;
-            background:var(--bg-primary);
-            color: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
+            /* ... (all your existing CSS styles remain unchanged) ... */
+            .controls-bar {
+                background: var(--bg-primary);
+                border-radius: 15px;
+                padding: 1rem;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+            
+            .controls-bar .btn {
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #showAdvancedFilters {
+                background-color: #007bff;
+                border-color: #007bff;
+                color: white;
+            }
+            
+            #showAdvancedFilters:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+                color: white;
+            }
+            /* New gradient filter bar */
+            #filters {
+                display: flex;
+                align-items: center;
+                overflow-x: auto;
+                padding: 1rem;
+                margin-top: 10px;
+                border-radius: 20px;
+                background:var(--bg-primary);
+                color: white;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
 
-        .filters-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: space-evenly;
-            gap: 0.5rem;
-            min-width: 0;
-        }
+            .filters-container {
+                display: flex;
+                align-items: center;
+                flex: 1;
+                justify-content: space-evenly;
+                gap: 0.5rem;
+                min-width: 0;
+            }
 
-        .filter {
-            text-align: center;
-            color: white;
-            white-space: nowrap;
-            flex-shrink: 0;
-            padding: 0.5rem;
-            border-radius: 0.75rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            cursor: pointer;
-        }
+            .filter {
+                text-align: center;
+                color: white;
+                white-space: nowrap;
+                flex-shrink: 0;
+                padding: 0.5rem;
+                border-radius: 0.75rem;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                cursor: pointer;
+            }
 
-        .filter:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
+            .filter:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                transform: translateY(-2px);
+            }
 
-        .filter.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+            .filter.active {
+                background-color: rgba(255, 255, 255, 0.2);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
 
-        /* tax toggle restyled */
-        .tax-toggle {
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--bg-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-primary);
-            height: 50px;
-        }
+            /* tax toggle restyled */
+            .tax-toggle {
+                border: 1px solid var(--border-color);
+                border-radius: 1rem;
+                padding: 0.75rem 1rem;
+                background: var(--bg-secondary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-primary);
+                height: 50px;
+            }
 
-        /* Hide scrollbar */
-        #filters::-webkit-scrollbar {
-            display: none;
-        }
+            /* Hide scrollbar */
+            #filters::-webkit-scrollbar {
+                display: none;
+            }
 
-        /* Search Results Styling */
-        .search-results-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 1.5rem;
-            border-left: 4px solid #007bff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+            /* Search Results Styling */
+            .search-results-header {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 15px;
+                padding: 1.5rem;
+                border-left: 4px solid #007bff;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
 
-        .search-results-header h4 {
-            font-weight: 600;
-            color: #2c3e50;
-        }
+            .search-results-header h4 {
+                font-weight: 600;
+                color: #2c3e50;
+            }
 
-        .search-results-header .text-muted {
-            font-size: 0.95rem;
-        }
+            .search-results-header .text-muted {
+                font-size: 0.95rem;
+            }
 
-        .no-results-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            border-radius: 20px;
-            margin: 2rem 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+            .no-results-container {
+                background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+                border-radius: 20px;
+                margin: 2rem 0;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
 
-        .search-suggestions .btn-outline-primary {
-            border-radius: 20px;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
+            .search-suggestions .btn-outline-primary {
+                border-radius: 20px;
+                font-size: 0.85rem;
+                transition: all 0.3s ease;
+            }
 
-        .search-suggestions .btn-outline-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,123,255,0.3);
-        }
+            .search-suggestions .btn-outline-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+            }
 
-        /* Enhanced search input in navbar */
-        .search-inp:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
-        }
-        .search-btn {
-        padding-top: 0.5rem;  
-        padding-bottom: 0.5rem;
+            /* Enhanced search input in navbar */
+            .search-inp:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+            }
+            .search-btn {
+            padding-top: 0.5rem;  
+            padding-bottom: 0.5rem;
 }
 
-        .search-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(254,66,77,0.3);
-        }
-
-        /* Search term highlighting */
-        .search-highlight {
-            background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: 600;
-            color: #333;
-            box-shadow: 0 1px 3px rgba(255,193,7,0.3);
-        }
-
-        /* Enhanced listing card styles for search */
-        .listing-location {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .listing-price {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        /* Card refinements */
-        .listing-card {
-            border: none !important;
-            border-radius: 1.2rem !important;
-            overflow: hidden;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .listing-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
-        }
-
-        .listing-image-container {
-            height: 18rem;
-        }
-
-        .listing-card .card-body {
-            padding: 1rem;
-        }
-
-        .listing-badges {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            z-index: 10;
-        }
-
-        .badge {
-            padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            display: inline-block;
-        }
-
-        .badge-new {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .badge-featured {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .badge-discount {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .badge-rated {
-            background-color: #ffc107;
-            color: white;
-        }
-
-        .badge-featured-review {
-            background-color: #17a2b8;
-            color: white;
-            border-color: rgba(23, 162, 184, 0.3);
-        }
-        /* --- FIX FOR ISSUE #236: Dark Mode Compare Button Contrast --- */
-        @media (prefers-color-scheme: dark) {
-            .compare-btn {
-                /* FIX: Force text and border to be visible against the dark card */
-                color: #fff !important; 
-                border-color: #fff !important;
+            .search-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(254,66,77,0.3);
             }
-        }/* FIX for Issue #257: Text Contrast over Images (Location, Price, GST) */
+
+            /* Search term highlighting */
+            .search-highlight {
+                background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-weight: 600;
+                color: #333;
+                box-shadow: 0 1px 3px rgba(255,193,7,0.3);
+            }
+
+            /* Enhanced listing card styles for search */
+            .listing-location {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .listing-price {
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            /* Card refinements */
+            .listing-card {
+                border: none !important;
+                border-radius: 1.2rem !important;
+                overflow: hidden;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .listing-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+            }
+
+            .listing-image-container {
+                height: 18rem;
+            }
+
+            .listing-card .card-body {
+                padding: 1rem;
+            }
+
+            .listing-badges {
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                z-index: 10;
+            }
+
+            .badge {
+                padding: 0.5rem 1rem;
+                border-radius: 1rem;
+                font-size: 0.75rem;
+                font-weight: bold;
+                text-transform: uppercase;
+                display: inline-block;
+            }
+
+            .badge-new {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .badge-featured {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .badge-discount {
+                background-color: #dc3545;
+                color: white;
+            }
+
+            .badge-rated {
+                background-color: #ffc107;
+                color: white;
+            }
+
+            .badge-featured-review {
+                background-color: #17a2b8;
+                color: white;
+                border-color: rgba(23, 162, 184, 0.3);
+            }
+            /* --- FIX FOR ISSUE #236: Dark Mode Compare Button Contrast --- */
+            @media (prefers-color-scheme: dark) {
+                .compare-btn {
+                    /* FIX: Force text and border to be visible against the dark card */
+                    color: #fff !important; 
+                    border-color: #fff !important;
+                }
+            }/* FIX for Issue #257: Text Contrast over Images (Location, Price, GST) */
 .listing-location, 
 .listing-price, 
 .tax-info {
@@ -250,211 +251,213 @@
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
-        
+            
 
-        /* Comparison checkbox styles - Modern Design */
-        .compare-checkbox {
-            position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            user-select: none;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            color: #2d3748;
-            transition: all 0.2s ease;
-        }
+            /* Comparison checkbox styles - Modern Design */
+            .compare-checkbox {
+                position: absolute;
+                bottom: 0.5rem;
+                right: 0.5rem;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0.3rem 0.6rem;
+                font-size: 0.85rem;
+                font-weight: 500;
+                cursor: pointer;
+                user-select: none;
+                z-index: 20;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                color: #2d3748;
+                transition: all 0.2s ease;
+            }
 
-        /* Dark mode styling for compare checkbox - keeping text consistent */
-        [data-theme="dark"] .compare-checkbox {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: #e2e8f0;
-            color: #2d3748 !important;
-        }
+            /* Dark mode styling for compare checkbox - keeping text consistent */
+            [data-theme="dark"] .compare-checkbox {
+                background: rgba(255, 255, 255, 0.95);
+                border-color: #e2e8f0;
+                color: #2d3748 !important;
+            }
 
-        .compare-checkbox:hover {
-            border-color: #fe424d;
-            color: #fe424d !important;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
-        }
+            .compare-checkbox:hover {
+                border-color: #fe424d;
+                color: #fe424d !important;
+                background: rgba(255, 255, 255, 1);
+                box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
+            }
 
-        /* Keep hover state consistent in dark mode */
-        [data-theme="dark"] .compare-checkbox:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: #fe424d;
-            color: #fe424d !important;
-        }
+            /* Keep hover state consistent in dark mode */
+            [data-theme="dark"] .compare-checkbox:hover {
+                background: rgba(255, 255, 255, 1);
+                border-color: #fe424d;
+                color: #fe424d !important;
+            }
 
-        .compare-checkbox input[type="checkbox"] {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.2s ease;
-            background: white;
-        }
+            .compare-checkbox input[type="checkbox"] {
+                cursor: pointer;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #e2e8f0;
+                transition: all 0.2s ease;
+                background: white;
+            }
 
-        /* Keep checkbox input consistent in dark mode */
-        [data-theme="dark"] .compare-checkbox input[type="checkbox"] {
-            background: white;
-            border-color: #e2e8f0;
-        }
+            /* Keep checkbox input consistent in dark mode */
+            [data-theme="dark"] .compare-checkbox input[type="checkbox"] {
+                background: white;
+                border-color: #e2e8f0;
+            }
 
-        .compare-checkbox input[type="checkbox"]:checked {
-            background-color: #fe424d;
-            border-color: #fe424d;
-        }
+            .compare-checkbox input[type="checkbox"]:checked {
+                background-color: #fe424d;
+                border-color: #fe424d;
+            }
 
-        /* Ensure checked state is consistent in dark mode */
-        [data-theme="dark"] .compare-checkbox input[type="checkbox"]:checked {
-            background-color: #fe424d;
-            border-color: #fe424d;
-        }
+            /* Ensure checked state is consistent in dark mode */
+            [data-theme="dark"] .compare-checkbox input[type="checkbox"]:checked {
+                background-color: #fe424d;
+                border-color: #fe424d;
+            }
 
-        /* Floating Compare Button - Modern Design */
-        #compare-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #fe424d;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: 2px solid #fe424d;
-            border-radius: 25px;
-            box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
-            font-weight: 700;
-            cursor: pointer;
-            display: none;
-            z-index: 9999;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-        }
+            /* Floating Compare Button - Modern Design */
+            #compare-btn {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                background: #fe424d;
+                color: white;
+                padding: 0.8rem 1.5rem;
+                border: 2px solid #fe424d;
+                border-radius: 25px;
+                box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
+                font-weight: 700;
+                cursor: pointer;
+                display: none;
+                z-index: 9999;
+                transition: all 0.2s ease;
+                font-size: 1rem;
+            }
 
-        #compare-btn:hover {
-            background: #e53e3e;
-            border-color: #e53e3e;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(254, 66, 77, 0.5);
-        /* Modern Tax Info Styling */
-        .tax-info {
-            color: var(--text-muted, #6c757d);
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
+            #compare-btn:hover {
+                background: #e53e3e;
+                border-color: #e53e3e;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(254, 66, 77, 0.5);
+            /* Modern Tax Info Styling */
+            .tax-info {
+                color: var(--text-muted, #6c757d);
+                font-size: 0.85rem;
+                font-weight: 400;
+            }
 
-        /* Enhanced Link Styling */
-        .listing-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
+            /* Enhanced Link Styling */
+            .listing-link {
+                text-decoration: none;
+                color: inherit;
+                display: block;
+            }
 
-        .listing-link:hover {
-            color: inherit;
-            text-decoration: none;
-        }
+            .listing-link:hover {
+                color: inherit;
+                text-decoration: none;
+            }
 
 
-        }
-        
-        /* Advanced Filters Styling */
-        .advanced-filters-container {
-            background: var(--bg-primary);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
-        }
-        
-        .filters-panel .form-label {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .filters-panel .form-control,
-        .filters-panel .form-select {
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-        }
-        
-        .filters-panel .form-control:focus,
-        .filters-panel .form-select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.15);
-        }
-        
-        /* Active Filters */
-        .active-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .filter-tag {
-            background: var(--accent-color);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .filter-tag .remove-filter {
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .filter-tag .remove-filter:hover {
-            color: #ffcccc;
-        }
-        
-        /* Loading Indicator */
-        .loading-indicator {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 2rem;
-        }
-        
-        /* Fade Animation */
-        .listings-container {
-            transition: opacity 0.3s ease;
-        }
-        
-        .listings-container.loading {
-            opacity: 0.5;
-        }
-        
-        /* Responsive Filters */
-        @media (max-width: 768px) {
+            }
+            
+            /* Advanced Filters Styling */
             .advanced-filters-container {
-                padding: 1rem;
+                background: var(--bg-primary);
+                border-radius: 15px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                border: 1px solid var(--border-color);
             }
             
-            .filters-panel .row {
-                margin: 0;
+            .filters-panel .form-label {
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 0.5rem;
             }
             
-            .filters-panel .col-md-3,
-            .filters-panel .col-md-2 {
-                margin-bottom: 1rem;
+            .filters-panel .form-control,
+            .filters-panel .form-select {
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                background: var(--bg-secondary);
+                color: var(--text-primary);
             }
-        }
-    </style><% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+            
+            .filters-panel .form-control:focus,
+            .filters-panel .form-select:focus {
+                border-color: var(--accent-color);
+                box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.15);
+            }
+            
+            /* Active Filters */
+            .active-filters {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .filter-tag {
+                background: var(--accent-color);
+                color: white;
+                padding: 0.25rem 0.75rem;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .filter-tag .remove-filter {
+                cursor: pointer;
+                font-weight: bold;
+            }
+            
+            .filter-tag .remove-filter:hover {
+                color: #ffcccc;
+            }
+            
+            /* Loading Indicator */
+            .loading-indicator {
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 10px;
+                padding: 2rem;
+            }
+            
+            /* Fade Animation */
+            .listings-container {
+                transition: opacity 0.3s ease;
+            }
+            
+            .listings-container.loading {
+                opacity: 0.5;
+            }
+            
+            /* Responsive Filters */
+            @media (max-width: 768px) {
+                .advanced-filters-container {
+                    padding: 1rem;
+                }
+                
+                .filters-panel .row {
+                    margin: 0;
+                }
+                
+                .filters-panel .col-md-3,
+                .filters-panel .col-md-2 {
+                    margin-bottom: 1rem;
+                }
+            }
+    </style>
+
+<% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
     <div class="row mt-3">
         <div class="col-12">
             <div class="alert alert-info" role="alert">
@@ -744,13 +747,44 @@
         </div>
     <% } %>
 
+<div class="row mt-3">
+    <div class="col">
+        <% if (totalPages > 1) { %>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <% 
+                        // Helper to build query string while preserving existing filters
+                        const params = new URLSearchParams();
+                        if (searchQuery) params.set('search', searchQuery);
+                        if (category) params.set('category', category);
+                        const baseQuery = params.toString() ? `&${params.toString()}` : '';
+                    %>
 
-    <button id="compare-btn" style="display: none;">
+                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                        <a class="page-link" href="/listings?page=<%= currentPage - 1 %><%= baseQuery %>">Previous</a>
+                    </li>
+
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                            <a class="page-link" href="/listings?page=<%= i %><%= baseQuery %>"><%= i %></a>
+                        </li>
+                    <% } %>
+
+                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                        <a class="page-link" href="/listings?page=<%= currentPage + 1 %><%= baseQuery %>">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        <% } %>
+    </div>
+</div>
+<button id="compare-btn" style="display: none;">
         <i class="fas fa-balance-scale me-2"></i>
         Compare (<span id="compare-count">0</span>)
     </button>
 
     <script>
+        // ... (all your existing JavaScript code remains unchanged) ...
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded, initializing filters...');
             
