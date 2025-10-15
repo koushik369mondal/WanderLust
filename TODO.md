@@ -1,50 +1,27 @@
-# Offline Mode for Itinerary Access - Implementation Plan
+# Trip Plan Notifications Implementation
 
-## Current Status
-- ✅ Analyzed existing codebase and identified gaps
-- ✅ Created comprehensive implementation plan
-- ✅ Got user approval to proceed
+## Backend Changes
+- [x] Add notifications array to user model
+- [x] Update tripPlanner routes to create notifications on trip actions (save, delete, update status)
+- [x] Create notification service for managing notifications
+- [x] Add API endpoints for notification management (get, mark as read, delete, unread count)
+- [x] Install node-cron dependency for reminder notifications
+- [x] Set up cron job in app.js to process scheduled reminders daily
 
-## Tasks to Complete
+## Frontend Changes
+- [ ] Add notification icon with badge count to navbar
+- [ ] Create notification center modal/page
+- [ ] Add toast notifications for trip actions
+- [ ] Update myTrips page to show notifications
+- [ ] Add notification preferences in user profile
 
-### 1. Fix Trip Detail Download Button
-- [ ] Update `views/tripPlanner/tripDetail.ejs` script to use correct `OfflineManager.saveTripForOffline()` method
-- [ ] Add proper error handling and success feedback
+## Optional Advanced Features
+- [ ] Integrate Firebase Cloud Messaging for push notifications
+- [ ] Add email notifications using Nodemailer
+- [ ] Allow users to enable/disable notification types
 
-### 2. Add Download Buttons to My-Trips Page
-- [ ] Add download buttons to each trip card in `views/tripPlanner/myTrips.ejs`
-- [ ] Implement download functionality with toast notifications
-- [ ] Add visual indicators for downloaded trips
-
-### 3. Enhance Service Worker Caching
-- [ ] Update `public/sw.js` to better cache trip detail pages
-- [ ] Ensure offline trip data is served from cache when network unavailable
-
-### 4. Add Offline Trips API Endpoint
-- [ ] Add `/trip-planner/api/offline-trips` endpoint in `routes/tripPlanner.js`
-- [ ] Return cached trips when offline, fallback to database when online
-
-### 5. Add Sync Endpoint
-- [ ] Add `/trip-planner/api/sync` endpoint for syncing offline changes
-- [ ] Integrate with existing OfflineManager sync functionality
-
-### 6. Add Toast Notifications
-- [ ] Create reusable toast notification system
-- [ ] Add toasts for download success/failure, sync status, offline/online status
-
-### 7. Update Offline Trip Display
-- [ ] Modify trip list rendering to show cached trips when offline
-- [ ] Add offline indicators and sync status badges
-
-## Testing Checklist
-- [ ] Test offline functionality in browser dev tools
-- [ ] Verify PWA install prompt appears
-- [ ] Test automatic sync when reconnecting
-- [ ] Ensure cached trips load instantly offline
-- [ ] Test trip downloads from both detail and list views
-
-## Files to Edit
-- `views/tripPlanner/tripDetail.ejs`
-- `views/tripPlanner/myTrips.ejs`
-- `routes/tripPlanner.js`
-- `public/sw.js`
+## Testing
+- [x] Test notification creation on trip save/delete/update
+- [ ] Test reminder notifications
+- [ ] Test notification center functionality
+- [ ] Test toast notifications
