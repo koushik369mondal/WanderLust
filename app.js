@@ -54,7 +54,7 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const newsletterRouter = require("./routes/newsletter.js");
 const compareRoutes = require('./routes/compare'); //for comparison of listings
-
+const safetyRouter = require("./routes/safety.js");
 // Check for MongoDB connection string and provide a fallback for development
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 if (!process.env.ATLAS_DB_URL) {
@@ -242,7 +242,7 @@ app.use("/chatbot", require("./routes/chatbot.js"));
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
-
+app.use("/safety-alerts", safetyRouter);
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
 });

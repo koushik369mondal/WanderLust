@@ -2,24 +2,22 @@ const CACHE_NAME = 'wanderlust-v1';
 const STATIC_CACHE = 'wanderlust-static-v1';
 const DYNAMIC_CACHE = 'wanderlust-dynamic-v1';
 
-// Assets to cache immediately
+// Assets to cache immediately (only static assets - avoid dynamic routes which may return 5xx)
 const STATIC_ASSETS = [
   '/',
-  '/trip-planner',
-  '/trip-planner/my-trips',
-  '/css/style.css',
-  '/css/admin-dashboard.css',
-  '/css/holiday.css',
-  '/css/loading.css',
-  '/css/packingList.css',
-  '/css/rating.css',
-  '/js/script.js',
-  '/js/admin-dashboard.js',
-  '/js/loading.js',
-  '/js/map.js',
-  '/js/packingList.js',
-  '/js/weather.js',
-  '/js/offlineManager.js',
+  '/CSS/style.css',
+  '/CSS/admin-dashboard.css',
+  '/CSS/holiday.css',
+  '/CSS/loading.css',
+  '/CSS/packingList.css',
+  '/CSS/rating.css',
+  '/JS/script.js',
+  '/JS/admin-dashboard.js',
+  '/JS/loading.js',
+  '/JS/map.js',
+  '/JS/packingList.js',
+  '/JS/weather.js',
+  '/JS/offlineManager.js',
   '/images/travel_cover-1500x1000.jpeg',
   '/images/compass.png',
   '/manifest.json'
@@ -28,11 +26,26 @@ const STATIC_ASSETS = [
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Installing...');
+  // Cache assets individually and tolerate failures so one missing/500 asset won't fail the whole install
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then((cache) => {
-        console.log('Service Worker: Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
+      .then(async (cache) => {
+        console.log('Service Worker: Caching static assets (individual, tolerant)');
+        const results = await Promise.allSettled(STATIC_ASSETS.map(async (asset) => {
+          try {
+            // Use cache.add which fetches and stores the response
+            await cache.add(asset);
+            return { asset, status: 'fulfilled' };
+          } catch (err) {
+            console.error('Service Worker: Failed to cache asset', asset, err && err.message ? err.message : err);
+            return { asset, status: 'rejected', reason: err };
+          }
+        }));
+        // Optionally, log summary of failures
+        const failures = results.filter(r => r.status === 'rejected');
+        if (failures.length) {
+          console.warn(`Service Worker: ${failures.length} asset(s) failed to cache during install. See earlier errors.`);
+        }
       })
       .then(() => self.skipWaiting())
   );
