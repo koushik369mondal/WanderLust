@@ -231,6 +231,15 @@
     }
   }
 
+  /* Language dropdown styling */
+  .language-dropdown .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+  }
+
   /* Notification dropdown styling */
   .notification-dropdown {
     border: none;
@@ -572,22 +581,13 @@
             <i class="fa-solid fa-globe"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
-                English</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
-                हिंदी</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
-                বাংলা</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
-                অসমীয়া</a>
-            </li>
+            <% Object.keys(languageMap).forEach(lang => { %>
+              <li>
+                <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
+                  <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
+                </a>
+              </li>
+            <% }); %>
           </ul>
         </div>
 

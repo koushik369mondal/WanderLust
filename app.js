@@ -120,7 +120,7 @@ app.use(helmet({
 
 // i18n configuration
 i18n.configure({
-    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur'],
+    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur', 'es', 'fr', 'de', 'ja', 'zh', 'it', 'pt'],
     directory: path.join(__dirname, 'locales'),
     defaultLocale: 'en',
     queryParameter: 'lang',
@@ -132,6 +132,30 @@ i18n.configure({
         '__n': '__n'
     }
 });
+
+// Language mapping for display names and flags
+const languageMap = {
+    'en': { name: 'English', flag: '🇺🇸' },
+    'hi': { name: 'हिंदी', flag: '🇮🇳' },
+    'bn': { name: 'বাংলা', flag: '🇧🇩' },
+    'te': { name: 'తెలుగు', flag: '🇮🇳' },
+    'mr': { name: 'मराठी', flag: '🇮🇳' },
+    'ta': { name: 'தமிழ்', flag: '🇮🇳' },
+    'gu': { name: 'ગુજરાતી', flag: '🇮🇳' },
+    'kn': { name: 'ಕನ್ನಡ', flag: '🇮🇳' },
+    'ml': { name: 'മലയാളം', flag: '🇮🇳' },
+    'pa': { name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
+    'or': { name: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
+    'as': { name: 'অসমীয়া', flag: '🇮🇳' },
+    'ur': { name: 'اردو', flag: '🇮🇳' },
+    'es': { name: 'Español', flag: '🇪🇸' },
+    'fr': { name: 'Français', flag: '🇫🇷' },
+    'de': { name: 'Deutsch', flag: '🇩🇪' },
+    'ja': { name: '日本語', flag: '🇯🇵' },
+    'zh': { name: '中文', flag: '🇨🇳' },
+    'it': { name: 'Italiano', flag: '🇮🇹' },
+    'pt': { name: 'Português', flag: '🇵🇹' }
+};
 
 app.use(i18n.init);
 
@@ -190,7 +214,7 @@ app.use((req, res, next) => {
     res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
     res.locals.searchQuery = req.query.search || '';
-    
+
     // Language switching helper
     res.locals.buildLangUrl = (lang) => {
         const currentUrl = req.originalUrl.split('?')[0];
@@ -198,7 +222,11 @@ app.use((req, res, next) => {
         params.set('lang', lang);
         return currentUrl + '?' + params.toString();
     };
-    
+
+    // Make language map available to templates
+    res.locals.languageMap = languageMap;
+    res.locals.getLocale = () => i18n.getLocale(req);
+
     next();
 });
 
