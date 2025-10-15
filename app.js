@@ -44,6 +44,7 @@ const helmet = require("helmet");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const i18n = require('i18n');
+const cron = require('node-cron');
 // Import OAuth strategies
 require("./config/passport");
 const Listing = require("./models/listing");
@@ -289,6 +290,18 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error.ejs", { message });
 });
 
+
+// Set up cron job for reminder notifications
+const notificationService = require('./services/notificationService');
+cron.schedule('0 9 * * *', async () => {
+    console.log('Running daily reminder notification check...');
+    try {
+        await notificationService.processScheduledReminders();
+        console.log('Reminder notifications processed successfully');
+    } catch (error) {
+        console.error('Error processing reminder notifications:', error);
+    }
+});
 
 const { seedListings } = require('./init/data');
 app.listen(8080, async () => {
