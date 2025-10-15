@@ -1,32 +1,50 @@
 # Offline Mode for Itinerary Access - Implementation Plan
 
-## PWA Setup
-- [x] Create `public/manifest.json` for app metadata and install prompt
-- [x] Create `public/sw.js` service worker for caching static assets
-- [x] Register service worker in `app.js`
+## Current Status
+- ✅ Analyzed existing codebase and identified gaps
+- ✅ Created comprehensive implementation plan
+- ✅ Got user approval to proceed
 
-## Individual Trip View
-- [ ] Add route `GET /my-trips/:id` in `routes/tripPlanner.js`
-- [ ] Create `views/tripPlanner/tripDetail.ejs` for individual trip display
-- [ ] Add "Download for Offline" button on trip detail page
+## Tasks to Complete
 
-## Offline Caching System
-- [ ] Create `public/JS/offlineManager.js` with IndexedDB operations
-- [ ] Cache trip data, maps (if available), and notes locally
-- [ ] Show cached trips in `/my-trips` when offline
+### 1. Fix Trip Detail Download Button
+- [ ] Update `views/tripPlanner/tripDetail.ejs` script to use correct `OfflineManager.saveTripForOffline()` method
+- [ ] Add proper error handling and success feedback
 
-## Sync Functionality
-- [ ] Auto-sync offline changes when back online
-- [ ] Handle conflicts between local and server data
-- [ ] Add toast notifications for sync status
+### 2. Add Download Buttons to My-Trips Page
+- [ ] Add download buttons to each trip card in `views/tripPlanner/myTrips.ejs`
+- [ ] Implement download functionality with toast notifications
+- [ ] Add visual indicators for downloaded trips
 
-## UI Enhancements
-- [ ] Modify `views/tripPlanner/myTrips.ejs` to indicate offline trips
-- [ ] Add offline indicators and sync status
-- [ ] Update navbar with PWA install prompt
+### 3. Enhance Service Worker Caching
+- [ ] Update `public/sw.js` to better cache trip detail pages
+- [ ] Ensure offline trip data is served from cache when network unavailable
 
-## Testing & Followup
+### 4. Add Offline Trips API Endpoint
+- [ ] Add `/trip-planner/api/offline-trips` endpoint in `routes/tripPlanner.js`
+- [ ] Return cached trips when offline, fallback to database when online
+
+### 5. Add Sync Endpoint
+- [ ] Add `/trip-planner/api/sync` endpoint for syncing offline changes
+- [ ] Integrate with existing OfflineManager sync functionality
+
+### 6. Add Toast Notifications
+- [ ] Create reusable toast notification system
+- [ ] Add toasts for download success/failure, sync status, offline/online status
+
+### 7. Update Offline Trip Display
+- [ ] Modify trip list rendering to show cached trips when offline
+- [ ] Add offline indicators and sync status badges
+
+## Testing Checklist
 - [ ] Test offline functionality in browser dev tools
-- [ ] Verify PWA install works on mobile devices
-- [ ] Test sync behavior when reconnecting
-- [ ] Add error handling for storage quota exceeded
+- [ ] Verify PWA install prompt appears
+- [ ] Test automatic sync when reconnecting
+- [ ] Ensure cached trips load instantly offline
+- [ ] Test trip downloads from both detail and list views
+
+## Files to Edit
+- `views/tripPlanner/tripDetail.ejs`
+- `views/tripPlanner/myTrips.ejs`
+- `routes/tripPlanner.js`
+- `public/sw.js`
