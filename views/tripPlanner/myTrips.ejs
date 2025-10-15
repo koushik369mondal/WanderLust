@@ -166,18 +166,23 @@
                                     </small>
                                     <div class="trip-actions-footer">
                                         <div class="btn-group" role="group">
-                                            <a href="/trip-planner?destination=<%= encodeURIComponent(trip.destination) %>" 
-                                               class="btn btn-sm btn-outline-primary">
-                                                <i class="fa-solid fa-edit me-1"></i>
-                                                Modify
+                                            <a href="/trip-planner/my-trips/<%= trip._id %>" class="btn btn-sm btn-outline-primary">
+                                                <i class="fa-solid fa-eye me-1"></i>
+                                                View Details
                                             </a>
-                                            <button class="btn btn-sm btn-outline-success update-status-btn" 
-                                                    data-trip-id="<%= trip._id %>" 
+                                            <button class="btn btn-sm btn-outline-secondary download-trip-btn"
+                                                    data-trip-id="<%= trip._id %>"
+                                                    data-trip-data="<%= JSON.stringify(trip).replace(/"/g, '"') %>">
+                                                <i class="fa-solid fa-download me-1"></i>
+                                                Download Offline
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success update-status-btn"
+                                                    data-trip-id="<%= trip._id %>"
                                                     data-current-status="<%= trip.status %>">
                                                 <i class="fa-solid fa-check me-1"></i>
                                                 Update Status
                                             </button>
-                                            <button class="btn btn-sm btn-outline-info share-trip-btn" 
+                                            <button class="btn btn-sm btn-outline-info share-trip-btn"
                                                     data-trip-id="<%= trip._id %>">
                                                 <i class="fa-solid fa-share me-1"></i>
                                                 Share
@@ -573,13 +578,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const destination = tripCard.querySelector('h4').textContent.replace('🗺️ ', '');
             const dates = tripCard.querySelector('.trip-dates').textContent.replace('📅 ', '');
             const totalCost = tripCard.querySelector('.cost-amount').textContent;
-            
+
             const shareText = `Check out my trip plan!\n` +
                              `📍 Destination: ${destination}\n` +
                              `📅 Dates: ${dates}\n` +
                              `💰 Total Cost: ${totalCost}\n` +
                              `Plan your trip at: ${window.location.origin}/trip-planner`;
-            
+
             if (navigator.share) {
                 navigator.share({
                     title: `Trip to ${destination} - WanderLust`,
@@ -595,5 +600,55 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Handle download trip for offline access
+    document.querySelectorAll('.download-trip-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const tripId = this.dataset.tripId;
+            const tripDataStr = this.dataset.tripData;
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Downloading...';
+
+            try {
+                let tripData;
+                try {
+                    tripData = JSON.parse(tripDataStr);
+                } catch (e) {
+                    throw new Error('Invalid trip data');
+                }
+
+                if (window.OfflineManager) {
+                    await window.OfflineManager.saveTripForOffline(tripData);
+                    this.innerHTML = '<i class="fa-solid fa-check me-1"></i>Downloaded ✓';
+                    this.classList.remove('btn-outline-secondary');
+                    this.classList.add('btn-success');
+
+                    // Show toast notification
+                    showToast('Trip saved! You can now access it offline.', 'success');
+                } else {
+                    throw new Error('Offline functionality not available');
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+                this.disabled = false;
+                this.innerHTML = '<i class="fa-solid fa-download me-1"></i>Download Offline';
+                showToast('Failed to download trip for offline access', 'error');
+            }
+        });
+    });
+
+    // Toast notification function
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type === 'success' ? 'success' : 'error' ? 'danger' : 'warning'} position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check' : 'error' ? 'times' : 'exclamation'}-circle me-2"></i>${message}`;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
 });
 </script>

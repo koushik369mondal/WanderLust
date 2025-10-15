@@ -233,28 +233,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('downloadOfflineBtn').addEventListener('click', async () => {
         const btn = document.getElementById('downloadOfflineBtn');
         const status = document.getElementById('downloadStatus');
-        
+
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Downloading...';
         status.style.display = 'block';
         status.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Preparing offline version...';
-        
+
         try {
             // Use offline manager to cache trip
-            if (typeof OfflineManager !== 'undefined') {
-                await OfflineManager.cacheTrip(tripId, tripData);
-                status.innerHTML = '<i class="fa-solid fa-check text-success me-2"></i>Trip downloaded successfully!';
+            if (window.OfflineManager) {
+                await window.OfflineManager.saveTripForOffline(window.tripData);
+                status.innerHTML = '<i class="fa-solid fa-check text-success me-2"></i>Trip saved! You can now access it offline.';
                 btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Downloaded ✓';
                 btn.classList.remove('btn-outline-primary');
                 btn.classList.add('btn-success');
+
+                // Show toast notification
+                showToast('Trip saved! You can now access it offline.', 'success');
             } else {
-                throw new Error('Offline manager not loaded');
+                throw new Error('Offline functionality not available');
             }
         } catch (error) {
             console.error('Download error:', error);
             status.innerHTML = '<i class="fa-solid fa-exclamation-triangle text-danger me-2"></i>Download failed: ' + error.message;
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-download me-2"></i>Download for Offline Access';
+            showToast('Failed to download trip for offline access', 'error');
         }
     });
 });
