@@ -46,7 +46,39 @@
     color: #666;
     margin-top: 5px;
 }
+/* FIX 1: Fading Subtitle Text (for Holiday Calendar Header) */
+.calendar-subtitle-fix {
+    color: white !important; 
+    font-weight: 600 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
 
+/* FIX 2: High Contrast Labels in Country Selector (New Class) */
+.holiday-label-fix,
+.country-selector small { /* Target both the custom label class and the small text */
+    color: white !important; 
+    font-weight: 700 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Theme Override */
+[data-theme="dark"] .calendar-subtitle-fix,
+[data-theme="dark"] .holiday-label-fix,
+[data-theme="dark"] .country-selector small {
+    color: rgba(236, 232, 232, 0.988) !important; /* Ensure white text in Dark Mode */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Light Theme Override */
+@media (prefers-color-scheme: light) {
+    .calendar-subtitle-fix,
+    .holiday-label-fix,
+    .country-selector small {
+        color: #0b0202e6 !important; /* Forces dark color in light mode */
+        text-shadow: none;
+    }
+}
 .holiday-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -292,15 +324,15 @@
 
 <div class="holiday-calendar">
     <div class="text-center mb-4">
-        <h1><i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar & Travel Planner</h1>
-        <p class="text-muted">Plan your perfect vacation around holidays and discover ideal destinations</p>
-    </div>
+        <h1><i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar & Travel Planner</h1>
+        <p class="text-muted calendar-subtitle-fix">Plan your perfect vacation around holidays and discover ideal destinations</p>
+    </div>
 
     <div class="country-selector">
         <div class="row align-items-center">
             <div class="col-md-3">
-                <label for="countrySelect" class="form-label fw-bold">🌍 Country:</label>
-                <select class="form-select form-select-lg" id="countrySelect">
+            <label for="countrySelect" class="form-label fw-bold \mathbf{holiday-label-fix}">🌍 Country:</label>                
+            <select class="form-select form-select-lg" id="countrySelect">
                     <option value="US">🇺🇸 United States</option>
                     <option value="IN">🇮🇳 India</option>
                     <option value="GB">🇬🇧 United Kingdom</option>
