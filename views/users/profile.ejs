@@ -2,17 +2,17 @@
 
 <style>
     :root {
-        --profile-header-bg: linear-gradient(135deg, #1ed9a8, #0f5a7c);
-        --profile-card-bg: rgba(15, 90, 124, 0.25);
-        --card-header-bg: linear-gradient(to right, rgba(10, 70, 100, 0.8), rgba(8, 50, 75, 0.9));
-        --accent-border-color: #1ed9a8;
-        --accent-border-color-dark: #0f5a7c;
-        --tag-bg: linear-gradient(135deg, #1ed9a8, #0f5a7c);
+        --profile-header-bg: linear-gradient(135deg, #1c577bf5, #409fdaf5);
+        --profile-card-bg: rgba(42, 79, 191, 0.937);
+        --card-header-bg: linear-gradient(to right, rgba(70, 143, 227, 0.8), rgba(18, 98, 144, 0.9));
+        --accent-border-color: #3b7fe6;
+        --accent-border-color-dark: #3eaee1;        
+        --tag-bg: linear-gradient(135deg, #1f6fa8, #2c66d0);
         --link-color: #a7d8f9;
-        --header-text-color: #ffffff;
+        --header-text-color: #ffffff; 
         --body-text-color: #e0f7ff;
-        --text-primary: #0a2533;
-        --shadow-color: rgba(0, 0, 0, 0.2);
+        --text-primary: #010508;
+        --shadow-color: rgba(12, 91, 176, 0.911);
     }
 
     .profile-header {
@@ -35,7 +35,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(to right, #1ed9a8, #0f5a7c);
+        background: linear-gradient(to right, #020306, #0f2db6);
     }
 
     .profile-avatar {
@@ -63,15 +63,15 @@
     .profile-header h3 {
         font-weight: 800;
         font-size: 2.2rem;
-        color: var(--text-primary);
-        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5)
         margin-bottom: 0.5rem;
         letter-spacing: -0.5px;
     }
 
     .profile-header p {
-        opacity: 0.95;
-        color: var(--body-text-color);
+        opacity: 1 !important;        
+        color: #f0f0f0 !important;        
         margin-bottom: 0.3rem;
     }
 
@@ -96,22 +96,22 @@
     }
 
     .nav-tabs .nav-link.active {
-        background: linear-gradient(to bottom, rgba(30, 217, 168, 0.2), transparent);
-        color: var(--accent-border-color);
-        border-bottom: 3px solid var(--accent-border-color);
-    }
+        background: linear-gradient(to bottom, rgba(23, 29, 88, 0.797), transparent);
+        color: var(--accent-border-color);        
+        border-bottom: 3px solid var(--accent-border-color);    }
 
     .profile-card {
-        background-color: var(--profile-card-bg);
+        background-color: var(--profile-card-bg) !important;
         backdrop-filter: blur(10px);
         border-radius: 1rem;
-        color: var(--body-text-color);
+        color: #f0f0f0 !important;        
         height: 100%;
         overflow: hidden;
         border: 2px solid transparent;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 15px rgba(2, 25, 40, 0.903);
         margin-bottom: 1.5rem;
+        padding: 1.5rem;
     }
 
     .profile-card:hover {
@@ -144,7 +144,13 @@
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: var(--spacing-lg);
         margin-bottom: var(--spacing-xl);
+        color:#040000;
     }
+    @media (prefers-color-scheme: light) {
+    #suggest-btn {
+        color: white !important; 
+    }
+}
 
     .stat-card {
         background: var(--bg-secondary);
@@ -360,6 +366,7 @@
     /* Progress Bar */
     .progress-wrapper {
         margin-top: var(--spacing-md);
+        color:#22398b;
     }
 
     .profile-avatar {
@@ -379,7 +386,7 @@
 
     .profile-actions,
     .form-actions {
-        flex-direction: column;
+        flex-direction: row;
         padding: 1.5rem;
     }
 
@@ -693,6 +700,24 @@
             font-size: 2rem;
         }
     }
+    .profile-header p,
+.profile-card,
+.goal-description,
+.vacation-slot-meta,
+.activity-content,
+.activity-time {  color: #040000 !important;
+}
+    .progress-bar {background-color: #000102 !important;
+}
+.form-actions {display: flex;
+    flex-direction: row; /* Horizontal alignment */
+    justify-content: flex-end; /* Push buttons to the right */
+    gap: 1rem;
+}
+.form-actions .btn {
+    width: auto; /* Remove 100% width on desktop */
+}
+    
 </style>
 
 <div class="profile-container">
@@ -868,7 +893,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-actions">
+                    <div class="form-actions d-flex flex-row justify-content-end">                         
                         <button type="submit" class="btn btn-primary">
                             <i class="fa-solid fa-save me-2"></i>Save Changes
                         </button>
