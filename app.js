@@ -289,6 +289,7 @@ app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
 app.use("/currency", require("./routes/currency.js"));
 app.use("/safety-alerts", safetyRouter);
+app.use("/phrase-assistant", require("./routes/phraseAssistant.js"));
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
 });

@@ -1,390 +1,4 @@
-<style>
-  .search-btn {
-    background-color: #fe424d;
-    color: #fff;
-    border-radius: 25px;
-    padding: 0 1rem 0 1rem;
-  }
 
-  .search-btn:hover {
-    background-color: #fe424d;
-    color: #fff;
-  }
-
-  .search-btn i {
-    display: inline;
-    margin-right: 0.5rem;
-  }
-
-  .search-inp {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 1rem;
-  }
-
-  /* Enhanced navbar brand styling */
-  .navbar-brand {
-    font-size: 1.5rem;
-    color: var(--accent-color) !important;
-    text-decoration: none;
-    transition: all 0.3s ease;
-  }
-
-  .navbar-brand:hover {
-    color: var(--accent-color) !important;
-    transform: scale(1.05);
-  }
-
-  .navbar-brand i {
-    color: #fe424d;
-    font-size: 1.4rem;
-  }
-
-  /* Tablet view fixes */
-  @media (max-width: 991px) and (min-width: 768px) {
-    .navbar-nav .d-flex {
-      flex-wrap: nowrap;
-    }
-
-    .search-inp {
-      min-width: 200px;
-    }
-
-    .search-btn {
-      white-space: nowrap;
-    }
-  }
-
-  /* Mobile Responsiveness */
-  @media (max-width: 767px) {
-    .navbar-collapse {
-      background-color:var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-nav .d-flex {
-      flex-direction: column;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .search-inp {
-      width: 100%;
-      margin-bottom: 0.5rem;
-      margin-right: 0 !important;
-      padding: 0.5rem 1rem;
-    }
-
-    .search-btn {
-      width: 100%;
-    }
-
-    .navbar-nav {
-      text-align: center;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    #theme-toggle {
-      margin: 1rem auto 0.5rem auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .mobile-icon {
-      display: inline-block !important;
-    }
-
-    .desktop-hide-mobile {
-      display: none;
-    }
-  }
-
-  .mobile-icon {
-    display: none;
-  }
-
-  /* Desktop view - hide mobile icons */
-  @media (min-width: 768px) {
-    .mobile-icon {
-      display: none !important;
-    }
-  }
-
-  /* Search suggestions styling */
-  .search-container {
-    position: relative;
-    width: 100%;
-  }
-
-  .search-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: none;
-    color: #333;
-    font-size: 0.95rem;
-    z-index: 1000;
-  }
-
-  .search-suggestions.show {
-    display: block;
-  }
-
-  .search-suggestion-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: background-color 0.2s ease;
-  }
-
-  .search-suggestion-item:hover {
-    background-color: #f8f9fa;
-  }
-
-  .search-suggestion-item:last-child {
-    border-bottom: none;
-  }
-
-  .search-suggestion-icon {
-    color: #6c757d;
-    width: 16px;
-    text-align: center;
-  }
-
-  .search-suggestion-text {
-    flex: 1;
-    font-size: 0.95rem;
-  }
-
-  .search-suggestion-type {
-    font-size: 0.8rem;
-    color: #6c757d;
-    text-transform: capitalize;
-  }
-
-  /* Dropdown submenu styling */
-  .dropdown-submenu {
-    position: relative;
-  }
-
-  .dropdown-submenu .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -1px;
-    margin-left: -1px;
-    border-radius: 0.375rem;
-  }
-
-  .dropdown-submenu:hover .dropdown-menu {
-    display: block;
-  }
-
-  .dropdown-submenu-menu {
-    min-width: 200px;
-    max-width: 300px;
-  }
-
-  .dropdown-submenu-menu .dropdown-item {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .dropdown-submenu-menu .dropdown-item i {
-    width: 16px;
-  }
-
-  /* Mobile submenu adjustments */
-  @media (max-width: 767px) {
-    .dropdown-submenu .dropdown-menu {
-      position: static;
-      display: block !important;
-      margin: 0;
-      border: none;
-      box-shadow: none;
-      background: transparent;
-      padding-left: 1rem;
-    }
-
-    .dropdown-submenu-menu .dropdown-item {
-      padding: 0.25rem 1rem;
-    }
-  }
-
-  /* Notification dropdown styling */
-  .notification-dropdown {
-    border: none;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    border-radius: 0.5rem;
-  }
-
-  .notification-dropdown .dropdown-header {
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color) !important;
-  }
-
-  .notification-dropdown .dropdown-footer {
-    background-color: var(--bg-secondary);
-    border-top: 1px solid var(--border-color) !important;
-  }
-
-  .notification-item {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-  }
-
-  .notification-item:hover {
-    background-color: var(--bg-hover);
-  }
-
-  .notification-item.unread {
-    background-color: rgba(254, 66, 77, 0.05);
-    border-left: 3px solid #fe424d;
-  }
-
-  .notification-item:last-child {
-    border-bottom: none;
-  }
-
-  .notification-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .notification-icon.trip-added {
-    background-color: #28a745;
-    color: white;
-  }
-
-  .notification-icon.reminder {
-    background-color: #ffc107;
-    color: white;
-  }
-
-  .notification-icon.system {
-    background-color: #6c757d;
-    color: white;
-  }
-
-  .notification-content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .notification-title {
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
-    color: var(--text-primary);
-  }
-
-  .notification-message {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.25rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .notification-time {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  .notification-actions {
-    display: flex;
-    gap: 0.25rem;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  .notification-item:hover .notification-actions {
-    opacity: 1;
-  }
-
-  .notification-action-btn {
-    padding: 0.25rem;
-    border: none;
-    background: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .notification-action-btn:hover {
-    background-color: var(--bg-hover);
-  }
-
-  .notification-action-btn i {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  .language-dropdown .dropdown-menu {
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  /* Mobile notification adjustments */
-  @media (max-width: 767px) {
-    .notification-dropdown {
-      width: 300px !important;
-      max-height: 350px !important;
-    }
-
-    .notification-item {
-      padding: 0.5rem 0.75rem;
-    }
-
-    .notification-icon {
-      width: 35px;
-      height: 35px;
-      margin-right: 0.5rem;
-    }
-
-    .notification-title {
-      font-size: 0.85rem;
-    }
-
-    .notification-message {
-      font-size: 0.75rem;
-    }
-
-    .notification-time {
-      font-size: 0.7rem;
-    }
-  }
-</style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
@@ -455,11 +69,7 @@
                 <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
               </a>
             </li>
-            <li>
-              <a class="dropdown-item" href="/currency">
-                <i class="fa-solid fa-exchange-alt me-2"></i>Currency Converter
-              </a>
-            </li>
+
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -539,6 +149,11 @@
                     <i class="fa-solid fa-suitcase-rolling me-2"></i>My Trip Plans
                   </a>
                 </li>
+                <li>
+                  <a class="dropdown-item" href="/phrase-assistant">
+                    <i class="fa-solid fa-language me-2"></i>Phrase Assistant
+                  </a>
+                </li>
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#" id="downloadsDropdownToggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-download me-2"></i>My Downloads
@@ -582,13 +197,19 @@
             <i class="fa-solid fa-globe"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <% Object.keys(languageMap).forEach(lang => { %>
+            <% if (typeof languageMap !== 'undefined' && Object.keys(languageMap).length) { %>
+              <% Object.keys(languageMap).forEach(lang => { %>
+                <li>
+                  <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
+                    <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
+                  </a>
+                </li>
+              <% }); %>
+            <% } else { %>
               <li>
-                <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
-                  <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
-                </a>
+                <a class="dropdown-item active" href="#">English</a>
               </li>
-            <% }); %>
+            <% } %>
           </ul>
         </div>
 
