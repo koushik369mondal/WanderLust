@@ -10,51 +10,23 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ------------------
-    // SERVICE WORKER - SELF-DESTRUCT MODE
+    // SERVICE WORKER - CLEANUP ONLY
     // ------------------
-    // Force load the self-destructing service worker to clean up old caches
-    if ('serviceWorker' in navigator) {
-        console.log('🔴 Loading self-destructing service worker...');
-        
-        // First, unregister all existing service workers
+    // Emergency cache clear already handled by emergencyCacheClear.js
+    // Just ensure no service workers are running
+    if ('serviceWorker' in navigator && !sessionStorage.getItem('swCleanupDone')) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            const unregisterPromises = registrations.map(registration => {
-                return registration.unregister().then(function(success) {
-                    if (success) {
-                        console.log('✅ Old Service Worker unregistered');
-                    }
-                    return success;
+            if (registrations.length > 0) {
+                console.log('🧹 Cleaning up service workers...');
+                registrations.forEach(registration => {
+                    registration.unregister().then(function(success) {
+                        if (success) {
+                            console.log('✅ Service Worker cleaned up');
+                        }
+                    });
                 });
-            });
-            
-            // After unregistering, force register the self-destructing version
-            return Promise.all(unregisterPromises).then(() => {
-                // Add cache-busting parameter to force fresh load of sw.js
-                return navigator.serviceWorker.register('/sw.js?v=' + Date.now(), {
-                    scope: '/',
-                    updateViaCache: 'none' // Never use cached service worker
-                }).then(function(registration) {
-                    console.log('🔴 Self-destructing Service Worker registered:', registration);
-                    // Force immediate update
-                    registration.update();
-                }).catch(function(error) {
-                    console.log('Service Worker registration failed:', error);
-                });
-            });
-        });
-    }
-
-    // Clear all caches to ensure fresh data from database
-    if ('caches' in window) {
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
-                    console.log('Deleting cache:', cacheName);
-                    return caches.delete(cacheName);
-                })
-            );
-        }).then(function() {
-            console.log('All caches cleared - fetching fresh data from database');
+            }
+            sessionStorage.setItem('swCleanupDone', 'true');
         });
     }
 

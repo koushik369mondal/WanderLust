@@ -1,10 +1,19 @@
 /**
  * EMERGENCY CACHE KILLER - Load this FIRST
- * This script will forcefully clear all caches and reload
+ * Runs only ONCE per session to clear corrupted caches
  */
 
 (function() {
     'use strict';
+    
+    // Check if already cleared in this session
+    const CLEARED_FLAG = 'emergencyCacheCleared';
+    
+    // Skip if already cleared
+    if (sessionStorage.getItem(CLEARED_FLAG) === 'true') {
+        console.log('%c✅ Cache already cleared this session', 'color: green; font-size: 14px;');
+        return;
+    }
     
     console.log('%c🚨 EMERGENCY CACHE KILLER ACTIVATED', 'color: red; font-size: 20px; font-weight: bold;');
     
@@ -63,28 +72,45 @@
             }
         }
         
-        // Step 4: Clear localStorage
+        // Step 4: Clear localStorage (preserve emergency flag)
         try {
-            localStorage.clear();
+            const keysToPreserve = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && !key.includes('emergency')) {
+                    keysToPreserve.push(key);
+                }
+            }
+            keysToPreserve.forEach(key => localStorage.removeItem(key));
             console.log('✅ localStorage cleared');
             steps.push('localStorage: Cleared');
         } catch (e) {
             console.error('localStorage error:', e);
         }
         
-        // Step 5: Clear sessionStorage
-        try {
-            sessionStorage.clear();
-            console.log('✅ sessionStorage cleared');
-            steps.push('sessionStorage: Cleared');
-        } catch (e) {
-            console.error('sessionStorage error:', e);
-        }
-        
         console.log('%c✅ CACHE CLEAR COMPLETE!', 'color: green; font-size: 18px; font-weight: bold;');
         console.log('Steps completed:', steps);
         
-        // Show user notification
+        // Mark as cleared in this session
+        sessionStorage.setItem(CLEARED_FLAG, 'true');
+        
+        // Show notification if body exists
+        if (document.body) {
+            showNotification(steps);
+        }
+        
+        // ONE-TIME reload only if caches were found
+        if (cacheNames && cacheNames.length > 0) {
+            console.log('%c🔄 Reloading to apply changes...', 'color: blue; font-size: 16px;');
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 2000);
+        } else {
+            console.log('%c✅ No reload needed - continuing...', 'color: green; font-size: 16px;');
+        }
+    }
+    
+    function showNotification(steps) {
         const notification = document.createElement('div');
         notification.style.cssText = `
             position: fixed;
@@ -108,7 +134,7 @@
                 ${steps.join('<br>')}
             </p>
             <p style="margin: 0; font-size: 14px; font-weight: bold;">
-                Reloading in 3 seconds...
+                Page cleaned successfully!
             </p>
         `;
         
@@ -123,11 +149,12 @@
         document.head.appendChild(style);
         document.body.appendChild(notification);
         
-        // Force reload after 3 seconds
+        // Auto-hide after 5 seconds
         setTimeout(() => {
-            console.log('%c🔄 FORCING HARD RELOAD...', 'color: blue; font-size: 16px;');
-            window.location.reload(true);
-        }, 3000);
+            notification.style.transition = 'opacity 0.5s';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 500);
+        }, 5000);
     }
     
     // Run immediately
