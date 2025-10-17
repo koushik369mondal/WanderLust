@@ -20,7 +20,8 @@ const STATIC_ASSETS = [
   '/JS/offlineManager.js',
   '/images/travel_cover-1500x1000.jpeg',
   '/images/compass.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/offline.html' // Add the offline fallback page
 ];
 
 // Install event - cache static assets
@@ -72,6 +73,31 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // Use Network-First strategy for navigation requests (HTML pages)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          // If the fetch is successful, cache it and return it
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then(cache => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // If the network fails, try to serve from the cache
+          return caches.match(request).then(cachedResponse => {
+            // If it's in the cache, serve it. Otherwise, serve the offline page.
+            return cachedResponse || caches.match('/offline.html');
+          });
+        })
+    );
+    return; // End execution here for navigation requests
+  }
 
   // Skip non-GET requests and external requests
   if (request.method !== 'GET' || !url.origin.includes(self.location.origin)) {
@@ -128,7 +154,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For other requests, try cache first, then network
+  // For other requests (static assets like CSS, JS, images), use Cache-First strategy
   event.respondWith(
     caches.match(request)
       .then((cachedResponse) => {
@@ -150,12 +176,7 @@ self.addEventListener('fetch', (event) => {
 
             return response;
           })
-          .catch(() => {
-            // Return offline fallback for navigation requests
-            if (request.mode === 'navigate') {
-              return caches.match('/trip-planner/my-trips');
-            }
-          });
+          .catch(() => { /* For non-navigation requests, failing is okay if not in cache */ });
       })
   );
 });
