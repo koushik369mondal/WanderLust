@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="WanderLust - Find your perfect accommodation">
+    <title>WanderLust</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/compass.png">
+    <link rel="shortcut icon" type="image/png" href="/images/compass.png">
+    <link rel="apple-touch-icon" href="/images/compass.png">
+    
+    <!-- EMERGENCY CACHE CLEAR - Loads FIRST to clean corrupted caches -->
+    <script src="/JS/emergencyCacheClear.js?v=1760686917171"></script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/CSS/style.css?v=1760686917171">
+    <link rel="stylesheet" href="/CSS/rating.css?v=1760686917171">
+    <link rel="stylesheet" href="/CSS/loading.css?v=1760686917171">
+    
+    <!-- Mapbox CSS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body>
+    <style>
+  .search-btn {
+    background-color: #fe424d;
+    color: #fff;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+  }
+
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #fff;
+  }
+
+  .search-btn i {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+
+  .search-inp {
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+    font-size: 1rem;
+  }
+
+  /* Enhanced navbar brand styling */
+  .navbar-brand {
+    font-size: 1.5rem;
+    color: var(--accent-color) !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-brand:hover {
+    color: var(--accent-color) !important;
+    transform: scale(1.05);
+  }
+
+  .navbar-brand i {
+    color: #fe424d;
+    font-size: 1.4rem;
+  }
+
+  /* Tablet view fixes */
+  @media (max-width: 991px) and (min-width: 768px) {
+    .navbar-nav .d-flex {
+      flex-wrap: nowrap;
+    }
+
+    .search-inp {
+      min-width: 200px;
+    }
+
+    .search-btn {
+      white-space: nowrap;
+    }
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 767px) {
+    .navbar-collapse {
+      background-color:var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav .d-flex {
+      flex-direction: column;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .search-inp {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      margin-right: 0 !important;
+      padding: 0.5rem 1rem;
+    }
+
+    .search-btn {
+      width: 100%;
+    }
+
+    .navbar-nav {
+      text-align: center;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    #theme-toggle {
+      margin: 1rem auto 0.5rem auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mobile-icon {
+      display: inline-block !important;
+    }
+
+    .desktop-hide-mobile {
+      display: none;
+    }
+  }
+
+  .mobile-icon {
+    display: none;
+  }
+
+  /* Desktop view - hide mobile icons */
+  @media (min-width: 768px) {
+    .mobile-icon {
+      display: none !important;
+    }
+  }
+
+  /* Search suggestions styling */
+  .search-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    color: #333;
+    font-size: 0.95rem;
+    z-index: 1000;
+  }
+
+  .search-suggestions.show {
+    display: block;
+  }
+
+  .search-suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s ease;
+  }
+
+  .search-suggestion-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  .search-suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .search-suggestion-icon {
+    color: #6c757d;
+    width: 16px;
+    text-align: center;
+  }
+
+  .search-suggestion-text {
+    flex: 1;
+    font-size: 0.95rem;
+  }
+
+  .search-suggestion-type {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: capitalize;
+  }
+
+  /* Dropdown submenu styling */
+  .dropdown-submenu {
+    position: relative;
+  }
+
+  .dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    margin-left: -1px;
+    border-radius: 0.375rem;
+  }
+
+  .dropdown-submenu:hover .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-submenu-menu {
+    min-width: 200px;
+    max-width: 300px;
+  }
+
+  .dropdown-submenu-menu .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-submenu-menu .dropdown-item i {
+    width: 16px;
+  }
+
+  /* Mobile submenu adjustments */
+  @media (max-width: 767px) {
+    .dropdown-submenu .dropdown-menu {
+      position: static;
+      display: block !important;
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+      padding-left: 1rem;
+    }
+
+    .dropdown-submenu-menu .dropdown-item {
+      padding: 0.25rem 1rem;
+    }
+  }
+
+  /* Notification dropdown styling */
+  .notification-dropdown {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+  }
+
+  .notification-dropdown .dropdown-header {
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+
+  .notification-dropdown .dropdown-footer {
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border-color) !important;
+  }
+
+  .notification-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .notification-item:hover {
+    background-color: var(--bg-hover);
+  }
+
+  .notification-item.unread {
+    background-color: rgba(254, 66, 77, 0.05);
+    border-left: 3px solid #fe424d;
+  }
+
+  .notification-item:last-child {
+    border-bottom: none;
+  }
+
+  .notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .notification-icon.trip-added {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .notification-icon.reminder {
+    background-color: #ffc107;
+    color: white;
+  }
+
+  .notification-icon.system {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .notification-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .notification-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+
+  .notification-message {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .notification-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .notification-actions {
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .notification-item:hover .notification-actions {
+    opacity: 1;
+  }
+
+  .notification-action-btn {
+    padding: 0.25rem;
+    border: none;
+    background: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .notification-action-btn:hover {
+    background-color: var(--bg-hover);
+  }
+
+  .notification-action-btn i {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .language-dropdown .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  /* Mobile notification adjustments */
+  @media (max-width: 767px) {
+    .notification-dropdown {
+      width: 300px !important;
+      max-height: 350px !important;
+    }
+
+    .notification-item {
+      padding: 0.5rem 0.75rem;
+    }
+
+    .notification-icon {
+      width: 35px;
+      height: 35px;
+      margin-right: 0.5rem;
+    }
+
+    .notification-title {
+      font-size: 0.85rem;
+    }
+
+    .notification-message {
+      font-size: 0.75rem;
+    }
+
+    .notification-time {
+      font-size: 0.7rem;
+    }
+  }
+</style>
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
+      <i class="fa-regular fa-compass me-2"></i>
+      <span class="fw-bold">WanderLust</span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Primary Navigation -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings">
+            <i class="fa-regular fa-compass"></i>
+            All Listings
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/listings/about">
+            <i class="fa-solid fa-info-circle"></i>
+            About
+          </a>
+        </li>
+
+        <!-- Travel Tools Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-tools"></i>
+            Travel Tools
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="/trip-planner">
+                <i class="fa-solid fa-route me-2"></i>Trip Planner
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/packing-list">
+                <i class="fa-solid fa-suitcase me-2"></i>Packing List Generator
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/holiday">
+                <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/listings/compare">
+                <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/trip-planner/mood-fixing">
+                <i class="fa-solid fa-music me-2"></i>Mood Fixing
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/weather">
+                <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/currency">
+                <i class="fa-solid fa-exchange-alt me-2"></i>Currency Converter
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="/achievements">
+                <i class="fa-solid fa-trophy me-2"></i>Achievements
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/leaderboard">
+                <i class="fa-solid fa-chart-line me-2"></i>Leaderboard
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+      <!-- Search Bar -->
+      <div class="search-container me-3">
+        <form role="search" method="GET" action="/listings">
+          <div class="position-relative">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input class="search-input" type="search" name="search" placeholder="Search destinations..."
+              value="" autocomplete="off" />
+            <button class="search-btn" type="submit">
+              Search
+            </button>
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </form>
+      </div>
+
+      <!-- Authentication & Profile -->
+      <div class="action-buttons">
+        <a class="nav-link" href="/listings/new">Add New Listing</a>
+        
+          <a class="btn btn-outline-primary" href="/login">
+            <i class="fa-solid fa-sign-in-alt me-1"></i>
+            Login
+          </a>
+          <a class="btn btn-primary" href="/signup">
+            <i class="fa-solid fa-user-plus me-1"></i>
+            Signup
+          </a>
+          
+      </div>
+
+      <!-- Utility Controls -->
+      <div class="utility-controls">
+        <!-- Language Dropdown -->
+        <div class="language-dropdown dropdown">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            
+              <li>
+                <a class="dropdown-item active" href="/login?lang=en">
+                  🇺🇸 English
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=hi">
+                  🇮🇳 हिंदी
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=bn">
+                  🇧🇩 বাংলা
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=te">
+                  🇮🇳 తెలుగు
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=mr">
+                  🇮🇳 मराठी
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=ta">
+                  🇮🇳 தமிழ்
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=gu">
+                  🇮🇳 ગુજરાતી
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=kn">
+                  🇮🇳 ಕನ್ನಡ
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=ml">
+                  🇮🇳 മലയാളം
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=pa">
+                  🇮🇳 ਪੰਜਾਬੀ
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=or">
+                  🇮🇳 ଓଡ଼ିଆ
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=as">
+                  🇮🇳 অসমীয়া
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=ur">
+                  🇮🇳 اردو
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=es">
+                  🇪🇸 Español
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=fr">
+                  🇫🇷 Français
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=de">
+                  🇩🇪 Deutsch
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=ja">
+                  🇯🇵 日本語
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=zh">
+                  🇨🇳 中文
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=it">
+                  🇮🇹 Italiano
+                </a>
+              </li>
+            
+              <li>
+                <a class="dropdown-item " href="/login?lang=pt">
+                  🇵🇹 Português
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+
+        <!-- Notification Bell -->
+        
+
+        <button id="theme-toggle" class="btn btn-outline-secondary">
+          <i id="theme-icon" class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        
+
+        
+            <div class="alert alert-danger alert-dismissible fade show col-6 offset-3" role="alert">
+                You must be logged in to create a listing!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        
+
+    <div class="row mt-3">
+        <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+            <div class="auth-container">
+                <h1 class="auth-title">Login</h1>
+                <form action="/login" method="POST" class="auth-form needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required />
+                </div>
+                <button class="btn btn-success">Login</button>
+                <div class="mt-3 text-center">
+                    <p class="text-dark">Don't have an account? <a href="/signup" class="text-dark"><u>Sign up here</u></a></p>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    
+
+<footer class="wander-footer">
+  <div class="footer-container">
+    <!-- Brand / About -->
+    <div class="footer-col">
+      <div class="footer-brand">
+        <i class="fa-solid fa-compass footer-logo"></i>
+        <h5>WanderLust</h5>
+      </div>
+      <p class="footer-description">
+        🌍 Explore the world with us<br>
+        Discover hidden gems, book your stays, and make every trip unforgettable.
+      </p>
+      <div class="footer-stats">
+        <div class="stat-item">
+          <span class="stat-number">10K+</span>
+          <span class="stat-label">Happy Travelers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Destinations</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-col">
+      <h6><i class="fa-solid fa-link me-2"></i>Quick Links</h6>
+      <div class="footer-links">
+        <a href="/about"><i class="fa-solid fa-info-circle me-2"></i>About Us</a>
+        <a href="/listings"><i class="fa-solid fa-map-location-dot me-2"></i>Destinations</a>
+        <a href="/newsletter"><i class="fa-solid fa-envelope me-2"></i>Newsletter</a>
+        <a href="/privacy"><i class="fa-solid fa-shield-alt me-2"></i>Privacy Policy</a>
+        <a href="/terms"><i class="fa-solid fa-file-contract me-2"></i>Terms & Conditions</a>
+      </div>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="footer-col">
+      <h6><i class="fa-solid fa-phone me-2"></i>Contact</h6>
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>Assam, India</span>
+        </div>
+        <div class="contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <span>koushik369mondal@gmail.com</span>
+        </div>
+        <div class="contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <span>+91 95932 95965</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="footer-col">
+      <h6><i class="fa-solid fa-paper-plane me-2"></i>Stay Updated</h6>
+      <p class="newsletter-text">Subscribe for travel tips & exclusive deals ✈️</p>
+      <form action="/newsletter/subscribe" method="POST" class="newsletter-form">
+        <div class="input-group">
+          <input type="email" name="email" placeholder="Enter your email" required>
+          <button type="submit">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <input type="hidden" name="source" value="footer">
+      </form>
+      <div class="newsletter-benefits">
+        <small><i class="fa-solid fa-check me-1"></i>Weekly travel tips</small>
+        <small><i class="fa-solid fa-check me-1"></i>Exclusive deals</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-content">
+      <div class="socials">
+        <span class="social-label">Follow us:</span>
+        <a href="https://www.facebook.com/koushik.mondal.481562" title="Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+        <a href="https://www.instagram.com/koushik369mondal/" title="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/koushik369mondal/" title="LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="https://x.com/Koushik369m" title="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </div>
+      <div class="copyright">
+        <p>© 2025 <strong>WanderLust Pvt. Ltd.</strong> | Made with <i class="fa-solid fa-heart text-danger"></i> for Travelers</p>
+      </div>
+    </div>
+  </div>
+</footer>
+    <!-- Travel Chatbot -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+  <button id="chatbot-toggle" class="btn btn-primary rounded-circle" style="width: 60px; height: 60px;">
+    <i class="fa-solid fa-comments"></i>
+  </button>
+  
+  <div id="chatbot-window" class="card" style="width: 350px; height: 400px; display: none; position: absolute; bottom: 70px; right: 0;">
+    <div class="card-header bg-primary text-white">
+      <h6 class="mb-0"><i class="fa-solid fa-robot me-2"></i>Travel Guide Bot</h6>
+    </div>
+    <div class="card-body p-0">
+      <div id="chat-messages" style="height: 300px; overflow-y: auto; padding: 15px;">
+        <div class="bot-message mb-2">
+          <small class="text-muted">Bot</small>
+          <div class="bg-light p-2 rounded">
+            Hi! I'm your travel guide. Ask me about destinations, best places to visit, activities, seasons, transport, accommodation, budget tips, and more!
+          </div>
+        </div>
+      </div>
+      <div class="border-top p-2">
+        <div class="input-group">
+          <input type="text" id="chat-input" class="form-control" placeholder="Ask me anything...">
+          <button id="send-btn" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const toggle = document.getElementById('chatbot-toggle');
+  const window = document.getElementById('chatbot-window');
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('send-btn');
+  const messages = document.getElementById('chat-messages');
+
+  toggle.addEventListener('click', () => {
+    window.style.display = window.style.display === 'none' ? 'block' : 'none';
+  });
+
+  function addMessage(message, isUser = false) {
+    const div = document.createElement('div');
+    div.className = `${isUser ? 'user' : 'bot'}-message mb-2`;
+    div.innerHTML = `
+      <small class="text-muted">${isUser ? 'You' : 'Bot'}</small>
+      <div class="${isUser ? 'bg-primary text-white ms-auto' : 'bg-light'} p-2 rounded" style="${isUser ? 'max-width: 80%;' : ''}">
+        ${message}
+      </div>
+    `;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function sendMessage() {
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, true);
+    input.value = '';
+
+    fetch('/chatbot/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    })
+    .then(res => res.json())
+    .then(data => addMessage(data.response))
+    .catch(() => addMessage('Sorry, I encountered an error. Please try again.'));
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+});
+</script>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+      <script src="/JS/script.js?v=1760686917178"></script>
+      <script src="/JS/loading.js?v=1760686917178"></script>
+      <script src="/JS/phraseAssistant.js?v=1760686917178"></script>
+      <!-- offlineManager.js removed - app now fetches fresh data directly from database -->
+      <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+  </body>
+</html>
