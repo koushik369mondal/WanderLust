@@ -350,6 +350,11 @@
     color: var(--text-muted);
   }
 
+  .language-dropdown .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
   /* Mobile notification adjustments */
   @media (max-width: 767px) {
     .notification-dropdown {
@@ -448,6 +453,11 @@
             <li>
               <a class="dropdown-item" href="/weather">
                 <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/currency">
+                <i class="fa-solid fa-exchange-alt me-2"></i>Currency Converter
               </a>
             </li>
             <li>
@@ -572,22 +582,13 @@
             <i class="fa-solid fa-globe"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
-                English</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
-                हिंदी</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
-                বাংলা</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
-                অসমীয়া</a>
-            </li>
+            <% Object.keys(languageMap).forEach(lang => { %>
+              <li>
+                <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
+                  <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
+                </a>
+              </li>
+            <% }); %>
           </ul>
         </div>
 
