@@ -153,15 +153,17 @@ For trip planning requests:
 }
 
 // Enhanced fallback response generator with trip planning
-function generateEnhancedFallbackResponse(message, userLang = 'en') {
+async function generateEnhancedFallbackResponse(message, userLang = 'en') {
   const q = message.toLowerCase();
 
   // Check for trip planning requests in fallback
   const tripPlanningKeywords = ['plan', 'trip', 'itinerary', 'book', 'schedule', 'travel to', 'visit', 'holiday', 'कर दो', 'बना दो', 'प्लान'];
   const isTripPlanning = tripPlanningKeywords.some(keyword => q.includes(keyword));
 
+  let response = '';
+
   if (isTripPlanning) {
-    // Extract trip parameters from Hindi/English messages
+    // Extract trip parameters from messages
     const destinationMatch = message.match(/(?:plan|trip|visit|go to|कर दो|बना दो|जाऊंगा|जाएंगे?)\s+(.+?)(?:\s+in|\s+for|\s+under|\s+with|\s+में|\s+का|\s+की|$)/i);
     const durationMatch = message.match(/(\d+)\s*(?:day|days|night|nights|week|weeks|दिन|दिवस|सप्ताह)/i);
     const budgetMatch = message.match(/(?:under|below|budget|₹|rs|\$|€|£|हजार|लाख)\s*(\d+(?:,\d+|,\d\d\d)*)/i);
@@ -171,122 +173,168 @@ function generateEnhancedFallbackResponse(message, userLang = 'en') {
     const budget = budgetMatch ? parseInt(budgetMatch[1].replace(/,/g, '')) : null;
 
     if (destination) {
-      let response = '';
-
       if (destination.toLowerCase().includes('shimla') || destination.toLowerCase().includes('शिमला')) {
-        response = `ठीक है! मैं आपके लिए ${duration || 3} दिन का शिमला ट्रिप प्लान बना रहा हूँ।
+        response = `Alright! I'm creating a ${duration || 3}-day trip plan for Shimla.
 
-**शिमला ट्रिप प्लान (दिसंबर में):**
+**Shimla Trip Plan (in December):**
 
-**दिन 1: दिल्ली से शिमला (यात्रा)**
-• दिल्ली से शिमला बस/कार: ₹800-1500
-• शाम तक पहुँचकर आराम
+**Day 1: Travel from Delhi to Shimla**
+• Delhi to Shimla bus/car: ₹800-1500
+• Arrive by evening and relax
 
-**दिन 2: शिमला साइटसीइंग**
-• मॉल रोड, रिज मैदान, जैकब्स चर्च
-• खाना: चाय, मकई, चिवड़ा
-• बजट: ₹2000-3000
+**Day 2: Sightseeing in Shimla**
+• Mall Road, Ridge, St. Michael's Church
+• Food: Tea, corn, chivda
+• Budget: ₹2000-3000
 
-**दिन 3: आसपास के स्थान**
-• कुफरी (मोनाल, हिमालयन वाइल्डलाइफ) या चैल (क्रिकेट ग्राउंड)
-• वापसी दिल्ली
-• बजट: ₹2000-3000
+**Day 3: Nearby places**
+• Kufri (monal, Himalayan wildlife) or Chail (cricket ground)
+• Return to Delhi
+• Budget: ₹2000-3000
 
-**कुल बजट: ₹${budget ? budget : '8000-12000'}**
-• यात्रा: ₹2000
-• होटल: ₹3000-5000 (₹1000-1500/रूम)
-• खाना: ₹2000-3000
-• अन्य: ₹1000
+**Total Budget: ₹${budget ? budget : '8000-12000'}**
+• Travel: ₹2000
+• Hotel: ₹3000-5000 (₹1000-1500/room)
+• Food: ₹2000-3000
+• Other: ₹1000
 
-क्या आप इस प्लान को सेव करना चाहेंगे या कोई बदलाव करना चाहेंगे?`;
+Would you like to save this plan or make changes?`;
       } else if (destination.toLowerCase().includes('goa') || destination.toLowerCase().includes('गोवा')) {
-        response = `ठीक है! मैं आपके लिए ${duration || 5} दिन का गोवा ट्रिप प्लान बना रहा हूँ।
+        response = `Alright! I'm creating a ${duration || 5}-day trip plan for Goa.
 
-**गोवा ट्रिप प्लान:**
+**Goa Trip Plan:**
 
-**दिन 1-2: उत्तर गोवा (पणजी क्षेत्र)**
-• कैलंगुट/बागा बीच
-• फोर्ट अगुआडा, सिन्क्वेरिम बीच
-• बजट: ₹3000-4000/दिन
+**Days 1-2: North Goa (Panjim area)**
+• Calangute/Baga beach
+• Fort Aguada, Sinquerim beach
+• Budget: ₹3000-4000/day
 
-**दिन 3-4: दक्षिण गोवा**
-• कोलवा बीच, बेनौलिम
-• बस्सेलम, मारगाव बाजार
-• बजट: ₹3000-4000/दिन
+**Days 3-4: South Goa**
+• Colva beach, Benaulim
+• Palolem, Margao market
+• Budget: ₹3000-4000/day
 
-**दिन 5: वापसी**
-• अंतिम शॉपिंग, आराम
+**Day 5: Return**
+• Final shopping, relax
 
-**कुल बजट: ₹${budget ? budget : '25000-35000'}**
-• होटल: ₹8000-12000
-• खाना: ₹5000-7000
-• ट्रांसपोर्ट: ₹3000-5000
-• एक्टिविटीज: ₹2000-3000
+**Total Budget: ₹${budget ? budget : '25000-35000'}**
+• Hotel: ₹8000-12000
+• Food: ₹5000-7000
+• Transport: ₹3000-5000
+• Activities: ₹2000-3000
 
-क्या आप इस प्लान को सेव करना चाहेंगे?`;
+Would you like to save this plan?`;
       } else {
-        response = `ठीक है! मैं आपके लिए ${destination} का ट्रिप प्लान बना रहा हूँ।
+        response = `Alright! I'm creating a trip plan for ${destination}.
 
-**सामान्य ट्रिप प्लान:**
+**General Trip Plan:**
 
-**दिन 1: यात्रा और पहुँच**
-• मुख्य आकर्षण देखें
-• बजट: ₹2000-3000
+**Day 1: Travel and arrival**
+• Visit main attractions
+• Budget: ₹2000-3000
 
-**दिन 2-${duration || 3}: साइटसीइंग**
-• लोकल फूड और कल्चर
-• बजट: ₹2000-4000/दिन
+**Days 2-${duration || 3}: Sightseeing**
+• Local food and culture
+• Budget: ₹2000-4000/day
 
-**अंतिम दिन: वापसी**
-• शॉपिंग और आराम
+**Last day: Return**
+• Shopping and relax
 
-**कुल बजट: ₹${budget ? budget : '10000-20000'}**
+**Total Budget: ₹${budget ? budget : '10000-20000'}**
 
-क्या आप और डिटेल्स देना चाहेंगे जैसे डेट्स, बजट, या स्पेशल प्रेफरेंस?`;
+Would you like more details like dates, budget, or special preferences?`;
       }
-
-      return response;
     }
   }
 
-  // Destination queries
-  for (const [dest, info] of Object.entries(travelKnowledge.destinations)) {
-    if (q.includes(dest)) return info;
+  if (!response) {
+    // Destination queries
+    for (const [dest, info] of Object.entries(travelKnowledge.destinations)) {
+      if (q.includes(dest)) {
+        response = info;
+        break;
+      }
+    }
+
+    // Activity queries
+    if (!response) {
+      for (const [activity, info] of Object.entries(travelKnowledge.activities)) {
+        if (q.includes(activity)) {
+          response = info;
+          break;
+        }
+      }
+    }
+
+    // Season queries
+    if (!response) {
+      for (const [season, info] of Object.entries(travelKnowledge.seasons)) {
+        if (q.includes(season)) {
+          response = info;
+          break;
+        }
+      }
+    }
+
+    // Transport queries
+    if (!response) {
+      for (const [transport, info] of Object.entries(travelKnowledge.transport)) {
+        if (q.includes(transport)) {
+          response = info;
+          break;
+        }
+      }
+    }
+
+    // Accommodation queries
+    if (!response) {
+      for (const [acc, info] of Object.entries(travelKnowledge.accommodation)) {
+        if (q.includes(acc)) {
+          response = info;
+          break;
+        }
+      }
+    }
+
+    // Specific travel topics
+    if (!response) {
+      if (q.includes('budget') || q.includes('बजट')) {
+        response = 'Budget varies by destination. South Asia: $20-50/day, Europe: €50-100/day, America: $80-150/day. Use hostels, local food, and public transport.';
+      } else if (q.includes('safety') || q.includes('सुरक्षा')) {
+        response = 'Research your destination, get travel insurance, keep copies of documents, stay aware of surroundings, and trust your instincts.';
+      } else if (q.includes('packing') || q.includes('पैकिंग')) {
+        response = 'Pack light - versatile clothes, comfortable shoes, essential documents, medicine, chargers, and first-aid kit. Check weather and cultural dress codes.';
+      } else if (q.includes('visa') || q.includes('वीजा')) {
+        response = 'Check visa requirements 3 months before. Many countries have e-visa or visa-on-arrival. Passport validity should be 6+ months.';
+      } else if (q.includes('insurance') || q.includes('इंश्योरेंस')) {
+        response = 'Travel insurance is essential - for medical emergencies, trip cancellation, and lost luggage. Compare policies and coverage limits.';
+      } else if (q.includes('currency') || q.includes('करेंसी')) {
+        response = 'Research exchange rates, notify banks of travel, carry some cash, and have backup payment options. ATMs offer better rates.';
+      } else if (q.includes('best place') || q.includes('recommend') || q.includes('सुझाव')) {
+        response = 'Popular destinations: Paris (culture), Bali (beach), Tokyo (modern), Thailand (budget-friendly), Italy (history). What type of experience do you want?';
+      } else if (q.includes('when to visit') || q.includes('कब जाएं')) {
+        response = 'Best time depends on destination and activities. Spring/fall are best for most places. Summer for beaches, winter for skiing.';
+      } else if (q.includes('solo travel') || q.includes('अकेले')) {
+        response = 'Solo travel is rewarding! Choose safe destinations, stay in hostels, join group tours, keep in touch with home, and trust your instincts.';
+      } else if (q.includes('group travel') || q.includes('ग्रुप')) {
+        response = 'Plan together, set a budget, choose a leader, book accommodations early, and be flexible with different preferences.';
+      } else {
+        response = 'I can help with destinations, activities, seasons, transport, accommodation, budget, safety, packing, visas, insurance, and trip planning! What would you like to know?';
+      }
+    }
   }
 
-  // Activity queries
-  for (const [activity, info] of Object.entries(travelKnowledge.activities)) {
-    if (q.includes(activity)) return info;
+  // Translate response to user's language if not English
+  if (userLang !== 'en' && response) {
+    try {
+      response = await translateText(response, userLang);
+    } catch (error) {
+      console.error('Translation error in fallback:', error);
+      // Keep original response if translation fails
+    }
   }
 
-  // Season queries
-  for (const [season, info] of Object.entries(travelKnowledge.seasons)) {
-    if (q.includes(season)) return info;
-  }
-
-  // Transport queries
-  for (const [transport, info] of Object.entries(travelKnowledge.transport)) {
-    if (q.includes(transport)) return info;
-  }
-
-  // Accommodation queries
-  for (const [acc, info] of Object.entries(travelKnowledge.accommodation)) {
-    if (q.includes(acc)) return info;
-  }
-
-  // Specific travel topics
-  if (q.includes('budget') || q.includes('बजट')) return 'बजट डेस्टिनेशन के हिसाब से बदलता है। दक्षिण एशिया: $20-50/दिन, यूरोप: €50-100/दिन, अमेरिका: $80-150/दिन। हॉस्टल, लोकल फूड और पब्लिक ट्रांसपोर्ट इस्तेमाल करें।';
-  if (q.includes('safety') || q.includes('सुरक्षा')) return 'डेस्टिनेशन रिसर्च करें, ट्रेवल इंश्योरेंस लें, डॉक्यूमेंट्स की कॉपी रखें, आसपास से अवेयर रहें, और अपने इंस्टिंक्ट पर भरोसा करें।';
-  if (q.includes('packing') || q.includes('पैकिंग')) return 'लाइट पैक करें - वर्सटाइल कपड़े, आरामदायक जूते, जरूरी डॉक्यूमेंट्स, मेडिसिन, चार्जर, और फर्स्ट-एड किट। मौसम और कल्चरल ड्रेस कोड चेक करें।';
-  if (q.includes('visa') || q.includes('वीजा')) return '3 महीने पहले वीजा रिक्वायरमेंट चेक करें। कई देशों में e-visa या visa-on-arrival मिलता है। पासपोर्ट वैलिडिटी 6+ महीने होनी चाहिए।';
-  if (q.includes('insurance') || q.includes('इंश्योरेंस')) return 'ट्रेवल इंश्योरेंस जरूरी है - मेडिकल इमरजेंसी, ट्रिप कैंसलेशन, और लॉस्ट लगेज के लिए। पॉलिसी और कवरेज लिमिट्स कम्पेयर करें।';
-  if (q.includes('currency') || q.includes('करेंसी')) return 'एक्सचेंज रेट रिसर्च करें, बैंकों को ट्रेवल की नोटिफाई करें, कुछ कैश लेकर चलें, और बैकअप पेमेंट ऑप्शंस रखें। एटीएम से बेहतर रेट मिलते हैं।';
-  if (q.includes('best place') || q.includes('recommend') || q.includes('सुझाव')) return 'पॉपुलर डेस्टिनेशंस: पेरिस (कल्चर), बाली (बीच), टोक्यो (मॉडर्न), थाईलैंड (बजट-फ्रेंडली), इटली (हिस्ट्री)। आप किस तरह का एक्सपीरियंस चाहते हैं?';
-  if (q.includes('when to visit') || q.includes('कब जाएं')) return 'बेस्ट टाइम डेस्टिनेशन और एक्टिविटीज पर डिपेंड करता है। ज्यादातर जगहों के लिए स्प्रिंग/फॉल बेस्ट हैं। समर बीचे के लिए, विंटर स्कीइंग के लिए।';
-  if (q.includes('solo travel') || q.includes('अकेले')) return 'सोलो ट्रेवल रिवॉर्डिंग है! सेफ डेस्टिनेशंस चुनें, हॉस्टल में रुकें, ग्रुप टूर्स जॉइन करें, होम से कांटेक्ट में रहें, और अपने इंस्टिंक्ट पर भरोसा करें।';
-  if (q.includes('group travel') || q.includes('ग्रुप')) return 'टुगेदर प्लान करें, बजट सेट करें, एक लीडर चुनें, अकॉमोडेशन जल्दी बुक करें, और डिफरेंट प्रेफरेंस के साथ फ्लेक्सिबल रहें।';
-
-  return 'मैं डेस्टिनेशंस, एक्टिविटीज, सीजंस, ट्रांसपोर्ट, अकॉमोडेशन, बजट, सेफ्टी, पैकिंग, वीजा, इंश्योरेंस, और ट्रिप प्लानिंग में हेल्प कर सकता हूँ! आप क्या जानना चाहेंगे?';
+  return response;
 }
 
 // Fallback response generator (static)

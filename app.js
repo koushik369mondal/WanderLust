@@ -230,6 +230,51 @@ app.use((req, res, next) => {
     next();
 });
 
+// No-cache middleware for dynamic HTML pages to prevent browsers or SW from serving stale content
+app.use((req, res, next) => {
+    try {
+        if (req.method === 'GET' && (req.path.startsWith('/listings') || req.path.startsWith('/safety-alerts') || req.path.startsWith('/trip-planner') || req.path.startsWith('/admin'))) {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+            res.set('Pragma', 'no-cache');
+            res.set('Expires', '0');
+        }
+    } catch (e) {
+        console.warn('no-cache middleware error', e && e.message ? e.message : e);
+    }
+    next();
+});
+
+// Listing debug middleware: for GET /listings/:id, wrap res.send to log headers and a small response summary
+app.use((req, res, next) => {
+    try {
+        if (req.method === 'GET' && /^\/listings\/[a-fA-F0-9]{24}(?:\/.*)?$/.test(req.path)) {
+            const start = Date.now();
+            const origSend = res.send.bind(res);
+            res.send = function (body) {
+                try {
+                    console.log(`Listing Debug: ${req.method} ${req.originalUrl} - Response headers before send:`,
+                        res.getHeaders ? res.getHeaders() : {});
+                    let size = 0;
+                    if (typeof body === 'string') size = Buffer.byteLength(body, 'utf8');
+                    else if (body) size = JSON.stringify(body).length;
+                    console.log(`Listing Debug: approx response size ${size} bytes, took ${Date.now() - start}ms`);
+                    // include a short snippet for easier debugging (first 200 chars)
+                    if (typeof body === 'string') {
+                        const snippet = body.replace(/\n/g, ' ').slice(0, 200);
+                        console.log('Listing Debug: snippet:', snippet);
+                    }
+                } catch (e) {
+                    // swallow
+                }
+                return origSend(body);
+            };
+        }
+    } catch (e) {
+        // ignore
+    }
+    next();
+});
+
 // Routes - Compare routes must come BEFORE listing routes
 app.use("/listings", compareRoutes); // for comparison of listings
 app.use("/listings", listingRouter);
