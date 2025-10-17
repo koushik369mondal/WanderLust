@@ -1,6 +1,14 @@
 const Notification = require('../models/notification');
 const NotificationService = require('../services/notificationService');
 
+// Input sanitization helper
+const sanitizeInput = (input) => {
+    if (typeof input === 'string') {
+        return input.replace(/[<>'"&]/g, '').trim().slice(0, 1000); // Remove HTML chars and limit length
+    }
+    return input;
+};
+
 class NotificationController {
     constructor() {
         this.notificationService = new NotificationService();
@@ -15,10 +23,10 @@ class NotificationController {
     async getNotifications(req, res) {
         try {
             const userId = req.user._id;
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-            const status = req.query.status;
-            const type = req.query.type;
+            const page = Math.max(1, Math.min(parseInt(req.query.page) || 1, 100)); // Limit page range
+            const limit = Math.max(1, Math.min(parseInt(req.query.limit) || 20, 50)); // Limit results per page
+            const status = sanitizeInput(req.query.status);
+            const type = sanitizeInput(req.query.type);
 
             const result = await this.notificationService.getUserNotifications(userId, {
                 page,

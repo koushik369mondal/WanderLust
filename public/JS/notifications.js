@@ -527,10 +527,18 @@ class NotificationManager {
         const alertDiv = document.createElement('div');
         alertDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show position-fixed`;
         alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
-        alertDiv.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
+        
+        // Safely set text content to prevent XSS
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message; // Use textContent instead of innerHTML
+        
+        const closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'btn-close';
+        closeButton.setAttribute('data-bs-dismiss', 'alert');
+        
+        alertDiv.appendChild(messageSpan);
+        alertDiv.appendChild(closeButton);
         
         document.body.appendChild(alertDiv);
         

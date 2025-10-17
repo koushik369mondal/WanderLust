@@ -288,7 +288,7 @@ app.use("/notifications", require("./routes/notifications.js"));
 app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
 app.use("/packing-list", require("./routes/packingList.js"));
-app.use("/chatbot", require("./routes/chatbot.js"));
+// app.use("/chatbot", require("./routes/chatbot.js")); // Temporarily disabled for development
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
@@ -397,7 +397,9 @@ io.on('connection', (socket) => {
     
     // Handle notification acknowledgment
     socket.on('notification_seen', (notificationId) => {
-        console.log(`Notification ${notificationId} seen by user`);
+        // Sanitize notification ID before logging to prevent log injection
+        const sanitizedId = String(notificationId).replace(/[\r\n\t]/g, '');
+        console.log('Notification seen by user:', sanitizedId);
     });
     
     socket.on('disconnect', () => {

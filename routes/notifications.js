@@ -3,8 +3,34 @@ const router = express.Router();
 const notificationController = require('../controllers/notifications');
 const { isLoggedIn } = require('../middleware');
 
+// Simple rate limiting middleware
+const rateLimitMap = new Map();
+const rateLimit = (maxRequests = 100, windowMs = 15 * 60 * 1000) => {
+    return (req, res, next) => {
+        const clientId = req.ip + ':' + (req.user ? req.user._id : 'anonymous');
+        const now = Date.now();
+        const windowStart = now - windowMs;
+        
+        if (!rateLimitMap.has(clientId)) {
+            rateLimitMap.set(clientId, []);
+        }
+        
+        const requests = rateLimitMap.get(clientId).filter(time => time > windowStart);
+        
+        if (requests.length >= maxRequests) {
+            return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+        }
+        
+        requests.push(now);
+        rateLimitMap.set(clientId, requests);
+        next();
+    };
+};
+
 // Middleware to ensure user is logged in for all notification routes
 router.use(isLoggedIn);
+// Add rate limiting to prevent abuse
+router.use(rateLimit(50, 15 * 60 * 1000)); // 50 requests per 15 minutes
 
 // Routes
 router.get('/', notificationController.getNotifications.bind(notificationController));
