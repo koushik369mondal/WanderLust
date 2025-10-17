@@ -1382,40 +1382,43 @@ const display = document.getElementById('suggestion-display');
 const suggestedSpot = document.getElementById('suggested-spot');
 const selectedInterests = new Set();
 
-// Simple logic for selecting/deselecting tags
-tags.forEach(tag => {
-    tag.addEventListener('click', () => {
-        const interest = tag.dataset.interest;
-        if (selectedInterests.has(interest)) {
-            selectedInterests.delete(interest);
-            // Remove the 'selected' class on uncheck
-            tag.classList.remove('selected'); 
+// Check if all required elements exist before adding event listeners
+if (suggestBtn && display && suggestedSpot) {
+    // Simple logic for selecting/deselecting tags
+    tags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            const interest = tag.dataset.interest;
+            if (selectedInterests.has(interest)) {
+                selectedInterests.delete(interest);
+                // Remove the 'selected' class on uncheck
+                tag.classList.remove('selected'); 
+            } else {
+                selectedInterests.add(interest);
+                // Add the 'selected' class on check (This triggers the CSS change)
+                tag.classList.add('selected'); 
+            }
+        });
+    });
+
+    // Logic to show the static result (Future API call would go here)
+    suggestBtn.addEventListener('click', () => {
+        if (selectedInterests.size > 0) {
+            // 1. Show the static result display
+            display.style.display = 'block'; 
+            
+            // 2. Update the text based on the selection 
+            suggestedSpot.textContent = `Processing ${selectedInterests.size} interests... (Backend Pending)`;
+            
+            // You can use the actual data attributes for a cleaner display
+            // Example: suggestedSpot.textContent = Array.from(selectedInterests).join(', ') + ' based selection...';
+
         } else {
-            selectedInterests.add(interest);
-            // Add the 'selected' class on check (This triggers the CSS change)
-            tag.classList.add('selected'); 
+            alert('Please select at least one interest!');
+            // Hide the display if the user unselects all tags
+            display.style.display = 'none'; 
         }
     });
-});
-
-// Logic to show the static result (Future API call would go here)
-suggestBtn.addEventListener('click', () => {
-    if (selectedInterests.size > 0) {
-        // 1. Show the static result display
-        display.style.display = 'block'; 
-        
-        // 2. Update the text based on the selection 
-        suggestedSpot.textContent = `Processing ${selectedInterests.size} interests... (Backend Pending)`;
-        
-        // You can use the actual data attributes for a cleaner display
-        // Example: suggestedSpot.textContent = Array.from(selectedInterests).join(', ') + ' based selection...';
-
-    } else {
-        alert('Please select at least one interest!');
-        // Hide the display if the user unselects all tags
-        display.style.display = 'none'; 
-    }
-});
+}
 // END OF NEW SUGGESTION BOX JS LOGIC            
             function showComparisonModal(listings) {
                 const modal = document.createElement('div');
