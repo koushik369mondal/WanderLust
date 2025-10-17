@@ -76,22 +76,16 @@ self.addEventListener('fetch', (event) => {
 
   // Use Network-First strategy for navigation requests (HTML pages)
   if (request.mode === 'navigate') {
+    console.log('SW: navigation request for', url.pathname);
     event.respondWith(
       fetch(request)
         .then(response => {
-          // If the fetch is successful, cache it and return it
-          if (response.ok) {
-            const responseClone = response.clone();
-            caches.open(DYNAMIC_CACHE).then(cache => {
-              cache.put(request, responseClone);
-            });
-          }
+          // Always return the network response for navigation; do not cache HTML pages here
           return response;
         })
         .catch(() => {
           // If the network fails, try to serve from the cache
           return caches.match(request).then(cachedResponse => {
-            // If it's in the cache, serve it. Otherwise, serve the offline page.
             return cachedResponse || caches.match('/offline.html');
           });
         })
