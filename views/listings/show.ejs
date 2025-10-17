@@ -1,13 +1,22 @@
 <% layout('/layouts/boilerplate') %>
 <script>
-  const mapToken = "<%= process.env.MAP_TOKEN || 'dummy_token' %>";
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
   const listing = <%- JSON.stringify(listing) %>;
   
-  console.log('🗺️ Listing data for map:', {
+  console.log('� MapToken loaded:', mapToken ? '✅ Token exists (length: ' + mapToken.length + ')' : '❌ No token');
+  console.log('🗺🗺�️ Listing data for map:', {
     title: listing.title,
     location: listing.location,
     country: listing.country,
     geometry: listing.geometry
+  });
+  
+  // Check if mapboxgl is loaded
+  if (typeof mapboxgl === 'undefined') {
+    console.error('❌ Mapbox GL library not loaded!');
+  } else {
+    console.log('✅ Mapbox GL library loaded');
+  }
   });
   
   // Ensure listing has proper structure for map
@@ -503,7 +512,7 @@
 </div>
 <% } %>
 
-<script src="/JS/map.js"></script>
+<script src="/JS/map.js?v=<%= Date.now() %>"></script>
 
 <script>
 // Enhanced Review Form Functionality

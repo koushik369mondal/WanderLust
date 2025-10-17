@@ -1,76 +1,45 @@
-const CACHE_NAME = 'wanderlust-v1';
-const STATIC_CACHE = 'wanderlust-static-v1';
-const DYNAMIC_CACHE = 'wanderlust-dynamic-v1';
+// ============================================
+// 🔴 SELF-DESTRUCTING SERVICE WORKER
+// ============================================
+// This service worker immediately unregisters itself
+// and clears all caches to prevent cache corruption.
+// DO NOT restore old caching code!
+// ============================================
 
-// Assets to cache immediately (only static assets - avoid dynamic routes which may return 5xx)
-const STATIC_ASSETS = [
-  '/',
-  '/CSS/style.css',
-  '/CSS/admin-dashboard.css',
-  '/CSS/holiday.css',
-  '/CSS/loading.css',
-  '/CSS/packingList.css',
-  '/CSS/rating.css',
-  '/JS/script.js',
-  '/JS/admin-dashboard.js',
-  '/JS/loading.js',
-  '/JS/map.js',
-  '/JS/packingList.js',
-  '/JS/weather.js',
-  '/JS/offlineManager.js',
-  '/images/travel_cover-1500x1000.jpeg',
-  '/images/compass.png',
-  '/manifest.json',
-  '/offline.html' // Add the offline fallback page
-];
+console.log('🔴 SERVICE WORKER: Self-destruct sequence initiated');
 
-// Install event - cache static assets
+// Immediately skip waiting and activate
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-  // Cache assets individually and tolerate failures so one missing/500 asset won't fail the whole install
-  event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then(async (cache) => {
-        console.log('Service Worker: Caching static assets (individual, tolerant)');
-        const results = await Promise.allSettled(STATIC_ASSETS.map(async (asset) => {
-          try {
-            // Use cache.add which fetches and stores the response
-            await cache.add(asset);
-            return { asset, status: 'fulfilled' };
-          } catch (err) {
-            console.error('Service Worker: Failed to cache asset', asset, err && err.message ? err.message : err);
-            return { asset, status: 'rejected', reason: err };
-          }
-        }));
-        // Optionally, log summary of failures
-        const failures = results.filter(r => r.status === 'rejected');
-        if (failures.length) {
-          console.warn(`Service Worker: ${failures.length} asset(s) failed to cache during install. See earlier errors.`);
-        }
-      })
-      .then(() => self.skipWaiting())
-  );
+  console.log('🔴 SERVICE WORKER: Installing self-destruct version...');
+  self.skipWaiting(); // Force immediate activation
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
+  console.log('🔴 SERVICE WORKER: Activating self-destruct...');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-            console.log('Service Worker: Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
+    (async () => {
+      // Delete ALL caches
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map(cacheName => {
+          console.log(`🔴 SERVICE WORKER: Deleting cache: ${cacheName}`);
+          return caches.delete(cacheName);
         })
       );
-    }).then(() => self.clients.claim())
+      
+      // Unregister this service worker
+      const registrations = await self.registration.unregister();
+      console.log('🔴 SERVICE WORKER: Self-destructed successfully!', registrations);
+      
+      // Claim all clients to take control immediately
+      return self.clients.claim();
+    })()
   );
 });
 
-// Fetch event - serve from cache or network
+// No fetch event handler - let all requests go to network
 self.addEventListener('fetch', (event) => {
+<<<<<<< HEAD
   const { request } = event;
   const url = new URL(request.url);
 
@@ -233,4 +202,7 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+=======
+  // Do nothing - all requests pass through to network
+>>>>>>> db0e0818c2c9452899f84576225035f060b3fb67
 });

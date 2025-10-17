@@ -1,8 +1,28 @@
-// Check if mapToken is available
-if (!mapToken) {
-    console.error('Mapbox token is not available');
-    document.getElementById('map').innerHTML = '<p>Map cannot be loaded due to missing token</p>';
-} else {
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🗺️ Map.js initializing...');
+    
+    // Check if mapToken is available
+    if (!mapToken) {
+        console.error('❌ Mapbox token is not available');
+        const mapEl = document.getElementById('map');
+        if (mapEl) {
+            mapEl.innerHTML = '<div class="alert alert-warning m-3">Map cannot be loaded due to missing token</div>';
+        }
+        return;
+    }
+    
+    // Check if mapboxgl is loaded
+    if (typeof mapboxgl === 'undefined') {
+        console.error('❌ Mapbox GL JS library not loaded');
+        const mapEl = document.getElementById('map');
+        if (mapEl) {
+            mapEl.innerHTML = '<div class="alert alert-warning m-3">Map library not loaded</div>';
+        }
+        return;
+    }
+    
+    console.log('✅ Setting Mapbox access token');
     mapboxgl.accessToken = mapToken;
 
     // Function to get coordinates
@@ -104,7 +124,9 @@ if (!mapToken) {
         console.log('📍 Marker placed at:', coordinates);
     }).catch(error => {
         console.error('❌ Failed to get coordinates:', error);
-        document.getElementById('map').innerHTML = 
-            '<p>Unable to load map for this location</p>';
+        const mapEl = document.getElementById('map');
+        if (mapEl) {
+            mapEl.innerHTML = '<div class="alert alert-warning m-3">Unable to load map for this location</div>';
+        }
     });
-}
+});

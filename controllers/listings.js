@@ -328,6 +328,13 @@ module.exports.showListing = async (req, res, next) => {
     console.log("Request URL:", req.url);
     console.log("Request method:", req.method);
     
+    // Validate MongoDB ObjectId format (24 hex characters)
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      console.log("❌ Invalid ObjectId format - likely from corrupted cache");
+      req.flash("error", "Invalid listing ID format! Please clear your browser cache.");
+      return res.redirect("/listings");
+    }
+    
     const listing = await Listing.findById(id)
       .populate({
         path: "reviews",
@@ -337,7 +344,7 @@ module.exports.showListing = async (req, res, next) => {
 
 
     if (!listing) {
-      console.log(" Listing not found in database");
+      console.log("❌ Listing not found in database");
       req.flash("error", "Listing not found!");
       return res.redirect("/listings");
     }
