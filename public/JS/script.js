@@ -10,38 +10,45 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ------------------
-    // SERVICE WORKER REGISTRATION
+    // SERVICE WORKER - DISABLED FOR DIRECT DATABASE FETCHING
     // ------------------
+    // Unregister any existing service workers to prevent caching issues
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then((registration) => {
-                    console.log('Service Worker registered successfully:', registration.scope);
-
-                    // Handle updates
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // New version available
-                                showUpdateToast();
-                            }
-                        });
-                    });
-                })
-                .catch((error) => {
-                    console.log('Service Worker registration failed:', error);
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister().then(function(success) {
+                    if (success) {
+                        console.log('Service Worker unregistered successfully');
+                    }
                 });
+            }
         });
     }
 
-    // PWA Install Prompt
+    // Clear all caches to ensure fresh data from database
+    if ('caches' in window) {
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    console.log('Deleting cache:', cacheName);
+                    return caches.delete(cacheName);
+                })
+            );
+        }).then(function() {
+            console.log('All caches cleared - fetching fresh data from database');
+        });
+    }
+
+    // PWA Install Prompt - DISABLED (offline features removed)
+    // Users will always fetch fresh data from the database
+    /*
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         showInstallPrompt();
     });
+    */
 
     function showInstallPrompt() {
         const installToast = document.createElement('div');

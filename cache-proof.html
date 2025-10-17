@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderLust - Cache Issue Proof</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .error-section {
+            background: #fee;
+            border-left: 5px solid #f44336;
+        }
+        .success-section {
+            background: #efe;
+            border-left: 5px solid #4caf50;
+        }
+        .warning-section {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+        }
+        .info-section {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+        }
+        .id-list {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .id-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .id-item.invalid {
+            background: #ffebee;
+            border-left: 3px solid #f44336;
+        }
+        .id-item.valid {
+            background: #e8f5e9;
+            border-left: 3px solid #4caf50;
+        }
+        .icon {
+            font-size: 1.5rem;
+        }
+        a.test-link {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        a.test-link:hover {
+            background: #e3f2fd;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-danger {
+            background: #f44336;
+        }
+        .btn-success {
+            background: #4caf50;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .steps {
+            counter-reset: step;
+            list-style: none;
+        }
+        .steps li {
+            counter-increment: step;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            position: relative;
+            padding-left: 60px;
+        }
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        #cache-status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 WanderLust Cache Issue - Proof & Solution</h1>
+        <p class="subtitle">Your browser cache has corrupted listing IDs. Here's the proof and how to fix it.</p>
+
+        <div class="section error-section">
+            <h2>❌ Invalid IDs from Your Browser Cache</h2>
+            <p><strong>These IDs DO NOT EXIST in the database:</strong></p>
+            <div class="id-list">
+                <div class="id-item invalid">
+                    <span class="icon">❌</span>
+                    <code>68f0440df427bea75937500b</code>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f0440df427bea75937500b" class="test-link" target="_blank">Test (will fail)</a>
+                </div>
+                <div class="id-item invalid">
+                    <span class="icon">❌</span>
+                    <code>68f0440df427bea75937500d</code>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f0440df427bea75937500d" class="test-link" target="_blank">Test (will fail)</a>
+                </div>
+                <div class="id-item invalid">
+                    <span class="icon">❌</span>
+                    <code>68f0440df427bea75937500e</code>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f0440df427bea75937500e" class="test-link" target="_blank">Test (will fail)</a>
+                </div>
+                <div class="id-item invalid">
+                    <span class="icon">❌</span>
+                    <code>68f0440df427bea75937501f</code>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f0440df427bea75937501f" class="test-link" target="_blank">Test (will fail)</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section success-section">
+            <h2>✅ Valid IDs from Your Database</h2>
+            <p><strong>These IDs ACTUALLY EXIST and will work:</strong></p>
+            <div class="id-list">
+                <div class="id-item valid">
+                    <span class="icon">✅</span>
+                    <code>68f1a3b87e4d451f0407a139</code>
+                    <span>Cozy Beachfront Cottage</span>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f1a3b87e4d451f0407a139" class="test-link" target="_blank">Test (should work)</a>
+                </div>
+                <div class="id-item valid">
+                    <span class="icon">✅</span>
+                    <code>68f1a3b87e4d451f0407a13a</code>
+                    <span>Modern Loft in Downtown</span>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f1a3b87e4d451f0407a13a" class="test-link" target="_blank">Test (should work)</a>
+                </div>
+                <div class="id-item valid">
+                    <span class="icon">✅</span>
+                    <code>68f1a3b87e4d451f0407a13b</code>
+                    <span>Mountain Retreat</span>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f1a3b87e4d451f0407a13b" class="test-link" target="_blank">Test (should work)</a>
+                </div>
+                <div class="id-item valid">
+                    <span class="icon">✅</span>
+                    <code>68f1a3b87e4d451f0407a13c</code>
+                    <span>Historic Villa in Tuscany</span>
+                    <span style="flex:1"></span>
+                    <a href="http://localhost:8080/listings/68f1a3b87e4d451f0407a13c" class="test-link" target="_blank">Test (should work)</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section warning-section">
+            <h2>⚠️ Cache Status Check</h2>
+            <div id="cache-status">
+                <p>Checking your browser cache...</p>
+            </div>
+            <button class="btn btn-success" onclick="checkCache()">🔍 Check Cache Now</button>
+            <button class="btn btn-danger" onclick="clearCache()">🧹 Clear All Cache</button>
+        </div>
+
+        <div class="section info-section">
+            <h2>🚀 How to Fix This Issue</h2>
+            <ol class="steps">
+                <li>
+                    <strong>Press Ctrl + Shift + Delete</strong><br>
+                    This opens your browser's clear browsing data dialog
+                </li>
+                <li>
+                    <strong>Select "All time" as the time range</strong><br>
+                    We need to clear everything, not just recent cache
+                </li>
+                <li>
+                    <strong>Check these boxes:</strong><br>
+                    ✅ Cookies and other site data<br>
+                    ✅ Cached images and files<br>
+                    ✅ Hosted app data (if available)
+                </li>
+                <li>
+                    <strong>Click "Clear data"</strong><br>
+                    This will remove all cached content
+                </li>
+                <li>
+                    <strong>Close your browser completely</strong><br>
+                    Not just the tab - close the entire browser window
+                </li>
+                <li>
+                    <strong>Reopen browser and test</strong><br>
+                    Visit: <a href="http://localhost:8080/listings">http://localhost:8080/listings</a>
+                </li>
+            </ol>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="http://localhost:8080/listings" class="btn">🏠 Go to Main Listings Page</a>
+            <button class="btn btn-danger" onclick="clearCache()">🧹 Clear Cache & Reload</button>
+        </div>
+    </div>
+
+    <script>
+        async function checkCache() {
+            const statusDiv = document.getElementById('cache-status');
+            let issues = [];
+            let html = '<h3>Cache Analysis:</h3>';
+
+            // Check Service Workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                if (registrations.length > 0) {
+                    issues.push(`❌ ${registrations.length} Service Worker(s) active`);
+                    html += `<p style="color: #f44336;">❌ Service Workers found: ${registrations.length}</p>`;
+                } else {
+                    html += '<p style="color: #4caf50;">✅ No Service Workers (Good!)</p>';
+                }
+            }
+
+            // Check Cache Storage
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                if (cacheNames.length > 0) {
+                    issues.push(`❌ ${cacheNames.length} Cache(s) found: ${cacheNames.join(', ')}`);
+                    html += `<p style="color: #f44336;">❌ Caches found: ${cacheNames.join(', ')}</p>`;
+                } else {
+                    html += '<p style="color: #4caf50;">✅ No caches (Good!)</p>';
+                }
+            }
+
+            // Check IndexedDB
+            if ('indexedDB' in window) {
+                const databases = await indexedDB.databases();
+                const wanderlustDB = databases.find(db => db.name.includes('WanderLust'));
+                if (wanderlustDB) {
+                    issues.push('❌ WanderLust IndexedDB found');
+                    html += `<p style="color: #f44336;">❌ IndexedDB found: ${wanderlustDB.name}</p>`;
+                } else {
+                    html += '<p style="color: #4caf50;">✅ No WanderLust IndexedDB (Good!)</p>';
+                }
+            }
+
+            // Check localStorage
+            if (localStorage.length > 0) {
+                issues.push(`⚠️ ${localStorage.length} localStorage items`);
+                html += `<p style="color: #ffc107;">⚠️ localStorage has ${localStorage.length} items</p>`;
+            }
+
+            if (issues.length > 0) {
+                html += '<hr><h4 style="color: #f44336;">❌ CACHE ISSUES DETECTED!</h4>';
+                html += '<p><strong>You MUST clear your cache to fix the listing issue.</strong></p>';
+            } else {
+                html += '<hr><h4 style="color: #4caf50;">✅ CACHE IS CLEAN!</h4>';
+                html += '<p>Your cache looks good. Listings should work now!</p>';
+            }
+
+            statusDiv.innerHTML = html;
+        }
+
+        async function clearCache() {
+            const statusDiv = document.getElementById('cache-status');
+            statusDiv.innerHTML = '<p>🧹 Clearing cache...</p>';
+
+            try {
+                // Unregister service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                    }
+                }
+
+                // Clear caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let cacheName of cacheNames) {
+                        await caches.delete(cacheName);
+                    }
+                }
+
+                // Clear IndexedDB
+                if ('indexedDB' in window) {
+                    const databases = await indexedDB.databases();
+                    for (let db of databases) {
+                        indexedDB.deleteDatabase(db.name);
+                    }
+                }
+
+                // Clear localStorage and sessionStorage
+                localStorage.clear();
+                sessionStorage.clear();
+
+                statusDiv.innerHTML = '<p style="color: #4caf50;">✅ Cache cleared! Reloading in 2 seconds...</p>';
+                
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 2000);
+
+            } catch (error) {
+                statusDiv.innerHTML = `<p style="color: #f44336;">❌ Error: ${error.message}</p>
+                <p>Please clear cache manually using Ctrl + Shift + Delete</p>`;
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', checkCache);
+    </script>
+</body>
+</html>
