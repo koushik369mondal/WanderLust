@@ -10,18 +10,37 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ------------------
-    // SERVICE WORKER - DISABLED FOR DIRECT DATABASE FETCHING
+    // SERVICE WORKER - SELF-DESTRUCT MODE
     // ------------------
-    // Unregister any existing service workers to prevent caching issues
+    // Force load the self-destructing service worker to clean up old caches
     if ('serviceWorker' in navigator) {
+        console.log('🔴 Loading self-destructing service worker...');
+        
+        // First, unregister all existing service workers
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) {
-                registration.unregister().then(function(success) {
+            const unregisterPromises = registrations.map(registration => {
+                return registration.unregister().then(function(success) {
                     if (success) {
-                        console.log('Service Worker unregistered successfully');
+                        console.log('✅ Old Service Worker unregistered');
                     }
+                    return success;
                 });
-            }
+            });
+            
+            // After unregistering, force register the self-destructing version
+            return Promise.all(unregisterPromises).then(() => {
+                // Add cache-busting parameter to force fresh load of sw.js
+                return navigator.serviceWorker.register('/sw.js?v=' + Date.now(), {
+                    scope: '/',
+                    updateViaCache: 'none' // Never use cached service worker
+                }).then(function(registration) {
+                    console.log('🔴 Self-destructing Service Worker registered:', registration);
+                    // Force immediate update
+                    registration.update();
+                }).catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
         });
     }
 
