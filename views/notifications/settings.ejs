@@ -1,0 +1,338 @@
+<% layout("/layouts/boilerplate") %>
+<link rel="stylesheet" href="/CSS/notifications.css">
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="mb-4">
+                <h2>
+                    <i class="fas fa-cog text-primary me-2"></i>
+                    Notification Settings
+                </h2>
+                <p class="text-muted">Customize how you receive notifications from WanderLust.</p>
+            </div>
+
+            <!-- Settings Form -->
+            <form id="notificationSettingsForm" class="needs-validation" novalidate>
+                <!-- Email Notifications -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-envelope me-2"></i>
+                            Email Notifications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="emailNewReview" 
+                                           name="email[newReview]" <%= settings.email.newReview ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="emailNewReview">
+                                        <strong>New Reviews</strong>
+                                        <br><small class="text-muted">When someone reviews your listing</small>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="emailBadgeEarned" 
+                                           name="email[badgeEarned]" <%= settings.email.badgeEarned ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="emailBadgeEarned">
+                                        <strong>Badge Achievements</strong>
+                                        <br><small class="text-muted">When you earn a new badge</small>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="emailWishlistDiscount" 
+                                           name="email[wishlistDiscount]" <%= settings.email.wishlistDiscount ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="emailWishlistDiscount">
+                                        <strong>Wishlist Discounts</strong>
+                                        <br><small class="text-muted">When wishlist items go on sale</small>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="emailSystemAnnouncements" 
+                                           name="email[systemAnnouncements]" <%= settings.email.systemAnnouncements ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="emailSystemAnnouncements">
+                                        <strong>System Announcements</strong>
+                                        <br><small class="text-muted">Important updates and news</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="emailNewsletter" 
+                                   name="email[newsletter]" <%= settings.email.newsletter ? 'checked' : '' %>>
+                            <label class="form-check-label" for="emailNewsletter">
+                                <strong>Newsletter</strong>
+                                <br><small class="text-muted">Weekly travel tips and destination highlights</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Push Notifications -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-mobile-alt me-2"></i>
+                            Push Notifications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pushNewReview" 
+                                           name="push[newReview]" <%= settings.push.newReview ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="pushNewReview">
+                                        <strong>New Reviews</strong>
+                                        <br><small class="text-muted">Instant notifications for reviews</small>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pushBadgeEarned" 
+                                           name="push[badgeEarned]" <%= settings.push.badgeEarned ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="pushBadgeEarned">
+                                        <strong>Badge Achievements</strong>
+                                        <br><small class="text-muted">Celebrate your achievements</small>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pushWishlistDiscount" 
+                                           name="push[wishlistDiscount]" <%= settings.push.wishlistDiscount ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="pushWishlistDiscount">
+                                        <strong>Wishlist Discounts</strong>
+                                        <br><small class="text-muted">Don't miss great deals</small>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="pushSystemAnnouncements" 
+                                           name="push[systemAnnouncements]" <%= settings.push.systemAnnouncements ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="pushSystemAnnouncements">
+                                        <strong>System Announcements</strong>
+                                        <br><small class="text-muted">Critical updates only</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- In-App Notifications -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-bell me-2"></i>
+                            In-App Notifications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="inAppNewReview" 
+                                           name="inApp[newReview]" <%= settings.inApp.newReview ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="inAppNewReview">
+                                        <strong>New Reviews</strong>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="inAppNewRating" 
+                                           name="inApp[newRating]" <%= settings.inApp.newRating ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="inAppNewRating">
+                                        <strong>New Ratings</strong>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="inAppListingLiked" 
+                                           name="inApp[listingLiked]" <%= settings.inApp.listingLiked ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="inAppListingLiked">
+                                        <strong>Listing Likes</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="inAppBadgeEarned" 
+                                           name="inApp[badgeEarned]" <%= settings.inApp.badgeEarned ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="inAppBadgeEarned">
+                                        <strong>Badge Achievements</strong>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="inAppWishlistDiscount" 
+                                           name="inApp[wishlistDiscount]" <%= settings.inApp.wishlistDiscount ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="inAppWishlistDiscount">
+                                        <strong>Wishlist Discounts</strong>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="inAppSystemAnnouncements" 
+                                           name="inApp[systemAnnouncements]" <%= settings.inApp.systemAnnouncements ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="inAppSystemAnnouncements">
+                                        <strong>System Announcements</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between">
+                    <a href="/notifications" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Back to Notifications
+                    </a>
+                    
+                    <div>
+                        <button type="button" id="resetToDefaults" class="btn btn-outline-warning me-2">
+                            <i class="fas fa-undo me-2"></i>
+                            Reset to Defaults
+                        </button>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('notificationSettingsForm');
+    const resetBtn = document.getElementById('resetToDefaults');
+    
+    // Handle form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const settings = {
+            email: {},
+            push: {},
+            inApp: {}
+        };
+        
+        // Parse form data
+        for (let [key, value] of formData.entries()) {
+            const matches = key.match(/(\w+)\[(\w+)\]/);
+            if (matches) {
+                const [, category, setting] = matches;
+                settings[category][setting] = value === 'on';
+            }
+        }
+        
+        // Include unchecked checkboxes as false
+        ['email', 'push', 'inApp'].forEach(category => {
+            const checkboxes = form.querySelectorAll(`input[name^="${category}["]`);
+            checkboxes.forEach(checkbox => {
+                const settingName = checkbox.name.match(/\[(\w+)\]/)[1];
+                if (!settings[category].hasOwnProperty(settingName)) {
+                    settings[category][settingName] = false;
+                }
+            });
+        });
+        
+        try {
+            const response = await fetch('/notifications/settings', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(settings)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert('Settings saved successfully!', 'success');
+            } else {
+                showAlert('Error saving settings: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            showAlert('Error saving settings. Please try again.', 'error');
+        }
+    });
+    
+    // Reset to defaults
+    resetBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to reset all settings to defaults?')) {
+            // Reset all checkboxes to default values
+            const defaults = {
+                email: {
+                    newReview: true,
+                    badgeEarned: true,
+                    wishlistDiscount: true,
+                    systemAnnouncements: true,
+                    newsletter: true
+                },
+                push: {
+                    newReview: true,
+                    badgeEarned: true,
+                    wishlistDiscount: true,
+                    systemAnnouncements: false,
+                    newsletter: false
+                },
+                inApp: {
+                    newReview: true,
+                    newRating: true,
+                    listingLiked: true,
+                    badgeEarned: true,
+                    wishlistDiscount: true,
+                    systemAnnouncements: true,
+                    newsletter: true
+                }
+            };
+            
+            Object.keys(defaults).forEach(category => {
+                Object.keys(defaults[category]).forEach(setting => {
+                    const checkbox = form.querySelector(`input[name="${category}[${setting}]"]`);
+                    if (checkbox) {
+                        checkbox.checked = defaults[category][setting];
+                    }
+                });
+            });
+        }
+    });
+    
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        const container = document.querySelector('.container');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+});
+</script>

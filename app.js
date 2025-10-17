@@ -31,6 +31,10 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_
 
 const express = require("express");
 const app = express();
+const http = require("http");
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+const io = socketIo(server);
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
@@ -280,10 +284,11 @@ app.use("/listings", compareRoutes); // for comparison of listings
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/notifications", require("./routes/notifications.js"));
 app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
 app.use("/packing-list", require("./routes/packingList.js"));
-app.use("/chatbot", require("./routes/chatbot.js"));
+// app.use("/chatbot", require("./routes/chatbot.js")); // Temporarily disabled for development
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
@@ -367,7 +372,7 @@ app.use((err, req, res, next) => {
 
 
 // Set up cron job for reminder notifications
-const notificationService = require('./services/notificationService');
+const notificationService = require('./services/notificationServiceNew');
 cron.schedule('0 9 * * *', async () => {
     console.log('Running daily reminder notification check...');
     try {
@@ -378,9 +383,37 @@ cron.schedule('0 9 * * *', async () => {
     }
 });
 
+// Socket.io configuration for real-time notifications
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+    
+    // Join user to their personal room for notifications
+    socket.on('join', (userId) => {
+        if (userId) {
+            socket.join(`user_${userId}`);
+            console.log(`User ${userId} joined their notification room`);
+        }
+    });
+    
+    // Handle notification acknowledgment
+    socket.on('notification_seen', (notificationId) => {
+        // Sanitize notification ID before logging to prevent log injection
+        const sanitizedId = String(notificationId).replace(/[\r\n\t]/g, '');
+        console.log('Notification seen by user:', sanitizedId);
+    });
+    
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+});
+
+// Make io available globally for notification service
+global.io = io;
+
 const { seedListings } = require('./init/data');
-app.listen(8080, async () => {
+server.listen(8080, async () => {
     await seedListings();
     console.log("Server is running on port 8080");
     console.log("Visit: http://localhost:8080/listings");
+    console.log("Socket.io server ready for real-time notifications ⚡");
 });
