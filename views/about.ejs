@@ -2,12 +2,32 @@
 
 <style>
   .hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: rgba(0, 5, 13, 0.566) !important; /* Darker transparency */
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
+
     color: white;
     padding: 5rem 0;
     position: relative;
     overflow: hidden;
   }
+    [data-theme="dark"] .hero-section {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+
+}
+[data-theme="light"] .hero-section {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgb(6, 5, 5) !important; /* Ensure text is white */
+    text-shadow: 2px 2px 4px rgba(11, 2, 2, 0.956);
+
+}
+
   
   .hero-section::before {
     content: '';
@@ -37,6 +57,23 @@
     overflow: hidden;
     transition: all 0.4s ease;
   }
+    [data-theme="dark"] .hero-section {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+
+}
+[data-theme="light"] .hero-section {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgb(6, 5, 5) !important; /* Ensure text is white */
+    text-shadow: 2px 2px 4px rgba(11, 2, 2, 0.956);
+
+}
+
   
   .testimonial-card::before {
     content: '';
@@ -57,7 +94,12 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #fe424d, #667eea);
+        background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(17, 112, 136, 0.9),
+      rgba(9, 72, 80, 0.9)
+    ),;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,6 +109,10 @@
     margin: 0 auto 1rem;
     border: 3px solid rgba(255,255,255,0.3);
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+    -webkit-text-fill-color: #f9f7f7;
+
+
   }
   
   .testimonial-text {
@@ -74,18 +120,20 @@
     font-size: 1.1rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
-    color: #2c3e50;
+    color: #000305;
+    text-shadow: 2px 2px 4px rgba(4, 0, 0, 0.956);
+
   }
   
   .user-name {
     font-weight: 700;
-    color: #fe424d;
+    color: #030000;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
   }
   
   .user-location {
-    color: #667eea;
+    color: #fdfdfe;
     font-size: 0.9rem;
     display: flex;
     align-items: center;
@@ -94,20 +142,24 @@
   }
   
   .stats-section {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: rgba(0, 5, 13, 0.566) !important; /* Darker transparency */
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
+    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
     color: white;
-    padding: 4rem 0;
+    padding: 4rem ;
   }
   
   .stat-card {
     text-align: center;
     padding: 2rem;
+    color:#030000;
   }
   
   .stat-number {
     font-size: 3rem;
     font-weight: 700;
-    color: #fe424d;
+    color: #f8f7f7;
     display: block;
   }
   
@@ -116,6 +168,7 @@
     opacity: 0.9;
     text-transform: uppercase;
     letter-spacing: 1px;
+    color:#f5f7fa;
   }
   
   .section-title {
@@ -141,10 +194,12 @@
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 1rem;
-    padding: 2rem;
+    padding: 1rem;
     text-align: center;
     transition: all 0.3s ease;
     height: 100%;
+    -webkit-text-fill-color: #090000;
+
   }
   
   .feature-card:hover {
@@ -154,18 +209,23 @@
   
   .feature-icon {
     font-size: 3rem;
-    color: #fe424d;
+    color: #fbfafa;
+    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
     margin-bottom: 1rem;
   }
   
+  
   .team-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    background: linear-gradient(135deg, rgba(5, 0, 0, 0.1), rgba(220, 228, 233, 0.952));
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 1.5rem;
     padding: 2rem;
     text-align: center;
     transition: all 0.4s ease;
+    -webkit-text-fill-color: #090000;
+
+    
   }
   
   .team-card:hover {
@@ -177,7 +237,12 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+        background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(17, 112, 136, 0.9),
+      rgba(9, 72, 80, 0.9)
+    ),;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -190,7 +255,14 @@
   }
   
   .mission-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+      background: linear-gradient(
+      135deg,
+      #89CFF0(2, 42, 87, 0.9),
+      #3B82F6(36, 67, 141, 0.9),
+      #1E3A8A(61, 208, 228, 0.9)
+    ),;
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
     padding: 4rem;
     margin: 2rem 0;
@@ -202,6 +274,7 @@
     background-clip: padding-box;
     transition: all 0.5s ease;
   }
+
   
   .mission-card:hover {
     transform: translateY(-10px) scale(1.02);
@@ -215,7 +288,12 @@
     left: 0;
     width: 100%;
     height: 6px;
-    background: linear-gradient(90deg, #fe424d, #667eea, #764ba2, #fe424d);
+        background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(17, 112, 136, 0.9),
+      rgba(9, 72, 80, 0.9)
+    ),;
     background-size: 200% 100%;
     animation: gradientShift 3s ease-in-out infinite;
   }
@@ -275,7 +353,7 @@
     position: absolute;
     width: 4px;
     height: 4px;
-    background: linear-gradient(45deg, #fe424d, #667eea);
+    background: linear-gradient(45deg, #fe424d, #00020a);
     border-radius: 50%;
     animation: particleFloat 4s ease-in-out infinite;
   }
@@ -319,11 +397,33 @@
   }
   
   .cta-section {
-    background: linear-gradient(135deg, #fe424d, #667eea);
+        background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(17, 112, 136, 0.9),
+      rgba(9, 72, 80, 0.9)
+    ),;
     color: white;
     padding: 4rem 0;
     text-align: center;
   }
+    [data-theme="dark"] .cta-section {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+
+}
+[data-theme="light"] .cta-section {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgb(6, 5, 5) !important; /* Ensure text is white */
+    text-shadow: 2px 2px 4px rgba(11, 2, 2, 0.956);
+
+}
+
 </style>
 
 <!-- Hero Section -->
@@ -424,7 +524,20 @@
 </section>
 
 <!-- Mission Section -->
-<section class="py-5" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+<section class="py-5" style="background: linear-gradient(
+      135deg,
+      rgba(11, 30, 30, 0.9),
+      rgba(99, 159, 200, 0.9),
+      rgba(245, 247, 247, 0.9)
+    )
+
+;
+text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+  -webkit-text-fill-color: #f9f7f7;
+  padding:4rem ;"
+  
+
+>
   <div class="container">
     <div class="mission-card">
       <div class="mission-particles">
@@ -569,7 +682,13 @@
 </section>
 
 <!-- Team Section -->
-<section class="py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+<section class="py-5" style=" background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(17, 112, 136, 0.9),
+      rgba(9, 72, 80, 0.9)
+    ),
+; color: white;">
   <div class="container">
     <h2 class="section-title display-5 fw-bold">👥 Meet Our Team</h2>
     <div class="row g-4">
