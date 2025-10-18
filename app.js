@@ -288,7 +288,7 @@ app.use("/notifications", require("./routes/notifications.js"));
 app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
 app.use("/packing-list", require("./routes/packingList.js"));
-// app.use("/chatbot", require("./routes/chatbot.js")); // Temporarily disabled for development
+app.use("/chatbot", require("./routes/chatbot.js")); // Re-enabled with voice features
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
