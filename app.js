@@ -219,6 +219,15 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.searchQuery = req.query.search || '';
 
+    // Debug logging for i18n
+    if (req.query.lang) {
+        console.log(`🌍 Language parameter detected: ${req.query.lang}`);
+        console.log(`🌍 Current locale: ${i18n.getLocale(req)}`);
+        // Set the locale manually if it's in the query parameter
+        i18n.setLocale(req, req.query.lang);
+        console.log(`🌍 Locale set to: ${i18n.getLocale(req)}`);
+    }
+
     // Language switching helper
     res.locals.buildLangUrl = (lang) => {
         const currentUrl = req.originalUrl.split('?')[0];

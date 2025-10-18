@@ -26,7 +26,7 @@
         <li class="nav-item">
           <a class="nav-link" href="/listings/about">
             <i class="fa-solid fa-info-circle"></i>
-            About
+            <%= __('about') %>
           </a>
         </li>
 
@@ -201,23 +201,20 @@
       <div class="utility-controls">
         <!-- Language Dropdown -->
         <div class="language-dropdown dropdown">
-          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle">
             <i class="fa-solid fa-globe"></i>
+            <span id="currentLanguageDisplay"><%= languageMap[getLocale()].flag %> <%= languageMap[getLocale()].name %></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <% if (typeof languageMap !== 'undefined' && Object.keys(languageMap).length) { %>
-              <% Object.keys(languageMap).forEach(lang => { %>
-                <li>
-                  <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
-                    <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
-                  </a>
-                </li>
-              <% }); %>
-            <% } else { %>
+          <ul class="dropdown-menu dropdown-menu-end" id="languageDropdown">
+            <% Object.keys(languageMap).forEach(lang => { %>
               <li>
-                <a class="dropdown-item active" href="#">English</a>
+                <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
+                  <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
+                </a>
               </li>
-            <% } %>
+            <% }); %>
+          </ul>
+        </div>
           </ul>
         </div>
 
