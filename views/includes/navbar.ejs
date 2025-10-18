@@ -1,15 +1,16 @@
 
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top" role="navigation" id="navigation" aria-label="Main navigation">
   <div class="container-fluid">
-    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
-      <i class="fa-regular fa-compass me-2"></i>
+    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings" aria-label="WanderLust - Go to home page">
+      <i class="fa-regular fa-compass me-2" aria-hidden="true"></i>
       <span class="fw-bold"><%= __('wanderlust') %></span>
     </a>
 
     <!-- Mobile Toggle -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle main navigation menu">
       <span class="navbar-toggler-icon"></span>
+      <span class="sr-only">Menu</span>
     </button>
 
     <!-- Collapsible Content -->
@@ -31,11 +32,13 @@
 
         <!-- Travel Tools Dropdown -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-tools"></i>
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" 
+             aria-expanded="false" aria-haspopup="true" id="travel-tools-dropdown"
+             aria-label="Travel tools menu">
+            <i class="fa-solid fa-tools" aria-hidden="true"></i>
             Travel Tools
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" aria-labelledby="travel-tools-dropdown" role="menu">
             <li>
               <a class="dropdown-item" href="/trip-planner">
                 <i class="fa-solid fa-route me-2"></i>Trip Planner
@@ -88,14 +91,19 @@
 
 
       <!-- Search Bar -->
-      <div class="search-container me-3">
-        <form role="search" method="GET" action="/listings">
+      <div class="search-container me-3" id="search">
+        <form role="search" method="GET" action="/listings" aria-label="Search destinations">
           <div class="position-relative">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input class="search-input" type="search" name="search" placeholder="<%= __('search_destinations') %>"
-              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off" />
-            <button class="search-btn" type="submit">
-              <%= __('search') %>
+            <label for="search-input" class="sr-only">Search destinations</label>
+            <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+            <input class="search-input" type="search" name="search" id="search-input"
+              placeholder="<%= __('search_destinations') %>"
+              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" 
+              autocomplete="off" 
+              aria-describedby="search-help" />
+            <div id="search-help" class="sr-only">Search for travel destinations, accommodations, and experiences</div>
+            <button class="search-btn" type="submit" aria-label="Submit search">
+              <span aria-hidden="true"><%= __('search') %></span>
             </button>
           </div>
           <div class="search-suggestions" id="searchSuggestions"></div>

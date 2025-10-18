@@ -4,6 +4,25 @@
 
 This pull request implements a comprehensive dark mode theme system for the WanderLust platform, featuring CSS custom properties architecture, modern theme toggle component, cross-component theming, and full accessibility compliance. The implementation provides users with a seamless dark mode experience while maintaining all existing functionality.
 
+## 🖼️ Visual Showcase
+
+### Dark Mode Implementation Preview
+![Dark Mode Showcase](./screenshots/homepage-light-mode.png)
+*WanderLust homepage comparison: Light mode interface*
+
+![Dark Mode Showcase](./screenshots/homepage-dark-mode.png)
+*WanderLust homepage in dark mode with preserved glassmorphism effects*
+
+### Theme Toggle Component
+![Theme Toggle Animation](./screenshots/theme-toggle-animation.gif)
+*Smooth theme transition animation with modern glassmorphism design*
+
+### Mobile Experience
+![Mobile Dark Mode](./screenshots/mobile-dark.png)
+*Touch-optimized dark mode experience on mobile devices*
+
+> 📸 **Full Visual Documentation**: See [complete screenshot gallery](./DARK_MODE_SCREENSHOTS.md) for comprehensive before/after comparisons and detailed component showcases.
+
 ## 🎯 What This PR Adds
 
 ### 🎨 **CSS Custom Properties Theme System**
