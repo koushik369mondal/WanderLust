@@ -38,13 +38,9 @@
 <body>
     <%- include("../includes/navbar.ejs") %>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        <%- include("../includes/flash.ejs") %>
-    </div>
-
     <!-- Main Content -->
-    <main>
+    <main class="container mt-3">
+        <%- include("../includes/flash.ejs") %>
         <%- body %>
     </main>
 
