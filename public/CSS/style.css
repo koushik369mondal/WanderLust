@@ -56,6 +56,19 @@ body {
   transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
+[data-theme="light"] body {
+  background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(35, 117, 138, 0.9),
+      rgba(27, 93, 102, 0.9)
+    ),
+    url("/images/beach.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  background-blend-mode: overlay;
+}
+
 
 [data-theme="dark"] body {
   background: linear-gradient(
