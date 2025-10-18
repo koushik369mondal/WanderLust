@@ -3,8 +3,7 @@ description: Report a bug, request a feature, or suggest an improvement
 body:
   - type: markdown
     attributes:
-      value: |
-        ## 👋 Welcome to WanderLust!
+      value: 
 
   - type: textarea
     attributes:
