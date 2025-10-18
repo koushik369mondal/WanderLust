@@ -3,18 +3,30 @@ description: Report a bug, request a feature, or suggest an improvement
 body:
   - type: markdown
     attributes:
-      value: 
+      value: |
+        ## 👋 Welcome to WanderLust!
+        
+        Thank you for contributing! Please provide clear information about your issue.
 
   - type: textarea
     attributes:
       label: 📋 Description
       description: Clearly describe what you want to report or suggest
-
+      placeholder: |
+        Be specific and clear:
+        - What is the issue or feature?
+        - What should happen?
+        - What actually happens (if bug)?
+        
+        Examples:
+        • "Fix typo 'accomodation' → 'accommodation' in navbar.ejs line 23"
+        • "Add search bar to filter listings by location and price"
+        • "Security: JWT token validation missing in /api/user routes"
     validations:
       required: true
   
   - type: textarea
     attributes:
       label: 📸 Screenshots (Optional)
-      description: Add screenshots, mockups, or error messages if applicable
+      description: Add screenshots, mockups, or error messages if helpful
       placeholder: Drag and drop images here
