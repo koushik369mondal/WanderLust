@@ -18,6 +18,10 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="/CSS/rating.css" />
   <link rel="stylesheet" href="/CSS/loading.css" />
+  <!-- Performance Enhancement Styles -->
+  <link rel="stylesheet" href="/CSS/performance-enhanced.css" />
+  <link rel="stylesheet" href="/CSS/accessibility.css" />
+  <link rel="stylesheet" href="/CSS/i18n-enhanced.css" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
 </head>
@@ -44,6 +48,118 @@
         crossorigin="anonymous"></script>
       <script src="/JS/script.js"></script>
       <script src="/JS/loading.js"></script>
+      
+      <!-- Performance Optimization Scripts -->
+      <script src="/JS/performance-optimizer.js"></script>
+      <script src="/JS/accessibility.js"></script>
+      <script src="/JS/lazy-loading.js"></script>
+      <script src="/JS/i18n-manager.js"></script>
+      
+      <!-- Initialize Performance Systems -->
+      <script>
+        // Initialize performance optimization when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log('🚀 Initializing WanderLust Performance Suite...');
+          
+          // Performance dashboard toggle (Ctrl+Shift+P)
+          document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+              e.preventDefault();
+              togglePerformanceDashboard();
+            }
+          });
+        });
+        
+        function togglePerformanceDashboard() {
+          let dashboard = document.getElementById('performance-dashboard');
+          
+          if (!dashboard) {
+            dashboard = createPerformanceDashboard();
+            document.body.appendChild(dashboard);
+          }
+          
+          dashboard.classList.toggle('visible');
+          
+          if (dashboard.classList.contains('visible')) {
+            updatePerformanceMetrics();
+            // Update metrics every 2 seconds while visible
+            window.performanceUpdateInterval = setInterval(updatePerformanceMetrics, 2000);
+          } else {
+            clearInterval(window.performanceUpdateInterval);
+          }
+        }
+        
+        function createPerformanceDashboard() {
+          const dashboard = document.createElement('div');
+          dashboard.id = 'performance-dashboard';
+          dashboard.className = 'performance-dashboard';
+          
+          dashboard.innerHTML = `
+            <h3><i class="fa fa-tachometer-alt"></i> Performance Dashboard</h3>
+            <div class="performance-metric" id="page-load-metric">
+              <span class="metric-label">Page Load</span>
+              <span class="metric-value">--<span class="metric-unit">ms</span></span>
+            </div>
+            <div class="performance-metric" id="cache-hit-metric">
+              <span class="metric-label">Cache Hit Rate</span>
+              <span class="metric-value">--<span class="metric-unit">%</span></span>
+            </div>
+            <div class="performance-metric" id="memory-metric">
+              <span class="metric-label">Memory Usage</span>
+              <span class="metric-value">--<span class="metric-unit">MB</span></span>
+            </div>
+            <div class="performance-metric" id="dom-nodes-metric">
+              <span class="metric-label">DOM Nodes</span>
+              <span class="metric-value">--</span>
+            </div>
+            <div class="performance-metric" id="network-metric">
+              <span class="metric-label">Network</span>
+              <span class="metric-value">Online</span>
+            </div>
+          `;
+          
+          return dashboard;
+        }
+        
+        function updatePerformanceMetrics() {
+          // Page load time
+          if (performance.timing) {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            updateMetric('page-load-metric', loadTime, loadTime < 3000 ? 'good' : loadTime < 5000 ? 'warning' : 'error');
+          }
+          
+          // Memory usage (if available)
+          if (performance.memory) {
+            const memoryUsage = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+            updateMetric('memory-metric', memoryUsage, memoryUsage < 50 ? 'good' : memoryUsage < 100 ? 'warning' : 'error');
+          }
+          
+          // DOM nodes
+          const domNodes = document.getElementsByTagName('*').length;
+          updateMetric('dom-nodes-metric', domNodes, domNodes < 1000 ? 'good' : domNodes < 2000 ? 'warning' : 'error');
+          
+          // Network status
+          const networkStatus = navigator.onLine ? 'Online' : 'Offline';
+          updateMetric('network-metric', networkStatus, navigator.onLine ? 'good' : 'error');
+          
+          // Cache hit rate (if performance optimizer is available)
+          if (window.performanceOptimizer) {
+            const stats = window.performanceOptimizer.getPerformanceStats();
+            const hitRate = stats.cache.hitRate;
+            updateMetric('cache-hit-metric', hitRate.replace('%', ''), parseFloat(hitRate) > 80 ? 'good' : parseFloat(hitRate) > 60 ? 'warning' : 'error');
+          }
+        }
+        
+        function updateMetric(metricId, value, status) {
+          const metric = document.getElementById(metricId);
+          if (metric) {
+            const valueElement = metric.querySelector('.metric-value');
+            valueElement.textContent = value + (valueElement.querySelector('.metric-unit')?.textContent || '');
+            
+            metric.className = `performance-metric ${status}`;
+          }
+        }
+      </script>
       <script>
         const canvas = document.getElementById("fluid-cursor");
         const ctx = canvas.getContext("2d");
