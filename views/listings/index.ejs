@@ -819,14 +819,14 @@
                                             <%= listing.location %>, <%= listing.country %>
                                         </small><br />
                                         <span class="listing-price">
-                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
+                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / <%= __('night') %>
                                             <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                         </span>
                                     </p>
                                 </div>
                                 <div class="compare-checkbox">
                                     <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
-                                    <span>Compare</span>
+                                    <span><%= __('compare') %></span>
                                 </div>
                             </div>
                         </a>
@@ -852,7 +852,7 @@
 
     <button id="compare-btn" style="display: none;">
         <i class="fas fa-balance-scale me-2"></i>
-        Compare (<span id="compare-count">0</span>)
+        <%= __('compare') %> (<span id="compare-count">0</span>)
     </button>
 
     <script>
@@ -1238,7 +1238,7 @@
                                             ${listing.location}, ${listing.country}
                                         </small><br />
                                         <span class="listing-price">
-                                            ₹${listing.price?.toLocaleString('en-IN') || 'N/A'} / night
+                                            ₹${listing.price?.toLocaleString('en-IN') || 'N/A'} / <%= __('night') %>
                                             <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                         </span>
                                         ${listing.avgRating ? `
