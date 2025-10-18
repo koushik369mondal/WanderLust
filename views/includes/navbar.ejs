@@ -1,8 +1,146 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top" role="navigation"
+<style>
+  /* Force remove horizontal scrollbar */
+  body,
+  html {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  .navbar {
+    overflow: visible !important;
+    max-width: 100% !important;
+  }
+
+  .navbar .container-fluid {
+    overflow: visible !important;
+    flex-wrap: nowrap;
+  }
+
+  /* Compact navbar items */
+  .navbar-brand {
+    white-space: nowrap;
+    margin-right: 0.5rem !important;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.5rem 0.5rem !important;
+    font-size: 0.9rem;
+  }
+
+  /* Search form styling */
+  .navbar-search-form {
+    position: relative;
+    flex-grow: 1;
+    max-width: 500px;
+    min-width: 200px;
+  }
+
+  .navbar-search-form .input-group {
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-search-form .input-group-text {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    padding-left: 1rem;
+  }
+
+  .navbar-search-form .form-control {
+    border: 1px solid #dee2e6;
+    border-left: none;
+    border-right: none;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .navbar-search-form .form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+  }
+
+  .navbar-search-form .btn-primary {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    padding: 0.5rem 1.25rem;
+    white-space: nowrap;
+  }
+
+  /* Action buttons compact layout */
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
+
+  .navbar-actions .btn-sm {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .navbar-actions .dropdown-toggle {
+    padding: 0.375rem 0.5rem;
+  }
+
+  /* Hide text on smaller screens */
+  @media (max-width: 1400px) {
+    .navbar-actions .hide-text {
+      display: none !important;
+    }
+  }
+
+  /* Responsive navbar */
+  @media (max-width: 991px) {
+    .navbar-search-form {
+      max-width: 100%;
+      margin: 1rem 0;
+    }
+
+    .navbar-actions {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+  }
+
+  /* Notification badge styling */
+  #notificationBadge {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.4rem;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Dropdown menu improvements */
+  .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .notification-dropdown {
+    width: 350px;
+  }
+
+  @media (max-width: 576px) {
+    .notification-dropdown {
+      width: 280px;
+    }
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top" role="navigation"
   aria-label="Main navigation">
-  <div class="container-fluid">
+  <div class="container-fluid px-3 px-lg-4">
     <!-- Brand -->
-    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings" aria-label="WanderLust - Go to home page">
+    <a class="navbar-brand d-flex align-items-center" href="/listings" aria-label="WanderLust - Go to home page">
       <i class="fa-regular fa-compass me-2" aria-hidden="true"></i>
       <span class="fw-bold">
         <%= __('wanderlust') %>
@@ -18,17 +156,21 @@
     <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navbarContent">
       <!-- Primary Navigation -->
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" href="/listings">
-            <i class="fa-regular fa-copy" aria-hidden="true"></i>
-            <%= __('all_listings') %>
+            <i class="fa-regular fa-copy me-1" aria-hidden="true"></i>
+            <span>
+              <%= __('all_listings') %>
+            </span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/listings/about">
-            <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
-            <%= __('about') %>
+            <i class="fa-solid fa-info-circle me-1" aria-hidden="true"></i>
+            <span>
+              <%= __('about') %>
+            </span>
           </a>
         </li>
 
@@ -36,8 +178,8 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
             id="travelToolsDropdown">
-            <i class="fa-solid fa-tools" aria-hidden="true"></i>
-            Travel Tools
+            <i class="fa-solid fa-tools me-1" aria-hidden="true"></i>
+            <span>Travel Tools</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="travelToolsDropdown">
             <li>
@@ -91,47 +233,60 @@
       </ul>
 
       <!-- Search Bar -->
-      <div class="search-container me-3">
-        <form role="search" method="GET" action="/listings" aria-label="Search destinations">
-          <div class="position-relative">
-            <label for="searchInput" class="visually-hidden">Search destinations</label>
-            <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
-            <input class="search-input" type="search" name="search" id="searchInput"
-              placeholder="<%= __('search_destinations') %>"
-              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off"
-              aria-describedby="searchHelp" />
-            <span id="searchHelp" class="visually-hidden">Search for travel destinations, accommodations, and
-              experiences</span>
-            <button class="search-btn" type="submit" aria-label="Submit search">
-              <%= __('search') %>
-            </button>
-          </div>
-          <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
-        </form>
-      </div>
+      <form role="search" method="GET" action="/listings" class="navbar-search-form mx-lg-3"
+        aria-label="Search destinations">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass text-muted" aria-hidden="true"></i>
+          </span>
+          <input class="form-control" type="search" name="search" id="searchInput"
+            placeholder="<%= __('search_destinations') %>"
+            value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off"
+            aria-label="Search destinations" />
+          <button class="btn btn-primary" type="submit" aria-label="Submit search">
+            <%= __('search') %>
+          </button>
+        </div>
+        <div class="search-suggestions position-absolute bg-white shadow-sm" id="searchSuggestions" role="listbox"
+          aria-label="Search suggestions"
+          style="display: none; top: 100%; left: 0; right: 0; z-index: 1050; max-height: 300px; overflow-y: auto; border-radius: 8px; margin-top: 4px;">
+        </div>
+      </form>
 
-      <!-- Authentication & Profile -->
-      <div class="action-buttons d-flex align-items-center gap-2">
-        <a class="nav-link" href="/listings/new">
-          <%= __('add_new_listing') %>
+      <!-- Right Side Actions -->
+      <div class="navbar-actions">
+        <!-- Add New Listing -->
+        <a class="btn btn-sm btn-outline-primary text-nowrap" href="/listings/new">
+          <i class="fa-solid fa-plus me-1" aria-hidden="true"></i>
+          <span class="hide-text">
+            <%= __('add_new_listing') %>
+          </span>
+          <span class="d-inline d-xl-none">Add</span>
         </a>
 
         <% if (typeof currentUser==='undefined' || !currentUser) { %>
-          <a class="btn btn-outline-primary" href="/login">
+          <!-- Login/Signup Buttons -->
+          <a class="btn btn-sm btn-outline-primary" href="/login">
             <i class="fa-solid fa-sign-in-alt me-1" aria-hidden="true"></i>
-            <%= __('login') %>
+            <span>
+              <%= __('login') %>
+            </span>
           </a>
-          <a class="btn btn-primary" href="/signup">
+          <a class="btn btn-sm btn-primary" href="/signup">
             <i class="fa-solid fa-user-plus me-1" aria-hidden="true"></i>
-            <%= __('signup') %>
+            <span>
+              <%= __('signup') %>
+            </span>
           </a>
           <% } else { %>
             <!-- Profile Dropdown -->
             <div class="dropdown">
-              <button class="btn dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown"
-                aria-expanded="false" aria-label="User profile menu">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown"
+                data-bs-toggle="dropdown" aria-expanded="false" aria-label="User profile menu">
                 <i class="fa-solid fa-user me-1" aria-hidden="true"></i>
-                <%= __('profile') %>
+                <span class="hide-text">
+                  <%= __('profile') %>
+                </span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                 <li>
@@ -170,8 +325,7 @@
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" id="downloadsDropdownToggle" data-bs-toggle="modal"
-                    data-bs-target="#downloadsModal">
+                  <a class="dropdown-item" href="#" id="downloadsDropdownToggle">
                     <i class="fa-solid fa-download me-2" aria-hidden="true"></i>My Downloads
                     <span id="profileDownloadCount" class="badge bg-primary ms-2" style="display: none;">0</span>
                   </a>
@@ -200,27 +354,30 @@
 
             <!-- Notification Bell -->
             <div class="dropdown">
-              <button class="btn btn-outline-secondary position-relative" type="button" id="notificationToggle"
+              <button class="btn btn-sm btn-outline-secondary position-relative" type="button" id="notificationToggle"
                 data-bs-toggle="dropdown" aria-expanded="false" aria-label="View notifications">
                 <i class="fa-solid fa-bell" aria-hidden="true"></i>
-                <span id="notificationBadge" class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                <span id="notificationBadge"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                   style="display: none;">0</span>
               </button>
-              <div class="dropdown-menu dropdown-menu-end notification-dropdown"
-                style="width: 350px; max-height: 400px; overflow-y: auto;" aria-labelledby="notificationToggle">
+              <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationToggle">
                 <div class="dropdown-header d-flex justify-content-between align-items-center p-3 border-bottom">
-                  <h6 class="mb-0">Notifications</h6>
-                  <button id="markAllRead" class="btn btn-sm btn-outline-primary" type="button">Mark All Read</button>
+                  <h6 class="mb-0 fw-bold">Notifications</h6>
+                  <button id="markAllRead" class="btn btn-sm btn-link text-primary text-decoration-none p-0"
+                    type="button">
+                    Mark All Read
+                  </button>
                 </div>
                 <div id="notificationList" class="notification-list">
                   <div class="text-center text-muted p-4" id="noNotifications">
-                    <i class="fa-solid fa-bell-slash fa-2x mb-2" aria-hidden="true"></i>
-                    <p>No notifications yet</p>
+                    <i class="fa-solid fa-bell-slash fa-2x mb-3" aria-hidden="true"></i>
+                    <p class="mb-0 small">No notifications yet</p>
                   </div>
                 </div>
-                <div class="dropdown-footer p-2 border-top">
-                  <a href="/notifications" class="text-decoration-none text-center d-block">
-                    <small>View All Notifications</small>
+                <div class="dropdown-footer p-2 border-top text-center">
+                  <a href="/notifications" class="text-decoration-none small">
+                    View All Notifications
                   </a>
                 </div>
               </div>
@@ -229,12 +386,13 @@
 
               <!-- Language Dropdown -->
               <div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" id="languageToggle" data-bs-toggle="dropdown"
-                  aria-expanded="false" aria-label="Select language">
-                  <i class="fa-solid fa-globe" aria-hidden="true"></i>
-                  <span id="currentLanguageDisplay">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="languageToggle"
+                  data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
+                  <span>
                     <%= languageMap[getLocale()].flag %>
-                      <%= languageMap[getLocale()].name %>
+                  </span>
+                  <span class="hide-text ms-1">
+                    <%= languageMap[getLocale()].name %>
                   </span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageToggle">
@@ -358,7 +516,7 @@
           if (badge) {
             if (this.unreadCount > 0) {
               badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
-              badge.style.display = 'inline-block';
+              badge.style.display = 'inline-flex';
             } else {
               badge.style.display = 'none';
             }
@@ -384,23 +542,29 @@
 
         createNotificationHTML(notification) {
           const timeAgo = this.getTimeAgo(notification.createdAt);
-          const unreadClass = notification.isRead ? '' : 'unread';
+          const unreadClass = notification.isRead ? '' : 'bg-light';
 
           return `
-        <div class="notification-item p-3 border-bottom ${unreadClass}" data-id="${notification._id}">
+        <div class="p-3 border-bottom ${unreadClass}" data-id="${notification._id}" style="cursor: pointer;">
           <div class="d-flex justify-content-between align-items-start">
             <div class="flex-grow-1">
-              <h6 class="mb-1">${this.escapeHtml(notification.title)}</h6>
-              <p class="mb-1 text-muted small">${this.escapeHtml(notification.message)}</p>
+              <h6 class="mb-1 fw-bold" style="font-size: 0.9rem;">${this.escapeHtml(notification.title)}</h6>
+              <p class="mb-1 text-muted" style="font-size: 0.85rem;">${this.escapeHtml(notification.message)}</p>
               <small class="text-muted">${timeAgo}</small>
             </div>
-            <div class="ms-2">
+            <div class="ms-2 d-flex flex-column gap-1">
               ${!notification.isRead ? `
-                <button class="btn btn-sm btn-link" onclick="window.notificationManager.markAsRead('${notification._id}')" title="Mark as read">
+                <button class="btn btn-sm btn-link p-0 text-success" 
+                        onclick="event.stopPropagation(); window.notificationManager.markAsRead('${notification._id}')" 
+                        title="Mark as read" 
+                        aria-label="Mark as read">
                   <i class="fa-solid fa-check"></i>
                 </button>
               ` : ''}
-              <button class="btn btn-sm btn-link text-danger" onclick="window.notificationManager.deleteNotification('${notification._id}')" title="Delete">
+              <button class="btn btn-sm btn-link p-0 text-danger" 
+                      onclick="event.stopPropagation(); window.notificationManager.deleteNotification('${notification._id}')" 
+                      title="Delete" 
+                      aria-label="Delete notification">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
@@ -516,16 +680,48 @@
         }[type] || 'fa-info-circle';
 
         const toast = document.createElement('div');
-        toast.className = `alert ${alertClass} position-fixed shadow`;
-        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.className = `alert ${alertClass} position-fixed shadow-lg`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideIn 0.3s ease-out;';
         toast.setAttribute('role', 'alert');
-        toast.innerHTML = `<i class="fa-solid ${iconClass} me-2"></i>${message}`;
+        toast.innerHTML = `
+      <div class="d-flex align-items-center">
+        <i class="fa-solid ${iconClass} me-2"></i>
+        <span>${message}</span>
+      </div>
+    `;
         document.body.appendChild(toast);
 
         setTimeout(() => {
-          toast.remove();
+          toast.style.animation = 'slideOut 0.3s ease-in';
+          setTimeout(() => toast.remove(), 300);
         }, 3000);
       };
+
+      // Add CSS animations
+      const style = document.createElement('style');
+      style.textContent = `
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+  `;
+      document.head.appendChild(style);
     })();
   </script>
   <% } %>
