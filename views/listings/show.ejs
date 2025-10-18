@@ -691,12 +691,34 @@ document.addEventListener('DOMContentLoaded', function() {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.search-btn {
+padding-top: 0.5rem;  
+padding-bottom: 0.5rem;
+}
 
-/* AI Summary Styles */
-.ai-summary-card {
-  border: 2px solid #e3f2fd;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
-  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1);
+/* FIX 1: Description Bubble Enhancement (Level 3) */
+.description-bubble-container {
+    /* Spacing */
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    /* Bubbly Design & Transparency (Dark Mode Default) */
+    background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+    backdrop-filter: blur(5px);
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    
+    /* Light/Blue Shadow for Dark Mode */
+    box-shadow: 0 4px 15px rgba(0, 200, 255, 0.4),
+                0 0 0 2px rgba(255, 255, 255, 0.3) inset;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    /* Layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
 .ai-summary-card .card-header {

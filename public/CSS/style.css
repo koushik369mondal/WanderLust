@@ -496,6 +496,11 @@ body {
   height: 30vh;
   border-radius: 1rem;
 }
+        .search-btn {
+        padding-top: 0.5rem;  
+        padding-bottom: 0.5rem;
+}
+
 
 .btns {
   display: flex;
