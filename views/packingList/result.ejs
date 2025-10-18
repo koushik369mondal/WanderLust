@@ -2,21 +2,60 @@
 
   <main class="packing-list-result-container">
     <div class="packing-list-header">
-      <h1>Your Personalized Packing List</h1>
+      <h1>✨ Your Personalized Packing List ✨</h1>
+      <p class="header-subtitle">Everything you need for an amazing trip to <%= packingList.destination %>!</p>
       <div class="trip-summary">
-        <span class="trip-detail">📍 <%= packingList.destination %></span>
-        <span class="trip-detail">📅 <%= packingList.duration %> days</span>
-        <span class="trip-detail">👥 <%= packingList.travelType %></span>
+        <span class="trip-detail" data-tooltip="Destination">📍 <%= packingList.destination %></span>
+        <span class="trip-detail" data-tooltip="Duration">📅 <%= packingList.duration %> days</span>
+        <span class="trip-detail" data-tooltip="Travel Type">👥 <%= packingList.travelType %></span>
         <% if (packingList.activities && packingList.activities.length > 0) { %>
-          <span class="trip-detail">🎯 <%= packingList.activities.join(', ') %></span>
+          <span class="trip-detail" data-tooltip="Planned Activities">🎯 <%= packingList.activities.join(', ') %></span>
         <% } %>
+      </div>
+      
+      <!-- Progress Bar -->
+      <div class="packing-progress">
+        <div class="progress-header">
+          <span class="progress-label">Packing Progress</span>
+          <span class="progress-percentage">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-stats">
+          <span class="packed-count">0</span> of <span class="total-count">0</span> items packed
+        </div>
       </div>
     </div>
 
     <div class="packing-list-actions">
-      <button id="save-list-btn" class="save-btn">💾 Save to My Trips</button>
-      <button id="print-list-btn" class="print-btn">🖨️ Print List</button>
-      <button id="download-pdf-btn" class="download-btn">📄 Download PDF</button>
+      <button id="save-list-btn" class="save-btn" data-tooltip="Save this list to your profile">
+        <span class="btn-icon">💾</span>
+        <span class="btn-text">Save to My Trips</span>
+      </button>
+      <button id="print-list-btn" class="print-btn" data-tooltip="Print a physical copy">
+        <span class="btn-icon">🖨️</span>
+        <span class="btn-text">Print List</span>
+      </button>
+      <button id="download-pdf-btn" class="download-btn" data-tooltip="Download as PDF file">
+        <span class="btn-icon">📄</span>
+        <span class="btn-text">Download PDF</span>
+      </button>
+      <button id="share-list-btn" class="share-btn" data-tooltip="Share with travel companions">
+        <span class="btn-icon">🔗</span>
+        <span class="btn-text">Share List</span>
+      </button>
+    </div>
+
+    <!-- Progress Summary -->
+    <div class="progress-summary">
+      <h3>Packing Progress</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" id="overall-progress"></div>
+      </div>
+      <p class="progress-text">
+        <span id="completed-items">0</span> of <span id="total-items">0</span> items packed
+      </p>
     </div>
 
     <div class="packing-list-content">
@@ -30,16 +69,26 @@
 
       <% categories.forEach(category => { %>
         <% if (packingList.categories[category.key] && packingList.categories[category.key].length > 0) { %>
-          <div class="packing-category">
-            <h3><%= category.icon %> <%= category.title %></h3>
+          <div class="packing-category" data-category="<%= category.key %>">
+            <div class="category-header">
+              <h3><%= category.icon %> <%= category.title %></h3>
+              <div class="category-progress">
+                <span class="category-count">0</span>/<span class="category-total"><%= packingList.categories[category.key].length %></span>
+              </div>
+            </div>
             <div class="packing-items">
-              <% packingList.categories[category.key].forEach(item => { %>
-                <label class="packing-item">
+              <% packingList.categories[category.key].forEach((item, index) => { %>
+                <label class="packing-item" data-item-index="<%= index %>">
                   <input type="checkbox"
                          class="item-checkbox"
                          data-item="<%= item.item %>"
-                         data-category="<%= category.key %>">
+                         data-category="<%= category.key %>"
+                         id="item-<%= category.key %>-<%= index %>">
+                  <span class="checkbox-custom"></span>
                   <span class="item-text"><%= item.item %></span>
+                  <span class="item-priority" data-priority="<%= item.priority || 'medium' %>">
+                    <%= item.priority === 'high' ? '🔥' : item.priority === 'low' ? '⚪' : '🟡' %>
+                  </span>
                 </label>
               <% }) %>
             </div>
@@ -73,3 +122,109 @@
   <!-- jsPDF library for PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="/JS/packingList.js"></script>
+  
+  <script>
+    // Enhanced Progress Tracking
+    function updateProgress() {
+      const allCheckboxes = document.querySelectorAll('.item-checkbox');
+      const checkedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+      
+      const totalItems = allCheckboxes.length;
+      const completedItems = checkedCheckboxes.length;
+      const progressPercentage = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+      
+      // Update overall progress
+      const progressFill = document.getElementById('overall-progress');
+      const completedSpan = document.getElementById('completed-items');
+      const totalSpan = document.getElementById('total-items');
+      
+      if (progressFill) {
+        progressFill.style.width = progressPercentage + '%';
+      }
+      
+      if (completedSpan) completedSpan.textContent = completedItems;
+      if (totalSpan) totalSpan.textContent = totalItems;
+      
+      // Update category progress
+      const categories = document.querySelectorAll('.packing-category');
+      categories.forEach(category => {
+        const categoryCheckboxes = category.querySelectorAll('.item-checkbox');
+        const categoryChecked = category.querySelectorAll('.item-checkbox:checked');
+        const categoryCount = category.querySelector('.category-count');
+        
+        if (categoryCount) {
+          categoryCount.textContent = categoryChecked.length;
+        }
+        
+        // Add visual feedback for completed categories
+        const categoryHeader = category.querySelector('.category-header h3');
+        if (categoryCheckboxes.length > 0 && categoryChecked.length === categoryCheckboxes.length) {
+          categoryHeader.style.color = '#10b981';
+          categoryHeader.style.textDecoration = 'line-through';
+        } else {
+          categoryHeader.style.color = '';
+          categoryHeader.style.textDecoration = '';
+        }
+      });
+      
+      // Celebration effect at 100%
+      if (progressPercentage === 100 && totalItems > 0) {
+        celebrateCompletion();
+      }
+    }
+    
+    function celebrateCompletion() {
+      // Add celebration animation
+      const progressSummary = document.querySelector('.progress-summary');
+      if (progressSummary) {
+        progressSummary.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))';
+        progressSummary.style.animation = 'glassmorphismGlow 2s ease-in-out';
+        
+        // Show celebration message
+        const progressText = progressSummary.querySelector('.progress-text');
+        if (progressText) {
+          const originalText = progressText.innerHTML;
+          progressText.innerHTML = '🎉 Congratulations! All items packed!';
+          setTimeout(() => {
+            progressText.innerHTML = originalText;
+            progressSummary.style.background = '';
+            progressSummary.style.animation = '';
+          }, 3000);
+        }
+      }
+    }
+    
+    // Initialize progress tracking
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up event listeners for all checkboxes
+      const checkboxes = document.querySelectorAll('.item-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateProgress);
+      });
+      
+      // Initial progress calculation
+      updateProgress();
+      
+      // Add staggered animation to items
+      const packingItems = document.querySelectorAll('.packing-item');
+      packingItems.forEach((item, index) => {
+        item.style.animationDelay = (index * 0.1) + 's';
+        item.style.animation = 'fadeInScale 0.6s ease both';
+      });
+    });
+    
+    // Enhanced keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const focusedElement = document.activeElement;
+        if (focusedElement && focusedElement.classList.contains('packing-item')) {
+          e.preventDefault();
+          const checkbox = focusedElement.querySelector('.item-checkbox');
+          if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            updateProgress();
+          }
+        }
+      }
+    });
+  </script>
