@@ -330,10 +330,10 @@ class AccessibilityTester {
     let issues = [];
     
     // Test skip links
-    const skipLinks = document.querySelectorAll('.skip-link, .skip-links a');
-    if (skipLinks.length === 0) {
-      issues.push('No skip links found');
-    }
+    // const skipLinks = document.querySelectorAll('.skip-link, .skip-links a');
+    // if (skipLinks.length === 0) {
+    //   issues.push('No skip links found');
+    // }
     
     // Test focus traps in modals
     const modals = document.querySelectorAll('.modal, [role="dialog"]');

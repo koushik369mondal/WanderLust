@@ -41,16 +41,16 @@ class AccessibilityManager {
   }
 
   // Skip Links for Screen Readers
-  setupSkipLinks() {
-    const skipLinks = document.createElement('div');
-    skipLinks.className = 'skip-links';
-    skipLinks.innerHTML = `
-      <a href="#main-content">Skip to main content</a>
-      <a href="#navigation">Skip to navigation</a>
-      <a href="#search">Skip to search</a>
-    `;
-    document.body.insertBefore(skipLinks, document.body.firstChild);
-  }
+  // setupSkipLinks() {
+  //   const skipLinks = document.createElement('div');
+  //   skipLinks.className = 'skip-links';
+  //   skipLinks.innerHTML = `
+  //     <a href="#main-content">Skip to main content</a>
+  //     <a href="#navigation">Skip to navigation</a>
+  //     <a href="#search">Skip to search</a>
+  //   `;
+  //   document.body.insertBefore(skipLinks, document.body.firstChild);
+  // }
 
   // ARIA Live Region for Announcements
   setupAriaLive() {
