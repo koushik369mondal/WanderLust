@@ -1,7 +1,6 @@
 <% layout('/layouts/boilerplate') %>
 
 <style>
-    
     :root {
         --profile-header-bg: linear-gradient(135deg, #1ed9a8, #0f5a7c);
         --profile-card-bg: rgba(15, 90, 124, 0.25);
@@ -116,52 +115,73 @@
     }
 
     .profile-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
     }
 
-    .row .col-md-6:nth-child(odd) .profile-card {
-        border-top: 3px solid var(--accent-border-color);
-        border-right: 3px solid var(--accent-border-color-dark);
+    .profile-card-header {
+        background: var(--bg-secondary);
+        padding: var(--spacing-lg);
+        border-bottom: 1px solid var(--border-light);
     }
 
-    .row .col-md-6:nth-child(even) .profile-card {
-        border-top: 3px solid var(--accent-border-color);
-        border-left: 3px solid var(--accent-border-color-dark);
-    }
-
-    .profile-card .card-header {
-        background: var(--card-header-bg);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 1.2rem 1.5rem;
-        font-weight: 700;
-        color: var(--header-text-color);
-        position: relative;
-    }
-
-    .profile-card .card-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(to right, transparent, var(--accent-border-color), transparent);
-    }
-
-    .profile-card .card-header h5 {
+    .profile-card-header h5 {
         margin: 0;
-        font-size: 1.2rem;
+        font-size: 1.25rem;
+        font-weight: var(--font-weight-bold);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
     }
 
-    .profile-card .card-body {
-        padding: 1.8rem;
+    .profile-card-body {
+        padding: var(--spacing-lg);
     }
 
+    /* Statistics Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-lg);
+        text-align: center;
+        border: 1px solid var(--border-light);
+        transition: all var(--transition-base);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-primary);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+        margin-bottom: var(--spacing-sm);
+        line-height: 1;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Info Sections */
     .info-item {
-        margin-bottom: 1.8rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid var(--border-light);
     }
 
     .info-item:last-child {
@@ -185,10 +205,11 @@
         line-height: 1.6;
     }
 
+    /* Tags & Badges */
     .tags-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: var(--spacing-sm);
     }
 
     .tags-container .tag {
@@ -202,8 +223,18 @@
         transition: transform 0.2s ease;
     }
 
-    .tags-container .tag:hover {
+    .tag:hover {
+        background: var(--color-primary);
+        color: var(--text-inverse);
+        border-color: var(--color-primary);
         transform: translateY(-2px);
+    }
+
+    /* Social Links */
+    .social-links {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
     }
 
     .social-link {
@@ -230,25 +261,24 @@
     }
 
     /* Form Styling */
-.profile-container .form-control {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--body-text-color);
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-}
+    .profile-container .form-control {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--body-text-color);
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
 
-.profile-container .form-control:focus {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: var(--accent-border-color);
-    box-shadow: 0 0 0 0.2rem rgba(30, 217, 168, 0.25);
-    color: var(--body-text-color);
-}
+    .profile-container .form-control:focus {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: var(--accent-border-color);
+        box-shadow: 0 0 0 0.2rem rgba(30, 217, 168, 0.25);
+        color: var(--body-text-color);
+    }
 
-.profile-container .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
+    .profile-container .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
 
     .form-label {
         color: rgba(255, 255, 255, 0.9);
@@ -313,62 +343,60 @@
         color: #dc3545;
     }
 
-    .profile-actions .btn-danger:hover {
-        background: rgba(220, 53, 69, 0.1);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    .btn-danger:hover {
+        background: var(--color-danger);
+        color: var(--text-inverse);
+        transform: translateY(-2px);
     }
 
+    .btn-success {
+        background: var(--color-success);
+        color: var(--text-inverse);
+        border-color: var(--color-success);
+        padding: var(--spacing-sm) var(--spacing-md);
+        min-width: auto;
+    }
+
+    /* Progress Bar */
+    .progress-wrapper {
+        margin-top: var(--spacing-md);
+    }
+
+    .profile-avatar {
+        margin-bottom: 1rem;
+    }
+
+    .profile-header h3 {
+        font-size: 1.8rem;
+    }
+
+    .row .col-md-6:nth-child(odd) .profile-card,
+    .row .col-md-6:nth-child(even) .profile-card {
+        border-left: none;
+        border-right: none;
+        border-top: 3px solid var(--accent-border-color);
+    }
+
+    .profile-actions,
     .form-actions {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        margin-top: 2.5rem;
-        padding: 0;
+        flex-direction: column;
+        padding: 1.5rem;
     }
 
+    .profile-actions .btn,
     .form-actions .btn {
-        min-width: 180px;
-        padding: 0.9rem 2rem;
-        font-size: 1.1rem;
+        width: 100%;
     }
 
-    @media (max-width: 768px) {
-        .profile-header {
-            text-align: center;
-            padding: 1.5rem;
-        }
+    .nav-tabs .nav-link {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
 
-        .profile-avatar {
-            margin-bottom: 1rem;
-        }
-
-        .profile-header h3 {
-            font-size: 1.8rem;
-        }
-
-        .row .col-md-6:nth-child(odd) .profile-card,
-        .row .col-md-6:nth-child(even) .profile-card {
-            border-left: none;
-            border-right: none;
-            border-top: 3px solid var(--accent-border-color);
-        }
-
-        .profile-actions,
-        .form-actions {
-            flex-direction: column;
-            padding: 1.5rem;
-        }
-
-        .profile-actions .btn,
-        .form-actions .btn {
-            width: 100%;
-        }
-
-        .nav-tabs .nav-link {
-            padding: 0.7rem 1rem;
-            font-size: 0.9rem;
-        }
+    .progress-hint {
+        margin-top: var(--spacing-sm);
+        color: var(--text-muted);
+        font-size: 0.85rem;
     }
 
     /* Badge Styles */
@@ -521,669 +549,469 @@
         font-size: 0.8rem;
     }
 
-    /* Enhanced Stats Cards */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .stat-card {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1.5rem;
-        border-radius: 1rem;
+    /* Empty States */
+    .empty-state {
         text-align: center;
+        padding: var(--spacing-2xl) var(--spacing-lg);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--text-muted);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .empty-state-title {
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .empty-state-text {
+        color: var(--text-secondary);
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Vacation Slots Styles */
+    .vacation-slot-item {
+        background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
         transition: all 0.3s ease;
+        border-left: 4px solid var(--accent-border-color);
     }
 
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    .vacation-slot-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
     }
 
-    .stat-number {
-        font-size: 2rem;
-        font-weight: 700;
+    .vacation-slot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .vacation-slot-name {
+        font-weight: 600;
+        color: var(--header-text-color);
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .vacation-slot-date {
         color: var(--accent-border-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .vacation-slot-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
         margin-bottom: 0.5rem;
     }
 
-    .stat-label {
-        color: var(--body-text-color);
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
+    .vacation-slot-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .btn-remove-slot {
+        background: transparent;
+        border: 1px solid #dc3545;
+        color: #dc3545;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-remove-slot:hover {
+        background: #dc3545;
+        color: white;
     }
 
     .completion-progress {
         margin-top: 1rem;
     }
 
-    .progress {
-        height: 8px;
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.1);
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: var(--spacing-md);
+        }
+
+        .profile-header {
+            padding: var(--spacing-lg);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        .profile-tabs .nav-link {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .badge-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .activity-timeline {
+            padding-left: var(--spacing-xl);
+        }
     }
 
-    .progress-bar {
-        background: var(--tag-bg);
-        transition: width 0.5s ease;
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
     }
 </style>
 
-<div class="profile-container mt-3">
-    <div class="row">
-        <div class="col-12">
-            <div class="profile-header mb-3">
-                <div class="row align-items-center">
-                    <div class="col-md-2 text-center">
-                        <div class="profile-avatar">
-                            <i class="fa-solid fa-user-circle fa-4x"></i>
-                        </div>
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="row align-items-center">
+            <div class="col-md-3 text-center">
+                <div class="profile-avatar">
+                    <i class="fa-solid fa-user-circle"></i>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="profile-info">
+                    <h3><%= currentUser.username %></h3>
+                    <p class="mb-1 fs-6">
+                        <i class="fa-solid fa-list me-2"></i>
+                        Listings created: <%= typeof listingCount !== 'undefined' ? listingCount : 0 %>
+                    </p>
+                    <p class="mb-1 fs-6">
+                        <i class="fa-solid fa-envelope me-2"></i>
+                        <%= currentUser.email %>
+                    </p>
+                    <p class="mb-0 fs-6">
+                        <i class="fa-solid fa-calendar-days me-2"></i>
+                        Member since <%= new Date(currentUser.joinDate || new Date()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="view-tab" data-bs-toggle="tab"
+                    data-bs-target="#view-profile" type="button" role="tab">
+                    <i class="fa-solid fa-eye me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-profile"
+                    type="button" role="tab">
+                    <i class="fa-solid fa-edit me-2"></i>Edit Profile
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="badges-tab" data-bs-toggle="tab" data-bs-target="#badges-section"
+                    type="button" role="tab">
+                    <i class="fa-solid fa-award me-2"></i>Badges <span class="badge bg-primary ms-1"><%= user.badges.length %></span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="travel-goals-tab" data-bs-toggle="tab" data-bs-target="#travel-goals-section"
+                    type="button" role="tab">
+                    <i class="fa-solid fa-target me-2"></i>Travel Goals
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="vacation-slots-tab" data-bs-toggle="tab" data-bs-target="#vacation-slots-section"
+                    type="button" role="tab">
+                    <i class="fa-solid fa-calendar-check me-2"></i>Vacation Slots
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity-section"
+                    type="button" role="tab">
+                    <i class="fa-solid fa-clock me-2"></i>Activity
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="profileTabsContent">
+            <!-- View Profile Tab -->
+            <div class="tab-pane fade show active" id="view-profile" role="tabpanel">
+                <!-- Enhanced Statistics Section -->
+                <div class="stats-grid mb-4">
+                    <div class="stat-card">
+                        <div class="stat-number"><%= listingCount %></div>
+                        <div class="stat-label">Listings</div>
                     </div>
-                    <div class="col-md-10">
-                        <h3 class="mb-1">
-                            <%= currentUser.username %>
-                        </h3>
-                        <p class="mb-1 fs-6">
-                            <i class="fa-solid fa-list me-2"></i>
-                            Listings created: <%= typeof listingCount !=='undefined' ? listingCount : 0 %>
-                        </p>
-                        <p class="mb-1 fs-6">
-                            <i class="fa-solid fa-envelope me-2"></i>
-                            <%= currentUser.email %>
-                        </p>
-                        <p class="mb-0 fs-6">
-                            <i class="fa-solid fa-calendar-days me-2"></i>
-                            Member since <%= new Date(currentUser.joinDate || new Date()).toLocaleDateString('en-US', { year: 'numeric'
-                                , month: 'long' , day: 'numeric' }) %>
-                        </p>
+                    <div class="stat-card">
+                        <div class="stat-number"><%= reviewCount %></div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><%= wishlistCount %></div>
+                        <div class="stat-label">Wishlist Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><%= user.badges.length %></div>
+                        <div class="stat-label">Badges Earned</div>
+                    </div>
+                </div>
+
+                <!-- Profile Completion -->
+                <div class="profile-card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fa-solid fa-chart-line me-2"></i>Profile Completion</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Complete your profile to unlock more features</span>
+                            <strong><%= user.profileCompletion %>%</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: <%= user.profileCompletion %>%"></div>
+                        </div>
+                        <div class="completion-progress">
+                            <small class="text-muted">
+                                <% if (user.profileCompletion < 50) { %>
+                                    Add more information to improve your profile visibility!
+                                <% } else if (user.profileCompletion < 80) { %>
+                                    You're doing great! A few more details and you'll have a complete profile.
+                                <% } else { %>
+                                    Excellent! Your profile is well-optimized.
+                                <% } %>
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="view-tab" data-bs-toggle="tab"
-                        data-bs-target="#view-profile" type="button" role="tab">
-                        <i class="fa-solid fa-eye me-2"></i>Overview
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-profile"
-                        type="button" role="tab">
-                        <i class="fa-solid fa-edit me-2"></i>Edit Profile
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="badges-tab" data-bs-toggle="tab" data-bs-target="#badges-section"
-                        type="button" role="tab">
-                        <i class="fa-solid fa-award me-2"></i>Badges <span class="badge bg-primary ms-1"><%= user.badges.length %></span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="travel-goals-tab" data-bs-toggle="tab" data-bs-target="#travel-goals-section"
-                        type="button" role="tab">
-                        <i class="fa-solid fa-target me-2"></i>Travel Goals
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity-section"
-                        type="button" role="tab">
-                        <i class="fa-solid fa-clock me-2"></i>Activity
-                    </button>
-                </li>
-            </ul>
-
-            <!-- Tab Content -->
-            <div class="tab-content" id="profileTabsContent">
-                <!-- View Profile Tab -->
-                <div class="tab-pane fade show active" id="view-profile" role="tabpanel">
-                    <!-- Enhanced Statistics Section -->
-                    <div class="stats-grid mb-4">
-                        <div class="stat-card">
-                            <div class="stat-number"><%= listingCount %></div>
-                            <div class="stat-label">Listings</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number"><%= reviewCount %></div>
-                            <div class="stat-label">Reviews</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number"><%= wishlistCount %></div>
-                            <div class="stat-label">Wishlist Items</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number"><%= user.badges.length %></div>
-                            <div class="stat-label">Badges Earned</div>
-                        </div>
-                    </div>
-
-                    <!-- Profile Completion -->
-                    <div class="profile-card mb-4">
-                        <div class="card-header">
-                            <h5><i class="fa-solid fa-chart-line me-2"></i>Profile Completion</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span>Complete your profile to unlock more features</span>
-                                <strong><%= user.profileCompletion %>%</strong>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar" style="width: <%= user.profileCompletion %>%"></div>
-                            </div>
-                            <div class="completion-progress">
-                                <small class="text-muted">
-                                    <% if (user.profileCompletion < 50) { %>
-                                        Add more information to improve your profile visibility!
-                                    <% } else if (user.profileCompletion < 80) { %>
-                                        You're doing great! A few more details and you'll have a complete profile.
-                                    <% } else { %>
-                                        Excellent! Your profile is well-optimized.
-                                    <% } %>
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
+            <!-- Edit Profile Tab -->
+            <div class="tab-pane fade" id="edit-profile" role="tabpanel">
+                <form action="/profile?_method=PUT" method="POST" class="needs-validation" novalidate>
                     <div class="row">
-                        <!-- Basic Info Cardddd -->
+                        <!-- Basic Information -->
                         <div class="col-md-6 mb-4">
                             <div class="profile-card">
                                 <div class="card-header">
                                     <h5><i class="fa-solid fa-user me-2"></i>Basic Information</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="info-item">
-                                        <label>Bio:</label>
-                                        <p>
-                                            <%= currentUser.bio || "Tell us a bit about yourself to make your profile more engaging!"
-                                                %>
-                                        </p>
+                                    <div class="mb-3">
+                                        <label for="bio" class="form-label">Bio</label>
+                                        <textarea class="form-control" id="bio" name="bio" rows="4"
+                                            maxlength="500"
+                                            placeholder="Tell us about yourself..."><%= currentUser.bio || "" %></textarea>
+                                        <div class="form-text">Maximum 500 characters</div>
                                     </div>
-                                    <div class="info-item">
-                                        <label>Location:</label>
-                                        <p>
-                                            <% if (currentUser.location) { %>
-                                                <i class="fa-solid fa-location-dot me-2"></i>
-                                                <%= currentUser.location %>
-                                                    <% } else { %>
-                                                        Not specified
-                                                        <% } %>
-                                        </p>
+                                    <div class="mb-3">
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location" name="location"
+                                            value="<%= currentUser.location || "" %>"
+                                            placeholder="City, Country" maxlength="100">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Interests Card -->
+                        <!-- Interests & Hobbies -->
                         <div class="col-md-6 mb-4">
                             <div class="profile-card">
                                 <div class="card-header">
                                     <h5><i class="fa-solid fa-heart me-2"></i>Interests & Hobbies</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="info-item">
-                                        <label>Hobbies:</label>
-                                        <div class="tags-container">
-                                            <% if (currentUser.hobbies && currentUser.hobbies.length> 0) { %>
-                                                <% currentUser.hobbies.forEach(hobby=> { %>
-                                                    <span class="tag">
-                                                        <%= hobby %>
-                                                    </span>
-                                                    <% });
-                                                        %>
-                                                        <% } else { %>
-                                                            <p class="text-muted">No hobbies added</p>
-                                                            <% } %>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="hobbies" class="form-label">Hobbies</label>
+                                        <input type="text" class="form-control" id="hobbies" name="hobbies"
+                                            value="<%= currentUser.hobbies ? currentUser.hobbies.join(', ') : '' %>"
+                                            placeholder="Photography, Hiking, Reading...">
+                                        <div class="form-text">Separate multiple hobbies with commas</div>
                                     </div>
-                                    <div class="info-item">
-                                        <label>Interests:</label>
-                                        <div class="tags-container">
-                                            <% if (currentUser.interests && currentUser.interests.length> 0) { %>
-                                                <% currentUser.interests.forEach(interest=> { %>
-                                                    <span class="tag">
-                                                        <%= interest %>
-                                                    </span>
-                                                    <% });
-                                                        %>
-                                                        <% } else { %>
-                                                            <p class="text-muted">No interests added</p>
-                                                            <% } %>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="interests" class="form-label">Interests</label>
+                                        <input type="text" class="form-control" id="interests" name="interests"
+                                            value="<%= currentUser.interests ? currentUser.interests.join(', ') : '' %>"
+                                            placeholder="Travel, Food, Culture...">
+                                        <div class="form-text">Separate multiple interests with commas</div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Travel Info Card -->
-                        <div class="col-md-6 mb-4">
-                            <div class="profile-card">
-                                <div class="card-header">
-                                    <h5><i class="fa-solid fa-plane me-2"></i>Travel Preferences</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="info-item">
-                                        <label>Favorite Destinations:</label>
-                                        <div class="tags-container">
-                                            <% if (currentUser.favoriteDestinations &&
-                                                currentUser.favoriteDestinations.length> 0) { %>
-                                                <% currentUser.favoriteDestinations.forEach(destination=> { %>
-                                                    <span class="tag destination-tag">
-                                                        <%= destination %>
-                                                    </span>
-                                                    <% });
-                                                        %>
-                                                        <% } else { %>
-                                                            <p class="text-muted">No favorite destinations added
-                                                            </p>
-                                                            <% } %>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Social Links Card -->
-                        <div class="col-md-6 mb-4">
-                            <div class="profile-card">
-                                <div class="card-header">
-                                    <h5><i class="fa-solid fa-link me-2"></i>Social Links</h5>
-                                </div>
-                                <div class="card-body">
-                                    <% if (currentUser.socialLinks) { %>
-                                        <% if (currentUser.socialLinks.website) { %>
-                                            <div class="social-link">
-                                                <a href="<%= currentUser.socialLinks.website %>" target="_blank">
-                                                    <i class="fa-solid fa-globe me-2"></i>Website
-                                                </a>
-                                            </div>
-                                            <% } %>
-                                                <% if (currentUser.socialLinks.instagram) { %>
-                                                    <div class="social-link">
-                                                        <a href="<%= currentUser.socialLinks.instagram %>"
-                                                            target="_blank">
-                                                            <i
-                                                                class="fa-brands fa-instagram me-2"></i>Instagram
-                                                        </a>
-                                                    </div>
-                                                    <% } %>
-                                                        <% if (currentUser.socialLinks.twitter) { %>
-                                                            <div class="social-link">
-                                                                <a href="<%= currentUser.socialLinks.twitter %>"
-                                                                    target="_blank">
-                                                                    <i
-                                                                        class="fa-brands fa-twitter me-2"></i>Twitter
-                                                                </a>
-                                                            </div>
-                                                            <% } %>
-                                                                <% if (currentUser.socialLinks.linkedin) { %>
-                                                                    <div class="social-link">
-                                                                        <a href="<%= currentUser.socialLinks.linkedin %>"
-                                                                            target="_blank">
-                                                                            <i
-                                                                                class="fa-brands fa-linkedin me-2"></i>LinkedIn
-                                                                        </a>
-                                                                    </div>
-                                                                    <% } %>
-                                                                        <% if (!currentUser.socialLinks.website &&
-                                                                            !currentUser.socialLinks.instagram &&
-                                                                            !currentUser.socialLinks.twitter &&
-                                                                            !currentUser.socialLinks.linkedin) { %>
-                                                                            <p class="text-muted">No social links
-                                                                                added</p>
-                                                                            <% } %>
-                                                                                <% } else { %>
-                                                                                    <p class="text-muted">No social
-                                                                                        links added</p>
-                                                                                    <% } %>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Edit Profile Tab -->
-                <div class="tab-pane fade" id="edit-profile" role="tabpanel">
-                    <form action="/profile?_method=PUT" method="POST" class="needs-validation" novalidate>
-                        <div class="row">
-                            <!-- Basic Information -->
-                            <div class="col-md-6 mb-4">
-                                <div class="profile-card">
-                                    <div class="card-header">
-                                        <h5><i class="fa-solid fa-user me-2"></i>Basic Information</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="bio" class="form-label">Bio</label>
-                                            <textarea class="form-control" id="bio" name="bio" rows="4"
-                                                maxlength="500"
-                                                placeholder="Tell us about yourself..."><%= currentUser.bio || "" %></textarea>
-                                            <div class="form-text">Maximum 500 characters</div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="location" class="form-label">Location</label>
-                                            <input type="text" class="form-control" id="location" name="location"
-                                                value="<%= currentUser.location || "" %>"
-                                                placeholder="City, Country" maxlength="100">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Interests & Hobbies -->
-                            <div class="col-md-6 mb-4">
-                                <div class="profile-card">
-                                    <div class="card-header">
-                                        <h5><i class="fa-solid fa-heart me-2"></i>Interests & Hobbies</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="hobbies" class="form-label">Hobbies</label>
-                                            <input type="text" class="form-control" id="hobbies" name="hobbies"
-                                                value="<%= currentUser.hobbies ? currentUser.hobbies.join(', ') : '' %>"
-                                                placeholder="Photography, Hiking, Reading...">
-                                            <div class="form-text">Separate multiple hobbies with commas</div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="interests" class="form-label">Interests</label>
-                                            <input type="text" class="form-control" id="interests" name="interests"
-                                                value="<%= currentUser.interests ? currentUser.interests.join(', ') : '' %>"
-                                                placeholder="Travel, Food, Culture...">
-                                            <div class="form-text">Separate multiple interests with commas</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Travel Preferences -->
-                            <div class="col-md-6 mb-4">
-                                <div class="profile-card">
-                                    <div class="card-header">
-                                        <h5><i class="fa-solid fa-plane me-2"></i>Travel Preferences</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="favoriteDestinations" class="form-label">Favorite
-                                                Destinations</label>
-                                            <input type="text" class="form-control" id="favoriteDestinations"
-                                                name="favoriteDestinations"
-                                                value="<%= currentUser.favoriteDestinations ? currentUser.favoriteDestinations.join(', ') : '' %>"
-                                                placeholder="Paris, Tokyo, New York...">
-                                            <div class="form-text">Separate multiple destinations with commas</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Social Links -->
-                            <div class="col-md-6 mb-4">
-                                <div class="profile-card">
-                                    <div class="card-header">
-                                        <h5><i class="fa-solid fa-link me-2"></i>Social Links</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="website" class="form-label">Website</label>
-                                            <input type="url" class="form-control" id="website" name="website"
-                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.website : '' %>"
-                                                placeholder="https://yourwebsite.com">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="instagram" class="form-label">Instagram</label>
-                                            <input type="url" class="form-control" id="instagram" name="instagram"
-                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.instagram : '' %>"
-                                                placeholder="https://instagram.com/username">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="twitter" class="form-label">Twitter</label>
-                                            <input type="url" class="form-control" id="twitter" name="twitter"
-                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.twitter : '' %>"
-                                                placeholder="https://twitter.com/username">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="linkedin" class="form-label">LinkedIn</label>
-                                            <input type="url" class="form-control" id="linkedin" name="linkedin"
-                                                value="<%= currentUser.socialLinks ? currentUser.socialLinks.linkedin : '' %>"
-                                                placeholder="https://linkedin.com/in/username">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Privacy Settings -->
-                            <div class="col-12 mb-4">
-                                <div class="profile-card">
-                                    <div class="card-header">
-                                        <h5><i class="fa-solid fa-shield-alt me-2"></i>Privacy Settings</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-check mb-3">
-                                                    <input class="form-check-input" type="checkbox" id="isPublic" name="isPublic"
-                                                        <%= (currentUser.profileSettings && currentUser.profileSettings.isPublic) ? 'checked' : '' %>>
-                                                    <label class="form-check-label" for="isPublic">
-                                                        <strong>Public Profile</strong><br>
-                                                        <small class="text-muted">Allow others to view your profile</small>
-                                                    </label>
-                                                </div>
-                                                <div class="form-check mb-3">
-                                                    <input class="form-check-input" type="checkbox" id="showEmail" name="showEmail"
-                                                        <%= (currentUser.profileSettings && currentUser.profileSettings.showEmail) ? 'checked' : '' %>>
-                                                    <label class="form-check-label" for="showEmail">
-                                                        <strong>Show Email</strong><br>
-                                                        <small class="text-muted">Display your email on your profile</small>
-                                                    </label>
-                                                </div>
-                                                <div class="form-check mb-3">
-                                                    <input class="form-check-input" type="checkbox" id="showSocialLinks" name="showSocialLinks"
-                                                        <%= (currentUser.profileSettings && currentUser.profileSettings.showSocialLinks !== false) ? 'checked' : '' %>>
-                                                    <label class="form-check-label" for="showSocialLinks">
-                                                        <strong>Show Social Links</strong><br>
-                                                        <small class="text-muted">Display your social media links</small>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-check mb-3">
-                                                    <input class="form-check-input" type="checkbox" id="showWishlist" name="showWishlist"
-                                                        <%= (currentUser.profileSettings && currentUser.profileSettings.showWishlist) ? 'checked' : '' %>>
-                                                    <label class="form-check-label" for="showWishlist">
-                                                        <strong>Show Wishlist</strong><br>
-                                                        <small class="text-muted">Let others see your wishlist</small>
-                                                    </label>
-                                                </div>
-                                                <div class="form-check mb-3">
-                                                    <input class="form-check-input" type="checkbox" id="showTravelStats" name="showTravelStats"
-                                                        <%= (currentUser.profileSettings && currentUser.profileSettings.showTravelStats !== false) ? 'checked' : '' %>>
-                                                    <label class="form-check-label" for="showTravelStats">
-                                                        <strong>Show Travel Stats</strong><br>
-                                                        <small class="text-muted">Display your travel statistics</small>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
                     
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa-solid fa-save me-2"></i>Save Changes
-                            </button>
-                            <button type="button" class="btn btn-secondary"
-                                onclick="document.getElementById('view-tab').click();">
-                                <i class="fa-solid fa-times me-2"></i>Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Badges Tab -->
-                <div class="tab-pane fade" id="badges-section" role="tabpanel">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="profile-card">
-                                <div class="card-header">
-                                    <h5><i class="fa-solid fa-trophy me-2"></i>Achievement Badges</h5>
-                                </div>
-                                <div class="card-body">
-                                    <% if (user.badges && user.badges.length > 0) { %>
-                                        <div class="row">
-                                            <% user.badges.forEach(badge => { %>
-                                                <div class="col-md-4 col-sm-6 mb-3">
-                                                    <div class="badge-card" style="background: <%= BadgeService.getBadgeRarityGradient(badge.rarity || 'common') %>">
-                                                        <div class="badge-icon">
-                                                            <i class="<%= badge.icon %> fa-2x"></i>
-                                                        </div>
-                                                        <h6 class="badge-name"><%= badge.name %></h6>
-                                                        <p class="badge-description"><%= badge.description %></p>
-                                                        <small class="badge-date">Earned <%= new Date(badge.earnedAt).toLocaleDateString() %></small>
-                                                    </div>
-                                                </div>
-                                            <% }); %>
-                                        </div>
-                                    <% } else { %>
-                                        <div class="text-center py-4">
-                                            <i class="fa-solid fa-medal fa-3x text-muted mb-3"></i>
-                                            <h5>No badges earned yet</h5>
-                                            <p class="text-muted">Complete your profile, create listings, and write reviews to earn badges!</p>
-                                        </div>
-                                    <% } %>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-save me-2"></i>Save Changes
+                        </button>
+                        <button type="button" class="btn btn-secondary"
+                            onclick="document.getElementById('view-tab').click();">
+                            <i class="fa-solid fa-times me-2"></i>Cancel
+                        </button>
                     </div>
-                </div>
+                </form>
+            </div>
 
-                <!-- Travel Goals Tab -->
-                <div class="tab-pane fade" id="travel-goals-section" role="tabpanel">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="profile-card">
-                                <div class="card-header">
-                                    <h5><i class="fa-solid fa-map-marked-alt me-2"></i>My Travel Goals</h5>
-                                </div>
-                                <div class="card-body">
-                                    <% if (user.travelGoals && user.travelGoals.length > 0) { %>
-                                        <% user.travelGoals.forEach(goal => { %>
-                                            <div class="goal-item <%= goal.isCompleted ? 'completed' : '' %>">
-                                                <div class="goal-header">
-                                                    <h6><%= goal.destination %></h6>
-                                                    <div class="goal-actions">
-                                                        <% if (!goal.isCompleted) { %>
-                                                            <form action="/profile/travel-goals/<%= goal._id %>/complete?_method=PATCH" method="POST" style="display: inline;">
-                                                                <button type="submit" class="btn btn-sm btn-success">
-                                                                    <i class="fa-solid fa-check"></i>
-                                                                </button>
-                                                            </form>
-                                                        <% } %>
-                                                        <form action="/profile/travel-goals/<%= goal._id %>?_method=DELETE" method="POST" style="display: inline;">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this goal?')">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                            </button>
-                                                        </form>
+            <!-- Badges Tab -->
+            <div class="tab-pane fade" id="badges-section" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="profile-card">
+                            <div class="card-header">
+                                <h5><i class="fa-solid fa-trophy me-2"></i>Achievement Badges</h5>
+                            </div>
+                            <div class="card-body">
+                                <% if (user.badges && user.badges.length > 0) { %>
+                                    <div class="row">
+                                        <% user.badges.forEach(badge => { %>
+                                            <div class="col-md-4 col-sm-6 mb-3">
+                                                <div class="badge-card">
+                                                    <div class="badge-icon">
+                                                        <i class="<%= badge.icon %> fa-2x"></i>
                                                     </div>
-                                                </div>
-                                                <% if (goal.description) { %>
-                                                    <p class="goal-description"><%= goal.description %></p>
-                                                <% } %>
-                                                <div class="goal-meta">
-                                                    <% if (goal.targetDate) { %>
-                                                        <span class="goal-date">Target: <%= new Date(goal.targetDate).toLocaleDateString() %></span>
-                                                    <% } %>
-                                                    <% if (goal.isCompleted) { %>
-                                                        <span class="goal-completed">✅ Completed <%= new Date(goal.completedAt).toLocaleDateString() %></span>
-                                                    <% } %>
+                                                    <h6 class="badge-name"><%= badge.name %></h6>
+                                                    <p class="badge-description"><%= badge.description %></p>
+                                                    <small class="badge-date">Earned <%= new Date(badge.earnedAt).toLocaleDateString() %></small>
                                                 </div>
                                             </div>
                                         <% }); %>
-                                    <% } else { %>
-                                        <div class="text-center py-4">
-                                            <i class="fa-solid fa-compass fa-3x text-muted mb-3"></i>
-                                            <h5>No travel goals set</h5>
-                                            <p class="text-muted">Set your travel goals and track your journey!</p>
-                                        </div>
-                                    <% } %>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="profile-card">
-                                <div class="card-header">
-                                    <h5><i class="fa-solid fa-plus me-2"></i>Add New Goal</h5>
-                                </div>
-                                <div class="card-body">
-                                    <form action="/profile/travel-goals" method="POST">
-                                        <div class="mb-3">
-                                            <label for="destination" class="form-label">Destination</label>
-                                            <input type="text" class="form-control" id="destination" name="destination" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="description" class="form-label">Description</label>
-                                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="targetDate" class="form-label">Target Date</label>
-                                            <input type="date" class="form-control" id="targetDate" name="targetDate">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fa-solid fa-plus me-2"></i>Add Goal
-                                        </button>
-                                    </form>
-                                </div>
+                                    </div>
+                                <% } else { %>
+                                    <div class="text-center py-4">
+                                        <i class="fa-solid fa-medal fa-3x text-muted mb-3"></i>
+                                        <h5>No badges earned yet</h5>
+                                        <p class="text-muted">Complete your profile, create listings, and write reviews to earn badges!</p>
+                                    </div>
+                                <% } %>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Activity Tab -->
-                <div class="tab-pane fade" id="activity-section" role="tabpanel">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="profile-card">
-                                <div class="card-header">
-                                    <h5><i class="fa-solid fa-history me-2"></i>Recent Activity</h5>
-                                </div>
-                                <div class="card-body">
-                                    <% if (recentActivity && recentActivity.length > 0) { %>
-                                        <div class="activity-timeline">
-                                            <% recentActivity.forEach(activity => { %>
-                                                <div class="activity-item">
-                                                    <div class="activity-icon">
-                                                        <% if (activity.action.includes('badge')) { %>
-                                                            <i class="fa-solid fa-award"></i>
-                                                        <% } else if (activity.action.includes('wishlist')) { %>
-                                                            <i class="fa-solid fa-heart"></i>
-                                                        <% } else if (activity.action.includes('profile')) { %>
-                                                            <i class="fa-solid fa-user-edit"></i>
-                                                        <% } else if (activity.action.includes('goal')) { %>
-                                                            <i class="fa-solid fa-target"></i>
-                                                        <% } else { %>
-                                                            <i class="fa-solid fa-info-circle"></i>
-                                                        <% } %>
-                                                    </div>
-                                                    <div class="activity-content">
-                                                        <p class="activity-text"><%= activity.details %></p>
-                                                        <small class="activity-time"><%= new Date(activity.timestamp).toLocaleString() %></small>
-                                                    </div>
+            <!-- Travel Goals Tab -->
+            <div class="tab-pane fade" id="travel-goals-section" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="profile-card">
+                            <div class="card-header">
+                                <h5><i class="fa-solid fa-map-marked-alt me-2"></i>My Travel Goals</h5>
+                            </div>
+                            <div class="card-body">
+                                <% if (user.travelGoals && user.travelGoals.length > 0) { %>
+                                    <% user.travelGoals.forEach(goal => { %>
+                                        <div class="goal-item <%= goal.isCompleted ? 'completed' : '' %>">
+                                            <div class="goal-header">
+                                                <h6><%= goal.destination %></h6>
+                                                <div class="goal-actions">
+                                                    <% if (!goal.isCompleted) { %>
+                                                        <form action="/profile/travel-goals/<%= goal._id %>/complete?_method=PATCH" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-sm btn-success">
+                                                                <i class="fa-solid fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                    <% } %>
+                                                    <form action="/profile/travel-goals/<%= goal._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this goal?')">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
-                                            <% }); %>
+                                            </div>
+                                            <% if (goal.description) { %>
+                                                <p class="goal-description"><%= goal.description %></p>
+                                            <% } %>
+                                            <div class="goal-meta">
+                                                <% if (goal.targetDate) { %>
+                                                    <span class="goal-date">Target: <%= new Date(goal.targetDate).toLocaleDateString() %></span>
+                                                <% } %>
+                                                <% if (goal.isCompleted) { %>
+                                                    <span class="goal-completed">✅ Completed <%= new Date(goal.completedAt).toLocaleDateString() %></span>
+                                                <% } %>
+                                            </div>
                                         </div>
-                                    <% } else { %>
-                                        <div class="text-center py-4">
-                                            <i class="fa-solid fa-clock fa-3x text-muted mb-3"></i>
-                                            <h5>No recent activity</h5>
-                                            <p class="text-muted">Your recent activities will appear here.</p>
-                                        </div>
-                                    <% } %>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="text-center py-4">
+                                        <i class="fa-solid fa-compass fa-3x text-muted mb-3"></i>
+                                        <h5>No travel goals set</h5>
+                                        <p class="text-muted">Set your travel goals and track your journey!</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="profile-card">
+                            <div class="card-header">
+                                <h5><i class="fa-solid fa-plus me-2"></i>Add New Goal</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="/profile/travel-goals" method="POST">
+                                    <div class="mb-3">
+                                        <label for="destination" class="form-label">Destination</label>
+                                        <input type="text" class="form-control" id="destination" name="destination" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="targetDate" class="form-label">Target Date</label>
+                                        <input type="date" class="form-control" id="targetDate" name="targetDate">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa-solid fa-plus me-2"></i>Add Goal
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vacation Slots Tab -->
+            <div class="tab-pane fade" id="vacation-slots-section" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="profile-card">
+                            <div class="card-header">
+                                <h5><i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="vacationSlotsList">
+                                    <div class="text-center py-4">
+                                        <i class="fa-solid fa-spinner fa-spin fa-2x text-muted mb-3"></i>
+                                        <p>Loading vacation slots...</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1191,14 +1019,163 @@
                 </div>
             </div>
 
-            <div class="profile-actions">
-                <a href="/listings" class="btn btn-secondary">
-                    <i class="fa-solid fa-home me-2"></i>Back to Listings
-                </a>
-                <a href="/logout" class="btn btn-danger">
-                    <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
-                </a>
+            <!-- Activity Tab -->
+            <div class="tab-pane fade" id="activity-section" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="profile-card">
+                            <div class="card-header">
+                                <h5><i class="fa-solid fa-history me-2"></i>Recent Activity</h5>
+                            </div>
+                            <div class="card-body">
+                                <% if (recentActivity && recentActivity.length > 0) { %>
+                                    <div class="activity-timeline">
+                                        <% recentActivity.forEach(activity => { %>
+                                            <div class="activity-item">
+                                                <div class="activity-icon">
+                                                    <% if (activity.action.includes('badge')) { %>
+                                                        <i class="fa-solid fa-award"></i>
+                                                    <% } else if (activity.action.includes('wishlist')) { %>
+                                                        <i class="fa-solid fa-heart"></i>
+                                                    <% } else if (activity.action.includes('profile')) { %>
+                                                        <i class="fa-solid fa-user-edit"></i>
+                                                    <% } else if (activity.action.includes('goal')) { %>
+                                                        <i class="fa-solid fa-target"></i>
+                                                    <% } else { %>
+                                                        <i class="fa-solid fa-info-circle"></i>
+                                                    <% } %>
+                                                </div>
+                                                <div class="activity-content">
+                                                    <p class="activity-text">
+                                                        <%= activity.details || activity.action %>
+                                                    </p>
+                                                    <small class="activity-time">
+                                                        <%= new Date(activity.timestamp).toLocaleString() %>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        <% }); %>
+                                    </div>
+                                <% } else { %>
+                                    <div class="text-center py-4">
+                                        <i class="fa-solid fa-clock fa-3x text-muted mb-3"></i>
+                                        <h5>No recent activity</h5>
+                                        <p class="text-muted">Your recent activities will appear here.</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="profile-actions">
+            <a href="/listings" class="btn btn-secondary">
+                <i class="fa-solid fa-home me-2"></i>Back to Listings
+            </a>
+            <a href="/logout" class="btn btn-danger">
+                <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
+            </a>
         </div>
     </div>
 </div>
+
+<script>
+// Load vacation slots when tab is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const vacationSlotsTab = document.getElementById('vacation-slots-tab');
+    const vacationSlotsList = document.getElementById('vacationSlotsList');
+    
+    vacationSlotsTab.addEventListener('click', function() {
+        loadVacationSlots();
+    });
+    
+    function loadVacationSlots() {
+        fetch('/holiday/vacation-slots')
+            .then(response => response.json())
+            .then(data => {
+                displayVacationSlots(data.vacationSlots || []);
+            })
+            .catch(error => {
+                console.error('Error loading vacation slots:', error);
+                vacationSlotsList.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                        <p>Failed to load vacation slots</p>
+                    </div>
+                `;
+            });
+    }
+    
+    function displayVacationSlots(slots) {
+        if (slots.length === 0) {
+            vacationSlotsList.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fa-solid fa-calendar-plus fa-3x text-muted mb-3"></i>
+                    <h5>No vacation slots marked</h5>
+                    <p class="text-muted">Visit the <a href="/holiday" class="text-decoration-none">Holiday Calendar</a> to mark holidays as vacation slots!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const slotsHtml = slots.map(slot => {
+            const date = new Date(slot.date);
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            return `
+                <div class="vacation-slot-item" data-date="${slot.date}">
+                    <div class="vacation-slot-header">
+                        <h6 class="vacation-slot-name">${slot.holidayName}</h6>
+                        <div class="vacation-slot-actions">
+                            <button class="btn btn-remove-slot" onclick="removeVacationSlot('${slot.date}')">
+                                <i class="fa-solid fa-trash me-1"></i>Remove
+                            </button>
+                        </div>
+                    </div>
+                    <div class="vacation-slot-date">${formattedDate}</div>
+                    <div class="vacation-slot-meta">
+                        <span><i class="fa-solid fa-flag me-1"></i>${slot.country}</span>
+                        <span><i class="fa-solid fa-tag me-1"></i>${slot.holidayType}</span>
+                        <span><i class="fa-solid fa-clock me-1"></i>Marked ${new Date(slot.markedAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        vacationSlotsList.innerHTML = `
+            <div class="mb-3">
+                <p class="text-muted">You have marked ${slots.length} holiday${slots.length > 1 ? 's' : ''} as vacation slots</p>
+            </div>
+            ${slotsHtml}
+        `;
+    }
+    
+    window.removeVacationSlot = function(date) {
+        if (!confirm('Remove this vacation slot?')) return;
+        
+        fetch(`/holiday/vacation-slot/${date}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadVacationSlots(); // Reload the list
+            } else {
+                alert('Failed to remove vacation slot');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to remove vacation slot');
+        });
+    };
+});
+</script>

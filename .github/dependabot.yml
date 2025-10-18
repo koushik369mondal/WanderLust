@@ -1,0 +1,59 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    target-branch: "main"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "koushik369mondal"
+    labels:
+      - "dependencies"
+      - "automated"
+      - "GSSoC'25"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      # Ignore major version updates for stable packages
+      - dependency-name: "express"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "mongoose"
+        update-types: ["version-update:semver-major"]
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+      production-dependencies:
+        patterns:
+          - "express*"
+          - "mongoose*"
+          - "passport*"
+          - "cloudinary*"
+          - "multer*"
+          - "ejs*"
+          - "bootstrap*"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        patterns:
+          - "nodemon*"
+          - "jest*"
+          - "eslint*"
+          - "prettier*"
+        update-types:
+          - "major"
+          - "minor" 
+          - "patch"

@@ -41,14 +41,25 @@
 
 ## 🚀 Features
 
-- 🌐 **Browse Destinations** - Explore amazing travel locations
-- 📝 **Add New Places** - Share your favorite destinations
-- ⭐ **Reviews & Ratings** - Rate and review places you've visited
-- 🗺️ **Interactive Maps** - Powered by Mapbox
-- 📸 **Photo Uploads** - Upload images via Cloudinary
-- 📱 **Responsive Design** - Works on all devices
-- 🔐 **User Authentication** - Secure login/signup system
-- ✏️ **Full CRUD** - Create, Read, Update, Delete functionality
+### Core Features
+- 🌐 **Browse Destinations** - Explore amazing travel locations with detailed information
+- 📝 **Add New Places** - Share your favorite destinations with photos and descriptions
+- ⭐ **Reviews & Ratings** - Rate and review places you've visited (1-5 stars)
+- 🗺️ **Interactive Maps** - Powered by Mapbox with precise location markers
+- 📸 **Photo Uploads** - Upload multiple images via Cloudinary integration
+- 📱 **Responsive Design** - Fully optimized for desktop, tablet, and mobile devices
+- 🔐 **User Authentication** - Secure login/signup system with Passport.js
+- ✏️ **Full CRUD Operations** - Create, Read, Update, Delete listings and reviews
+
+### Advanced Features
+- 🤖 **AI-Powered Packing List Generator** - Smart travel packing lists with weather integration
+- 🌤️ **Real-Time Weather Integration** - Live weather data for all destinations
+- 📅 **Holiday Calendar & Travel Planner** - Smart vacation planning with global holidays
+- 🎯 **Best Time to Visit Recommendations** - Country-specific travel season suggestions
+- 🔍 **Smart Search & Filters** - Find destinations by location, price, or features
+- 💾 **Data Caching** - Optimized performance with 10-minute weather caching
+- 🌍 **Multi-Country Support** - Global destinations with localized information
+- 📊 **Admin Analytics Dashboard** - Comprehensive platform metrics and insights
 
 ## 🌟 GSSoC 2025 Participation
 
@@ -66,6 +77,8 @@
 - **Cloud Storage:** Cloudinary (for image uploads)
 - **Maps:** Mapbox API
 - **Authentication:** Passport.js
+- **Analytics:** Chart.js (for admin dashboard)
+- **Data Visualization:** Interactive charts and real-time metrics
 
 ## 📋 Prerequisites
 
@@ -117,6 +130,33 @@ cp .env.example .env
    ATLAS_DB_URL=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
    ```
 
+### 🌤️ OpenWeatherMap API Setup (Weather Service)
+
+1. **Create Account:** Go to [OpenWeatherMap](https://openweathermap.org/api) and sign up for free
+2. **Get API Key:** After login, go to API Keys section and copy your key
+3. **Add to `.env`:**
+   ```env
+   WEATHER_API_KEY=your_openweathermap_api_key
+   ```
+
+### 🤖 OpenAI API Setup (Required - for AI Packing List Generator)
+
+1. **Create Account:** Go to [OpenAI](https://platform.openai.com/) and sign up for an account
+2. **Get API Key:** After login, go to API Keys section and create a new secret key
+3. **Add to `.env`:**
+   ```env
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+
+### 📅 Holiday API Setup (Optional - for Holiday Calendar)
+
+1. **Create Account:** Go to [Calendarific](https://calendarific.com/) for holiday data
+2. **Get API Key:** Copy your API key from dashboard
+3. **Add to `.env`:**
+   ```env
+   HOLIDAY_API_KEY=your_holiday_api_key
+   ```
+
 ### 🔐 Session Secret Setup
 
 Generate a strong random string for session encryption:
@@ -141,6 +181,10 @@ CLOUD_API_SECRET=your_cloudinary_api_secret
 MAP_TOKEN=pk.eyJ1IjoieW91cl91c2VybmFtZSIsImEiOiJjbTls...
 
 ATLAS_DB_URL=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+WEATHER_API_KEY=your_openweathermap_api_key
+OPENAI_API_KEY=your_openai_api_key
+HOLIDAY_API_KEY=your_holiday_api_key
 
 SECRET=your_super_secret_session_key_here_make_it_long_and_random
 ```
@@ -189,27 +233,42 @@ npm start
 ```bash
 WanderLust/
 ├── models/          # Database models (Listing, Review, User)
-├── routes/          # Express routes
+├── routes/          # Express routes (including admin analytics)
 ├── views/           # EJS templates
+│   └── admin/       # Admin dashboard views
 ├── public/          # Static files (CSS, JS, images)
+│   ├── CSS/         # Stylesheets (including admin-dashboard.css)
+│   └── JS/          # JavaScript files (including admin-dashboard.js)
 ├── middleware/      # Custom middleware functions
 ├── utils/           # Utility functions
 ├── init/            # Database initialization
+├── docs/            # Documentation (including ADMIN_DASHBOARD.md)
 ├── .env.example     # Environment variables template
+├── createAdmin.js   # Admin user creation script
 └── app.js           # Main application file
 ```
 
 ## 📝 Available Scripts
 
 ```bash
-npm start          # Start the application
-npm run dev        # Start with nodemon (auto-restart)
-npm test           # Run tests (if available)
+npm start                    # Start the application
+npm run dev                  # Start with nodemon (auto-restart)
+npm test                     # Run tests (if available)
+node createAdmin.js          # Create admin user for dashboard access
+node test-admin-dashboard.js # Test admin dashboard functionality
 ```
 
 ## 🤝 Contributing
 
 We welcome contributions! Follow these steps:
+
+### 🏷️ Understanding Our Auto-Labeling System
+
+Before contributing, please read our **[Labeling Guide](LABELING_GUIDE.md)** to understand how Issues and Pull Requests are automatically assigned complexity levels:
+
+- 🌱 **Level1**: Beginner-friendly (documentation, typos, simple styling)
+- 🔧 **Level2**: Intermediate (features, UI/UX, components)  
+- ⚡ **Level3**: Advanced (bugs, backend, security, performance)
 
 ### 1. Create a Feature Branch
 
@@ -222,6 +281,7 @@ git checkout -b feature/your-feature-name
 - Write clean, well-commented code
 - Follow existing code style and conventions
 - Test your changes locally
+- Consider the complexity level when creating Issues/PRs
 
 ### 3. Commit Your Changes
 
@@ -243,6 +303,162 @@ git push origin feature/your-feature-name
 3. Provide a clear title and description
 4. Submit the PR 🎉
 
+## 🌤️ Weather Integration Details
+
+### Real-Time Weather Display
+**Location:** Appears on listing detail pages above the map section
+
+**What You'll See:**
+- 🌡️ **Current Temperature** - Live temperature in Celsius (e.g., "24°C")
+- 🌤️ **Weather Condition** - Clear description with emoji (☀️ sunny, 🌧️ rainy, ☁️ cloudy)
+- 💨 **Wind Speed** - Current wind speed in m/s
+- 💧 **Humidity** - Percentage humidity level
+- 🌡️ **Feels Like** - Perceived temperature
+
+### Weather Icon System
+- ☀️ **Clear/Sunny** - Perfect weather conditions
+- ☁️ **Cloudy** - Overcast conditions
+- 🌧️ **Rain/Drizzle** - Wet weather conditions
+- ⛈️ **Thunderstorms** - Severe weather alerts
+- ❄️ **Snow** - Winter conditions
+- 🌫️ **Mist/Fog** - Low visibility conditions
+- 🌤️ **Mixed** - Partly cloudy/default conditions
+
+### Best Time to Visit Recommendations
+**Country-Specific Travel Seasons:**
+- 🇮🇹 **Italy:** Spring (Apr-Jun) & Fall (Sep-Oct)
+- 🇯🇵 **Japan:** Spring (Mar-May) & Fall (Sep-Nov) - Cherry blossoms & autumn colors
+- 🇹🇭 **Thailand:** Cool Season (Nov-Feb) - Dry and comfortable
+- 🇮🇳 **India:** Winter (Oct-Mar) - Pleasant temperatures
+- 🇺🇸 **USA:** Varies by region - Spring & Fall generally ideal
+- 🌍 **Default:** Spring & Fall seasons typically perfect for travel
+
+### Performance Optimization
+- ⚡ **10-minute caching** - Weather data cached for faster loading
+- 🔄 **Auto-refresh** - Data updates every 10 minutes automatically
+- 📱 **Fallback system** - Backup weather data when API is unavailable
+
+## 🤖 AI-Powered Packing List Generator
+
+### Smart Travel Planning
+**Access:** Available in navbar dropdown under "Travel Tools" 🛠️
+
+### Packing List Features
+- 🤖 **AI-Generated Lists** - Personalized packing suggestions using OpenAI GPT
+- 🌤️ **Weather Integration** - Weather-appropriate clothing and gear recommendations
+- 📋 **Categorized Organization** - Items grouped by essentials, clothing, toiletries, etc.
+- 💾 **Save to Trip Plans** - Store packing lists with your travel itineraries
+- 📱 **Interactive Checklists** - Check off items as you pack
+- 📄 **PDF Export** - Download printable packing lists
+
+### How It Works
+1. **Fill Out Form** - Provide trip details (destination, duration, activities, weather)
+2. **AI Analysis** - System analyzes weather data and generates personalized recommendations
+3. **Review & Customize** - Review the AI-generated list and make adjustments
+4. **Save & Export** - Save to your trip plans or export as PDF
+5. **Track Progress** - Use interactive checklist during packing
+
+### AI Intelligence Features
+- 🎯 **Activity-Based Suggestions** - Hiking, beach, city exploration, business travel
+- 🌡️ **Weather-Adaptive** - Appropriate clothing for temperature and conditions
+- 📅 **Duration-Aware** - Different recommendations for short vs long trips
+- 🌍 **Destination-Specific** - Local customs, voltage requirements, cultural considerations
+- 👥 **Group Travel** - Family, solo, couple, or group recommendations
+
+### Packing Categories
+- 🧳 **Essentials** - Documents, money, phone, chargers
+- 👕 **Clothing** - Weather-appropriate outfits and accessories
+- 🧴 **Toiletries** - Personal care and hygiene items
+- 💊 **Health & Safety** - Medications, first aid, travel insurance
+- 🛠️ **Electronics** - Gadgets, adapters, portable chargers
+- 🎒 **Activity Gear** - Sports equipment, special clothing
+- 📚 **Miscellaneous** - Books, entertainment, snacks
+
+### Smart Recommendations
+- ⚡ **Power Adapters** - Country-specific plug types and voltage
+- 💉 **Health Requirements** - Vaccination recommendations
+- 🌦️ **Weather Contingency** - Rain gear, layers for temperature changes
+- 🎯 **Activity-Specific** - Hiking boots for trails, formal wear for business
+- 📏 **Weight Optimization** - Suggestions for carry-on vs checked luggage
+
+### Integration Benefits
+- 🔗 **Trip Planner Sync** - Connects with holiday calendar and vacation slots
+- 🌤️ **Weather Data** - Real-time weather integration for accurate recommendations
+- 💾 **Persistent Storage** - Save multiple lists for different trips
+- 📊 **Progress Tracking** - Visual indicators for packing completion
+- 📱 **Mobile Friendly** - Responsive design for on-the-go planning
+
+## 📅 Holiday Calendar & Travel Planner
+
+### Smart Vacation Planning
+**Access:** Available in navbar dropdown under "Travel Tools" 🛠️
+
+### Holiday Calendar Features
+- 🗓️ **Global Holidays** - Public holidays for 200+ countries
+- 🎉 **Long Weekends** - Automatic detection of extended holiday periods
+- 🏖️ **Vacation Slots** - Mark ideal travel periods
+- 📊 **Peak vs Off-Peak** - Travel season indicators
+- 🎯 **Destination Suggestions** - Popular places during specific holidays
+
+### How It Works
+1. **Select Country** - Choose your home country or destination
+2. **View Calendar** - See upcoming holidays and long weekends
+3. **Plan Trips** - Mark holidays as "ideal vacation slots"
+4. **Get Suggestions** - Discover trending destinations for those dates
+5. **Smart Recommendations** - Combine with weather data for perfect timing
+
+### Holiday Types Covered
+- 🏛️ **National Holidays** - Official government holidays
+- 🎊 **Religious Festivals** - Major religious celebrations
+- 🎭 **Cultural Events** - Local festivals and celebrations
+- 🏖️ **School Holidays** - Academic calendar breaks
+- 💼 **Bank Holidays** - Financial sector closures
+
+### Travel Planning Benefits
+- 💰 **Cost Optimization** - Avoid peak pricing periods
+- 🎯 **Perfect Timing** - Travel during ideal weather + holidays
+- 📈 **Trend Analysis** - See popular destinations by season
+- 🗓️ **Calendar Integration** - Export to Google Calendar/iCal
+- 🌍 **Multi-Country Planning** - Compare holidays across regions
+
+## 📊 Admin Analytics Dashboard
+
+### Quick Setup
+1. **Create Admin User**
+   ```bash
+   node createAdmin.js
+   ```
+
+2. **Access Dashboard**
+   ```
+   URL: http://localhost:8080/admin/dashboard
+   Username: admin
+   Password: admin123
+   ```
+
+3. **Test Dashboard**
+   ```bash
+   node test-admin-dashboard.js
+   ```
+
+### Dashboard Features
+- 📈 **User Growth Trends** - Track new user registrations over time
+- ⭐ **Top Rated Destinations** - Highest rated locations by users
+- 🥇 **Most Active Contributors** - Users with most listings and reviews
+- 💬 **Review Activity** - Review submission patterns and trends
+- 🎯 **Popular Categories** - Distribution of listing categories
+- 💰 **Platform Value Trends** - Pricing trends and listing values
+
+### Key Metrics
+- Real-time user statistics
+- Monthly growth indicators
+- Platform engagement metrics
+- Revenue and pricing analytics
+- Interactive Chart.js visualizations
+- Auto-refresh every 5 minutes
+
+For detailed documentation, see [Admin Dashboard Guide](docs/ADMIN_DASHBOARD.md)
+
 ## 🐛 Common Issues & Solutions
 
 | Issue                       | Solution                                |
@@ -251,6 +467,11 @@ git push origin feature/your-feature-name
 | Database connection failed  | Check your `ATLAS_DB_URL` in `.env`     |
 | Images not uploading        | Verify Cloudinary credentials in `.env` |
 | Maps not loading            | Check your `MAP_TOKEN` in `.env`        |
+| Weather not displaying      | Verify `WEATHER_API_KEY` in `.env`      |
+| Holiday calendar empty      | Check `HOLIDAY_API_KEY` in `.env`       |
+| Admin dashboard not loading | Run `node createAdmin.js` first        |
+| Charts not displaying       | Check browser console for JS errors     |
+| Slow loading times          | Weather caching active - wait 10 mins   |
 
 ## 📜 Code of Conduct
 

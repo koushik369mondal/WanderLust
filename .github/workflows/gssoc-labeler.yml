@@ -1,14 +1,14 @@
-name: "🏷️ GSSoC'25 Auto-Labeler"
+﻿name: "🚀 HIGH PRIORITY: GSSoC'25 Auto-Labeler"
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited, reopened]
   pull_request:
-    types: [opened]
+    types: [opened, edited, synchronize, reopened]
 
 jobs:
   auto-label-gssoc:
-    name: "Apply GSSoC'25 Labels"
+    name: "🏷️ Apply GSSoC'25 and Smart Level Labels"
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -16,227 +16,496 @@ jobs:
       contents: read
 
     steps:
-      - name: "Auto-label issues with GSSoC'25"
-        if: github.event_name == 'issues'
+      - name: "🔄 Checkout Repository"
+        uses: actions/checkout@v4
+        
+      - name: "🎯 Classify and Label Issue or PR"
         uses: actions/github-script@v7
         with:
           script: |
-            try {
-              await github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.issue.number,
-                labels: ['GSSoC\'25', 'Level2']
-              });
-              
-              console.log('Successfully added GSSoC\'25 and Level2 labels to issue #' + context.payload.issue.number);
-            } catch (error) {
-              console.error('Error adding labels to issue:', error);
-              
-              // Try to create the labels if they don't exist
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'GSSoC\'25',
-                  description: 'Part of GirlScript Summer of Code 2025',
-                  color: 'ff6b35'
-                });
-                console.log('Created GSSoC\'25 label');
-              } catch (createError) {
-                console.log('GSSoC\'25 label might already exist');
-              }
-              
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'Level2',
-                  description: 'Intermediate level task - suitable for contributors with some experience',
-                  color: '0366d6'
-                });
-                console.log('Created Level2 label');
-              } catch (createError) {
-                console.log('Level2 label might already exist');
-              }
-              
-              // Try adding labels again after creation
-              try {
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.issue.number,
-                  labels: ['GSSoC\'25', 'Level2']
-                });
-                console.log('Successfully added labels after creation');
-              } catch (retryError) {
-                console.error('Failed to add labels even after creation:', retryError);
-              }
-            }
-
-      - name: "Auto-label PRs with GSSoC'25"
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            try {
-              await github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                labels: ['GSSoC\'25', 'Level2']
-              });
-              
-              console.log('Successfully added GSSoC\'25 and Level2 labels to PR #' + context.payload.pull_request.number);
-            } catch (error) {
-              console.error('Error adding labels to PR:', error);
-              
-              // Try to create the labels if they don't exist
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'GSSoC\'25',
-                  description: 'Part of GirlScript Summer of Code 2025',
-                  color: 'ff6b35'
-                });
-                console.log('Created GSSoC\'25 label');
-              } catch (createError) {
-                console.log('GSSoC\'25 label might already exist');
-              }
-              
-              try {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: 'Level2',
-                  description: 'Intermediate level task - suitable for contributors with some experience',
-                  color: '0366d6'
-                });
-                console.log('Created Level2 label');
-              } catch (createError) {
-                console.log('Level2 label might already exist');
-              }
-              
-              // Try adding labels again after creation
-              try {
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.pull_request.number,
-                  labels: ['GSSoC\'25', 'Level2']
-                });
-                console.log('Successfully added labels after creation');
-              } catch (retryError) {
-                console.error('Failed to add labels even after creation:', retryError);
-              }
-            }
-
-      - name: "Add welcome comment for GSSoC'25 contributors"
-        if: github.event_name == 'issues'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Check if this is a new contributor
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              creator: context.payload.issue.user.login,
-              state: 'all'
-            });
+            console.log('🚀 HIGH PRIORITY AUTO-LABELER STARTED');
+            console.log(`Event: ${context.eventName}`);
             
-            if (issues.data.length === 1) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.issue.number,
-                body: `## 🎉 Welcome to GSSoC'25! 🌟
-
-            Thank you for contributing to **WanderLust** as part of **GirlScript Summer of Code 2025**! 
-
-            ### 🏷️ **Your Issue Details:**
-            - 🎯 **Program**: GSSoC'25
-            - 📊 **Level**: Level2 (Intermediate)
-            - 🌍 **Project**: WanderLust - Travel Platform
-
-            ### 📋 **Next Steps:**
-            1. **Wait for Assignment** - A maintainer will review and assign this issue
-            2. **Read Guidelines** - Check our [Contributing Guide](CONTRIBUTION.md)
-            3. **Ask Questions** - Feel free to ask for clarification
-            4. **Stay Updated** - Watch this issue for updates
-
-            ### 💡 **GSSoC'25 Tips:**
-            - 🕒 **Time Management**: Plan your work effectively
-            - 🤝 **Communication**: Keep maintainers updated on progress
-            - 🔍 **Quality**: Focus on clean, well-documented code
-            - 📈 **Learning**: This is a great opportunity to grow your skills!
-
-            ### 🌟 **Point System:**
-            - **Level2 Issues**: Worth more points for intermediate complexity
-            - **Quality Matters**: Well-implemented solutions earn bonus points
-            - **Documentation**: Good documentation and tests are highly valued
-
-            **Happy Coding! Let's make WanderLust amazing together! 🚀✨**
-
-            *This is an automated message for GSSoC'25 participants. For questions, tag a maintainer.*`
-              });
+            // Utility to create label if missing
+            async function ensureLabel(name, description, color) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name,
+                  description,
+                  color
+                });
+                console.log(`✅ Created ${name} label`);
+              } catch (e) {
+                if (e.status === 422) {
+                  console.log(`ℹ️ ${name} label already exists`);
+                } else {
+                  console.log(`⚠️ Error creating ${name} label:`, e.message);
+                }
+              }
             }
 
-      - name: "Add welcome comment for GSSoC'25 PR contributors"
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Check if this is the contributor's first PR
-            const prs = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              creator: context.payload.pull_request.user.login,
-              state: 'all'
-            });
+            // Enhanced complexity analysis for Issues
+            function getLevelForIssue(issue) {
+              const title = (issue.title || '').toLowerCase();
+              const body = (issue.body || '').toLowerCase();
+              const content = title + ' ' + body;
+              
+              let complexityScore = 0;
+              
+              // Level 3 indicators (Advanced) - Higher complexity
+              const level3Keywords = [
+                'bug', 'error', 'crash', 'broken', 'fix', 'critical', 'urgent',
+                'database', 'schema', 'migration', 'auth', 'authentication', 'authorization', 'security', 'vulnerability',
+                'api', 'backend', 'server', 'infrastructure', 'devops',
+                'deploy', 'deployment', 'docker', 'container', 'kubernetes', 'ci/cd', 'pipeline', 'workflow',
+                'breaking change', 'architecture', 'refactor', 'refactoring', 'performance', 'optimization', 'memory leak',
+                'concurrency', 'async', 'promise', 'callback', 'event loop', 'scalability',
+                'testing', 'unit test', 'integration test', 'e2e', 'cypress', 'jest', 'mocha',
+                'websocket', 'real-time', 'streaming', 'caching', 'redis', 'mongodb', 'sql',
+                'encryption', 'cors', 'csrf', 'xss', 'injection', 'sanitization'
+              ];
+              
+              // Level 2 indicators (Intermediate) - Medium complexity
+              const level2Keywords = [
+                'feature', 'enhancement', 'functionality', 'component', 'module',
+                'integration', 'improvement', 'update', 'modify', 'change', 'implement',
+                'frontend', 'ui', 'interface', 'design', 'responsive', 'mobile',
+                'controller', 'route', 'routing', 'middleware', 'validation',
+                'form', 'input', 'button', 'modal', 'dropdown', 'navigation',
+                'search', 'filter', 'sort', 'pagination', 'table', 'grid',
+                'notification', 'alert', 'message', 'toast', 'popup',
+                'upload', 'download', 'file', 'image', 'video', 'media',
+                'user management', 'profile', 'dashboard', 'admin', 'settings',
+                'localization', 'i18n', 'translation', 'language',
+                'chart', 'graph', 'visualization', 'analytics', 'reporting'
+              ];
+              
+              // Level 1 indicators (Beginner) - Low complexity
+              const level1Keywords = [
+                'documentation', 'readme', 'docs', 'comment', 'comments',
+                'typo', 'spelling', 'grammar', 'text', 'content', 'copy',
+                'style', 'css', 'styling', 'color', 'font', 'theme',
+                'image', 'icon', 'logo', 'favicon', 'asset', 'static',
+                'minor', 'small', 'tiny', 'quick', 'simple', 'easy',
+                'whitespace', 'formatting', 'indentation', 'semicolon',
+                'link', 'url', 'href', 'anchor', 'hyperlink',
+                'license', 'copyright', 'author', 'contributor',
+                'version', 'changelog', 'release notes', 'update version'
+              ];
+              
+              // Enhanced scoring with keyword frequency and position weighting
+              // Title gets higher weight than body
+              const titleWeight = 1.5;
+              const bodyWeight = 0.5;
+              
+              // Score based on keywords in title (weighted higher)
+              for (const keyword of level3Keywords) {
+                const titleMatches = (title.match(new RegExp(keyword, 'g')) || []).length;
+                const bodyMatches = (body.match(new RegExp(keyword, 'g')) || []).length;
+                complexityScore += (titleMatches * 5 * titleWeight) + (bodyMatches * 3 * bodyWeight);
+              }
+              
+              for (const keyword of level2Keywords) {
+                const titleMatches = (title.match(new RegExp(keyword, 'g')) || []).length;
+                const bodyMatches = (body.match(new RegExp(keyword, 'g')) || []).length;
+                complexityScore += (titleMatches * 3 * titleWeight) + (bodyMatches * 2 * bodyWeight);
+              }
+              
+              for (const keyword of level1Keywords) {
+                const titleMatches = (title.match(new RegExp(keyword, 'g')) || []).length;
+                const bodyMatches = (body.match(new RegExp(keyword, 'g')) || []).length;
+                complexityScore += (titleMatches * 1 * titleWeight) + (bodyMatches * 0.5 * bodyWeight);
+              }
+              
+              // Additional complexity indicators
+              const bodyLength = (issue.body || '').length;
+              
+              // Content length bonus (more detailed issues tend to be more complex)
+              if (bodyLength > 2000) complexityScore += 5;
+              else if (bodyLength > 1000) complexityScore += 3;
+              else if (bodyLength > 500) complexityScore += 2;
+              else if (bodyLength > 200) complexityScore += 1;
+              
+              // Code block detection (issues with code tend to be more technical)
+              const codeBlocks = (body.match(/```[\s\S]*?```/g) || []).length;
+              const inlineCode = (body.match(/`[^`]+`/g) || []).length;
+              complexityScore += codeBlocks * 3 + Math.min(inlineCode, 10) * 0.3;
+              
+              // File path mentions (indicates specific code changes)
+              const filePaths = (content.match(/\b[\w-]+\.(js|ts|jsx|tsx|css|html|json|md|yml|yaml)\b/g) || []).length;
+              complexityScore += Math.min(filePaths, 5) * 1.5;
+              
+              // Priority indicators
+              if (/\b(urgent|critical|high priority|asap|blocking|blocker)\b/.test(content)) {
+                complexityScore += 5;
+              }
+              
+              // Question indicators (usually simpler issues)
+              if (/\?/.test(title) && /\b(how|what|why|where|when|help|question)\b/.test(content)) {
+                complexityScore = Math.max(0, complexityScore - 3);
+              }
+              
+              console.log(`📊 Issue complexity score: ${complexityScore}`);
+              console.log(`📝 Title: "${title}"`);
+              console.log(`📄 Body length: ${bodyLength} chars`);
+              console.log(`💻 Code blocks: ${codeBlocks}, Inline code: ${inlineCode}`);
+              console.log(`📁 File mentions: ${filePaths}`);
+              
+              // Adjusted thresholds for better distribution
+              // Level3: 45+ (Critical bugs, security issues, major refactors)
+              // Level2: 20-44 (Features, enhancements, moderate complexity)
+              // Level1: 0-19 (Documentation, UI tweaks, simple fixes)
+              if (complexityScore >= 45) return "Level3";
+              if (complexityScore >= 20) return "Level2";
+              return "Level1";
+            }
+
+            // Enhanced complexity analysis for PRs
+            function getLevelForPR(files, prData) {
+              const filesChanged = files.length;
+              const additions = files.reduce((sum, file) => sum + file.additions, 0);
+              const deletions = files.reduce((sum, file) => sum + file.deletions, 0);
+              const totalChanges = additions + deletions;
+              
+              // Analyze PR title and description for additional context
+              const title = (prData.title || '').toLowerCase();
+              const body = (prData.body || '').toLowerCase();
+              const prContent = title + ' ' + body;
+              
+              let complexityScore = 0;
+              
+              // File-based complexity analysis with enhanced categorization
+              for (const file of files) {
+                const filename = file.filename;
+                const fileChanges = file.additions + file.deletions;
+                
+                // Core application files (highest complexity)
+                if (/^(app\.js|server\.js|index\.js|main\.js)$/.test(filename)) {
+                  complexityScore += 15;
+                } else if (/^(schema\.js|database\.js|config\.js)$/.test(filename)) {
+                  complexityScore += 12;
+                } else if (/^(package\.json|package-lock\.json|yarn\.lock)$/.test(filename)) {
+                  complexityScore += 8;
+                  
+                // Backend/API files (high complexity)
+                } else if (/^models\/.*\.js$/.test(filename)) {
+                  complexityScore += 8 + Math.min(fileChanges / 30, 5);
+                } else if (/^(controllers\/|routes\/|api\/).*\.js$/.test(filename)) {
+                  complexityScore += 7 + Math.min(fileChanges / 25, 4);
+                } else if (/^middleware.*\.js$/.test(filename)) {
+                  complexityScore += 6 + Math.min(fileChanges / 20, 3);
+                  
+                // Authentication & Security
+                } else if (/^(auth|security|passport).*\.js$/.test(filename)) {
+                  complexityScore += 10;
+                  
+                // Database & Migration files
+                } else if (/^(migrations?\/|seeds?\/|init\/).*\.(js|sql)$/.test(filename)) {
+                  complexityScore += 9;
+                  
+                // Configuration files
+                } else if (/\.(env|config|yml|yaml|json)$/.test(filename) && !filename.includes('package')) {
+                  complexityScore += 5;
+                  
+                // Frontend files (medium complexity)
+                } else if (/^(views\/|templates\/).*\.(ejs|html|hbs|pug)$/.test(filename)) {
+                  complexityScore += 3 + Math.min(fileChanges / 50, 3);
+                } else if (/^public\/.*\.(js|ts)$/.test(filename)) {
+                  complexityScore += 4 + Math.min(fileChanges / 40, 3);
+                } else if (/^(public\/|assets\/|static\/).*\.css$/.test(filename)) {
+                  complexityScore += 2 + Math.min(fileChanges / 60, 2);
+                  
+                // Testing files
+                } else if (/^(test|tests|spec|__tests__)\/.*\.(js|ts)$/.test(filename)) {
+                  complexityScore += 5;
+                  
+                // CI/CD and DevOps
+                } else if (/^\.github\/workflows\/.*\.yml$/.test(filename)) {
+                  complexityScore += 8;
+                } else if (/^(docker|Docker).*$/.test(filename)) {
+                  complexityScore += 7;
+                  
+                // Documentation and assets (low complexity)
+                } else if (/\.(md|txt|rst)$/.test(filename)) {
+                  complexityScore += 0.5;
+                } else if (/\.(png|jpg|jpeg|gif|svg|ico|webp)$/.test(filename)) {
+                  complexityScore += 0.3;
+                  
+                // Other files
+                } else {
+                  complexityScore += 1.5;
+                }
+              }
+              
+              // Volume-based scoring with more balanced levels
+              if (filesChanged > 30) complexityScore += 20;
+              else if (filesChanged > 20) complexityScore += 15;
+              else if (filesChanged > 10) complexityScore += 10;
+              else if (filesChanged > 5) complexityScore += 5;
+              else if (filesChanged > 2) complexityScore += 2;
+              
+              if (totalChanges > 3000) complexityScore += 15;
+              else if (totalChanges > 1500) complexityScore += 12;
+              else if (totalChanges > 800) complexityScore += 8;
+              else if (totalChanges > 300) complexityScore += 4;
+              else if (totalChanges > 100) complexityScore += 2;
+              
+              // PR title and description analysis
+              const level3PrKeywords = [
+                'breaking change', 'major refactor', 'architecture', 'security fix', 'vulnerability',
+                'database migration', 'performance optimization', 'api redesign', 'authentication',
+                'critical bug', 'hotfix', 'emergency', 'urgent', 'production issue'
+              ];
+              
+              const level2PrKeywords = [
+                'feature', 'enhancement', 'improvement', 'integration', 'component',
+                'functionality', 'ui update', 'frontend', 'backend', 'endpoint',
+                'validation', 'middleware', 'routing', 'controller'
+              ];
+              
+              const level1PrKeywords = [
+                'documentation', 'readme', 'typo', 'style', 'css', 'minor',
+                'comment', 'formatting', 'cleanup', 'update version', 'dependency update'
+              ];
+              
+              // Score based on PR content
+              for (const keyword of level3PrKeywords) {
+                if (prContent.includes(keyword)) complexityScore += 8;
+              }
+              
+              for (const keyword of level2PrKeywords) {
+                if (prContent.includes(keyword)) complexityScore += 3;
+              }
+              
+              for (const keyword of level1PrKeywords) {
+                if (prContent.includes(keyword)) complexityScore -= 5; // Reduce score for simple changes
+              }
+              
+              // Special patterns that indicate complexity
+              if (/\b(dependency|dependencies)\b/.test(prContent) && filesChanged === 1) {
+                complexityScore = Math.max(complexityScore, 12); // Dependency updates are Level2
+              }
+              
+              // Multiple file types touched indicates higher complexity
+              const fileTypes = new Set(files.map(f => f.filename.split('.').pop()));
+              if (fileTypes.size > 5) complexityScore += 4;
+              else if (fileTypes.size > 3) complexityScore += 2;
+              
+              // Check for test file additions (good practice, slight complexity increase)
+              const hasTests = files.some(f => /^(test|tests|spec|__tests__)\//.test(f.filename));
+              if (hasTests) complexityScore += 2;
+              
+              console.log(`📊 PR complexity score: ${complexityScore}`);
+              console.log(`📁 Files: ${filesChanged}, 📝 Changes: ${totalChanges}`);
+              console.log(`🔍 File types: ${Array.from(fileTypes).join(', ')}`);
+              console.log(`🧪 Has tests: ${hasTests}`);
+              console.log(`📝 PR title: "${title}"`);
+              
+              // Adjusted thresholds for better distribution
+              // Level3: 60+ (Major refactors, security fixes, breaking changes, 20+ files)
+              // Level2: 25-59 (Features, enhancements, 5-20 files)
+              // Level1: 0-24 (Documentation, minor fixes, styling, 1-4 files)
+              if (complexityScore >= 60) return "Level3";
+              if (complexityScore >= 25) return "Level2";
+              return "Level1";
+            }
+
+            // Remove conflicting level labels
+            async function removeOldLevelLabels(itemNumber, newLevel) {
+              try {
+                // Get current labels from the API for both issues and PRs
+                const { data: currentItem } = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: itemNumber
+                });
+                
+                const existingLabels = currentItem.labels || [];
+                
+                const levelLabels = existingLabels.filter(label => 
+                  label.name.startsWith('Level') && label.name !== newLevel
+                );
+                
+                for (const label of levelLabels) {
+                  try {
+                    await github.rest.issues.removeLabel({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      issue_number: itemNumber,
+                      name: label.name
+                    });
+                    console.log(`🗑️ Removed old label: ${label.name}`);
+                  } catch (error) {
+                    console.log(`⚠️ Could not remove ${label.name}: ${error.message}`);
+                  }
+                }
+              } catch (error) {
+                console.log(`⚠️ Error fetching existing labels: ${error.message}`);
+              }
+            }
+
+            // Enhanced label application with retry mechanism
+            async function applyLabelsWithRetry(itemNumber, labels, maxRetries = 3) {
+              for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: itemNumber,
+                    labels: labels
+                  });
+                  console.log(`✅ Successfully applied labels: ${labels.join(', ')} (attempt ${attempt})`);
+                  return true;
+                } catch (error) {
+                  console.log(`⚠️ Attempt ${attempt} failed: ${error.message}`);
+                  if (attempt === maxRetries) {
+                    console.log(`❌ Failed to apply labels after ${maxRetries} attempts`);
+                    return false;
+                  }
+                  // Wait before retry (exponential backoff)
+                  await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                }
+              }
+              return false;
+            }
+
+            // Ensure all required labels exist with enhanced error handling
+            const requiredLabels = [
+              { name: 'GSSoC\'25', description: 'Part of GirlScript Summer of Code 2025', color: 'ff6b35' },
+              { name: 'Level1', description: 'Beginner level - Good for newcomers (1-5 points)', color: '28a745' },
+              { name: 'Level2', description: 'Intermediate level - Some experience needed (10-25 points)', color: '0366d6' },
+              { name: 'Level3', description: 'Advanced level - Significant experience required (30+ points)', color: 'd73a49' }
+            ];
+
+            for (const label of requiredLabels) {
+              await ensureLabel(label.name, label.description, label.color);
+            }
+
+            let level, itemNumber, itemType;
+
+            if (context.eventName === 'issues') {
+              itemNumber = context.payload.issue.number;
+              itemType = 'Issue';
+              level = getLevelForIssue(context.payload.issue);
+              
+              console.log(`📋 Processing Issue #${itemNumber}: "${context.payload.issue.title}"`);
+              console.log(`🎯 Determined level: ${level}`);
+              
+              // Remove conflicting labels first
+              await removeOldLevelLabels(itemNumber, level);
+              
+              // Apply labels with retry mechanism
+              const success = await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', level]);
+              if (success) {
+                console.log(`✅ Successfully labeled Issue #${itemNumber} with GSSoC'25 + ${level}`);
+              } else {
+                console.log(`❌ Failed to label Issue #${itemNumber} after multiple attempts`);
+              }
+              
+            } else if (context.eventName === 'pull_request') {
+              itemNumber = context.payload.pull_request.number;
+              itemType = 'PR';
+              
+              console.log(`🔀 Processing PR #${itemNumber}: "${context.payload.pull_request.title}"`);
+              console.log(`🔍 PR Action: ${context.payload.action}`);
+              
+              try {
+                console.log(`📁 Fetching files for PR #${itemNumber}...`);
+                
+                // Fetch files changed for the PR with proper error handling
+                const filesResponse = await github.rest.pulls.listFiles({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: itemNumber,
+                  per_page: 100
+                });
+                
+                const files = filesResponse.data || [];
+                console.log(`📊 Found ${files.length} files in PR #${itemNumber}`);
+                
+                if (files.length === 0) {
+                  console.log(`⚠️ No files found in PR, using default Level2`);
+                  level = 'Level2';
+                } else {
+                  level = getLevelForPR(files, context.payload.pull_request);
+                }
+                
+                console.log(`🎯 Determined level: ${level} for PR #${itemNumber}`);
+                
+                // Remove conflicting labels first
+                await removeOldLevelLabels(itemNumber, level);
+                
+                // Apply labels with retry mechanism
+                const success = await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', level]);
+                if (success) {
+                  console.log(`✅ Successfully labeled PR #${itemNumber} with GSSoC'25 + ${level}`);
+                } else {
+                  console.log(`❌ Failed to label PR #${itemNumber} after multiple attempts`);
+                }
+                
+              } catch (error) {
+                console.log(`⚠️ Error analyzing PR #${itemNumber}:`, error.message);
+                console.log(`📝 Error details:`, error.status, error.response?.data);
+                
+                level = 'Level2'; // Default fallback
+                console.log(`🔄 Using fallback level: ${level}`);
+                
+                try {
+                  // Remove old labels even in fallback mode
+                  await removeOldLevelLabels(itemNumber, level);
+                  
+                  const fallbackSuccess = await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', level]);
+                  if (fallbackSuccess) {
+                    console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level} (fallback mode)`);
+                  } else {
+                    console.log(`❌ Critical: Failed to apply fallback labels to PR #${itemNumber}`);
+                  }
+                } catch (fallbackError) {
+                  console.log(`❌ Critical error with fallback labeling:`, fallbackError.message);
+                  console.log(`📝 Fallback error details:`, fallbackError.status, fallbackError.response?.data);
+                }
+              }
+            }
+
+            // Final summary with validation
+            console.log('🎯 AUTO-LABELER SUMMARY');
+            console.log(`📋 Event: ${context.eventName}`);
+            console.log(`🔢 ${itemType} #${itemNumber} → ${level || 'Unknown'}`);
             
-            if (prs.data.length === 1) {
-              await github.rest.issues.createComment({
+            // Ensure GSSoC'25 label is always applied even if level detection fails
+            if (!level) {
+              console.log('⚠️ WARNING: Level was not determined properly, applying fallback');
+              try {
+                await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', 'Level2']);
+                console.log('✅ Applied fallback labels: GSSoC\'25 + Level2');
+              } catch (emergencyError) {
+                console.log('❌ CRITICAL: Could not apply even fallback labels');
+              }
+            }
+            
+            // Final verification - check if labels were actually applied
+            try {
+              const { data: finalItem } = await github.rest.issues.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                body: `## 🚀 First GSSoC'25 Pull Request! 🎉
-
-            Congratulations on submitting your first PR to **WanderLust** for **GSSoC'25**!
-
-            ### 🏷️ **PR Classification:**
-            - 🎯 **Program**: GSSoC'25  
-            - 📊 **Level**: Level2 (Intermediate)
-            - 🔄 **Status**: Under Review
-
-            ### 📝 **Review Process:**
-            1. **Automated Checks** - CI/CD pipeline will run tests
-            2. **Code Review** - Maintainers will review your changes
-            3. **Feedback** - Address any requested changes
-            4. **Merge** - Approved PRs will be merged
-
-            ### ✅ **PR Checklist:**
-            - [ ] Code follows project style guidelines
-            - [ ] Tests pass locally
-            - [ ] Documentation updated if needed
-            - [ ] Linked to related issue (if applicable)
-            - [ ] No merge conflicts
-
-            ### 🌟 **Scoring Criteria:**
-            - **Code Quality**: Clean, readable, and well-structured
-            - **Functionality**: Meets requirements and works correctly
-            - **Testing**: Proper test coverage
-            - **Documentation**: Clear comments and documentation
-            - **Best Practices**: Follows project conventions
-
-            ### 💡 **Tips for Success:**
-            - 🔍 Respond promptly to review feedback
-            - 🧪 Ensure all tests pass
-            - 📚 Keep learning and improving
-            - 🤝 Engage with the community
-
-            **Thank you for contributing to GSSoC'25! 🌟**
-
-            *This is an automated message for GSSoC'25 participants. Good luck! 🍀*`
+                issue_number: itemNumber
               });
+              
+              const finalLabels = finalItem.labels.map(l => l.name);
+              const hasGSSoC = finalLabels.includes('GSSoC\'25');
+              const hasLevel = finalLabels.some(l => l.startsWith('Level'));
+              
+              console.log(`📋 Final labels: ${finalLabels.join(', ')}`);
+              console.log(`✅ GSSoC'25 label applied: ${hasGSSoC}`);
+              console.log(`✅ Level label applied: ${hasLevel}`);
+              
+              if (!hasGSSoC || !hasLevel) {
+                console.log('⚠️ WARNING: Required labels missing in final verification');
+              }
+            } catch (verificationError) {
+              console.log('⚠️ Could not verify final labels:', verificationError.message);
             }
+            
+            console.log('✅ High priority workflow completed');

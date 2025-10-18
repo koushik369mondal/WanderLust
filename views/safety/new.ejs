@@ -1,0 +1,396 @@
+<% layout('/layouts/boilerplate') %>
+<% block('head').append(`<title>Report Travel Scam - WanderLust</title>`) %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">
+            <i class="fa-solid fa-exclamation-triangle me-2"></i>
+            Report a Travel Safety Concern
+          </h2>
+        </div>
+
+        <div class="card-body">
+          <div class="alert alert-info">
+            <i class="fa-solid fa-info-circle me-2"></i>
+            <strong>Help protect fellow travelers!</strong> Your report will be reviewed by our moderators before being published. All reports are anonymous by default.
+          </div>
+
+          <form action="/safety-alerts" method="POST" enctype="multipart/form-data" novalidate>
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label">
+                <i class="fa-solid fa-heading me-1"></i>Title *
+              </label>
+              <input type="text" class="form-control" id="title" name="scamReport[title]" required
+                     placeholder="Brief, descriptive title (e.g., 'Fake taxi scam at Delhi Airport')">
+              <div class="invalid-feedback">
+                Please provide a clear, descriptive title.
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="location" class="form-label">
+                  <i class="fa-solid fa-map-marker-alt me-1"></i>Location *
+                </label>
+                <input type="text" class="form-control" id="location" name="scamReport[location]" required
+                       placeholder="Specific location (e.g., Airport, Market, Hotel)">
+                <div class="invalid-feedback">
+                  Please specify the location where this occurred.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">
+                  <i class="fa-solid fa-city me-1"></i>City
+                </label>
+                <input type="text" class="form-control" id="city" name="scamReport[city]"
+                       placeholder="City name (optional)">
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div class="mb-3">
+              <label for="country" class="form-label">
+                <i class="fa-solid fa-globe me-1"></i>Country *
+              </label>
+              <select class="form-select" id="country" name="scamReport[country]" required>
+                <option value="">Select a country</option>
+                <option value="India">India</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+                <option value="Italy">Italy</option>
+                <option value="Spain">Spain</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Japan">Japan</option>
+                <option value="South Korea">South Korea</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Chile">Chile</option>
+                <option value="Peru">Peru</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Greece">Greece</option>
+                <option value="Egypt">Egypt</option>
+                <option value="Morocco">Morocco</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Israel">Israel</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Russia">Russia</option>
+                <option value="China">China</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback">
+                Please select the country where this occurred.
+              </div>
+            </div>
+
+            <!-- Category and Severity -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="category" class="form-label">
+                  <i class="fa-solid fa-tag me-1"></i>Category *
+                </label>
+                <select class="form-select" id="category" name="scamReport[category]" required>
+                  <option value="">Select a category</option>
+                  <option value="Overpricing">Overpricing</option>
+                  <option value="Fake Guide">Fake Guide</option>
+                  <option value="Fraud">Fraud</option>
+                  <option value="Theft">Theft</option>
+                  <option value="Unsafe Area">Unsafe Area</option>
+                  <option value="Transportation Scam">Transportation Scam</option>
+                  <option value="Accommodation Scam">Accommodation Scam</option>
+                  <option value="Tour Scam">Tour Scam</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select the type of safety concern.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="severity" class="form-label">
+                  <i class="fa-solid fa-exclamation-triangle me-1"></i>Severity *
+                </label>
+                <select class="form-select" id="severity" name="scamReport[severity]" required>
+                  <option value="">Select severity</option>
+                  <option value="low">Low - Minor inconvenience</option>
+                  <option value="medium">Medium - Significant issue</option>
+                  <option value="high">High - Serious threat</option>
+                  <option value="critical">Critical - Life threatening</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select the severity level.
+                </div>
+              </div>
+            </div>
+
+            <!-- Incident Date -->
+            <div class="mb-3">
+              <label for="incidentDate" class="form-label">
+                <i class="fa-solid fa-calendar me-1"></i>When did this happen? *
+              </label>
+              <input type="date" class="form-control" id="incidentDate" name="scamReport[incidentDate]" required
+                     max="<%= new Date().toISOString().split('T')[0] %>">
+              <div class="invalid-feedback">
+                Please select the date when this incident occurred.
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description" class="form-label">
+                <i class="fa-solid fa-file-alt me-1"></i>Detailed Description *
+              </label>
+              <textarea class="form-control" id="description" name="scamReport[description]" rows="6" required
+                        placeholder="Please provide as much detail as possible. Include what happened, how you were approached, what was said, and any other relevant information that could help other travelers avoid this situation."></textarea>
+              <div class="invalid-feedback">
+                Please provide a detailed description of the incident.
+              </div>
+              <div class="form-text">
+                <small class="text-muted">Minimum 20 characters. Be specific and include all relevant details.</small>
+              </div>
+            </div>
+
+            <!-- Evidence Upload -->
+            <div class="mb-3">
+              <label for="evidence" class="form-label">
+                <i class="fa-solid fa-camera me-1"></i>Evidence (Optional)
+              </label>
+              <input type="file" class="form-control" id="evidence" name="evidence" multiple accept="image/*">
+              <div class="form-text">
+                <small class="text-muted">Upload photos, receipts, or other evidence. Maximum 5 files, 5MB each.</small>
+              </div>
+            </div>
+
+            <!-- Anonymous Option -->
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isAnonymous" name="scamReport[isAnonymous]">
+                <label class="form-check-label" for="isAnonymous">
+                  <i class="fa-solid fa-user-secret me-1"></i>
+                  Submit anonymously (your username won't be shown with this report)
+                </label>
+              </div>
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="termsAgree" required>
+                <label class="form-check-label" for="termsAgree">
+                  I confirm that this report is accurate to the best of my knowledge and I understand that false reports may result in account suspension.
+                </label>
+                <div class="invalid-feedback">
+                  You must agree to the terms before submitting.
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-paper-plane me-2"></i>Submit Report
+              </button>
+              <a href="/safety-alerts" class="btn btn-outline-secondary btn-lg">
+                <i class="fa-solid fa-times me-2"></i>Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Form validation
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', function(event) {
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    // Custom validation for description length
+    const description = document.getElementById('description');
+    if (description.value.trim().length < 20) {
+      description.setCustomValidity('Description must be at least 20 characters long');
+    } else {
+      description.setCustomValidity('');
+    }
+
+    // Custom validation for title length
+    const title = document.getElementById('title');
+    if (title.value.trim().length < 5) {
+      title.setCustomValidity('Title must be at least 5 characters long');
+    } else {
+      title.setCustomValidity('');
+    }
+
+    form.classList.add('was-validated');
+  });
+
+  // Real-time character count for description
+  const descriptionTextarea = document.getElementById('description');
+  const charCount = document.createElement('div');
+  charCount.className = 'form-text small text-muted mt-1';
+  descriptionTextarea.parentNode.appendChild(charCount);
+
+  function updateCharCount() {
+    const count = descriptionTextarea.value.length;
+    charCount.innerHTML = `<small>${count}/2000 characters</small>`;
+    if (count < 20) {
+      charCount.className = 'form-text small text-danger mt-1';
+    } else if (count > 1800) {
+      charCount.className = 'form-text small text-warning mt-1';
+    } else {
+      charCount.className = 'form-text small text-muted mt-1';
+    }
+  }
+
+  descriptionTextarea.addEventListener('input', updateCharCount);
+  updateCharCount(); // Initial count
+
+  // File upload validation
+  const evidenceInput = document.getElementById('evidence');
+  evidenceInput.addEventListener('change', function() {
+    const files = this.files;
+    const maxFiles = 5;
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (files.length > maxFiles) {
+      alert(`You can only upload up to ${maxFiles} files`);
+      this.value = '';
+      return;
+    }
+
+    for (let file of files) {
+      if (file.size > maxSize) {
+        alert(`File "${file.name}" is too large. Maximum size is 5MB`);
+        this.value = '';
+        return;
+      }
+    }
+  });
+
+  // Set max date to today
+  const incidentDateInput = document.getElementById('incidentDate');
+  const today = new Date().toISOString().split('T')[0];
+  incidentDateInput.max = today;
+
+  // Set default date to today
+  incidentDateInput.value = today;
+});
+</script>
+
+<style>
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.card-header {
+  border-bottom: none;
+  padding: 2rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+}
+
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+.invalid-feedback {
+  display: none;
+}
+
+.was-validated .form-control:invalid,
+.was-validated .form-select:invalid,
+.was-validated .form-check-input:invalid {
+  border-color: #dc3545;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-select:invalid ~ .invalid-feedback,
+.was-validated .form-check-input:invalid ~ .invalid-feedback {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .card-header {
+    padding: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .d-flex.gap-2 {
+    flex-direction: column;
+  }
+}
+</style>

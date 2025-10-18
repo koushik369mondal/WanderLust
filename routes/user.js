@@ -42,7 +42,11 @@ router.get("/profile/likes", isLoggedIn, userController.showLikedListings);
 // Wishlist Routes (place before general profile routes)
 router.get("/profile/wishlist", isLoggedIn, wrapAsync(userController.showWishlist));
 router.post("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
+router.get("/profile/wishlist/add/:listingId", isLoggedIn, wrapAsync(userController.addToWishlist));
 router.delete("/profile/wishlist/:listingId", isLoggedIn, wrapAsync(userController.removeFromWishlist));
+
+// Vacation Slots Route
+router.get("/profile/vacation-slots", isLoggedIn, wrapAsync(userController.showVacationSlots));
 
 // Enhanced Profile Routes
 router
@@ -54,6 +58,18 @@ router
 router.post("/profile/travel-goals", isLoggedIn, wrapAsync(userController.addTravelGoal));
 router.patch("/profile/travel-goals/:goalId/complete", isLoggedIn, wrapAsync(userController.completeTravelGoal));
 router.delete("/profile/travel-goals/:goalId", isLoggedIn, wrapAsync(userController.deleteTravelGoal));
+
+// Achievements Route
+router.get("/achievements", isLoggedIn, wrapAsync(userController.showAchievements));
+
+// Leaderboard Route
+router.get("/leaderboard", isLoggedIn, wrapAsync(userController.showLeaderboard));
+
+// Smart Travel Recommendations Route
+router.get("/recommendations", (req, res) => {
+    console.log("Direct route handler called");
+    res.send("Direct route handler working!");
+});
 
 // Root route - redirect to listings
 router.get("/", (req, res) => {

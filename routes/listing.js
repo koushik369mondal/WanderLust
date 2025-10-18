@@ -22,11 +22,16 @@ router
 // Search suggestions API
 router.get("/search/suggestions", wrapAsync(listingsController.getSearchSuggestions));
 
+// Advanced filtering API
+router.get("/api/filter", wrapAsync(listingsController.getFilteredListings));
+
+// About route
+router.get("/about", (req, res) => {
+  res.render("about", { title: "About Us" });
+});
+
 // New Route - This must come BEFORE the /:id route
 router.get("/new", isLoggedIn, listingsController.renderNewForm);
-
-router.get("/search", wrapAsync(listingsController.searchListings));
-
 
 router
     .route("/:id")

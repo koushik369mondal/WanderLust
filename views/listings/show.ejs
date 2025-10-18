@@ -1,30 +1,45 @@
 <% layout('/layouts/boilerplate') %>
 <script>
-  // const mapToken = "<%= process.env.MAP_TOKEN %>";
-  const mapToken = "<%= process.env.MAP_TOKEN || 'dummy_token' %>";
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
   const listing = <%- JSON.stringify(listing) %>;
   
+  console.log('� MapToken loaded:', mapToken ? '✅ Token exists (length: ' + mapToken.length + ')' : '❌ No token');
+  console.log('🗺🗺�️ Listing data for map:', {
+    title: listing.title,
+    location: listing.location,
+    country: listing.country,
+    geometry: listing.geometry
+  });
+  
+  // Check if mapboxgl is loaded
+  if (typeof mapboxgl === 'undefined') {
+    console.error('❌ Mapbox GL library not loaded!');
+  } else {
+    console.log('✅ Mapbox GL library loaded');
+  }
+  });
+  
   // Ensure listing has proper structure for map
-  if (!listing.geometry) {
+  if (!listing.geometry || !listing.geometry.coordinates) {
+    console.warn('⚠️ No geometry coordinates found, will attempt geocoding');
     listing.geometry = {
       type: "Point",
-      coordinates: [77.2090, 28.6139] // Default to Delhi, India
+      coordinates: null // Set to null to trigger geocoding
     };
-  }
-  
-  // Make sure coordinates are valid numbers
-  if (!listing.geometry.coordinates || 
-      !Array.isArray(listing.geometry.coordinates) || 
-      listing.geometry.coordinates.length !== 2 ||
-      isNaN(listing.geometry.coordinates[0]) || 
-      isNaN(listing.geometry.coordinates[1])) {
-    listing.geometry.coordinates = [77.2090, 28.6139];
+  } else if (Array.isArray(listing.geometry.coordinates) && 
+             listing.geometry.coordinates.length === 2 &&
+             !isNaN(listing.geometry.coordinates[0]) && 
+             !isNaN(listing.geometry.coordinates[1])) {
+    console.log('✅ Valid coordinates found:', listing.geometry.coordinates);
+  } else {
+    console.warn('⚠️ Invalid coordinates format, will attempt geocoding');
+    listing.geometry.coordinates = null;
   }
 </script>
 
 
 
-<div class="row mt-3 m-1 ">
+<div class="row mt-3 m-1   ">
   
   <div class="card col-12 col-md-8 offset-md-2 show-card listing-card mb-3">
     <h3 class="d-flex justify-content-center mt-3"><%= listing.title %></h3>
@@ -34,37 +49,49 @@
       alt="listing_image"
     />
 
-    <div class="card-body">
+    <div class="card-body ">
       <p class="card-text">
-        Owned by -
+        <%= __('owned_by') %> -
         <i>
           <%= listing.owner && listing.owner.username ? listing.owner.username :
           "Unknown" %>
         </i>
       </p>
       <p class="card-text">
-        <b>Likes:</b> <%= listing.likes ? listing.likes.length : 0 %>
+        <b><%= __('likes') %>:</b> <%= listing.likes ? listing.likes.length : 0 %>
       </p>
       <% if (currentUser) { %>
         <div class="listing-actions d-flex gap-2 mb-3">
           <% if (listing.likes && listing.likes.some(id => id.toString() === currentUser._id.toString())) { %>
             <form action="/listings/<%= listing._id %>/unlike" method="POST" style="display: inline;">
               <button type="submit" class="btn btn-danger">
-                <i class="fa-solid fa-heart-broken me-1"></i>Unlike
+                <i class="fa-solid fa-heart-broken me-1"></i><%= __('unlike') %>
               </button>
             </form>
           <% } else { %>
             <form action="/listings/<%= listing._id %>/like" method="POST" style="display: inline;">
               <button type="submit" class="btn btn-success">
-                <i class="fa-solid fa-heart me-1"></i>Like
+                <i class="fa-solid fa-heart me-1"></i><%= __('like') %>
               </button>
             </form>
           <% } %>
           
-          <!-- Wishlist Button -->
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
-            <i class="fa-solid fa-bookmark me-1"></i>Add to Wishlist
-          </button>
+          <% if (isInWishlist) { %>
+            <form action="/profile/wishlist/<%= listing._id %>?_method=DELETE&redirect=listing" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-warning">
+                <i class="fa-solid fa-bookmark me-1"></i>Remove from Wishlist
+              </button>
+            </form>
+          <% } else { %>
+            <div class="btn-group" role="group">
+              <a href="/profile/wishlist/add/<%= listing._id %>" class="btn btn-outline-primary">
+                <i class="fa-solid fa-bookmark me-1"></i>Quick Add
+              </a>
+              <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#wishlistModal">
+                <i class="fa-solid fa-cog me-1"></i>Customize
+              </button>
+            </div>
+          <% } %>
         </div>
       <% } %>
       <p class="card-text">
@@ -96,18 +123,16 @@
     </div>
   </div>
 
-  <!-- Edit/Delete Buttons for Owner -->
   <% if(currentUser && listing.owner && listing.owner._id && listing.owner._id.equals(currentUser._id)) { %>
     
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="d-flex gap-2 justify-content-center">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary">
-        <i class="fa-solid fa-edit me-1"></i>Edit Listing
+        <i class="fa-solid fa-edit me-1"></i><%= __('edit_listing') %>
       </a>
-      <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" style="display: inline;">
-        <button type="submit" class="btn btn-danger" 
-                onclick="return confirm('Are you sure you want to delete this listing?')">
-          <i class="fa-solid fa-trash me-1"></i>Delete Listing
+      <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+        <button type="submit" class="btn btn-danger">
+          <i class="fa-solid fa-trash me-1"></i><%= __('delete_listing') %>
         </button>
       </form>
     </div>
@@ -115,123 +140,326 @@
   <% } %>
   <div class="col-12 col-md-8 offset-md-2 mb-3">
     <% if (currentUser) { %>
-    <hr />
-    <div class="listing-card p-4">
-      <h4>Leave a Review</h4>
+    <div class="review-section-divider">
+      <div class="divider-line"></div>
+      <span class="divider-text"><%= __('share_your_journey') %></span>
+      <div class="divider-line"></div>
+    </div>
+    
+    <div class="review-form-container">
+      <div class="review-form-header">
+        <i class="fa-solid fa-star-half-stroke review-icon"></i>
+        <h4><%= __('share_your_journey') %></h4>
+        <p class="review-subtitle"><%= __('your_words_inspire') %></p>
+      </div>
+      
       <form
         action="/listings/<%= listing._id %>/reviews"
         method="POST"
-        class="needs-validation"
+        class="review-form needs-validation"
         novalidate
       >
+        <div class="rating-section">
+          <label for="rating" class="form-label">
+            <i class="fa-solid fa-star me-2"></i><%= __('rate_your_experience') %>
+          </label>
+          <div class="rating-container">
+            <fieldset class="starability-slot">
+              <input
+                type="radio"
+                id="no-rate"
+                class="input-no-rate"
+                name="review[rating]"
+                value="1"
+                checked
+                aria-label="No rating."
+              />
+              <input
+                type="radio"
+                id="first-rate1"
+                name="review[rating]"
+                value="1"
+              />
+              <label for="first-rate1" title="Poor - Needs improvement">1 star</label>
+              <input
+                type="radio"
+                id="first-rate2"
+                name="review[rating]"
+                value="2"
+              />
+              <label for="first-rate2" title="Fair - Below expectations">2 stars</label>
+              <input
+                type="radio"
+                id="first-rate3"
+                name="review[rating]"
+                value="3"
+              />
+              <label for="first-rate3" title="Good - Met expectations">3 stars</label>
+              <input
+                type="radio"
+                id="first-rate4"
+                name="review[rating]"
+                value="4"
+              />
+              <label for="first-rate4" title="Very Good - Exceeded expectations">4 stars</label>
+              <input
+                type="radio"
+                id="first-rate5"
+                name="review[rating]"
+                value="5"
+              />
+              <label for="first-rate5" title="Excellent - Outstanding experience">5 stars</label>
+            </fieldset>
+            <div class="rating-text" id="rating-text">Select a rating</div>
+          </div>
+        </div>
+        
+        <div class="comment-section">
+          <label for="comment" class="form-label">
+            <i class="fa-solid fa-comment me-2"></i><%= __('tell_your_story') %>
+          </label>
+          <textarea
+            name="review[comment]"
+            id="comment"
+            class="form-control review-textarea"
+            rows="5"
+            placeholder="<%= __('what_made_special') %>"
+            required
+          ></textarea>
+          <div class="character-count">
+            <span id="char-count">0</span>/500 characters
+          </div>
+          <div class="invalid-feedback">Please provide a detailed review (minimum 10 characters).</div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit">
+            <i class="fa-solid fa-paper-plane me-2"></i>
+            <%= __('launch_review') %>
+          </button>
+          <small class="form-note">
+            <i class="fa-solid fa-info-circle me-1"></i>
+            <%= __('your_review_creates') %>
+          </small>
+        </div>
+      </form>
+    </div>
     
-      <div class="mb-3">
-        <label for="rating" class="form-label">Rating</label>
-        <fieldset class="starability-slot">
-          <input
-            type="radio"
-            id="no-rate"
-            class="input-no-rate"
-            name="review[rating]"
-            value="1"
-            checked
-            aria-label="No rating."
-          />
-          <input
-            type="radio"
-            id="first-rate1"
-            name="review[rating]"
-            value="1"
-          />
-          <label for="first-rate1" title="Terrible">1 star</label>
-          <input
-            type="radio"
-            id="first-rate2"
-            name="review[rating]"
-            value="2"
-          />
-          <label for="first-rate2" title="Not good">2 stars</label>
-          <input
-            type="radio"
-            id="first-rate3"
-            name="review[rating]"
-            value="3"
-          />
-          <label for="first-rate3" title="Average">3 stars</label>
-          <input
-            type="radio"
-            id="first-rate4"
-            name="review[rating]"
-            value="4"
-          />
-          <label for="first-rate4" title="Very good">4 stars</label>
-          <input
-            type="radio"
-            id="first-rate5"
-            name="review[rating]"
-            value="5"
-          />
-          <label for="first-rate5" title="Amazing">5 stars</label>
-        </fieldset>
-      </div>
-      <div class="mb-3">
-        <label for="comment" class="form-label">Comment</label>
-        <textarea
-          name="review[comment]"
-          id="comment"
-          class="form-control"
-          rows="4"
-          required
-        ></textarea>
-        <div class="invalid-feedback">Please provide a comment.</div>
-      </div>
-      <button type="submit" class="btn btn-dark">Submit</button>
-    </form>
-    </div>  
-    <hr />
+    <div class="review-section-divider mt-4">
+      <div class="divider-line"></div>
+      <span class="divider-text"><%= __('traveler_stories') %></span>
+      <div class="divider-line"></div>
+    </div>
     
     <% } %>
     
-    <!-- Reviews Section -->
     <% if(listing.reviews && listing.reviews.length > 0) { %>
-    <div class="row">
-      <p><b>All Reviews (<%= listing.reviews.length %>)</b></p>
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <h5 class="reviews-title">
+          <i class="fa-solid fa-comments me-2"></i>
+          <%= __('all_reviews') %> (<%= listing.reviews.length %>)
+        </h5>
+        <% if(listing.reviews.length > 0) { %>
+        <div class="reviews-summary">
+          <% 
+            let totalRating = listing.reviews.reduce((sum, review) => sum + review.rating, 0);
+            let avgRating = (totalRating / listing.reviews.length).toFixed(1);
+          %>
+          <div class="avg-rating">
+            <span class="rating-number"><%= avgRating %></span>
+            <div class="rating-stars">
+              <% for(let i = 1; i <= 5; i++) { %>
+                <i class="fa-solid fa-star <%= i <= Math.round(avgRating) ? 'filled' : '' %>"></i>
+              <% } %>
+            </div>
+            <span class="rating-text"><%= __('average_rating') %></span>
+          </div>
+        </div>
+        <% } %>
+      </div>
+      
+      <div class="reviews-grid">
       <% for (let review of listing.reviews) { %>
         <% if (review && review.author) { %>
-          <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100">
-              <div class="card-body position-relative">
-                <h5 class="card-title">@<%= review.author.username %></h5>
-                <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-                <p class="card-text"><%= review.comment %></p>
-                
+          <div class="review-card-wrapper">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-avatar">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div class="reviewer-details">
+                    <h6 class="reviewer-name">@<%= review.author.username %></h6>
+                    <div class="review-rating">
+                      <div class="starability-result" data-rating="<%= review.rating %>"></div>
+                    </div>
+                  </div>
+                </div>
                 <% if(currentUser && review.author._id.equals(currentUser._id)) { %>
-                <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" 
-                      class="position-absolute bottom-0 end-0 m-2">
-                  <button type="submit" class="btn btn-sm btn-outline-danger" 
-                          onclick="return confirm('Delete this review?')">
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </form>
+                <div class="review-actions">
+                  <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" 
+                        style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                    <button type="submit" class="btn-delete" title="Delete Review">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
                 <% } %>
+              </div>
+              
+              <div class="review-content">
+                <p class="review-text" id="review-text-<%= review._id %>"><%= review.comment %></p>
+                <button class="btn btn-sm btn-outline-primary translate-btn mt-2" 
+                        data-review-id="<%= review._id %>" 
+                        data-listing-id="<%= listing._id %>">
+                  <i class="fa-solid fa-language me-1"></i>
+                  <span class="translate-text"><%= __('translate_review') %></span>
+                </button>
+              </div>
+              
+              <div class="review-footer">
+                <small class="review-date">
+                  <i class="fa-solid fa-calendar me-1"></i>
+                  <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  }) : __('recently') %>
+                </small>
               </div>
             </div>
           </div>
         <% } %>
       <% } %>
+      </div>
     </div>
     <% } else { %>
-    <div class="text-center text-muted py-4">
-      <p><i class="fa-solid fa-comment-slash me-2"></i>No reviews yet. Be the first to review!</p>
+    <div class="no-reviews-container">
+      <div class="no-reviews-content">
+        <i class="fa-solid fa-comment-slash no-reviews-icon"></i>
+        <h5><%= __('no_reviews_yet') %></h5>
+        <p><%= __('be_first_to_review') %></p>
+        <% if (!currentUser) { %>
+        <a href="/login" class="btn btn-outline-primary">
+          <i class="fa-solid fa-sign-in-alt me-2"></i><%= __('login_to_review') %>
+        </a>
+        <% } %>
+      </div>
     </div>
     <% } %>
   </div>
-  
-  <!-- Map Section -->
+
+  <% if (typeof listing !== 'undefined' && listing.aiSummary) { %>
+  <div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card ai-summary-card">
+      <div class="card-header">
+        <h4 class="mb-0">
+          <i class="fa-solid fa-brain me-2"></i>
+          <%= __('ai_insights') %>
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="ai-summary-content">
+          <div class="ai-summary-icon">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="ai-summary-text">
+            <p class="mb-0"><%= listing.aiSummary %></p>
+          </div>
+        </div>
+        <div class="ai-summary-footer">
+          <small class="text-muted">
+            <i class="fa-solid fa-info-circle me-1"></i>
+            <%= __('ai_generated_summary') %>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (typeof recommendations !== 'undefined' && recommendations && recommendations.length > 0) { %>
   <div class="col-12 col-md-8 offset-md-2 mb-4">
     <div class="card">
       <div class="card-header">
-        <h4 class="mb-0"><i class="fa-solid fa-map-location-dot me-2"></i>Where you'll be</h4>
+        <h4 class="mb-0"><i class="fa-solid fa-lightbulb me-2"></i><%= __('you_may_also_like') %></h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <% recommendations.slice(0, 4).forEach(rec => { %>
+          <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card h-100">
+              <img src="<%= rec.image && rec.image.url ? rec.image.url : 'https://via.placeholder.com/300' %>" 
+                   class="card-img-top" style="height: 150px; object-fit: cover;" alt="<%= rec.title %>">
+              <div class="card-body p-2">
+                <h6 class="card-title mb-1"><%= rec.title %></h6>
+                <p class="card-text small text-muted mb-1">
+                  <i class="fa-solid fa-location-dot"></i> <%= rec.location %>, <%= rec.country %>
+                </p>
+                <p class="card-text small mb-2">
+                  <strong>₹<%= rec.price ? rec.price.toLocaleString('en-IN') : 'N/A' %></strong>/night
+                </p>
+                <a href="/listings/<%= rec._id %>" class="btn btn-sm btn-primary w-100"><%= __('view_details') %></a>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  
+  <% if (typeof weatherData !== 'undefined' && weatherData) { %>
+  <div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0"><i class="fa-solid fa-cloud-sun me-2"></i>Current Weather</h4>
+      </div>
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-4 text-center">
+            <div style="font-size: 4rem;"><%= weatherData.icon ? (weatherData.icon.includes('d') ? '☀️' : '🌙') : '🌤️' %></div>
+            <h2 class="mb-0"><%= weatherData.temperature %>°C</h2>
+            <p class="text-muted mb-0"><%= weatherData.description %></p>
+          </div>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fa-solid fa-thermometer-half me-2 text-primary"></i>
+                  <span>Feels like: <strong><%= weatherData.feelsLike %>°C</strong></span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-droplet me-2 text-info"></i>
+                  <span>Humidity: <strong><%= weatherData.humidity %>%</strong></span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fa-solid fa-wind me-2 text-success"></i>
+                  <span>Wind: <strong><%= weatherData.windSpeed %> m/s</strong></span>
+                </div>
+                <% if (typeof bestTimeToVisit !== 'undefined' && bestTimeToVisit) { %>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-calendar-check me-2 text-warning"></i>
+                  <span class="small">Best time: <strong><%= bestTimeToVisit %></strong></span>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="col-12 col-md-8 offset-md-2 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0"><i class="fa-solid fa-map-location-dot me-2"></i><%= __('where_youll_be') %></h4>
       </div>
       <div class="card-body p-0">
         <div id="map" style="height: 400px; border-radius: 0 0 0.375rem 0.375rem;"></div>
@@ -240,14 +468,13 @@
   </div>
 </div>
 
-<!-- Wishlist Modal -->
 <% if (currentUser) { %>
 <div class="modal fade" id="wishlistModal" tabindex="-1" aria-labelledby="wishlistModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="wishlistModalLabel">
-          <i class="fa-solid fa-bookmark me-2"></i>Add to Wishlist
+          <i class="fa-solid fa-bookmark me-2"></i><%= __('add_to_wishlist') %>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -276,7 +503,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-plus me-1"></i>Add to Wishlist
+            <i class="fa-solid fa-plus me-1"></i><%= __('add_to_wishlist') %>
           </button>
         </div>
       </form>
@@ -285,4 +512,226 @@
 </div>
 <% } %>
 
-<script src="/JS/map.js"></script>
+<script src="/JS/map.js?v=<%= Date.now() %>"></script>
+
+<script>
+// Enhanced Review Form Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Rating interaction feedback
+  const ratingInputs = document.querySelectorAll('input[name="review[rating]"]');
+  const ratingText = document.getElementById('rating-text');
+  
+  const ratingLabels = {
+    1: '<%= __('poor_experience') %>',
+    2: '<%= __('below_expectations') %>', 
+    3: '<%= __('good_experience') %>',
+    4: '<%= __('amazing_experience') %>',
+    5: '<%= __('absolutely_perfect') %>'
+  };
+  
+  ratingInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      if (this.value && ratingText) {
+        ratingText.textContent = ratingLabels[this.value];
+        ratingText.style.color = 'var(--accent-color)';
+        ratingText.style.fontWeight = '600';
+      }
+    });
+  });
+  
+  // Character count for review textarea
+  const reviewTextarea = document.getElementById('comment');
+  const charCount = document.getElementById('char-count');
+  
+  if (reviewTextarea && charCount) {
+    reviewTextarea.addEventListener('input', function() {
+      const count = this.value.length;
+      charCount.textContent = count;
+      
+      // Change color based on character count
+      if (count > 450) {
+        charCount.style.color = '#dc3545';
+      } else if (count > 350) {
+        charCount.style.color = '#ffc107';
+      } else {
+        charCount.style.color = 'var(--text-secondary)';
+      }
+      
+      // Limit to 500 characters
+      if (count > 500) {
+        this.value = this.value.substring(0, 500);
+        charCount.textContent = 500;
+        charCount.style.color = '#dc3545';
+      }
+    });
+  }
+  
+  // Form validation enhancement
+  const reviewForm = document.querySelector('.review-form');
+  if (reviewForm) {
+    reviewForm.addEventListener('submit', function(e) {
+      const comment = reviewTextarea.value.trim();
+      const rating = document.querySelector('input[name="review[rating]"]:checked');
+      
+      if (comment.length < 10) {
+        e.preventDefault();
+        reviewTextarea.classList.add('is-invalid');
+        reviewTextarea.focus();
+        return false;
+      }
+      
+      if (!rating || rating.value === '1' && rating.id === 'no-rate') {
+        e.preventDefault();
+        alert('Please select a rating before submitting your review.');
+        return false;
+      }
+      
+      // Add loading state to submit button
+      const submitBtn = this.querySelector('.btn-submit');
+      if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Submitting...';
+        submitBtn.disabled = true;
+      }
+    });
+  }
+  
+  // Remove invalid class on input
+  if (reviewTextarea) {
+    reviewTextarea.addEventListener('input', function() {
+      if (this.value.trim().length >= 10) {
+        this.classList.remove('is-invalid');
+      }
+    });
+  }
+  
+  // Translation functionality
+  const translateBtns = document.querySelectorAll('.translate-btn');
+  translateBtns.forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const reviewId = this.dataset.reviewId;
+      const listingId = this.dataset.listingId;
+      const reviewTextEl = document.getElementById(`review-text-${reviewId}`);
+      const translateTextEl = this.querySelector('.translate-text');
+      
+      if (this.dataset.translated === 'true') {
+        // Show original
+        reviewTextEl.textContent = this.dataset.originalText;
+        translateTextEl.textContent = '<%= __('translate_review') %>';
+        this.dataset.translated = 'false';
+        return;
+      }
+      
+      // Store original text
+      if (!this.dataset.originalText) {
+        this.dataset.originalText = reviewTextEl.textContent;
+      }
+      
+      // Show loading
+      const originalBtnText = translateTextEl.textContent;
+      translateTextEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Translating...';
+      this.disabled = true;
+      
+      try {
+        const response = await fetch(`/listings/${listingId}/reviews/translate/${reviewId}`);
+        const data = await response.json();
+        
+        if (data.translatedText) {
+          reviewTextEl.textContent = data.translatedText;
+          translateTextEl.textContent = '<%= __('original_review') %>';
+          this.dataset.translated = 'true';
+        } else {
+          throw new Error('Translation failed');
+        }
+      } catch (error) {
+        console.error('Translation error:', error);
+        alert('<%= __('translation_error') %>');
+        translateTextEl.textContent = originalBtnText;
+      } finally {
+        this.disabled = false;
+      }
+    });
+  });
+});
+</script>
+
+<style>
+/* Additional inline styles for review enhancements */
+.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.starability-slot input:checked ~ label,
+.starability-slot input:hover ~ label {
+  animation: starGlow 0.3s ease;
+}
+
+@keyframes starGlow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.review-card-wrapper {
+  height: 100%;
+}
+
+.translate-btn {
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.translate-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.translate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* AI Summary Styles */
+.ai-summary-card {
+  border: 2px solid #e3f2fd;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1);
+}
+
+.ai-summary-card .card-header {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.ai-summary-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.ai-summary-icon {
+  font-size: 2rem;
+  color: #2196f3;
+  background: rgba(33, 150, 243, 0.1);
+  padding: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ai-summary-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #424242;
+  margin: 0;
+  font-weight: 500;
+}
+
+.ai-summary-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+</style>

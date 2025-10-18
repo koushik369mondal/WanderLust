@@ -1,17 +1,18 @@
 const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
+const { updateListingCoordinates } = require("../utils/updateCoordinates.js");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const MONGO_URL = process.env.ATLAS_DB_URL;
 
 main()
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("✅ Database connected");
   })
   .catch((err) => {
-    console.log(err);
+    console.error("❌ Database connection failed:", err.message);
   });
 async function main() {
   await mongoose.connect(MONGO_URL);
@@ -22,15 +23,15 @@ const initDB = async () => {
   initData.data = initData.data.map((obj) => ({
     ...obj,
     owner: "68b03abbf434cdd259bd1032",
-    geometry: {
-      type: "Point",
-      // Default coordinates (New York City)
-      // Format: [longitude, latitude]
-      coordinates: [-74.006, 40.7128],
-    },
+    // Don't set default coordinates here - let updateListingCoordinates handle it
   }));
   await Listing.insertMany(initData.data);
-  console.log("data was initialized");
+  console.log("✅ Sample data initialized");
+  
+  // Now update all listings with proper coordinates
+  console.log("🗺️ Updating listing coordinates...");
+  await updateListingCoordinates();
+  console.log("✅ All coordinates updated!");
 };
 
 initDB();

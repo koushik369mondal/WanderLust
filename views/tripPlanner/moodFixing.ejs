@@ -1,0 +1,651 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="mood-fixing-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Header -->
+                <div class="mood-header text-center mb-5">
+                    <h1><i class="fa-solid fa-music me-3"></i>Mood Fixing</h1>
+                    <p class="lead">Sync your travel vibes with the perfect soundtrack 💚</p>
+                    <p class="text-muted">Let the rhythm of the road match the rhythm of your heart</p>
+                </div>
+
+                <!-- Global Language Filter -->
+                <div class="global-language-filter mb-4 text-center">
+                    <h4 class="text-white mb-3">Choose Your Language</h4>
+                    <div class="language-filter">
+                        <button class="btn btn-sm btn-outline-light language-btn active" data-lang="all">All</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="hindi">Hindi</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="english">English</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="punjabi">Punjabi</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="tamil">Tamil</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="telugu">Telugu</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="bengali">Bengali</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="malayalam">Malayalam</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="kannada">Kannada</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="gujarati">Gujarati</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="marathi">Marathi</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="urdu">Urdu</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="assamese">Assamese</button>
+                        <button class="btn btn-sm btn-outline-light language-btn" data-lang="oriya">Oriya</button>
+                    </div>
+                </div>
+
+                <!-- Search Bar with magical effect -->
+                <div class="search-bar-container mb-4">
+                    <input type="text" id="moodSearch" placeholder="Search moods, songs, or Bollywood hits..." autocomplete="off" />
+                    <div class="magical-glow"></div>
+                </div>
+
+                <!-- Mood Selection -->
+                <div class="mood-selection-card">
+                    <h3 class="text-center mb-4"><i class="fa-solid fa-face-smile me-2"></i>Choose Your Travel Mood</h3>
+                    <div class="mood-grid" id="moodGrid">
+                        <div class="mood-item" data-mood="calm" data-color="#87CEEB">
+                            <div class="mood-icon">😌</div>
+                            <div class="mood-name">Calm</div>
+                            <div class="mood-desc">Peaceful journeys & serene vibes</div>
+                        </div>
+                        <div class="mood-item" data-mood="adventure" data-color="#FF6B35">
+                            <div class="mood-icon">🏔️</div>
+                            <div class="mood-name">Adventure</div>
+                            <div class="mood-desc">Epic explorations & thrill</div>
+                        </div>
+                        <div class="mood-item" data-mood="spiritual" data-color="#9370DB">
+                            <div class="mood-icon">🧘</div>
+                            <div class="mood-name">Spiritual</div>
+                            <div class="mood-desc">Inner peace & mindfulness</div>
+                        </div>
+                        <div class="mood-item" data-mood="party" data-color="#FF1493">
+                            <div class="mood-icon">💃</div>
+                            <div class="mood-name">Party</div>
+                            <div class="mood-desc">Festive energy & celebration</div>
+                        </div>
+                        <div class="mood-item" data-mood="relax" data-color="#32CD32">
+                            <div class="mood-icon">🏖️</div>
+                            <div class="mood-name">Relax</div>
+                            <div class="mood-desc">Chill vibes & unwind</div>
+                        </div>
+                        <div class="mood-item" data-mood="romantic" data-color="#FF69B4">
+                            <div class="mood-icon">💕</div>
+                            <div class="mood-name">Romantic</div>
+                            <div class="mood-desc">Love & connection</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Now Playing Section -->
+                <div id="nowPlayingSection" class="now-playing-card" style="display: none;">
+                    <div class="now-playing-header">
+                        <h4><i class="fa-solid fa-play-circle me-2"></i>Now Playing</h4>
+                        <div class="mood-badge" id="currentMoodBadge"></div>
+                    </div>
+                    <div class="spotify-player-container">
+                        <iframe id="spotifyPlayer" src="" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+                    <div class="player-controls">
+                        <button class="btn btn-outline-primary btn-sm" id="shuffleBtn">
+                            <i class="fa-solid fa-shuffle me-1"></i>Shuffle
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" id="shareBtn">
+                            <i class="fa-solid fa-share me-1"></i>Share Playlist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mood-Based Recommendations -->
+                <div class="recommendations-section mt-5">
+                    <h3 class="text-center mb-4"><i class="fa-solid fa-lightbulb me-2"></i>Travel Soundtracks</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="playlist-card">
+                                <h5><i class="fa-solid fa-route me-2"></i>Road Trip Essentials</h5>
+                                <p>Perfect for long drives and scenic routes</p>
+                                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX5Q5wA1hYvDe" width="100%" height="200" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="playlist-card">
+                                <h5><i class="fa-solid fa-om me-2"></i>Spiritual Journeys</h5>
+                                <p>Meditation and bhakti vibes for inner peace</p>
+                                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4PP3DA4J0N8" width="100%" height="200" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bollywood Songs Section -->
+                <div class="bollywood-section mt-5">
+                    <h3 class="text-center mb-4"><i class="fa-solid fa-film me-2"></i>Bollywood Hits</h3>
+                    <div class="row" id="bollywoodPlaylists">
+                        <div class="col-md-4 playlist-item" data-lang="hindi" data-name="Romantic Bollywood">
+                            <div class="playlist-card">
+                                <h5>Romantic Bollywood</h5>
+                                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX5cZuAHLNjGz" width="100%" height="200" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-md-4 playlist-item" data-lang="punjabi" data-name="Punjabi Dance Party">
+                            <div class="playlist-card">
+                                <h5>Punjabi Dance Party</h5>
+                                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd" width="100%" height="200" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-md-4 playlist-item" data-lang="english" data-name="Classic Bollywood">
+                            <div class="playlist-card">
+                                <h5>Classic Bollywood</h5>
+                                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfEo1d2Pk" width="100%" height="200" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Enhanced background with subtle animated gradient */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.mood-fixing-container {
+    min-height: 100vh;
+    padding: 2rem 0;
+    background: linear-gradient(270deg, #08697d, #146695, #31739f, #076582);
+    background-size: 800% 800%;
+    animation: gradientShift 20s ease infinite;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Magical search bar */
+.search-bar-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+
+#moodSearch {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+#moodSearch::placeholder {
+    color: #ddd;
+    font-style: italic;
+    letter-spacing: 0.05em;
+}
+
+#moodSearch:focus {
+    box-shadow: 0 0 25px #ff4081, 0 0 35px #ff4081;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Magical glow effect */
+.magical-glow {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 60px;
+    pointer-events: none;
+    background: linear-gradient(45deg, #ff4081, #ff80ab, #ff4081, #ff80ab);
+    background-size: 400% 400%;
+    animation: gradientShift 10s ease infinite;
+    filter: blur(15px);
+    opacity: 0.7;
+    z-index: -1;
+}
+
+/* Header */
+.mood-header h1 {
+    font-weight: 900;
+    font-size: 3rem;
+    text-shadow: 0 0 10px rgba(255, 64, 129, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+.mood-header .lead {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffe4e1cc;
+    margin-bottom: 0.25rem;
+}
+
+.mood-header .text-muted {
+    font-size: 1.1rem;
+    color: #ffd1dcaa;
+}
+
+/* Mood Selection Card */
+.mood-selection-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 3rem 2rem;
+    box-shadow: 0 0 40px rgba(255, 64, 129, 0.3);
+    margin-bottom: 3rem;
+}
+
+.mood-selection-card h3 {
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 64, 129, 0.7);
+}
+
+/* Mood Grid */
+.mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Mood Item */
+.mood-item {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 25px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 15px rgba(255, 64, 129, 0.2);
+    border: 3px solid transparent;
+    color: white;
+    font-weight: 600;
+    user-select: none;
+}
+
+.mood-item:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 64, 129, 0.6);
+    background: rgba(255, 255, 255, 0.35);
+    border-color: #ff4081;
+}
+
+.mood-item.selected {
+    border-color: #ff4081;
+    background: linear-gradient(135deg, rgba(255, 64, 129, 0.3), rgba(255, 64, 129, 0.15));
+    box-shadow: 0 0 40px #ff4081;
+}
+
+.mood-icon {
+    font-size: 4rem;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 0 10px rgba(255, 64, 129, 0.8);
+}
+
+.mood-name {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.mood-desc {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #ffd1dccc;
+}
+
+/* Now Playing Card */
+.now-playing-card {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(25px);
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 0 50px rgba(255, 64, 129, 0.4);
+    animation: fadeInUp 0.6s ease-out;
+    color: white;
+}
+
+.now-playing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.mood-badge {
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #ff4081;
+    box-shadow: 0 0 15px #ff4081;
+    color: white;
+}
+
+.spotify-player-container {
+    margin: 1.5rem 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(255, 64, 129, 0.3);
+}
+
+.player-controls {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.player-controls button {
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.player-controls button:hover {
+    background-color: #ff4081;
+    color: white;
+}
+
+/* Recommendations Section */
+.recommendations-section {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 0 40px rgba(255, 64, 129, 0.3);
+    color: white;
+}
+
+.playlist-card {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(255, 64, 129, 0.2);
+    color: white;
+}
+
+.playlist-card h5 {
+    color: #ff80ab;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.playlist-card p {
+    color: #ffd1dccc;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.playlist-card iframe {
+    border-radius: 12px;
+}
+
+/* Bollywood Section */
+.bollywood-section {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 0 40px rgba(255, 64, 129, 0.3);
+    color: white;
+}
+
+.bollywood-section h3 {
+    color: #ff80ab;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .mood-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .mood-item {
+        padding: 1.2rem;
+    }
+
+    .mood-icon {
+        font-size: 3rem;
+    }
+
+    .mood-selection-card, .now-playing-card, .recommendations-section, .bollywood-section {
+        padding: 1.8rem 1.2rem;
+    }
+
+    #moodSearch {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
+    }
+}
+</style>
+
+<script>
+// Mood playlists mapping
+const moodPlaylists = {
+    calm: {
+        all: { name: "Calm Vibes", playlistId: "37i9dQZF1DX4PP3DA4J0N8", color: "#87CEEB" },
+        english: { name: "Peaceful Piano", playlistId: "37i9dQZF1DX4PP3DA4J0N8", color: "#87CEEB" },
+        hindi: { name: "Hindi Calm", playlistId: "placeholder_hindi_calm", color: "#87CEEB" },
+        punjabi: { name: "Punjabi Calm", playlistId: "placeholder_punjabi_calm", color: "#87CEEB" },
+        tamil: { name: "Tamil Calm", playlistId: "placeholder_tamil_calm", color: "#87CEEB" },
+        telugu: { name: "Telugu Calm", playlistId: "placeholder_telugu_calm", color: "#87CEEB" },
+        bengali: { name: "Bengali Calm", playlistId: "placeholder_bengali_calm", color: "#87CEEB" },
+        malayalam: { name: "Malayalam Calm", playlistId: "placeholder_malayalam_calm", color: "#87CEEB" },
+        kannada: { name: "Kannada Calm", playlistId: "placeholder_kannada_calm", color: "#87CEEB" },
+        gujarati: { name: "Gujarati Calm", playlistId: "placeholder_gujarati_calm", color: "#87CEEB" },
+        marathi: { name: "Marathi Calm", playlistId: "placeholder_marathi_calm", color: "#87CEEB" },
+        urdu: { name: "Urdu Calm", playlistId: "placeholder_urdu_calm", color: "#87CEEB" },
+        assamese: { name: "Assamese Calm", playlistId: "placeholder_assamese_calm", color: "#87CEEB" },
+        oriya: { name: "Oriya Calm", playlistId: "placeholder_oriya_calm", color: "#87CEEB" }
+    },
+    adventure: {
+        all: { name: "Adventure Energy", playlistId: "37i9dQZF1DX5Q5wA1hYvDe", color: "#FF6B35" },
+        english: { name: "Road Trip", playlistId: "37i9dQZF1DX5Q5wA1hYvDe", color: "#FF6B35" },
+        hindi: { name: "Hindi Adventure", playlistId: "placeholder_hindi_adventure", color: "#FF6B35" },
+        punjabi: { name: "Punjabi Adventure", playlistId: "placeholder_punjabi_adventure", color: "#FF6B35" },
+        tamil: { name: "Tamil Adventure", playlistId: "placeholder_tamil_adventure", color: "#FF6B35" },
+        telugu: { name: "Telugu Adventure", playlistId: "placeholder_telugu_adventure", color: "#FF6B35" },
+        bengali: { name: "Bengali Adventure", playlistId: "placeholder_bengali_adventure", color: "#FF6B35" },
+        malayalam: { name: "Malayalam Adventure", playlistId: "placeholder_malayalam_adventure", color: "#FF6B35" },
+        kannada: { name: "Kannada Adventure", playlistId: "placeholder_kannada_adventure", color: "#FF6B35" },
+        gujarati: { name: "Gujarati Adventure", playlistId: "placeholder_gujarati_adventure", color: "#FF6B35" },
+        marathi: { name: "Marathi Adventure", playlistId: "placeholder_marathi_adventure", color: "#FF6B35" },
+        urdu: { name: "Urdu Adventure", playlistId: "placeholder_urdu_adventure", color: "#FF6B35" },
+        assamese: { name: "Assamese Adventure", playlistId: "placeholder_assamese_adventure", color: "#FF6B35" },
+        oriya: { name: "Oriya Adventure", playlistId: "placeholder_oriya_adventure", color: "#FF6B35" }
+    },
+    spiritual: {
+        all: { name: "Spiritual Serenity", playlistId: "37i9dQZF1DX4PP3DA4J0N8", color: "#9370DB" },
+        english: { name: "Meditation", playlistId: "37i9dQZF1DX4PP3DA4J0N8", color: "#9370DB" },
+        hindi: { name: "Hindi Bhakti", playlistId: "placeholder_hindi_spiritual", color: "#9370DB" },
+        punjabi: { name: "Punjabi Spiritual", playlistId: "placeholder_punjabi_spiritual", color: "#9370DB" },
+        tamil: { name: "Tamil Devotional", playlistId: "placeholder_tamil_spiritual", color: "#9370DB" },
+        telugu: { name: "Telugu Devotional", playlistId: "placeholder_telugu_spiritual", color: "#9370DB" },
+        bengali: { name: "Bengali Spiritual", playlistId: "placeholder_bengali_spiritual", color: "#9370DB" },
+        malayalam: { name: "Malayalam Spiritual", playlistId: "placeholder_malayalam_spiritual", color: "#9370DB" },
+        kannada: { name: "Kannada Spiritual", playlistId: "placeholder_kannada_spiritual", color: "#9370DB" },
+        gujarati: { name: "Gujarati Spiritual", playlistId: "placeholder_gujarati_spiritual", color: "#9370DB" },
+        marathi: { name: "Marathi Spiritual", playlistId: "placeholder_marathi_spiritual", color: "#9370DB" },
+        urdu: { name: "Urdu Spiritual", playlistId: "placeholder_urdu_spiritual", color: "#9370DB" },
+        assamese: { name: "Assamese Spiritual", playlistId: "placeholder_assamese_spiritual", color: "#9370DB" },
+        oriya: { name: "Oriya Spiritual", playlistId: "placeholder_oriya_spiritual", color: "#9370DB" }
+    },
+    party: {
+        all: { name: "Party Beats", playlistId: "37i9dQZF1DXa8NOEUWPn9W", color: "#FF1493" },
+        english: { name: "Party Hits", playlistId: "37i9dQZF1DXa8NOEUWPn9W", color: "#FF1493" },
+        hindi: { name: "Hindi Party", playlistId: "placeholder_hindi_party", color: "#FF1493" },
+        punjabi: { name: "Punjabi Party", playlistId: "placeholder_punjabi_party", color: "#FF1493" },
+        tamil: { name: "Tamil Party", playlistId: "placeholder_tamil_party", color: "#FF1493" },
+        telugu: { name: "Telugu Party", playlistId: "placeholder_telugu_party", color: "#FF1493" },
+        bengali: { name: "Bengali Party", playlistId: "placeholder_bengali_party", color: "#FF1493" },
+        malayalam: { name: "Malayalam Party", playlistId: "placeholder_malayalam_party", color: "#FF1493" },
+        kannada: { name: "Kannada Party", playlistId: "placeholder_kannada_party", color: "#FF1493" },
+        gujarati: { name: "Gujarati Party", playlistId: "placeholder_gujarati_party", color: "#FF1493" },
+        marathi: { name: "Marathi Party", playlistId: "placeholder_marathi_party", color: "#FF1493" },
+        urdu: { name: "Urdu Party", playlistId: "placeholder_urdu_party", color: "#FF1493" },
+        assamese: { name: "Assamese Party", playlistId: "placeholder_assamese_party", color: "#FF1493" },
+        oriya: { name: "Oriya Party", playlistId: "placeholder_oriya_party", color: "#FF1493" }
+    },
+    relax: {
+        all: { name: "Chill & Relax", playlistId: "37i9dQZF1DX4PP3DA4J0N8", color: "#32CD32" },
+        english: { name: "Chill Hits", playlistId: "37i9dQZF1DX4PP3DA4J0N8", color: "#32CD32" },
+        hindi: { name: "Hindi Relax", playlistId: "placeholder_hindi_relax", color: "#32CD32" },
+        punjabi: { name: "Punjabi Relax", playlistId: "placeholder_punjabi_relax", color: "#32CD32" },
+        tamil: { name: "Tamil Relax", playlistId: "placeholder_tamil_relax", color: "#32CD32" },
+        telugu: { name: "Telugu Relax", playlistId: "placeholder_telugu_relax", color: "#32CD32" },
+        bengali: { name: "Bengali Relax", playlistId: "placeholder_bengali_relax", color: "#32CD32" },
+        malayalam: { name: "Malayalam Relax", playlistId: "placeholder_malayalam_relax", color: "#32CD32" },
+        kannada: { name: "Kannada Relax", playlistId: "placeholder_kannada_relax", color: "#32CD32" },
+        gujarati: { name: "Gujarati Relax", playlistId: "placeholder_gujarati_relax", color: "#32CD32" },
+        marathi: { name: "Marathi Relax", playlistId: "placeholder_marathi_relax", color: "#32CD32" },
+        urdu: { name: "Urdu Relax", playlistId: "placeholder_urdu_relax", color: "#32CD32" },
+        assamese: { name: "Assamese Relax", playlistId: "placeholder_assamese_relax", color: "#32CD32" },
+        oriya: { name: "Oriya Relax", playlistId: "placeholder_oriya_relax", color: "#32CD32" }
+    },
+    romantic: {
+        all: { name: "Romantic Journey", playlistId: "37i9dQZF1DX4sW8ldSUtV9", color: "#FF69B4" },
+        english: { name: "Love Songs", playlistId: "37i9dQZF1DX4sW8ldSUtV9", color: "#FF69B4" },
+        hindi: { name: "Hindi Romantic", playlistId: "placeholder_hindi_romantic", color: "#FF69B4" },
+        punjabi: { name: "Punjabi Romantic", playlistId: "placeholder_punjabi_romantic", color: "#FF69B4" },
+        tamil: { name: "Tamil Romantic", playlistId: "placeholder_tamil_romantic", color: "#FF69B4" },
+        telugu: { name: "Telugu Romantic", playlistId: "placeholder_telugu_romantic", color: "#FF69B4" },
+        bengali: { name: "Bengali Romantic", playlistId: "placeholder_bengali_romantic", color: "#FF69B4" },
+        malayalam: { name: "Malayalam Romantic", playlistId: "placeholder_malayalam_romantic", color: "#FF69B4" },
+        kannada: { name: "Kannada Romantic", playlistId: "placeholder_kannada_romantic", color: "#FF69B4" },
+        gujarati: { name: "Gujarati Romantic", playlistId: "placeholder_gujarati_romantic", color: "#FF69B4" },
+        marathi: { name: "Marathi Romantic", playlistId: "placeholder_marathi_romantic", color: "#FF69B4" },
+        urdu: { name: "Urdu Romantic", playlistId: "placeholder_urdu_romantic", color: "#FF69B4" },
+        assamese: { name: "Assamese Romantic", playlistId: "placeholder_assamese_romantic", color: "#FF69B4" },
+        oriya: { name: "Oriya Romantic", playlistId: "placeholder_oriya_romantic", color: "#FF69B4" }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const moodItems = document.querySelectorAll('.mood-item');
+    const nowPlayingSection = document.getElementById('nowPlayingSection');
+    const spotifyPlayer = document.getElementById('spotifyPlayer');
+    const currentMoodBadge = document.getElementById('currentMoodBadge');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const moodSearch = document.getElementById('moodSearch');
+    const moodGrid = document.getElementById('moodGrid');
+
+    let selectedLanguage = 'all';
+
+    // Global language filter handler
+    const globalLanguageBtns = document.querySelectorAll('.global-language-filter .language-btn');
+    globalLanguageBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            globalLanguageBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            selectedLanguage = this.dataset.lang;
+            // If a mood is selected, update the playlist
+            const selectedMood = document.querySelector('.mood-item.selected');
+            if (selectedMood) {
+                const mood = selectedMood.dataset.mood;
+                updatePlaylist(mood, selectedLanguage);
+            }
+            // Filter Bollywood playlists
+            filterBollywoodPlaylists(selectedLanguage);
+        });
+    });
+
+    // Function to update playlist based on mood and language
+    function updatePlaylist(mood, lang) {
+        const playlist = moodPlaylists[mood][lang] || moodPlaylists[mood]['all'];
+        nowPlayingSection.style.display = 'block';
+        currentMoodBadge.textContent = `${document.querySelector(`.mood-item[data-mood="${mood}"] .mood-icon`).textContent} ${playlist.name}`;
+        currentMoodBadge.style.backgroundColor = playlist.color;
+        currentMoodBadge.style.color = 'white';
+        spotifyPlayer.src = `https://open.spotify.com/embed/playlist/${playlist.playlistId}?utm_source=generator&theme=0`;
+    }
+
+    // Function to filter Bollywood playlists
+    function filterBollywoodPlaylists(lang) {
+        const playlists = document.querySelectorAll('#bollywoodPlaylists .playlist-item');
+        playlists.forEach(item => {
+            if (lang === 'all' || item.dataset.lang === lang) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Mood selection handler
+    moodItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const mood = this.dataset.mood;
+
+            // Update UI
+            moodItems.forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+
+            // Update playlist
+            updatePlaylist(mood, selectedLanguage);
+
+            // Scroll to now playing
+            nowPlayingSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Shuffle button
+    shuffleBtn.addEventListener('click', function() {
+        // Reload the iframe to shuffle (Spotify handles shuffling internally)
+        const currentSrc = spotifyPlayer.src;
+        spotifyPlayer.src = '';
+        setTimeout(() => {
+            spotifyPlayer.src = currentSrc;
+        }, 100);
+    });
+
+    // Share button
+    shareBtn.addEventListener('click', function() {
+        const playlistUrl = spotifyPlayer.src.replace('embed/', '').replace('?utm_source=generator&theme=0', '');
+        const shareText = `Check out this ${currentMoodBadge.textContent} playlist for my travels! 🎵 ${playlistUrl}`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Travel Mood Playlist',
+                text: shareText,
+                url: playlistUrl
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert('Playlist link copied to clipboard!');
+            }).catch(() => {
+                alert('Share this: ' + shareText);
+            });
+        }
+    });
+
+    // Search functionality for moods
+    moodSearch.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        moodItems.forEach(item => {
+            const name = item.querySelector('.mood-name').textContent.toLowerCase();
+            const desc = item.querySelector('.mood-desc').textContent.toLowerCase();
+            if (name.includes(query) || desc.includes(query)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
+</script>

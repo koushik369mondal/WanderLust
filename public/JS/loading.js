@@ -13,6 +13,14 @@ class LoadingManager {
     setupFormHandlers() {
         // Use event delegation to handle all form submissions
         document.addEventListener('submit', (e) => {
+            // If this form is using AJAX (data-ajax="true") skip the global interception
+            try {
+                if (e.target && e.target.getAttribute && e.target.getAttribute('data-ajax') === 'true') {
+                    return; // let the form's own JS handle submission
+                }
+            } catch (err) {
+                // ignore and continue
+            }
             // Find the submit button in this form - try multiple selectors
             let submitButton = e.target.querySelector('button[type="submit"]');
             if (!submitButton) {
@@ -109,8 +117,14 @@ class LoadingManager {
                 const response = await originalFetch(resource, config);
                 return response;
             } catch (error) {
-                console.error('Fetch error:', error);
+                try {
+                    console.error('Fetch error for', typeof resource === 'string' ? resource : resource.url, 'config:', config, error);
+                } catch (logErr) {
+                    console.error('Fetch error (failed to stringify request):', error);
+                }
                 throw error;
+                console.error('Fetch error:', error);
+                throw error; // Re-throw the error to be caught by the calling function
             } finally {
                 // Small delay to prevent flickering for fast requests
                 setTimeout(() => {
@@ -122,6 +136,7 @@ class LoadingManager {
                     });
                 }, 300);
             }
+
         };
     }
 

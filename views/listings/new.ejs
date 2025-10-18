@@ -90,6 +90,45 @@
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(14, 165, 233, 0.55);
   }
+  /* FIX 1: File Input Vertical Alignment */
+.file-upload-wrapper {
+    /* Use Flexbox to vertically center the button and text, fixing misalignment */
+    display: flex; 
+    align-items: center; /* Vertically centers all children */
+    gap: 1rem; /* Adds space between the button and the 'No file chosen' text */
+    flex-wrap: nowrap; /* Prevents wrapping which could break alignment */
+}
+
+/* FIX 2: Curvy Design & Contrast */
+.file-input-control {
+    border-radius: 25px; /* Makes the entire input area curvy/oval */
+    border: 2px solid var(--accent-color, #43E0D8); /* Subtle border color */
+    padding: 0.5rem 1rem; /* Add internal padding */
+    font-weight: 500;
+    
+    /* Ensure text contrast is right in Dark Mode */
+    color: #f7f7f7; 
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Styling the actual 'Choose File' button inside the input element */
+.file-input-control::file-selector-button {
+    border-radius: 20px; /* Makes the internal button curvy */
+    background-color: var(--primary-color, #fe424d); /* Consistent with other buttons (Red) */
+    color: white;
+    padding: 0.4rem 1rem;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+/* Ensure Light Mode compatibility (if background turns white, text must be dark) */
+@media (prefers-color-scheme: light) {
+    .file-input-control {
+        color: #333333;
+        background-color: #ffffff;
+        border-color: #ced4da;
+    }
+}
 </style>
 
 <div class="row mt-5">
@@ -148,16 +187,26 @@
           </div>
         </div>
 
-        <!-- Image Upload with Preview -->
         <div class="mb-3">
-          <label for="image" class="form-label">Upload Listing Image</label>
-          <input type="file" name="listing[image]" id="image" class="form-control" accept="image/*" onchange="previewImage(event)" required>
-          <div class="listing-preview-wrapper mt-3">
-            <img id="imagePreview" src="" alt="Image Preview">
-          </div>
-          <div class="valid-feedback">Looks good!</div>
-          <div class="invalid-feedback">Please upload an image.</div>
-        </div>
+    <label for="image" class="form-label">Upload Listing Image</label>
+    
+    <div class="file-upload-wrapper">
+        <input 
+            type="file" 
+            name="listing[image]" 
+            id="image" 
+            class="form-control file-input-control" 
+            accept="image/*" 
+            onchange="previewImage(event)" 
+            required
+        >
+    </div>
+    <div class="listing-preview-wrapper mt-3">
+        <img id="imagePreview" src="" alt="Image Preview">
+    </div>
+    <div class="valid-feedback">Looks good!</div>
+    <div class="invalid-feedback">Please upload an image.</div>
+</div>
 
         <!-- Price & Country -->
         <div class="row">

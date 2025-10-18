@@ -1,0 +1,489 @@
+<% layout("/layouts/boilerplate") %>
+<link rel="stylesheet" href="/CSS/admin-dashboard.css">
+
+<div class="admin-dashboard">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="sidebar-header">
+                    <h4><i class="fa-solid fa-chart-line me-2"></i>Admin Panel</h4>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="#overview" class="nav-item active">
+                        <i class="fa-solid fa-tachometer-alt"></i>
+                        Overview
+                    </a>
+                    <a href="#users" class="nav-item">
+                        <i class="fa-solid fa-users"></i>
+                        Users
+                    </a>
+                    <a href="#destinations" class="nav-item">
+                        <i class="fa-solid fa-map-marker-alt"></i>
+                        Destinations
+                    </a>
+                    <a href="#reviews" class="nav-item">
+                        <i class="fa-solid fa-star"></i>
+                        Reviews
+                    </a>
+                    <a href="#settings" class="nav-item">
+                        <i class="fa-solid fa-cog"></i>
+                        Settings
+                    </a>
+                    <a href="#activity" class="nav-item">
+                        <i class="fa-solid fa-history"></i>
+                        Activity
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="dashboard-header">
+                    <h1>Analytics Dashboard</h1>
+                    <p class="text-muted">Monitor platform performance and user engagement</p>
+                </div>
+
+                <!-- Quick Stats Cards -->
+                <div class="row mb-4" id="quickStats">
+                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon users">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalUsers">-</h3>
+                                <p>Total Users</p>
+                                <small class="growth-indicator" id="userGrowth">+0 this month</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon listings">
+                                <i class="fa-solid fa-map-marker-alt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalListings">-</h3>
+                                <p>Total Listings</p>
+                                <small class="growth-indicator" id="listingGrowth">+0 this month</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon reviews">
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalReviews">-</h3>
+                                <p>Total Reviews</p>
+                                <small class="growth-indicator" id="reviewGrowth">0% growth</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon rating">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avgRating">-</h3>
+                                <p>Avg Rating</p>
+                                <small class="growth-indicator positive">⭐ Platform Quality</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon engagement">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="activeUsers">-</h3>
+                                <p>Active Users</p>
+                                <small class="growth-indicator" id="engagementRate">Last 30 days</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avgListingPrice">-</h3>
+                                <p>Avg Price</p>
+                                <small class="growth-indicator" id="priceGrowth">Per listing</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="row">
+                    <!-- User Growth Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-chart-line me-2"></i>User Growth Trends</h5>
+                                <p class="text-muted">New users registered over time</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="userGrowthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Trends Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-comments me-2"></i>Review Activity</h5>
+                                <p class="text-muted">Reviews and ratings over time</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="reviewTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Destinations Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-trophy me-2"></i>Top Rated Destinations</h5>
+                                <p class="text-muted">Highest rated locations by users</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topDestinationsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Contributors Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-medal me-2"></i>Most Active Contributors</h5>
+                                <p class="text-muted">Users with most listings and reviews</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topContributorsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Distribution Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-chart-pie me-2"></i>Popular Categories</h5>
+                                <p class="text-muted">Distribution of listing categories</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Metrics Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h5><i class="fa-solid fa-money-bill-trend-up me-2"></i>Platform Value Trends</h5>
+                                <p class="text-muted">Listing values and pricing trends</p>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Management Section -->
+                <div class="management-section" id="users-section" style="display: none;">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-users me-2"></i>User Management</h2>
+                        <p>Manage user accounts, permissions, and activity</p>
+                    </div>
+
+                    <!-- Search and Filters -->
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <input type="text" id="userSearch" placeholder="Search users by username or email..." class="form-control">
+                            <button class="btn btn-outline-secondary" id="clearUserSearch">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="filter-controls">
+                            <select id="userSortBy" class="form-select">
+                                <option value="joinDate">Join Date</option>
+                                <option value="username">Username</option>
+                                <option value="lastActive">Last Active</option>
+                            </select>
+                            <select id="userSortOrder" class="form-select">
+                                <option value="desc">Newest First</option>
+                                <option value="asc">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Join Date</th>
+                                    <th>Last Active</th>
+                                    <th>Admin</th>
+                                    <th>Vacation Slots</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav id="usersPagination" class="mt-3" style="display: none;">
+                        <ul class="pagination justify-content-center" id="usersPaginationControls"></ul>
+                    </nav>
+                </div>
+
+                <!-- Destinations Management Section -->
+                <div class="management-section" id="destinations-section" style="display: none;">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-map-marker-alt me-2"></i>Destinations Management</h2>
+                        <p>Manage travel listings and featured content</p>
+                    </div>
+
+                    <!-- Search and Filters -->
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <input type="text" id="listingSearch" placeholder="Search listings by title, location..." class="form-control">
+                            <button class="btn btn-outline-secondary" id="clearListingSearch">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="filter-controls">
+                            <select id="listingCategory" class="form-select">
+                                <option value="">All Categories</option>
+                                <option value="Beach">Beach</option>
+                                <option value="Mountain">Mountain</option>
+                                <option value="City">City</option>
+                                <option value="Adventure">Adventure</option>
+                                <option value="Cultural">Cultural</option>
+                            </select>
+                            <select id="listingSortBy" class="form-select">
+                                <option value="createdAt">Created Date</option>
+                                <option value="title">Title</option>
+                                <option value="price">Price</option>
+                            </select>
+                            <select id="listingSortOrder" class="form-select">
+                                <option value="desc">Newest First</option>
+                                <option value="asc">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Listings Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="listingsTable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Location</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Owner</th>
+                                    <th>Reviews</th>
+                                    <th>Featured</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listingsTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav id="listingsPagination" class="mt-3" style="display: none;">
+                        <ul class="pagination justify-content-center" id="listingsPaginationControls"></ul>
+                    </nav>
+                </div>
+
+                <!-- Reviews Management Section -->
+                <div class="management-section" id="reviews-section" style="display: none;">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-star me-2"></i>Reviews Management</h2>
+                        <p>Moderate user reviews and manage content quality</p>
+                    </div>
+
+                    <!-- Search and Filters -->
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <input type="text" id="reviewSearch" placeholder="Search reviews by content..." class="form-control">
+                            <button class="btn btn-outline-secondary" id="clearReviewSearch">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="filter-controls">
+                            <select id="reviewRating" class="form-select">
+                                <option value="">All Ratings</option>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                            </select>
+                            <select id="reviewSortBy" class="form-select">
+                                <option value="createdAt">Created Date</option>
+                                <option value="rating">Rating</option>
+                            </select>
+                            <select id="reviewSortOrder" class="form-select">
+                                <option value="desc">Newest First</option>
+                                <option value="asc">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="reviewsTable">
+                            <thead>
+                                <tr>
+                                    <th>Author</th>
+                                    <th>Listing</th>
+                                    <th>Rating</th>
+                                    <th>Comment</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviewsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav id="reviewsPagination" class="mt-3" style="display: none;">
+                        <ul class="pagination justify-content-center" id="reviewsPaginationControls"></ul>
+                    </nav>
+                </div>
+
+                <!-- System Settings Section -->
+                <div class="management-section" id="settings-section" style="display: none;">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-cog me-2"></i>System Settings</h2>
+                        <p>Configure platform settings and preferences</p>
+                    </div>
+
+                    <div class="settings-container">
+                        <div class="setting-group">
+                            <h4>General Settings</h4>
+                            <div class="setting-item">
+                                <label class="form-label">Maintenance Mode</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="maintenanceMode">
+                                    <label class="form-check-label" for="maintenanceMode">
+                                        Enable maintenance mode
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <label class="form-label">Allow New Registrations</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="allowRegistration" checked>
+                                    <label class="form-check-label" for="allowRegistration">
+                                        Allow new user registrations
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h4>Content Limits</h4>
+                            <div class="setting-item">
+                                <label for="maxListingsPerUser" class="form-label">Max Listings Per User</label>
+                                <input type="number" class="form-control" id="maxListingsPerUser" value="10" min="1" max="50">
+                            </div>
+                            <div class="setting-item">
+                                <label for="featuredListingLimit" class="form-label">Featured Listing Limit</label>
+                                <input type="number" class="form-control" id="featuredListingLimit" value="5" min="1" max="20">
+                            </div>
+                        </div>
+
+                        <div class="setting-actions">
+                            <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+                            <button class="btn btn-outline-secondary" id="resetSettings">Reset to Defaults</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Logs Section -->
+                <div class="management-section" id="activity-section" style="display: none;">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-history me-2"></i>Recent Activity</h2>
+                        <p>Monitor recent platform activity and user actions</p>
+                    </div>
+
+                    <div class="activity-feed" id="activityFeed">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationTitle">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="confirmationMessage">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/JS/admin-dashboard.js"></script>

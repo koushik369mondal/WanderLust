@@ -1,0 +1,111 @@
+<% layout('/layouts/boilerplate') %>
+
+  <main class="packing-list-form-container">
+    <div class="packing-list-header">
+      <h1>🧳 AI-Powered Packing List Generator</h1>
+      <p>Get a personalized packing checklist tailored to your trip with AI assistance and weather insights.</p>
+    </div>
+
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+      <div class="error-messages">
+        <ul>
+          <% errors.forEach(error => { %>
+            <li><%= error %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="/packing-list/generate" method="POST" class="packing-list-form">
+      <div class="form-group">
+        <label for="destination">🌍 Destination:</label>
+        <input type="text"
+               id="destination"
+               name="destination"
+               required
+               placeholder="e.g., Paris, Tokyo, Goa"
+               value="<%= typeof formData !== 'undefined' ? formData.destination : '' %>">
+      </div>
+
+      <div class="form-group">
+        <label for="duration">📅 Trip Duration (days):</label>
+        <input type="number"
+               id="duration"
+               name="duration"
+               min="1"
+               max="365"
+               required
+               placeholder="e.g., 7"
+               value="<%= typeof formData !== 'undefined' ? formData.duration : '' %>">
+      </div>
+
+      <div class="form-group">
+        <label for="travelType">👥 Travel Type:</label>
+        <select id="travelType" name="travelType" required>
+          <option value="">Select travel type</option>
+          <option value="solo" <%= typeof formData !== 'undefined' && formData.travelType === 'solo' ? 'selected' : '' %>>Solo Traveler</option>
+          <option value="couple" <%= typeof formData !== 'undefined' && formData.travelType === 'couple' ? 'selected' : '' %>>Couple</option>
+          <option value="family" <%= typeof formData !== 'undefined' && formData.travelType === 'family' ? 'selected' : '' %>>Family</option>
+          <option value="group" <%= typeof formData !== 'undefined' && formData.travelType === 'group' ? 'selected' : '' %>>Group/Friends</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>🎯 Planned Activities:</label>
+        <div class="activities-grid">
+          <% const activityOptions = [
+            { value: 'beach', label: 'Beach & Swimming', icon: '🏖️' },
+            { value: 'trekking', label: 'Trekking & Hiking', icon: '🥾' },
+            { value: 'city_tour', label: 'City Sightseeing', icon: '🏙️' },
+            { value: 'cultural', label: 'Cultural Sites', icon: '🏛️' },
+            { value: 'business', label: 'Business Meetings', icon: '💼' },
+            { value: 'religious', label: 'Religious Sites', icon: '🙏' },
+            { value: 'adventure', label: 'Adventure Sports', icon: '🏂' },
+            { value: 'food', label: 'Food & Cuisine', icon: '🍽️' },
+            { value: 'photography', label: 'Photography', icon: '📸' },
+            { value: 'shopping', label: 'Shopping', icon: '🛍️' },
+            { value: 'spa', label: 'Spa & Relaxation', icon: '🧘' },
+            { value: 'nightlife', label: 'Nightlife', icon: '🌃' }
+          ] %>
+
+          <% activityOptions.forEach(activity => { %>
+            <label class="activity-option">
+              <input type="checkbox"
+                     name="activities"
+                     value="<%= activity.value %>"
+                     <%= typeof formData !== 'undefined' && formData.activities && formData.activities.includes(activity.value) ? 'checked' : '' %>>
+              <span class="activity-label">
+                <%= activity.icon %> <%= activity.label %>
+              </span>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+
+      <button type="submit" class="generate-btn">
+        🤖 Generate My Packing List
+      </button>
+    </form>
+
+    <div class="features-preview">
+      <h3>✨ What You'll Get:</h3>
+      <div class="features-grid">
+        <div class="feature-item">
+          <span class="feature-icon">🧠</span>
+          <span>AI-powered recommendations</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🌤️</span>
+          <span>Weather-adjusted suggestions</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📋</span>
+          <span>Categorized checklist</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">💾</span>
+          <span>Save to My Trips</span>
+        </div>
+      </div>
+    </div>
+  </main>

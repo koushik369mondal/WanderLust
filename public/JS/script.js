@@ -8,7 +8,102 @@
 //
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
+    // ------------------
+    // SERVICE WORKER - CLEANUP ONLY
+    // ------------------
+    // Emergency cache clear already handled by emergencyCacheClear.js
+    // Just ensure no service workers are running
+    if ('serviceWorker' in navigator && !sessionStorage.getItem('swCleanupDone')) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            if (registrations.length > 0) {
+                console.log('🧹 Cleaning up service workers...');
+                registrations.forEach(registration => {
+                    registration.unregister().then(function(success) {
+                        if (success) {
+                            console.log('✅ Service Worker cleaned up');
+                        }
+                    });
+                });
+            }
+            sessionStorage.setItem('swCleanupDone', 'true');
+        });
+    }
+
+    // PWA Install Prompt - DISABLED (offline features removed)
+    // Users will always fetch fresh data from the database
+    /*
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showInstallPrompt();
+    });
+    */
+
+    function showInstallPrompt() {
+        const installToast = document.createElement('div');
+        installToast.className = 'toast align-items-center text-white bg-primary border-0 position-fixed';
+        installToast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        installToast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-mobile-screen-button me-2"></i>
+                    Install WanderLust for offline access!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="mt-2 pt-2 border-top">
+                <button class="btn btn-sm btn-light me-2" id="install-btn">Install</button>
+                <button class="btn btn-sm btn-outline-light" data-bs-dismiss="toast">Later</button>
+            </div>
+        `;
+        document.body.appendChild(installToast);
+
+        const toast = new bootstrap.Toast(installToast);
+        toast.show();
+
+        document.getElementById('install-btn').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+            toast.hide();
+        });
+    }
+
+    function showUpdateToast() {
+        const updateToast = document.createElement('div');
+        updateToast.className = 'toast align-items-center text-white bg-info border-0 position-fixed';
+        updateToast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        updateToast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-refresh me-2"></i>
+                    New version available! Refresh to update.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="mt-2 pt-2 border-top">
+                <button class="btn btn-sm btn-light me-2" id="refresh-btn">Refresh</button>
+                <button class="btn btn-sm btn-outline-light" data-bs-dismiss="toast">Later</button>
+            </div>
+        `;
+        document.body.appendChild(updateToast);
+
+        const toast = new bootstrap.Toast(updateToast);
+        toast.show();
+
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            window.location.reload();
+        });
+    }
+
     // ------------------
     // FORM VALIDATION
     // ------------------
@@ -87,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     class SearchManager {
         constructor() {
             this.searchForm = document.querySelector('form[role="search"]');
-            this.searchInput = document.querySelector(".search-inp");
+            this.searchInput = document.querySelector(".search-input");
             this.suggestionsContainer = document.getElementById("searchSuggestions");
             this.debounceTimer = null;
             this.init();
@@ -116,15 +211,50 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
 
-                    this.searchInput.addEventListener("blur", () => {
-                        // Delay hiding to allow click on suggestions
-                        setTimeout(() => this.hideSuggestions(), 200);
+                    this.searchInput.addEventListener("blur", (e) => {
+                        // Only hide if not clicking on suggestions
+                        if (!this.suggestionsContainer.contains(e.relatedTarget)) {
+                            setTimeout(() => this.hideSuggestions(), 200);
+                        }
                     });
 
-                    // Hide suggestions on Escape
+                    // Prevent suggestions from losing focus when clicked
+                    this.suggestionsContainer.addEventListener("mousedown", (e) => {
+                        e.preventDefault();
+                    });
+
+                    // Handle keyboard navigation
                     this.searchInput.addEventListener("keydown", (e) => {
-                        if (e.key === "Escape") {
-                            this.hideSuggestions();
+                        const suggestions = this.suggestionsContainer.querySelectorAll('.search-suggestion-item');
+                        const currentActive = this.suggestionsContainer.querySelector('.search-suggestion-item.active');
+                        let activeIndex = currentActive ? Array.from(suggestions).indexOf(currentActive) : -1;
+
+                        switch (e.key) {
+                            case "Escape":
+                                this.hideSuggestions();
+                                break;
+                            case "ArrowDown":
+                                e.preventDefault();
+                                if (suggestions.length > 0) {
+                                    if (currentActive) currentActive.classList.remove('active');
+                                    activeIndex = (activeIndex + 1) % suggestions.length;
+                                    suggestions[activeIndex].classList.add('active');
+                                }
+                                break;
+                            case "ArrowUp":
+                                e.preventDefault();
+                                if (suggestions.length > 0) {
+                                    if (currentActive) currentActive.classList.remove('active');
+                                    activeIndex = activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1;
+                                    suggestions[activeIndex].classList.add('active');
+                                }
+                                break;
+                            case "Enter":
+                                if (currentActive) {
+                                    e.preventDefault();
+                                    currentActive.click();
+                                }
+                                break;
                         }
                     });
                 }
@@ -162,6 +292,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             this.suggestionsContainer.innerHTML = '';
+            // Reset any active states
+            this.activeIndex = -1;
+            // Reset any active states
+            this.activeIndex = -1;
             
             suggestions.forEach(suggestion => {
                 const item = document.createElement('div');
@@ -172,10 +306,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     <small class="search-suggestion-type">${suggestion.type}</small>
                 `;
                 
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     this.searchInput.value = suggestion.value;
                     this.hideSuggestions();
-                    this.searchForm.submit();
+                    // Use window.location instead of form.submit() for better reliability
+                    window.location.href = `/listings?search=${encodeURIComponent(suggestion.value)}`;
+                });
+                
+                // Also handle mousedown to prevent blur
+                item.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
                 });
                 
                 this.suggestionsContainer.appendChild(item);
