@@ -203,25 +203,16 @@
         <div class="language-dropdown dropdown">
           <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle">
             <i class="fa-solid fa-globe"></i>
-            <span id="currentLanguageDisplay">EN</span>
+            <span id="currentLanguageDisplay"><%= languageMap[getLocale()].flag %> <%= languageMap[getLocale()].name %></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end" id="languageDropdown">
-            <!-- Language options will be dynamically populated by i18n-manager.js -->
-            <li><a class="dropdown-item" href="#" data-lang="en">🇺🇸 English</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="hi">🇮🇳 हिंदी</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="es">🇪🇸 Español</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="fr">🇫🇷 Français</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="bn">🇧🇩 বাংলা</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="gu">🇮🇳 ગુજરાતી</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="kn">🇮🇳 ಕನ್ನಡ</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="ml">🇮🇳 മലയാളം</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="mr">🇮🇳 मराठी</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="or">🇮🇳 ଓଡ଼ିଆ</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="pa">🇮🇳 ਪੰਜਾਬੀ</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="ta">🇮🇳 தமிழ்</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="te">🇮🇳 తెలుగు</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="ur">🇵🇰 اردو</a></li>
-            <li><a class="dropdown-item" href="#" data-lang="as">🇮🇳 অসমীয়া</a></li>
+            <% Object.keys(languageMap).forEach(lang => { %>
+              <li>
+                <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
+                  <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
+                </a>
+              </li>
+            <% }); %>
           </ul>
         </div>
           </ul>
