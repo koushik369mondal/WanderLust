@@ -1,64 +1,66 @@
-const CACHE_NAME = 'wanderlust-v1';
-const STATIC_CACHE = 'wanderlust-static-v1';
-const DYNAMIC_CACHE = 'wanderlust-dynamic-v1';
+// ============================================
+// 🔴 SELF-DESTRUCTING SERVICE WORKER
+// ============================================
+// This service worker immediately unregisters itself
+// and clears all caches to prevent cache corruption.
+// DO NOT restore old caching code!
+// ============================================
 
-// Assets to cache immediately
-const STATIC_ASSETS = [
-  '/',
-  '/trip-planner',
-  '/trip-planner/my-trips',
-  '/css/style.css',
-  '/css/admin-dashboard.css',
-  '/css/holiday.css',
-  '/css/loading.css',
-  '/css/packingList.css',
-  '/css/rating.css',
-  '/js/script.js',
-  '/js/admin-dashboard.js',
-  '/js/loading.js',
-  '/js/map.js',
-  '/js/packingList.js',
-  '/js/weather.js',
-  '/js/offlineManager.js',
-  '/images/travel_cover-1500x1000.jpeg',
-  '/images/compass.png',
-  '/manifest.json'
-];
+console.log('🔴 SERVICE WORKER: Self-destruct sequence initiated');
 
-// Install event - cache static assets
+// Immediately skip waiting and activate
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-  event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then((cache) => {
-        console.log('Service Worker: Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .then(() => self.skipWaiting())
-  );
+  console.log('🔴 SERVICE WORKER: Installing self-destruct version...');
+  self.skipWaiting(); // Force immediate activation
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
+  console.log('🔴 SERVICE WORKER: Activating self-destruct...');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-            console.log('Service Worker: Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
+    (async () => {
+      // Delete ALL caches
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map(cacheName => {
+          console.log(`🔴 SERVICE WORKER: Deleting cache: ${cacheName}`);
+          return caches.delete(cacheName);
         })
       );
-    }).then(() => self.clients.claim())
+      
+      // Unregister this service worker
+      const registrations = await self.registration.unregister();
+      console.log('🔴 SERVICE WORKER: Self-destructed successfully!', registrations);
+      
+      // Claim all clients to take control immediately
+      return self.clients.claim();
+    })()
   );
 });
 
-// Fetch event - serve from cache or network
+// No fetch event handler - let all requests go to network
 self.addEventListener('fetch', (event) => {
+<<<<<<< HEAD
   const { request } = event;
   const url = new URL(request.url);
+
+  // Use Network-First strategy for navigation requests (HTML pages)
+  if (request.mode === 'navigate') {
+    console.log('SW: navigation request for', url.pathname);
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          // Always return the network response for navigation; do not cache HTML pages here
+          return response;
+        })
+        .catch(() => {
+          // If the network fails, try to serve from the cache
+          return caches.match(request).then(cachedResponse => {
+            return cachedResponse || caches.match('/offline.html');
+          });
+        })
+    );
+    return; // End execution here for navigation requests
+  }
 
   // Skip non-GET requests and external requests
   if (request.method !== 'GET' || !url.origin.includes(self.location.origin)) {
@@ -115,7 +117,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For other requests, try cache first, then network
+  // For other requests (static assets like CSS, JS, images), use Cache-First strategy
   event.respondWith(
     caches.match(request)
       .then((cachedResponse) => {
@@ -137,12 +139,7 @@ self.addEventListener('fetch', (event) => {
 
             return response;
           })
-          .catch(() => {
-            // Return offline fallback for navigation requests
-            if (request.mode === 'navigate') {
-              return caches.match('/trip-planner/my-trips');
-            }
-          });
+          .catch(() => { /* For non-navigation requests, failing is okay if not in cache */ });
       })
   );
 });
@@ -205,4 +202,7 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+=======
+  // Do nothing - all requests pass through to network
+>>>>>>> db0e0818c2c9452899f84576225035f060b3fb67
 });

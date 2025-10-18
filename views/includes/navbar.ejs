@@ -1,54 +1,3 @@
-<style>
-  .search-btn {
-    background-color: #fe424d;
-    color: #fff;
-    border-radius: 25px;
-    padding: 0 1rem 0 1rem;
-  }
-
-  .search-btn:hover {
-    background-color: #fe424d;
-    color: #fff;
-  }
-
-  .search-btn i {
-    display: inline;
-    margin-right: 0.5rem;
-  }
-
-  .search-inp {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 1rem;
-  }
-
-  /* Enhanced navbar brand styling */
-  .navbar-brand {
-    font-size: 1.5rem;
-    color: var(--accent-color) !important;
-    text-decoration: none;
-    transition: all 0.3s ease;
-  }
-
-  .navbar-brand:hover {
-    color: var(--accent-color) !important;
-    transform: scale(1.05);
-  }
-
-  .navbar-brand i {
-    color: #fe424d;
-    font-size: 1.4rem;
-  }
-
-  /* Tablet view fixes */
-  @media (max-width: 991px) and (min-width: 768px) {
-    .navbar-nav .d-flex {
-      flex-wrap: nowrap;
-    }
-
-    .search-inp {
-      min-width: 200px;
-    }
 
     .search-btn {
       white-space: nowrap;
@@ -189,16 +138,18 @@
   }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top" role="navigation" id="navigation" aria-label="Main navigation">
   <div class="container-fluid">
-    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
-      <i class="fa-regular fa-compass me-2"></i>
+    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings" aria-label="WanderLust - Go to home page">
+      <i class="fa-regular fa-compass me-2" aria-hidden="true"></i>
       <span class="fw-bold"><%= __('wanderlust') %></span>
     </a>
 
     <!-- Mobile Toggle -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle main navigation menu">
       <span class="navbar-toggler-icon"></span>
+      <span class="sr-only">Menu</span>
     </button>
 
     <!-- Collapsible Content -->
@@ -207,24 +158,26 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" href="/listings">
-            <i class="fa-regular fa-compass"></i>
+            <i class="fa-regular fa-copy"></i>
             <%= __('all_listings') %>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/listings/about">
             <i class="fa-solid fa-info-circle"></i>
-            About
+            <%= __('about') %>
           </a>
         </li>
 
         <!-- Travel Tools Dropdown -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-tools"></i>
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" 
+             aria-expanded="false" aria-haspopup="true" id="travel-tools-dropdown"
+             aria-label="Travel tools menu">
+            <i class="fa-solid fa-tools" aria-hidden="true"></i>
             Travel Tools
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" aria-labelledby="travel-tools-dropdown" role="menu">
             <li>
               <a class="dropdown-item" href="/trip-planner">
                 <i class="fa-solid fa-route me-2"></i>Trip Planner
@@ -258,6 +211,7 @@
                 <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
               </a>
             </li>
+
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -273,17 +227,22 @@
             </li>
           </ul>
         </li>
-      </ul>
+
 
       <!-- Search Bar -->
-      <div class="search-container me-3">
-        <form role="search" method="GET" action="/listings">
+      <div class="search-container me-3" id="search">
+        <form role="search" method="GET" action="/listings" aria-label="Search destinations">
           <div class="position-relative">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input class="search-input" type="search" name="search" placeholder="<%= __('search_destinations') %>"
-              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off" />
-            <button class="search-btn" type="submit">
-              <%= __('search') %>
+            <label for="search-input" class="sr-only">Search destinations</label>
+            <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+            <input class="search-input" type="search" name="search" id="search-input"
+              placeholder="<%= __('search_destinations') %>"
+              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" 
+              autocomplete="off" 
+              aria-describedby="search-help" />
+            <div id="search-help" class="sr-only">Search for travel destinations, accommodations, and experiences</div>
+            <button class="search-btn" type="submit" aria-label="Submit search">
+              <span aria-hidden="true"><%= __('search') %></span>
             </button>
           </div>
           <div class="search-suggestions" id="searchSuggestions"></div>
@@ -337,6 +296,22 @@
                     <i class="fa-solid fa-suitcase-rolling me-2"></i>My Trip Plans
                   </a>
                 </li>
+                <li>
+                  <a class="dropdown-item" href="/phrase-assistant">
+                    <i class="fa-solid fa-language me-2"></i>Phrase Assistant
+                  </a>
+                </li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#" id="downloadsDropdownToggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-download me-2"></i>My Downloads
+                    <span id="profileDownloadCount" class="badge bg-primary ms-2" style="display: none;">0</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-submenu-menu" id="downloadsDropdown" aria-labelledby="downloadsDropdownToggle">
+                    <!-- Downloaded trips will be populated here -->
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/trip-planner/offline-trips"><i class="fa-solid fa-list me-2"></i>View All Downloads</a></li>
+                  </ul>
+                </li>
                 <% if (currentUser && currentUser.isAdmin) { %>
                 <li>
                   <hr class="dropdown-divider">
@@ -365,33 +340,388 @@
       <div class="utility-controls">
         <!-- Language Dropdown -->
         <div class="language-dropdown dropdown">
-          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle">
             <i class="fa-solid fa-globe"></i>
+            <span id="currentLanguageDisplay"><%= languageMap[getLocale()].flag %> <%= languageMap[getLocale()].name %></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
-                English</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
-                हिंदी</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
-                বাংলা</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
-                অসমীয়া</a>
-            </li>
+          <ul class="dropdown-menu dropdown-menu-end" id="languageDropdown">
+            <% Object.keys(languageMap).forEach(lang => { %>
+              <li>
+                <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>" href="<%= buildLangUrl(lang) %>">
+                  <%= languageMap[lang].flag %> <%= languageMap[lang].name %>
+                </a>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
           </ul>
         </div>
 
-        <button id="theme-toggle" class="btn btn-outline-secondary">
-          <i id="theme-icon" class="fa-solid fa-moon"></i>
-        </button>
+        <!-- Notification Bell -->
+        <% if(typeof currentUser !== 'undefined' && currentUser) { %>
+        <div class="notification-container position-relative me-2">
+          <button id="notification-toggle" class="btn btn-outline-secondary position-relative" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-bell"></i>
+            <span id="notification-badge" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notification-dropdown" style="width: 350px; max-height: 400px; overflow-y: auto;" aria-labelledby="notification-toggle">
+            <div class="dropdown-header d-flex justify-content-between align-items-center p-3 border-bottom">
+              <h6 class="mb-0">Notifications</h6>
+              <button id="mark-all-read" class="btn btn-sm btn-outline-primary">Mark All Read</button>
+            </div>
+            <div id="notification-list" class="notification-list">
+              <!-- Notifications will be loaded here -->
+              <div class="text-center text-muted p-4" id="no-notifications">
+                <i class="fa-solid fa-bell-slash fa-2x mb-2"></i>
+                <p>No notifications yet</p>
+              </div>
+            </div>
+            <div class="dropdown-footer p-2 border-top">
+              <a href="#" class="text-decoration-none text-center d-block" id="view-all-notifications">
+                <small>View All Notifications</small>
+              </a>
+            </div>
+          </div>
+        </div>
+        <% } %>
+
+        <!-- Enhanced Theme Toggle -->
+        <%- include("../includes/theme-toggle.ejs") %>
       </div>
     </div>
   </div>
 </nav>
+
+<% if(typeof currentUser !== 'undefined' && currentUser) { %>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize downloads dropdown when user is logged in
+    initializeDownloadsDropdown();
+});
+
+async function initializeDownloadsDropdown() {
+    try {
+        if (window.OfflineManager) {
+            const trips = await window.OfflineManager.getStoredPdfs();
+            updateDownloadsDropdown(trips);
+        }
+    } catch (error) {
+        console.error('Error initializing downloads dropdown:', error);
+    }
+}
+
+function updateDownloadsDropdown(trips) {
+    const dropdown = document.getElementById('downloadsDropdown');
+    const badge = document.getElementById('profileDownloadCount');
+
+    if (!dropdown || !badge) return;
+
+    // Update badge count
+    if (trips && trips.length > 0) {
+        badge.textContent = trips.length;
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    // Clear existing trip items (keep the divider and "View All" link)
+    const existingItems = dropdown.querySelectorAll('.download-trip-item');
+    existingItems.forEach(item => item.remove());
+
+    // Add trip items (limit to 5 most recent)
+    const recentTrips = trips.slice(0, 5);
+    const divider = dropdown.querySelector('.dropdown-divider');
+
+    recentTrips.forEach(trip => {
+        const li = document.createElement('li');
+        li.className = 'download-trip-item';
+
+        li.innerHTML = `
+            <a class="dropdown-item" href="#" onclick="viewDownloadedTrip('${trip.id}')">
+                <i class="fa-solid fa-file-pdf me-2"></i>
+                <div class="d-flex flex-column">
+                    <span class="fw-medium">${trip.destination || 'Trip Plan'}</span>
+                    <small class="text-muted">${new Date(trip.downloadedAt).toLocaleDateString()}</small>
+                </div>
+            </a>
+        `;
+
+        dropdown.insertBefore(li, divider);
+    });
+}
+
+function viewDownloadedTrip(tripId) {
+    try {
+        if (window.OfflineManager) {
+            window.OfflineManager.getTripPdf(tripId).then(pdfData => {
+                if (pdfData) {
+                    const blob = new Blob([pdfData], { type: 'application/pdf' });
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                } else {
+                    showToast('PDF not found', 'error');
+                }
+            }).catch(error => {
+                console.error('Error viewing downloaded trip:', error);
+                showToast('Failed to open PDF', 'error');
+            });
+        }
+    } catch (error) {
+        console.error('Error viewing downloaded trip:', error);
+        showToast('Failed to open PDF', 'error');
+    }
+}
+
+// Toast notification function
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'success' ? 'success' : 'error' ? 'danger' : 'info' ? 'info' : 'warning'} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'info' ? 'info' : 'exclamation'}-circle me-2"></i>${message}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Notification Manager
+class NotificationManager {
+    constructor() {
+        this.notifications = [];
+        this.unreadCount = 0;
+        this.isInitialized = false;
+        this.init();
+    }
+
+    async init() {
+        if (this.isInitialized) return;
+
+        try {
+            await this.loadNotifications();
+            this.setupEventListeners();
+            this.isInitialized = true;
+        } catch (error) {
+            console.error('Failed to initialize notifications:', error);
+        }
+    }
+
+    async loadNotifications() {
+        try {
+            const response = await fetch('/trip-planner/api/notifications');
+            if (response.ok) {
+                this.notifications = await response.json();
+                this.updateUnreadCount();
+                this.renderNotifications();
+            }
+        } catch (error) {
+            console.error('Failed to load notifications:', error);
+        }
+    }
+
+    async loadUnreadCount() {
+        try {
+            const response = await fetch('/trip-planner/api/notifications/unread-count');
+            if (response.ok) {
+                const data = await response.json();
+                this.unreadCount = data.count;
+                this.updateBadge();
+            }
+        } catch (error) {
+            console.error('Failed to load unread count:', error);
+        }
+    }
+
+    updateUnreadCount() {
+        this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+        this.updateBadge();
+    }
+
+    updateBadge() {
+        const badge = document.getElementById('notification-badge');
+        if (badge) {
+            if (this.unreadCount > 0) {
+                badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    }
+
+    renderNotifications() {
+        const container = document.getElementById('notification-list');
+        const noNotifications = document.getElementById('no-notifications');
+
+        if (!container) return;
+
+        if (this.notifications.length === 0) {
+            if (noNotifications) noNotifications.style.display = 'block';
+            container.innerHTML = '';
+            return;
+        }
+
+        if (noNotifications) noNotifications.style.display = 'none';
+
+        // Show only the 5 most recent notifications
+        const recentNotifications = this.notifications.slice(0, 5);
+
+        container.innerHTML = recentNotifications.map(notification => this.createNotificationHTML(notification)).join('');
+    }
+
+    createNotificationHTML(notification) {
+        const iconClass = this.getNotificationIconClass(notification.type);
+        const timeAgo = this.getTimeAgo(notification.createdAt);
+        const unreadClass = notification.isRead ? '' : 'unread';
+
+        return `
+            <div class="notification-item ${unreadClass}" data-id="${notification._id}">
+                <div class="notification-icon ${iconClass}">
+                    <i class="fa-solid ${this.getNotificationIcon(notification.type)}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${timeAgo}</div>
+                </div>
+                <div class="notification-actions">
+                    ${!notification.isRead ? `<button class="notification-action-btn" onclick="notificationManager.markAsRead('${notification._id}')" title="Mark as read">
+                        <i class="fa-solid fa-check"></i>
+                    </button>` : ''}
+                    <button class="notification-action-btn" onclick="notificationManager.deleteNotification('${notification._id}')" title="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    getNotificationIconClass(type) {
+        switch (type) {
+            case 'trip_added': return 'trip-added';
+            case 'reminder': return 'reminder';
+            default: return 'system';
+        }
+    }
+
+    getNotificationIcon(type) {
+        switch (type) {
+            case 'trip_added': return 'fa-plus';
+            case 'reminder': return 'fa-clock';
+            default: return 'fa-info-circle';
+        }
+    }
+
+    getTimeAgo(dateString) {
+        const now = new Date();
+        const date = new Date(dateString);
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    }
+
+    setupEventListeners() {
+        // Mark all as read button
+        const markAllReadBtn = document.getElementById('mark-all-read');
+        if (markAllReadBtn) {
+            markAllReadBtn.addEventListener('click', () => this.markAllAsRead());
+        }
+
+        // View all notifications link
+        const viewAllLink = document.getElementById('view-all-notifications');
+        if (viewAllLink) {
+            viewAllLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                // TODO: Navigate to full notifications page
+                showToast('Full notifications page coming soon!', 'info');
+            });
+        }
+
+        // Click on notification item to mark as read
+        document.addEventListener('click', (e) => {
+            const notificationItem = e.target.closest('.notification-item');
+            if (notificationItem && !e.target.closest('.notification-actions')) {
+                const notificationId = notificationItem.dataset.id;
+                const notification = this.notifications.find(n => n._id === notificationId);
+                if (notification && !notification.isRead) {
+                    this.markAsRead(notificationId);
+                }
+            }
+        });
+    }
+
+    async markAsRead(notificationId) {
+        try {
+            const response = await fetch(`/trip-planner/api/notifications/${notificationId}/read`, {
+                method: 'PATCH'
+            });
+
+            if (response.ok) {
+                const notification = this.notifications.find(n => n._id === notificationId);
+                if (notification) {
+                    notification.isRead = true;
+                    this.updateUnreadCount();
+                    this.renderNotifications();
+                }
+            }
+        } catch (error) {
+            console.error('Failed to mark notification as read:', error);
+            showToast('Failed to mark notification as read', 'error');
+        }
+    }
+
+    async markAllAsRead() {
+        try {
+            // Mark all unread notifications as read
+            const unreadNotifications = this.notifications.filter(n => !n.isRead);
+
+            for (const notification of unreadNotifications) {
+                await this.markAsRead(notification._id);
+            }
+
+            showToast('All notifications marked as read', 'success');
+        } catch (error) {
+            console.error('Failed to mark all notifications as read:', error);
+            showToast('Failed to mark all notifications as read', 'error');
+        }
+    }
+
+    async deleteNotification(notificationId) {
+        try {
+            const response = await fetch(`/trip-planner/api/notifications/${notificationId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                this.notifications = this.notifications.filter(n => n._id !== notificationId);
+                this.updateUnreadCount();
+                this.renderNotifications();
+                showToast('Notification deleted', 'success');
+            }
+        } catch (error) {
+            console.error('Failed to delete notification:', error);
+            showToast('Failed to delete notification', 'error');
+        }
+    }
+
+    // Method to add new notification (called from external sources)
+    addNotification(notification) {
+        this.notifications.unshift(notification);
+        this.updateUnreadCount();
+        this.renderNotifications();
+
+        // Show toast for new notification
+        showToast(notification.title, 'info');
+    }
+}
+
+// Initialize notification manager when user is logged in
+let notificationManager;
+if (typeof currentUser !== 'undefined' && currentUser) {
+    notificationManager = new NotificationManager();
+}
+</script>
+<% } %>

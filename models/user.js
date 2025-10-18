@@ -312,8 +312,83 @@ const userSchema = new Schema({
         createdAt: {
             type: Date,
             default: Date.now,
+        },
+        lastUpdated: {
+            type: Date,
+            default: Date.now,
+        },
+        bookingStatus: {
+            flights: { type: Boolean, default: false },
+            hotels: { type: Boolean, default: false },
+            activities: { type: Boolean, default: false }
+        },
+        notes: {
+            type: String,
+            default: ''
+        },
+        reminders: [{
+            type: {
+                type: String,
+                enum: ['departure', 'custom'],
+                default: 'departure'
+            },
+            message: String,
+            scheduledFor: Date,
+            isSent: { type: Boolean, default: false },
+            createdAt: { type: Date, default: Date.now }
+        }],
+        sharedWith: [{
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }]
+    }],
+    notifications: [{
+        type: {
+            type: String,
+            enum: ['trip_added', 'trip_updated', 'trip_deleted', 'trip_reminder', 'trip_upcoming'],
+            required: true
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        message: {
+            type: String,
+            required: true
+        },
+        relatedTrip: {
+            type: Schema.Types.ObjectId,
+            ref: 'User.tripPlans'
+        },
+        isRead: {
+            type: Boolean,
+            default: false
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
         }
-    }]
+    }],
+    notificationSettings: {
+        tripAdded: { type: Boolean, default: true },
+        tripUpdated: { type: Boolean, default: true },
+        tripDeleted: { type: Boolean, default: true },
+        tripReminders: { type: Boolean, default: true },
+        emailNotifications: { type: Boolean, default: false },
+        pushNotifications: { type: Boolean, default: false },
+        // Real-time notification system settings
+        welcome: { type: Boolean, default: true },
+        review: { type: Boolean, default: true },
+        badge: { type: Boolean, default: true },
+        like: { type: Boolean, default: true },
+        system: { type: Boolean, default: true },
+        discount: { type: Boolean, default: true },
+        security: { type: Boolean, default: true },
+        maintenance: { type: Boolean, default: false },
+        event: { type: Boolean, default: true },
+        friend: { type: Boolean, default: true },
+        custom: { type: Boolean, default: true }
+    }
 }, { strict: false });
 
 
@@ -379,6 +454,33 @@ userSchema.methods.awardBadge = function(badgeData) {
         return this.save();
     }
     return false;
+};
+
+// Method to add notification
+userSchema.methods.addNotification = function(notificationData) {
+    this.notifications.unshift(notificationData);
+
+    // Keep only last 100 notifications to prevent bloating
+    if (this.notifications.length > 100) {
+        this.notifications = this.notifications.slice(0, 100);
+    }
+
+    return this.save();
+};
+
+// Method to mark notification as read
+userSchema.methods.markNotificationAsRead = function(notificationId) {
+    const notification = this.notifications.id(notificationId);
+    if (notification) {
+        notification.isRead = true;
+        return this.save();
+    }
+    return false;
+};
+
+// Method to get unread notification count
+userSchema.methods.getUnreadNotificationCount = function() {
+    return this.notifications.filter(n => !n.isRead).length;
 };
 
 module.exports = mongoose.model('User', userSchema);

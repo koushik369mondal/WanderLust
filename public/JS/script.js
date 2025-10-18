@@ -10,38 +10,36 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ------------------
-    // SERVICE WORKER REGISTRATION
+    // SERVICE WORKER - CLEANUP ONLY
     // ------------------
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then((registration) => {
-                    console.log('Service Worker registered successfully:', registration.scope);
-
-                    // Handle updates
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // New version available
-                                showUpdateToast();
-                            }
-                        });
+    // Emergency cache clear already handled by emergencyCacheClear.js
+    // Just ensure no service workers are running
+    if ('serviceWorker' in navigator && !sessionStorage.getItem('swCleanupDone')) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            if (registrations.length > 0) {
+                console.log('🧹 Cleaning up service workers...');
+                registrations.forEach(registration => {
+                    registration.unregister().then(function(success) {
+                        if (success) {
+                            console.log('✅ Service Worker cleaned up');
+                        }
                     });
-                })
-                .catch((error) => {
-                    console.log('Service Worker registration failed:', error);
                 });
+            }
+            sessionStorage.setItem('swCleanupDone', 'true');
         });
     }
 
-    // PWA Install Prompt
+    // PWA Install Prompt - DISABLED (offline features removed)
+    // Users will always fetch fresh data from the database
+    /*
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         showInstallPrompt();
     });
+    */
 
     function showInstallPrompt() {
         const installToast = document.createElement('div');

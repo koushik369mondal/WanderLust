@@ -232,25 +232,79 @@
                 color: #fff !important; 
                 border-color: #fff !important;
             }
-        }/* FIX for Issue #257: Text Contrast over Images (Location, Price, GST) */
-.listing-location, 
-.listing-price, 
-.tax-info {
-    /* Set the text color to white for maximum contrast in both Light and Dark Modes */
-    color: white !important; 
-    
-    /* Add a strong shadow to make the white text pop over any light part of the image */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), 
-                 -1px -1px 2px rgba(0, 0, 0, 0.8);
-    font-weight: 700 !important; /* Ensure text is bold for better visibility */
+/* FIX 1: Custom Styles for Suggestion Box Container */
+.suggestion-card-box {
+    /* Inherit existing card styles and apply glassmorphism */
+    background: rgba(255, 255, 255, 0.8) !important; 
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Ensure the smaller location text also benefits */
-.listing-location {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+/* FIX 2: Header and Text Contrast */
+.suggestion-title {
+    color: var(--accent-color); /* Use project accent color (Red) */
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for pop */
 }
-        
+
+.suggestion-subtitle, .recommendation-text, .recommendation-note {
+    color: var(--text-primary); /* Dark text for light mode */
+    text-align: center;
+}
+
+/* FIX 3: Tags Styling */
+.interest-tag {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.interest-tag:hover, .interest-tag.selected {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    box-shadow: 0 0 5px rgba(254, 66, 77, 0.4);
+}
+/* Styling for selected tags (to show state change) */
+.interest-tag.selected {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    box-shadow: 0 0 5px rgba(254, 66, 77, 0.5);
+}
+
+/* FIX 4: Centered Curvy Button (The final visual requirement) */
+.suggestion-button {
+    /* Alignment (small, curvy, centered) */
+    display: block !important; 
+    margin: 1.5rem auto !important; 
+    width: fit-content !important; /* Make it fit the content */
+
+    /* Curvy Shape & Size */
+    border-radius: 50px !important; /* Pill shape */
+    padding: 0.5rem 2rem !important;
+    font-size: 1rem !important;
+
+    /* Color (Override to ensure white text is visible) */
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    font-weight: 700;
+    
+    /* Ensure no unwanted hover classes interfere */
+    transition: transform 0.3s ease; 
+}
+
+/* Dark Mode Overrides (Minimalist) */
+[data-theme="dark"] .suggestion-card-box {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+}      
 
         /* Comparison checkbox styles - Modern Design */
         .compare-checkbox {
@@ -364,7 +418,6 @@
             text-decoration: none;
         }
 
-
         }
         
         /* Advanced Filters Styling */
@@ -473,67 +526,67 @@
         <a href="/listings?category=Trending" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Trending') ? 'active' : '' %>">
                 <i class="fa-solid fa-fire"></i>
-                <p>Trending</p>
+                <p><%= __('categories.trending') %></p>
             </div>
         </a>
         <a href="/listings?category=Rooms" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Rooms') ? 'active' : '' %>">
                 <i class="fa-solid fa-bed"></i>
-                <p>Rooms</p>
+                <p><%= __('categories.rooms') %></p>
             </div>
         </a>
         <a href="/listings?category=Iconic Cities" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Iconic Cities') ? 'active' : '' %>">
                 <i class="fa-solid fa-mountain-city"></i>
-                <p>Iconic Cities</p>
+                <p><%= __('categories.iconic_cities') %></p>
             </div>
         </a>
         <a href="/listings?category=Mountains" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Mountains') ? 'active' : '' %>">
                 <i class="fa-solid fa-mountain"></i>
-                <p>Mountains</p>
+                <p><%= __('categories.mountains') %></p>
             </div>
         </a>
         <a href="/listings?category=Castles" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Castles') ? 'active' : '' %>">
                 <i class="fa-solid fa-chess-rook"></i>
-                <p>Castles</p>
+                <p><%= __('categories.castles') %></p>
             </div>
         </a>
         <a href="/listings?category=Amazing pool" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Amazing pool') ? 'active' : '' %>">
                 <i class="fa-solid fa-person-swimming"></i>
-                <p>Amazing pool</p>
+                <p><%= __('categories.amazing_pool') %></p>
             </div>
         </a>
         <a href="/listings?category=Camping" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Camping') ? 'active' : '' %>">
                 <i class="fa-solid fa-tents"></i>
-                <p>Camping</p>
+                <p><%= __('categories.camping') %></p>
             </div>
         </a>
         <a href="/listings?category=Farms" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Farms') ? 'active' : '' %>">
                 <i class="fa-solid fa-tractor"></i>
-                <p>Farms</p>
+                <p><%= __('categories.farms') %></p>
             </div>
         </a>
         <a href="/listings?category=Arctic" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Arctic') ? 'active' : '' %>">
                 <i class="fa-solid fa-snowflake"></i>
-                <p>Arctic</p>
+                <p><%= __('categories.arctic') %></p>
             </div>
         </a>
         <a href="/listings?category=Domes" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Domes') ? 'active' : '' %>">
                 <i class="fa-solid fa-igloo"></i>
-                <p>Domes</p>
+                <p><%= __('categories.domes') %></p>
             </div>
         </a>
         <a href="/listings?category=Boats" style="text-decoration: none; color: inherit;">
             <div class="filter <%= (category === 'Boats') ? 'active' : '' %>">
                 <i class="fa-solid fa-ship"></i>
-                <p>Boats</p>
+                <p><%= __('categories.boats') %></p>
             </div>
         </a>
     </div>
@@ -543,14 +596,14 @@
     <div class="row">
         <div class="col-md-6">
             <button class="btn btn-outline-primary w-100" id="showAdvancedFilters">
-                <i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters
+                <i class="fa-solid fa-sliders-h me-2"></i><span data-i18n="filters.advanced">Advanced Filters</span>
             </button>
         </div>
         <div class="col-md-6">
             <div class="tax-toggle w-100">
                 <div class="form-check-reverse form-switch">
                     <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
-                    <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
+                    <label class="form-check-label" for="switchCheckDefault"><b data-i18n="filters.display_total_after_taxes">Display total after taxes</b></label>
                 </div>
             </div>
         </div>
@@ -563,37 +616,37 @@
     <div class="filters-panel">
         <div class="row g-3">
             <div class="col-md-3">
-                <label class="form-label">Sort By</label>
+                <label class="form-label" data-i18n="filters.sort_by">Sort By</label>
                 <select class="form-select" id="sortBy">
-                    <option value="newest">Newest First</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Highest Rated</option>
-                    <option value="popularity">Most Popular</option>
+                    <option value="newest" data-i18n="filters.newest_first">Newest First</option>
+                    <option value="price-low" data-i18n="filters.price_low_high">Price: Low to High</option>
+                    <option value="price-high" data-i18n="filters.price_high_low">Price: High to Low</option>
+                    <option value="rating" data-i18n="filters.highest_rated">Highest Rated</option>
+                    <option value="popularity" data-i18n="filters.most_popular">Most Popular</option>
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Country</label>
+                <label class="form-label" data-i18n="filters.country">Country</label>
                 <select class="form-select" id="countryFilter">
-                    <option value="">All Countries</option>
+                    <option value="" data-i18n="filters.all_countries">All Countries</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label">Min Price</label>
-                <input type="number" class="form-control" id="minPrice" placeholder="₹0">
+                <label class="form-label" data-i18n="filters.min_price">Min Price</label>
+                <input type="number" class="form-control" id="minPrice" data-i18n-placeholder="filters.price_placeholder">
             </div>
             <div class="col-md-2">
-                <label class="form-label">Max Price</label>
-                <input type="number" class="form-control" id="maxPrice" placeholder="₹10000">
+                <label class="form-label" data-i18n="filters.max_price">Max Price</label>
+                <input type="number" class="form-control" id="maxPrice" data-i18n-placeholder="filters.price_placeholder_max">
             </div>
             <div class="col-md-2">
-                <label class="form-label">Min Rating</label>
+                <label class="form-label" data-i18n="filters.min_rating">Min Rating</label>
                 <select class="form-select" id="minRating">
-                    <option value="">Any Rating</option>
-                    <option value="4.5">4.5+ Stars</option>
-                    <option value="4.0">4.0+ Stars</option>
-                    <option value="3.5">3.5+ Stars</option>
-                    <option value="3.0">3.0+ Stars</option>
+                    <option value="" data-i18n="filters.any_rating">Any Rating</option>
+                    <option value="4.5" data-i18n="filters.rating_4_5">4.5+ Stars</option>
+                    <option value="4.0" data-i18n="filters.rating_4_0">4.0+ Stars</option>
+                    <option value="3.5" data-i18n="filters.rating_3_5">3.5+ Stars</option>
+                    <option value="3.0" data-i18n="filters.rating_3_0">3.0+ Stars</option>
                 </select>
             </div>
         </div>
@@ -673,8 +726,60 @@
             </div>
         </div>
     <% } %>
+<!-- <div class="row mt-4 mb-4 justify-content-center">
+    <div class="col-12 col-md-8"> 
+        <div class="card suggestion-card-box p-4"> <div class="card-body"> 
+                
+                <h3 class="suggestion-title">
+                    Find Your Next Adventure
+                </h3>
+                
+                <p class="suggestion-subtitle text-muted">
+                    Tell us what you love, and we'll suggest your perfect spot.
+                </p>
 
-    <% if (allListings && allListings.length > 0) { %>
+                <div id="interest-input-area" class="d-flex flex-column align-items-center gap-3 mb-4">
+                    <h4 class="suggestion-label">
+                        What are you looking for?
+                    </h4>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-2 interest-tag-wrapper">
+                        <% ['Beach', 'Mountains', 'City', 'Snow', 'Adventure', 'Relaxation', 'Culture'].forEach(tag => { %>
+                            <span data-interest="<%= tag %>" 
+                                class="interest-tag">
+                                <%= tag %>
+                            </span>
+                        <% }); %>
+                    </div>
+                    
+                    <button id="suggest-btn" 
+                        class="btn btn-primary suggestion-button">
+                        Suggest My Vacation Spot
+                    </button>
+                </div>
+
+                <div id="suggestion-display" class="suggestion-display-area" style="display: none;">
+                    <h4 class="recommendation-header">
+                        ✨ Recommendation Found! ✨
+                    </h4>
+                    <div class="recommendation-content">
+                        <p class="recommendation-text">
+                            Based on your interests, we recommend:
+                        </p>
+                        <p id="suggested-spot" class="suggested-spot-result">
+                            The Swiss Alps (for Snow & Adventure)
+                        </p>
+                        <p class="recommendation-note">
+                            (Backend integration needed to make this dynamic)
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div> -->
+  <% if (allListings && allListings.length > 0) { %>
         <div class="listings-container" id="listingsContainer">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
                 <% for(let listing of allListings) { %>
@@ -714,14 +819,14 @@
                                             <%= listing.location %>, <%= listing.country %>
                                         </small><br />
                                         <span class="listing-price">
-                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / night
+                                            ₹<%= typeof listing.price !== 'undefined' ? listing.price.toLocaleString("en-IN") : 'N/A' %> / <%= __('night') %>
                                             <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                         </span>
                                     </p>
                                 </div>
                                 <div class="compare-checkbox">
                                     <input type="checkbox" class="compare-item" data-id="<%= listing._id %>">
-                                    <span>Compare</span>
+                                    <span><%= __('compare') %></span>
                                 </div>
                             </div>
                         </a>
@@ -747,7 +852,7 @@
 
     <button id="compare-btn" style="display: none;">
         <i class="fas fa-balance-scale me-2"></i>
-        Compare (<span id="compare-count">0</span>)
+        <%= __('compare') %> (<span id="compare-count">0</span>)
     </button>
 
     <script>
@@ -1133,7 +1238,7 @@
                                             ${listing.location}, ${listing.country}
                                         </small><br />
                                         <span class="listing-price">
-                                            ₹${listing.price?.toLocaleString('en-IN') || 'N/A'} / night
+                                            ₹${listing.price?.toLocaleString('en-IN') || 'N/A'} / <%= __('night') %>
                                             <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
                                         </span>
                                         ${listing.avgRating ? `
@@ -1270,7 +1375,51 @@
             
             // Initialize comparison after DOM is ready
             initializeComparison();
+// START OF NEW SUGGESTION BOX JS LOGIC
+const tags = document.querySelectorAll('.interest-tag');
+const suggestBtn = document.getElementById('suggest-btn');
+const display = document.getElementById('suggestion-display');
+const suggestedSpot = document.getElementById('suggested-spot');
+const selectedInterests = new Set();
+
+// Check if all required elements exist before adding event listeners
+if (suggestBtn && display && suggestedSpot) {
+    // Simple logic for selecting/deselecting tags
+    tags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            const interest = tag.dataset.interest;
+            if (selectedInterests.has(interest)) {
+                selectedInterests.delete(interest);
+                // Remove the 'selected' class on uncheck
+                tag.classList.remove('selected'); 
+            } else {
+                selectedInterests.add(interest);
+                // Add the 'selected' class on check (This triggers the CSS change)
+                tag.classList.add('selected'); 
+            }
+        });
+    });
+
+    // Logic to show the static result (Future API call would go here)
+    suggestBtn.addEventListener('click', () => {
+        if (selectedInterests.size > 0) {
+            // 1. Show the static result display
+            display.style.display = 'block'; 
             
+            // 2. Update the text based on the selection 
+            suggestedSpot.textContent = `Processing ${selectedInterests.size} interests... (Backend Pending)`;
+            
+            // You can use the actual data attributes for a cleaner display
+            // Example: suggestedSpot.textContent = Array.from(selectedInterests).join(', ') + ' based selection...';
+
+        } else {
+            alert('Please select at least one interest!');
+            // Hide the display if the user unselects all tags
+            display.style.display = 'none'; 
+        }
+    });
+}
+// END OF NEW SUGGESTION BOX JS LOGIC            
             function showComparisonModal(listings) {
                 const modal = document.createElement('div');
                 modal.className = 'modal fade';
@@ -1348,4 +1497,5 @@
                 bootstrap.Modal.getInstance(document.getElementById('comparisonModal')).hide();
             };
         });
+        
     </script>
