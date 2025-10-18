@@ -223,7 +223,7 @@ body {
   font-weight: 600;
   margin-bottom: 18px;
   font-size: 1.1rem;
-  color: #ffffff;
+  color: var(--footer-title-color, #ffffff);
 }
 
 /* Text & links - Enhanced visibility */
@@ -231,7 +231,7 @@ body {
 .footer-col a {
   font-size: 15px;
   line-height: 1.8;
-  color: #ffffff;
+  color: var(--footer-text-color, #ffffff);
   text-decoration: none;
   display: block;
   margin-bottom: 10px;
@@ -240,8 +240,8 @@ body {
 }
 
 .footer-col a:hover {
-  color: #ffffff;
-  text-shadow: 0 0 8px rgba(254, 66, 77, 0.8);
+  color: var(--footer-link-hover-color);
+  text-shadow: var(--footer-link-hover-shadow);
 }
 
 /* Newsletter form */
@@ -252,26 +252,26 @@ body {
 
 .footer-col input {
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--footer-input-border);
   border-radius: 6px 0 0 6px;
   outline: none;
   flex: 1;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: var(--footer-input-bg);
+  color: var(--footer-input-color);
   backdrop-filter: blur(10px);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .footer-col input::placeholder {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--footer-input-placeholder);
   font-weight: 400;
 }
 
 .footer-col input:focus {
-  border-color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 2px rgba(254, 66, 77, 0.3);
+  border-color: var(--footer-input-focus-border);
+  background: var(--footer-input-focus-bg);
+  box-shadow: var(--footer-input-focus-shadow);
 }
 
 .footer-col button {
@@ -286,7 +286,7 @@ body {
 }
 
 .footer-col button:hover {
-  background: #d63641;
+  background: var(--footer-button-hover);
   transform: translateY(-1px);
 }
 
@@ -298,26 +298,26 @@ body {
 
 .socials a {
   margin: 0 8px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--footer-social-color);
   font-size: 20px;
   transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .socials a:hover {
-  color: #ffffff;
+  color: var(--footer-social-hover-color);
   transform: translateY(-2px);
-  text-shadow: 0 0 12px rgba(254, 66, 77, 0.8);
+  text-shadow: var(--footer-social-hover-shadow);
 }
 
 /* Bottom copyright */
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--footer-border-color);
  /*  margin-top: 40px; */
   padding-top: 12px;
   padding-bottom: 0; 
   text-align: center;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--footer-bottom-color);
 }
 
 /* ========== RESPONSIVE BREAKPOINTS ========== */
