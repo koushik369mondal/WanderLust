@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="WanderLust - Find your perfect accommodation">
-    <title><% if (typeof title !== 'undefined') { %><%= title %><% } else { %>WanderLust<% } %></title>
+    <meta name="description" content="WanderLust - Find your perfect accommodation and travel experiences with enhanced accessibility features">
+    <meta name="keywords" content="travel, accommodation, accessibility, inclusive travel, wanderlust">
+    <meta name="author" content="WanderLust Team">
+    <meta name="theme-color" content="#007bff">
+    <title><% if (typeof title !== 'undefined') { %><%= title %> - WanderLust<% } else { %>WanderLust - Accessible Travel Platform<% } %></title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/compass.png">
     <link rel="shortcut icon" type="image/png" href="/images/compass.png">
     <link rel="apple-touch-icon" href="/images/compass.png">
+    
+    <!-- Accessibility Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     
     <!-- EMERGENCY CACHE CLEAR - Loads FIRST to clean corrupted caches -->
     <script src="/JS/emergencyCacheClear.js?v=<%= Date.now() %>"></script>
@@ -38,6 +45,22 @@
     
     <!-- Mapbox CSS -->
     <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "WanderLust",
+      "description": "Accessible travel platform for finding accommodations and travel experiences",
+      "url": "<%= process.env.BASE_URL || 'https://wanderlust.com' %>",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Web Browser",
+      "accessibilityAPI": "ARIA",
+      "accessibilityControl": "fullKeyboardControl,fullMouseControl,fullTouchControl",
+      "accessibilityFeature": "alternativeText,captions,highContrastDisplay,largePrint,readingOrder,screenReader"
+    }
+    </script>
 </head>
 <body>
     <%- include("../includes/navbar.ejs") %>
@@ -51,14 +74,43 @@
     <%- include("../includes/footer.ejs") %>
     <%- include("../includes/chatbot.ejs") %>
 
-
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-      <script src="/JS/script.js?v=<%= Date.now() %>"></script>
-      <script src="/JS/loading.js?v=<%= Date.now() %>"></script>
-      <script src="/JS/phraseAssistant.js?v=<%= Date.now() %>"></script>
-      <!-- offlineManager.js removed - app now fetches fresh data directly from database -->
-      <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+      
+    <!-- Custom JavaScript -->
+    <script src="/JS/accessibility.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/lazy-loading.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/script.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/loading.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/phraseAssistant.js?v=<%= Date.now() %>"></script>
+    <!-- offlineManager.js removed - app now fetches fresh data directly from database -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    
+    <!-- Development Accessibility Testing -->
+    <% if (process.env.NODE_ENV === 'development') { %>
+    <script src="/JS/accessibility-test.js?v=<%= Date.now() %>"></script>
+    <% } %>
+    
+    <!-- Performance and Accessibility Monitoring -->
+    <script>
+      // Performance monitoring
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          if (perfData) {
+            console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart + 'ms');
+          }
+        }, 0);
+      });
+      
+      // Accessibility error reporting
+      window.addEventListener('error', function(e) {
+        if (e.error && e.error.message && e.error.message.includes('accessibility')) {
+          console.warn('Accessibility error detected:', e.error.message);
+        }
+      });
+    </script>
   </body>
 </html>
