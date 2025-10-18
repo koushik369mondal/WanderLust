@@ -1,5 +1,25 @@
 # 🌍 Enhanced Internationalization (i18n) System for Global WanderLust
 
+## 📸 Visual Showcase
+
+> **Screenshots demonstrate the power of our global platform - see WanderLust in 15 languages!**
+
+### Language Selection Interface
+![Language Selector](../docs/screenshots/i18n/language-selector.png)
+*Intuitive flag-based language selector with native language names*
+
+### Multi-Language Support
+![Hindi Interface](../docs/screenshots/i18n/hindi-interface.png) | ![Urdu RTL Layout](../docs/screenshots/i18n/urdu-rtl.png)
+*Left: Hindi interface with Devanagari script | Right: Urdu with complete RTL layout*
+
+### Cultural Adaptations
+![Cultural Formatting](../docs/screenshots/i18n/cultural-formatting.png)
+*Region-specific currency, date, and number formatting*
+
+### Mobile Experience
+![Mobile Responsive](../docs/screenshots/i18n/mobile-responsive.png)
+*Touch-optimized language grid for mobile devices*
+
 ## 🎯 Overview
 
 This pull request introduces a comprehensive internationalization system that transforms WanderLust into a truly global travel platform. With intelligent language detection, support for 15 languages including complex scripts and RTL languages, and deep cultural adaptations, this enhancement makes travel planning accessible to users worldwide in their native languages.
@@ -104,6 +124,16 @@ This pull request introduces a comprehensive internationalization system that tr
 - **Testing Framework**: Built-in validation for translation completeness and accuracy
 
 ## 🧪 Testing & Validation
+
+### 📸 Testing Evidence
+
+#### Script Rendering Validation
+![Complex Scripts](../docs/screenshots/i18n/complex-scripts.png)
+*Perfect rendering of Devanagari, Bengali, Tamil, and other Indic scripts*
+
+#### RTL Layout Testing
+![RTL Navigation](../docs/screenshots/i18n/rtl-navigation.png)
+*Complete right-to-left navigation and content flow for Urdu*
 
 ### Automated Testing Performed
 - ✅ **Translation Completeness**: All keys validated across supported languages
@@ -320,6 +350,20 @@ This internationalization enhancement represents a fundamental transformation of
 **Accessibility Leadership**: Setting new standards for inclusive multilingual interface design.
 
 **Future Vision**: Establishing foundation for continued global expansion and cultural inclusion.
+
+## 📸 Complete Feature Gallery
+
+### Before vs After Comparison
+![Before After](../docs/screenshots/i18n/before-after.png)
+*Transformation from English-only to multilingual global platform*
+
+### Full Language Coverage
+![Language Coverage](../docs/screenshots/i18n/language-coverage.png)
+*All 15 supported languages in action*
+
+### Technical Implementation
+![Implementation](../docs/screenshots/i18n/technical-features.png)
+*Advanced features: RTL support, complex scripts, cultural formatting*
 
 ---
 
