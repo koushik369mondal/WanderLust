@@ -67,18 +67,13 @@
 <body>
     <%- include("../includes/navbar.ejs") %>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        <%- include("../includes/flash.ejs") %>
-    </div>
-
-    <!-- Main Content -->
     <!-- Skip Links (accessible navigation) -->
     <a class="skip-link sr-only-focusable" href="#main-content">Skip to main content</a>
     <a class="skip-link sr-only-focusable" href="#navigation">Skip to navigation</a>
     
     <!-- Main Content -->
-    <main id="main-content" role="main">
+    <main id="main-content" role="main" class="container mt-3">
+        <%- include("../includes/flash.ejs") %>
         <%- body %>
     </main>
 
