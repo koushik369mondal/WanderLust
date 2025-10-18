@@ -596,14 +596,14 @@
     <div class="row">
         <div class="col-md-6">
             <button class="btn btn-outline-primary w-100" id="showAdvancedFilters">
-                <i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters
+                <i class="fa-solid fa-sliders-h me-2"></i><span data-i18n="filters.advanced">Advanced Filters</span>
             </button>
         </div>
         <div class="col-md-6">
             <div class="tax-toggle w-100">
                 <div class="form-check-reverse form-switch">
                     <input class="form-check-input tax-input" type="checkbox" role="switch" id="switchCheckDefault" />
-                    <label class="form-check-label" for="switchCheckDefault"><b>Display total after taxes</b></label>
+                    <label class="form-check-label" for="switchCheckDefault"><b data-i18n="filters.display_total_after_taxes">Display total after taxes</b></label>
                 </div>
             </div>
         </div>
@@ -616,37 +616,37 @@
     <div class="filters-panel">
         <div class="row g-3">
             <div class="col-md-3">
-                <label class="form-label">Sort By</label>
+                <label class="form-label" data-i18n="filters.sort_by">Sort By</label>
                 <select class="form-select" id="sortBy">
-                    <option value="newest">Newest First</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Highest Rated</option>
-                    <option value="popularity">Most Popular</option>
+                    <option value="newest" data-i18n="filters.newest_first">Newest First</option>
+                    <option value="price-low" data-i18n="filters.price_low_high">Price: Low to High</option>
+                    <option value="price-high" data-i18n="filters.price_high_low">Price: High to Low</option>
+                    <option value="rating" data-i18n="filters.highest_rated">Highest Rated</option>
+                    <option value="popularity" data-i18n="filters.most_popular">Most Popular</option>
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Country</label>
+                <label class="form-label" data-i18n="filters.country">Country</label>
                 <select class="form-select" id="countryFilter">
-                    <option value="">All Countries</option>
+                    <option value="" data-i18n="filters.all_countries">All Countries</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label">Min Price</label>
-                <input type="number" class="form-control" id="minPrice" placeholder="₹0">
+                <label class="form-label" data-i18n="filters.min_price">Min Price</label>
+                <input type="number" class="form-control" id="minPrice" data-i18n-placeholder="filters.price_placeholder">
             </div>
             <div class="col-md-2">
-                <label class="form-label">Max Price</label>
-                <input type="number" class="form-control" id="maxPrice" placeholder="₹10000">
+                <label class="form-label" data-i18n="filters.max_price">Max Price</label>
+                <input type="number" class="form-control" id="maxPrice" data-i18n-placeholder="filters.price_placeholder_max">
             </div>
             <div class="col-md-2">
-                <label class="form-label">Min Rating</label>
+                <label class="form-label" data-i18n="filters.min_rating">Min Rating</label>
                 <select class="form-select" id="minRating">
-                    <option value="">Any Rating</option>
-                    <option value="4.5">4.5+ Stars</option>
-                    <option value="4.0">4.0+ Stars</option>
-                    <option value="3.5">3.5+ Stars</option>
-                    <option value="3.0">3.0+ Stars</option>
+                    <option value="" data-i18n="filters.any_rating">Any Rating</option>
+                    <option value="4.5" data-i18n="filters.rating_4_5">4.5+ Stars</option>
+                    <option value="4.0" data-i18n="filters.rating_4_0">4.0+ Stars</option>
+                    <option value="3.5" data-i18n="filters.rating_3_5">3.5+ Stars</option>
+                    <option value="3.0" data-i18n="filters.rating_3_0">3.0+ Stars</option>
                 </select>
             </div>
         </div>
