@@ -1,1 +1,5 @@
 blank_issues_enabled: true
+contact_links:
+  - name: 📋 Issue Guidelines & Labeling System
+    url: https://github.com/koushik369mondal/WanderLust/blob/main/.github/ISSUE_GUIDELINES.md
+    about: Learn how issues are automatically labeled and how to write good issues

@@ -1,0 +1,34 @@
+name: 📝 Create an Issue
+description: Report a bug, request a feature, or suggest an improvement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 👋 Welcome to WanderLust!
+        
+        Please provide clear information about your issue. **Simple issues will be automatically labeled as Level1**, while complex issues requiring significant work will be labeled Level2 or Level3.
+        
+        ⚠️ **Note**: Labels are automatically assigned based on complexity. Simply using keywords like "bug" or "critical" won't automatically give you higher levels.
+  
+  - type: textarea
+    attributes:
+      label: 📋 Description
+      description: Clearly describe what you want to report or suggest
+      placeholder: |
+        Examples:
+        - "Fix typo in README file" (Level1)
+        - "Add user profile page with avatar upload" (Level2)
+        - "Security vulnerability in authentication system" (Level3)
+        
+        Be specific and clear about:
+        - What is the issue/feature?
+        - What should happen?
+        - Any relevant technical details
+    validations:
+      required: true
+  
+  - type: textarea
+    attributes:
+      label: 📸 Screenshots (Optional)
+      description: Add screenshots, mockups, or error messages if applicable
+      placeholder: Drag and drop images here
