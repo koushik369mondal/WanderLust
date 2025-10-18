@@ -1,0 +1,292 @@
+<!-- Theme Toggle Component -->
+<div class="theme-toggle-container" id="theme-toggle-container">
+  <div class="theme-toggle-wrapper" id="theme-toggle-wrapper">
+    <input 
+      type="checkbox" 
+      id="theme-toggle" 
+      class="theme-toggle"
+      aria-label="Toggle dark mode"
+      role="switch"
+    >
+    <label for="theme-toggle" class="theme-slider">
+      <span class="theme-icon theme-icon-light">
+        <i class="fa-solid fa-sun"></i>
+      </span>
+      <span class="theme-icon theme-icon-dark">
+        <i class="fa-solid fa-moon"></i>
+      </span>
+    </label>
+    <div class="theme-toggle-tooltip" id="theme-tooltip">
+      <span id="theme-tooltip-text">Switch to dark mode</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Enhanced Theme Management System
+class ThemeManager {
+  constructor() {
+    this.currentTheme = 'light';
+    this.toggle = document.getElementById('theme-toggle');
+    this.wrapper = document.getElementById('theme-toggle-wrapper');
+    this.tooltip = document.getElementById('theme-tooltip-text');
+    this.storageKey = 'wanderlust-theme-preference';
+    this.transitionClass = 'theme-transition-overlay';
+    
+    this.init();
+  }
+
+  init() {
+    // Initialize theme from storage or system preference
+    this.loadThemePreference();
+    this.setupEventListeners();
+    this.updateUI();
+    this.createTransitionOverlay();
+    
+    // Set ARIA attributes
+    this.toggle.setAttribute('aria-checked', this.currentTheme === 'dark');
+    
+    console.log('🌗 Theme Manager initialized:', this.currentTheme);
+  }
+
+  loadThemePreference() {
+    // Priority: localStorage > system preference > default light
+    const storedTheme = localStorage.getItem(this.storageKey);
+    const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    
+    if (storedTheme && ['light', 'dark'].includes(storedTheme)) {
+      this.currentTheme = storedTheme;
+    } else {
+      this.currentTheme = systemPreference;
+    }
+    
+    this.applyTheme(this.currentTheme, false);
+  }
+
+  setupEventListeners() {
+    // Toggle click handler
+    this.toggle.addEventListener('change', (e) => {
+      this.toggleTheme();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Ctrl + Shift + T to toggle theme
+      if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+        e.preventDefault();
+        this.toggleTheme();
+        this.showSuccessIndicator();
+      }
+    });
+
+    // System theme change detection
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      // Only auto-switch if user hasn't manually set a preference
+      if (!localStorage.getItem(this.storageKey)) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        this.applyTheme(newTheme, true);
+        this.updateUI();
+      }
+    });
+
+    // Page visibility change (for theme sync across tabs)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        this.syncThemeAcrossTabs();
+      }
+    });
+
+    // Storage event listener for cross-tab sync
+    window.addEventListener('storage', (e) => {
+      if (e.key === this.storageKey && e.newValue !== this.currentTheme) {
+        this.currentTheme = e.newValue || 'light';
+        this.applyTheme(this.currentTheme, true);
+        this.updateUI();
+      }
+    });
+  }
+
+  toggleTheme() {
+    const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+    this.applyTheme(newTheme, true);
+    this.saveThemePreference(newTheme);
+    this.updateUI();
+    this.announceThemeChange(newTheme);
+  }
+
+  applyTheme(theme, animate = true) {
+    if (animate) {
+      this.showTransitionOverlay();
+    }
+
+    // Apply theme to document
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+
+    this.currentTheme = theme;
+    
+    // Update favicon for dark mode (if you have dark version)
+    this.updateFavicon(theme);
+    
+    // Trigger custom event for other components
+    window.dispatchEvent(new CustomEvent('themeChanged', { 
+      detail: { theme: theme, previousTheme: this.currentTheme } 
+    }));
+
+    if (animate) {
+      setTimeout(() => this.hideTransitionOverlay(), 150);
+    }
+  }
+
+  updateUI() {
+    // Update toggle state
+    this.toggle.checked = this.currentTheme === 'dark';
+    this.toggle.setAttribute('aria-checked', this.currentTheme === 'dark');
+    
+    // Update tooltip
+    const tooltipText = this.currentTheme === 'dark' 
+      ? 'Switch to light mode' 
+      : 'Switch to dark mode';
+    this.tooltip.textContent = tooltipText;
+    
+    // Update loading state
+    this.wrapper.classList.remove('loading');
+  }
+
+  saveThemePreference(theme) {
+    try {
+      localStorage.setItem(this.storageKey, theme);
+    } catch (error) {
+      console.warn('Could not save theme preference:', error);
+    }
+  }
+
+  syncThemeAcrossTabs() {
+    const storedTheme = localStorage.getItem(this.storageKey);
+    if (storedTheme && storedTheme !== this.currentTheme) {
+      this.applyTheme(storedTheme, false);
+      this.updateUI();
+    }
+  }
+
+  createTransitionOverlay() {
+    if (!document.querySelector(`.${this.transitionClass}`)) {
+      const overlay = document.createElement('div');
+      overlay.className = this.transitionClass;
+      document.body.appendChild(overlay);
+    }
+  }
+
+  showTransitionOverlay() {
+    const overlay = document.querySelector(`.${this.transitionClass}`);
+    if (overlay) {
+      overlay.classList.add('active');
+    }
+  }
+
+  hideTransitionOverlay() {
+    const overlay = document.querySelector(`.${this.transitionClass}`);
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
+  }
+
+  showSuccessIndicator() {
+    // Create and show success checkmark
+    const success = document.createElement('div');
+    success.className = 'theme-toggle-success';
+    success.innerHTML = '<i class="fa-solid fa-check"></i>';
+    this.wrapper.appendChild(success);
+    
+    setTimeout(() => {
+      if (success.parentNode) {
+        success.parentNode.removeChild(success);
+      }
+    }, 600);
+  }
+
+  announceThemeChange(theme) {
+    // Announce theme change for screen readers
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = `Switched to ${theme} mode`;
+    
+    document.body.appendChild(announcement);
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  }
+
+  updateFavicon(theme) {
+    // Optional: Update favicon based on theme
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+      const currentHref = favicon.href;
+      if (theme === 'dark' && !currentHref.includes('dark')) {
+        // Switch to dark favicon if available
+        favicon.href = currentHref.replace('.png', '-dark.png');
+      } else if (theme === 'light' && currentHref.includes('dark')) {
+        // Switch back to light favicon
+        favicon.href = currentHref.replace('-dark.png', '.png');
+      }
+    }
+  }
+
+  // Public API methods
+  getTheme() {
+    return this.currentTheme;
+  }
+
+  setTheme(theme) {
+    if (['light', 'dark'].includes(theme)) {
+      this.applyTheme(theme, true);
+      this.saveThemePreference(theme);
+      this.updateUI();
+    }
+  }
+
+  resetToSystem() {
+    localStorage.removeItem(this.storageKey);
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    this.applyTheme(systemTheme, true);
+    this.updateUI();
+  }
+}
+
+// Initialize theme manager when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait for fonts and CSS to load
+  if (document.readyState === 'loading') {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.themeManager = new ThemeManager();
+      }, 100);
+    });
+  } else {
+    window.themeManager = new ThemeManager();
+  }
+});
+
+// Expose theme manager globally for debugging
+window.getThemeManager = () => window.themeManager;
+</script>
+
+<!-- Screen reader only text for accessibility -->
+<style>
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
