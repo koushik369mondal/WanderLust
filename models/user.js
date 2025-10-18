@@ -375,7 +375,19 @@ const userSchema = new Schema({
         tripDeleted: { type: Boolean, default: true },
         tripReminders: { type: Boolean, default: true },
         emailNotifications: { type: Boolean, default: false },
-        pushNotifications: { type: Boolean, default: false }
+        pushNotifications: { type: Boolean, default: false },
+        // Real-time notification system settings
+        welcome: { type: Boolean, default: true },
+        review: { type: Boolean, default: true },
+        badge: { type: Boolean, default: true },
+        like: { type: Boolean, default: true },
+        system: { type: Boolean, default: true },
+        discount: { type: Boolean, default: true },
+        security: { type: Boolean, default: true },
+        maintenance: { type: Boolean, default: false },
+        event: { type: Boolean, default: true },
+        friend: { type: Boolean, default: true },
+        custom: { type: Boolean, default: true }
     }
 }, { strict: false });
 
