@@ -46,119 +46,174 @@ jobs:
               }
             }
 
-            // Enhanced complexity analysis for Issues
+            // Enhanced complexity analysis for Issues with anti-abuse measures
             function getLevelForIssue(issue) {
               const title = (issue.title || '').toLowerCase();
               const body = (issue.body || '').toLowerCase();
               const content = title + ' ' + body;
+              const bodyLength = (issue.body || '').length;
               
               let complexityScore = 0;
               
-              // Level 3 indicators (Advanced) - Higher complexity
+              // ANTI-ABUSE: Penalize very short or vague descriptions
+              if (bodyLength < 50) {
+                console.log(`⚠️ Very short description (${bodyLength} chars) - likely Level1`);
+                complexityScore -= 20; // Heavy penalty for lazy issues
+              } else if (bodyLength < 100) {
+                complexityScore -= 10;
+              } else if (bodyLength < 150) {
+                complexityScore -= 5;
+              }
+              
+              // ANTI-ABUSE: Check for spam/low-effort patterns
+              const spamPatterns = [
+                /^(bug|fix|error|issue|problem)$/i, // Single word issues
+                /^(fix bug|fix error|fix issue)$/i, // Two word issues
+                /^(please fix|need help|help me)$/i, // Lazy requests
+              ];
+              
+              for (const pattern of spamPatterns) {
+                if (pattern.test(title.trim())) {
+                  console.log(`⚠️ Spam/low-effort pattern detected in title`);
+                  complexityScore -= 30; // Heavy penalty
+                }
+              }
+              
+              // Level 3 indicators (Advanced) - REDUCED WEIGHTS
               const level3Keywords = [
-                'bug', 'error', 'crash', 'broken', 'fix', 'critical', 'urgent',
-                'database', 'schema', 'migration', 'auth', 'authentication', 'authorization', 'security', 'vulnerability',
-                'api', 'backend', 'server', 'infrastructure', 'devops',
-                'deploy', 'deployment', 'docker', 'container', 'kubernetes', 'ci/cd', 'pipeline', 'workflow',
-                'breaking change', 'architecture', 'refactor', 'refactoring', 'performance', 'optimization', 'memory leak',
-                'concurrency', 'async', 'promise', 'callback', 'event loop', 'scalability',
-                'testing', 'unit test', 'integration test', 'e2e', 'cypress', 'jest', 'mocha',
-                'websocket', 'real-time', 'streaming', 'caching', 'redis', 'mongodb', 'sql',
-                'encryption', 'cors', 'csrf', 'xss', 'injection', 'sanitization'
+                'security', 'vulnerability', 'exploit', 'injection', 'xss', 'csrf', 'authentication bypass',
+                'database migration', 'schema change', 'breaking change', 'data loss',
+                'memory leak', 'performance critical', 'scalability issue',
+                'architecture refactor', 'system design', 'infrastructure',
+                'ci/cd pipeline', 'deployment automation', 'kubernetes', 'docker orchestration',
+                'real-time system', 'websocket implementation', 'streaming',
+                'encryption', 'oauth implementation', 'jwt security'
               ];
               
-              // Level 2 indicators (Intermediate) - Medium complexity
+              // Level 2 indicators (Intermediate) - REDUCED WEIGHTS
               const level2Keywords = [
-                'feature', 'enhancement', 'functionality', 'component', 'module',
-                'integration', 'improvement', 'update', 'modify', 'change', 'implement',
-                'frontend', 'ui', 'interface', 'design', 'responsive', 'mobile',
-                'controller', 'route', 'routing', 'middleware', 'validation',
-                'form', 'input', 'button', 'modal', 'dropdown', 'navigation',
-                'search', 'filter', 'sort', 'pagination', 'table', 'grid',
-                'notification', 'alert', 'message', 'toast', 'popup',
-                'upload', 'download', 'file', 'image', 'video', 'media',
-                'user management', 'profile', 'dashboard', 'admin', 'settings',
-                'localization', 'i18n', 'translation', 'language',
-                'chart', 'graph', 'visualization', 'analytics', 'reporting'
+                'feature', 'enhancement', 'new functionality', 'component',
+                'api integration', 'backend logic', 'frontend component',
+                'user authentication', 'form validation', 'data processing',
+                'search functionality', 'filtering', 'pagination',
+                'notification system', 'email integration',
+                'file upload', 'image processing', 'media handling',
+                'user dashboard', 'admin panel', 'reporting',
+                'localization', 'multi-language', 'responsive design'
               ];
               
-              // Level 1 indicators (Beginner) - Low complexity
+              // Level 1 indicators (Beginner) - INCREASED DETECTION
               const level1Keywords = [
-                'documentation', 'readme', 'docs', 'comment', 'comments',
-                'typo', 'spelling', 'grammar', 'text', 'content', 'copy',
-                'style', 'css', 'styling', 'color', 'font', 'theme',
-                'image', 'icon', 'logo', 'favicon', 'asset', 'static',
-                'minor', 'small', 'tiny', 'quick', 'simple', 'easy',
-                'whitespace', 'formatting', 'indentation', 'semicolon',
-                'link', 'url', 'href', 'anchor', 'hyperlink',
-                'license', 'copyright', 'author', 'contributor',
-                'version', 'changelog', 'release notes', 'update version'
+                'typo', 'spelling', 'grammar', 'text change', 'wording',
+                'documentation', 'readme', 'comment', 'docs',
+                'css', 'styling', 'color', 'font', 'margin', 'padding',
+                'button', 'icon', 'logo', 'image', 'favicon',
+                'link', 'url', 'href', 'broken link',
+                'whitespace', 'formatting', 'indentation',
+                'minor', 'small', 'tiny', 'quick', 'simple', 'easy'
               ];
               
-              // Enhanced scoring with keyword frequency and position weighting
-              // Title gets higher weight than body
-              const titleWeight = 1.5;
-              const bodyWeight = 0.5;
+              // Count keyword matches with REDUCED scoring
+              let level3Matches = 0;
+              let level2Matches = 0;
+              let level1Matches = 0;
               
-              // Score based on keywords in title (weighted higher)
               for (const keyword of level3Keywords) {
-                const titleMatches = (title.match(new RegExp(keyword, 'g')) || []).length;
-                const bodyMatches = (body.match(new RegExp(keyword, 'g')) || []).length;
-                complexityScore += (titleMatches * 5 * titleWeight) + (bodyMatches * 3 * bodyWeight);
+                if (content.includes(keyword)) level3Matches++;
               }
               
               for (const keyword of level2Keywords) {
-                const titleMatches = (title.match(new RegExp(keyword, 'g')) || []).length;
-                const bodyMatches = (body.match(new RegExp(keyword, 'g')) || []).length;
-                complexityScore += (titleMatches * 3 * titleWeight) + (bodyMatches * 2 * bodyWeight);
+                if (content.includes(keyword)) level2Matches++;
               }
               
               for (const keyword of level1Keywords) {
-                const titleMatches = (title.match(new RegExp(keyword, 'g')) || []).length;
-                const bodyMatches = (body.match(new RegExp(keyword, 'g')) || []).length;
-                complexityScore += (titleMatches * 1 * titleWeight) + (bodyMatches * 0.5 * bodyWeight);
+                if (content.includes(keyword)) level1Matches++;
               }
               
-              // Additional complexity indicators
-              const bodyLength = (issue.body || '').length;
+              // IMPROVED SCORING: Require multiple indicators for higher levels
+              // Level3: Need MULTIPLE advanced indicators + substantial content
+              if (level3Matches >= 3 && bodyLength > 300) {
+                complexityScore += level3Matches * 8; // Reduced from previous
+              } else if (level3Matches >= 2 && bodyLength > 200) {
+                complexityScore += level3Matches * 5;
+              } else if (level3Matches >= 1) {
+                complexityScore += level3Matches * 3; // Single keyword = low impact
+              }
               
-              // Content length bonus (more detailed issues tend to be more complex)
-              if (bodyLength > 2000) complexityScore += 5;
-              else if (bodyLength > 1000) complexityScore += 3;
-              else if (bodyLength > 500) complexityScore += 2;
-              else if (bodyLength > 200) complexityScore += 1;
+              // Level2: Moderate weighting
+              if (level2Matches >= 2 && bodyLength > 150) {
+                complexityScore += level2Matches * 4;
+              } else if (level2Matches >= 1) {
+                complexityScore += level2Matches * 2;
+              }
               
-              // Code block detection (issues with code tend to be more technical)
+              // Level1: High detection rate
+              if (level1Matches >= 1) {
+                complexityScore += level1Matches * 1;
+              }
+              
+              // Generic words that get abused (bug, error, fix) should NOT give high scores
+              const genericBugWords = ['bug', 'error', 'fix', 'issue', 'broken', 'not working'];
+              let genericMatches = 0;
+              for (const word of genericBugWords) {
+                genericMatches += (content.match(new RegExp('\\b' + word + '\\b', 'g')) || []).length;
+              }
+              
+              // ANTI-ABUSE: Generic words alone = Level1
+              if (genericMatches >= 3 && level3Matches < 2 && bodyLength < 200) {
+                console.log(`⚠️ Multiple generic words detected without specific details`);
+                complexityScore -= 15; // Penalize keyword stuffing
+              }
+              
+              // Content quality indicators
               const codeBlocks = (body.match(/```[\s\S]*?```/g) || []).length;
               const inlineCode = (body.match(/`[^`]+`/g) || []).length;
-              complexityScore += codeBlocks * 3 + Math.min(inlineCode, 10) * 0.3;
+              const filePaths = (content.match(/\b[\w/-]+\.(js|ts|jsx|tsx|css|html|json|md|yml|yaml|ejs)\b/g) || []).length;
+              const hasSteps = /step\s+\d|1\.|2\.|3\./i.test(body); // Has numbered steps
+              const hasExpected = /expect|should|supposed to/i.test(body); // Has expected behavior
               
-              // File path mentions (indicates specific code changes)
-              const filePaths = (content.match(/\b[\w-]+\.(js|ts|jsx|tsx|css|html|json|md|yml|yaml)\b/g) || []).length;
-              complexityScore += Math.min(filePaths, 5) * 1.5;
+              // Reward detailed, well-structured issues
+              if (codeBlocks > 0) complexityScore += codeBlocks * 4;
+              if (inlineCode > 2) complexityScore += Math.min(inlineCode, 8) * 0.5;
+              if (filePaths > 0) complexityScore += Math.min(filePaths, 5) * 2;
+              if (hasSteps) complexityScore += 3;
+              if (hasExpected) complexityScore += 2;
               
-              // Priority indicators
-              if (/\b(urgent|critical|high priority|asap|blocking|blocker)\b/.test(content)) {
-                complexityScore += 5;
+              // Length bonuses (detailed issues deserve higher complexity)
+              if (bodyLength > 500) complexityScore += 8;
+              else if (bodyLength > 300) complexityScore += 5;
+              else if (bodyLength > 200) complexityScore += 3;
+              
+              // ANTI-ABUSE: Question indicators (usually simpler)
+              if (/\?/.test(title) && /\b(how|what|why|where|when|can you|could you)\b/.test(content)) {
+                console.log(`❓ Question-style issue detected`);
+                complexityScore -= 5;
               }
               
-              // Question indicators (usually simpler issues)
-              if (/\?/.test(title) && /\b(how|what|why|where|when|help|question)\b/.test(content)) {
-                complexityScore = Math.max(0, complexityScore - 3);
+              // Priority keywords should require context
+              if (/\b(urgent|critical|high priority|asap|blocker)\b/.test(content)) {
+                if (bodyLength > 200 && (codeBlocks > 0 || filePaths > 0)) {
+                  complexityScore += 5; // Reward if well-documented
+                } else {
+                  console.log(`⚠️ Priority keywords without sufficient context`);
+                  complexityScore -= 3; // Penalize empty claims
+                }
               }
               
               console.log(`📊 Issue complexity score: ${complexityScore}`);
               console.log(`📝 Title: "${title}"`);
               console.log(`📄 Body length: ${bodyLength} chars`);
+              console.log(`🔍 Keywords - L3:${level3Matches}, L2:${level2Matches}, L1:${level1Matches}`);
               console.log(`💻 Code blocks: ${codeBlocks}, Inline code: ${inlineCode}`);
               console.log(`📁 File mentions: ${filePaths}`);
+              console.log(`✅ Has steps: ${hasSteps}, Has expected: ${hasExpected}`);
               
-              // Adjusted thresholds for better distribution
-              // Level3: 45+ (Critical bugs, security issues, major refactors)
-              // Level2: 20-44 (Features, enhancements, moderate complexity)
-              // Level1: 0-19 (Documentation, UI tweaks, simple fixes)
-              if (complexityScore >= 45) return "Level3";
-              if (complexityScore >= 20) return "Level2";
+              // STRICTER THRESHOLDS to prevent abuse
+              // Level3: 50+ (Needs multiple advanced indicators + detailed content)
+              // Level2: 25-49 (Features with proper description)
+              // Level1: <25 (Simple fixes, docs, styling, or vague issues)
+              if (complexityScore >= 50) return "Level3";
+              if (complexityScore >= 25) return "Level2";
               return "Level1";
             }
 
