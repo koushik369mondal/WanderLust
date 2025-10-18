@@ -3,7 +3,7 @@ const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 const { updateListingCoordinates } = require("../utils/updateCoordinates.js");
 const dotenv = require("dotenv");
-dotenv.config({ debug: false });
+dotenv.config({ quiet: true });
 
 const MONGO_URL = process.env.ATLAS_DB_URL;
 
