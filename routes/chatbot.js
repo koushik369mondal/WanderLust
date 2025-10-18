@@ -7,14 +7,21 @@ const weatherService = require('../services/weatherService');
 const { Translate } = require('@google-cloud/translate').v2;
 const OpenAI = require('openai');
 
-// Initialize AI services
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// Initialize AI services conditionally
+let openai = null;
+let translate = null;
 
-const translate = new Translate({
-  key: process.env.GOOGLE_TRANSLATE_API_KEY
-});
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+  });
+}
+
+if (process.env.GOOGLE_TRANSLATE_API_KEY) {
+  translate = new Translate({
+    key: process.env.GOOGLE_TRANSLATE_API_KEY
+  });
+}
 
 // Conversation context storage (in production, use Redis or database)
 const conversationContexts = new Map();
