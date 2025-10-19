@@ -2,7 +2,7 @@
 
 <style>
     :root {
-        --leaderboard-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --leaderboard-bg: linear-gradient(135deg, #667eea 0%, #01060e 100%);
         --card-bg: rgba(255, 255, 255, 0.95);
         --card-bg-alt: rgba(255, 255, 255, 0.98);
         --text-primary: #2c3e50;
@@ -11,7 +11,7 @@
         --success-color: #27ae60;
         --warning-color: #f39c12;
         --danger-color: #e74c3c;
-        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-bg: rgba(14, 1, 1, 0.25);
         --glass-border: rgba(255, 255, 255, 0.18);
         --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         --shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
@@ -29,27 +29,48 @@
     .leaderboard-container {
         max-width: 1000px;
         margin: 2rem auto;
-        padding: 0 1rem;
+        padding: 0 3rem;
+        background: rgba(8, 57, 147, 0.8) !important; /* Light transparency for base */
+    backdrop-filter: blur(15px); 
+    -webkit-backdrop-filter: blur(15px);
+    
+    /* Apply a blue border/shadow for themed lift */
+    border: 2px solid var(--border-color);
+    box-shadow: 0 8px 30px rgba(0, 9, 17, 0.925); /* Soft blue shadow */
     }
 
     .leaderboard-header {
         text-align: center;
         margin-bottom: 3rem;
         color: white;
+        padding : 3rem ;
     }
 
     .leaderboard-header h1 {
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        text-shadow: 2px 2px 4px rgba(237, 231, 231, 0.3);
     }
 
     .leaderboard-header p {
         font-size: 1.2rem;
         opacity: 0.9;
         margin-bottom: 0;
+        text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
     }
+    [data-theme="dark"] .leaderboard-container {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    color: white !important;
+}
+[data-theme="light"] .leaderboard-container {
+    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgb(6, 5, 5) !important; /* Ensure text is white */
+}
 
     .current-user-rank {
         background: var(--glass-bg);
@@ -61,6 +82,8 @@
         color: white;
         text-align: center;
         box-shadow: var(--shadow-light);
+        text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+
     }
 
     .current-user-rank h2 {
@@ -75,8 +98,10 @@
     .rank-number {
         font-size: 2.5rem;
         font-weight: 700;
-        color: var(--accent-color);
+        color: white;
         margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+
     }
 
     .rank-stats {
@@ -104,15 +129,20 @@
     }
 
     .leaderboard-table {
-        background: var(--card-bg);
         border-radius: 1rem;
         overflow: hidden;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
+        background: linear-gradient(
+      135deg,
+      rgba(7, 41, 46, 0.9),
+      rgba(17, 112, 136, 0.9),
+      rgba(9, 72, 80, 0.9)
+    ),
     }
 
     .leaderboard-header-row {
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: var(--glass-bg);
         color: white;
         padding: 1.5rem;
         display: grid;
@@ -135,7 +165,7 @@
     }
 
     .leaderboard-row:hover {
-        background-color: #f8f9fa;
+        background-color: #02080d;
     }
 
     .leaderboard-row.current-user {
@@ -162,20 +192,27 @@
     .rank-1 {
         background: var(--gold);
         box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        -webkit-text-fill-color: #ec1e1e;
     }
 
     .rank-2 {
         background: var(--silver);
         box-shadow: 0 4px 15px rgba(192, 192, 192, 0.4);
+        -webkit-text-fill-color: #ec1e1e;
+
     }
 
     .rank-3 {
         background: var(--bronze);
         box-shadow: 0 4px 15px rgba(205, 127, 50, 0.4);
+        -webkit-text-fill-color: #ec1e1e;
+
     }
 
     .rank-other {
         background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        -webkit-text-fill-color: #ec1e1e;
+
     }
 
     .user-info {
@@ -195,6 +232,7 @@
 
     .leaderboard-row:hover .user-avatar {
         border-color: var(--accent-color);
+
     }
 
     .user-details h3 {
@@ -202,12 +240,16 @@
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--text-primary);
+        -webkit-text-fill-color: #070707;
+
     }
 
     .user-details p {
         margin: 0.25rem 0 0 0;
         font-size: 0.9rem;
         color: var(--text-secondary);
+        -webkit-text-fill-color: #fbfbfb;
+
     }
 
     .points-display {
@@ -215,12 +257,16 @@
         font-weight: 700;
         font-size: 1.1rem;
         color: var(--accent-color);
+        -webkit-text-fill-color: #f8f8f8;
+
     }
 
     .badges-count {
         text-align: center;
         font-weight: 600;
         color: var(--success-color);
+        -webkit-text-fill-color: #1eec8c;
+
     }
 
     .stats-display {

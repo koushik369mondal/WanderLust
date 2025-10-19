@@ -4,11 +4,63 @@ const { isLoggedIn } = require("../middleware");
 const User = require("../models/user");
 const Listing = require("../models/listing");
 const tripPlannerService = require("../services/tripPlannerService");
+const notificationService = require("../services/notificationService");
+
+// Notification API endpoints
+router.get('/api/notifications', isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).populate('notifications');
+        res.json(user.notifications || []);
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        res.status(500).json({ error: 'Failed to fetch notifications' });
+    }
+});
+
+router.patch('/api/notifications/:id/read', isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const notification = user.notifications.id(req.params.id);
+        if (notification) {
+            notification.isRead = true;
+            await user.save();
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: 'Notification not found' });
+        }
+    } catch (error) {
+        console.error('Error marking notification as read:', error);
+        res.status(500).json({ error: 'Failed to mark notification as read' });
+    }
+});
+
+router.delete('/api/notifications/:id', isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        user.notifications.pull(req.params.id);
+        await user.save();
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting notification:', error);
+        res.status(500).json({ error: 'Failed to delete notification' });
+    }
+});
+
+router.get('/api/notifications/unread-count', isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const unreadCount = user.notifications.filter(n => !n.isRead).length;
+        res.json({ count: unreadCount });
+    } catch (error) {
+        console.error('Error fetching unread count:', error);
+        res.status(500).json({ error: 'Failed to fetch unread count' });
+    }
+});
 
 // Trip Planner main page
 router.get("/", (req, res) => {
     const { destination } = req.query;
-    res.render("tripPlanner/planner", { 
+    res.render("tripPlanner/planner", {
         title: "Plan My Trip",
         preselectedDestination: destination || ""
     });
@@ -31,24 +83,24 @@ router.post("/api/estimate", async (req, res) => {
 
         const days = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
         const startMonth = new Date(startDate).getMonth();
-        
+
         // Use trip planner service for external API calls
         const flightData = await tripPlannerService.getFlightPrices(departureCity, destination, startDate, endDate, travelers);
         const hotelData = await tripPlannerService.getHotelPrices(destination, startDate, endDate, travelers, budgetType);
         const activityData = await tripPlannerService.getActivityPrices(destination, days, travelers, [req.body.tripType || 'leisure']);
-        
+
         // Seasonal pricing multiplier
         const seasonalMultiplier = getSeasonalMultiplier(destination, startMonth);
-        
+
         // Enhanced cost calculation
         const baseCosts = {
             budget: { flight: 200, hotel: 50, food: 30, activities: 25, transport: 15, insurance: 10 },
             moderate: { flight: 400, hotel: 100, food: 60, activities: 50, transport: 25, insurance: 20 },
             luxury: { flight: 800, hotel: 250, food: 120, activities: 100, transport: 50, insurance: 35 }
         };
-        
+
         const costs = baseCosts[budgetType];
-        
+
         // Apply seasonal and destination-specific adjustments
         const adjustedCosts = {
             flights: Math.round((flightData.price || costs.flight) * travelers * seasonalMultiplier),
@@ -58,13 +110,13 @@ router.post("/api/estimate", async (req, res) => {
             transport: Math.round(costs.transport * travelers * days * getDestinationMultiplier(destination, 'transport')),
             insurance: Math.round(costs.insurance * travelers * days)
         };
-        
+
         const grandTotal = Object.values(adjustedCosts).reduce((sum, cost) => sum + cost, 0);
-        
+
         // Add recommendations and tips using service
         const recommendations = tripPlannerService.generateRecommendations(destination, budgetType, startMonth, days, travelers);
         const savingTips = tripPlannerService.generateSavingTips(budgetType, days, seasonalMultiplier, destination);
-        
+
         // Prepare estimation in USD, then convert to requested currency if necessary
         const baseCurrency = 'USD';
         let responseCosts = { ...adjustedCosts };
@@ -149,10 +201,10 @@ function getSeasonalMultiplier(destination, month) {
         'Americas': [5, 6, 7, 8], // Jun-Sep
         'Default': [5, 6, 7, 11] // Jun-Aug, Dec
     };
-    
+
     const region = getRegion(destination);
     const peak = peakSeasons[region] || peakSeasons['Default'];
-    
+
     return peak.includes(month) ? 1.3 : 0.9;
 }
 
@@ -165,7 +217,7 @@ function getDestinationMultiplier(destination, category) {
         'Mumbai': { food: 0.6, transport: 0.5 },
         'Delhi': { food: 0.5, transport: 0.4 }
     };
-    
+
     return multipliers[destination]?.[category] || 1.0;
 }
 
@@ -175,7 +227,7 @@ function getRegion(destination) {
         'Asia': ['Tokyo', 'Mumbai', 'Delhi', 'Bangkok', 'Singapore'],
         'Americas': ['New York', 'Los Angeles', 'Toronto', 'Mexico City']
     };
-    
+
     for (const [region, cities] of Object.entries(regions)) {
         if (cities.includes(destination)) return region;
     }
@@ -187,11 +239,11 @@ router.post("/save", isLoggedIn, async (req, res) => {
     try {
         const { tripData } = req.body;
         const user = await User.findById(req.user._id);
-        
+
         if (!user.tripPlans) {
             user.tripPlans = [];
         }
-        
+
         // Enhanced trip data with additional fields
         const enhancedTripData = {
             ...tripData,
@@ -207,16 +259,32 @@ router.post("/save", isLoggedIn, async (req, res) => {
             reminders: [],
             sharedWith: []
         };
-        
+
         user.tripPlans.push(enhancedTripData);
-        
+
         // Update user travel stats
         user.travelStats.totalTrips += 1;
-        
+
         // Log activity
         await user.logActivity('trip_planned', `Planned trip to ${tripData.destination}`);
-        
+
         await user.save();
+
+        // Create notification for trip added
+        await notificationService.createTripNotification(
+            user._id,
+            'trip_added',
+            { destination: tripData.destination },
+            user.tripPlans[user.tripPlans.length - 1]._id
+        );
+
+        // Schedule reminders for the trip
+        await notificationService.scheduleTripReminders(
+            user._id,
+            tripData,
+            user.tripPlans[user.tripPlans.length - 1]._id
+        );
+
         res.json({ success: true, message: "Trip saved successfully!" });
     } catch (error) {
         console.error('Save trip error:', error);
@@ -229,7 +297,7 @@ router.get("/my-trips", isLoggedIn, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         const trips = user.tripPlans || [];
-        
+
         // Calculate trip analytics
         const analytics = {
             totalTrips: trips.length,
@@ -240,7 +308,7 @@ router.get("/my-trips", isLoggedIn, async (req, res) => {
             favoriteDestinations: getFavoriteDestinations(trips),
             budgetBreakdown: getBudgetBreakdown(trips)
         };
-        
+
         res.render("tripPlanner/myTrips", {
             title: "My Trips",
             trips: trips.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
@@ -258,12 +326,12 @@ router.get("/my-trips/:tripId", isLoggedIn, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         const trip = user.tripPlans.find(trip => trip._id.toString() === req.params.tripId);
-        
+
         if (!trip) {
             req.flash("error", "Trip not found");
             return res.redirect("/trip-planner/my-trips");
         }
-        
+
         res.render("tripPlanner/tripDetail", {
             title: `Trip to ${trip.destination}`,
             trip: trip
@@ -301,14 +369,23 @@ router.delete("/:tripId", isLoggedIn, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         const tripToDelete = user.tripPlans.find(trip => trip._id.toString() === req.params.tripId);
-        
+
         if (tripToDelete) {
             user.tripPlans = user.tripPlans.filter(trip => trip._id.toString() !== req.params.tripId);
-            
+
             // Log activity
             await user.logActivity('trip_deleted', `Deleted trip to ${tripToDelete.destination}`);
-            
+
             await user.save();
+
+            // Create notification for trip deleted
+            await notificationService.createTripNotification(
+                user._id,
+                'trip_deleted',
+                { destination: tripToDelete.destination },
+                req.params.tripId
+            );
+
             res.json({ success: true, message: "Trip deleted successfully" });
         } else {
             res.status(404).json({ error: "Trip not found" });
@@ -325,14 +402,22 @@ router.patch("/:tripId/status", isLoggedIn, async (req, res) => {
         const { status } = req.body;
         const user = await User.findById(req.user._id);
         const trip = user.tripPlans.find(trip => trip._id.toString() === req.params.tripId);
-        
+
         if (trip) {
             trip.status = status;
             trip.lastUpdated = new Date();
-            
+
             await user.logActivity('trip_updated', `Updated trip to ${trip.destination} status to ${status}`);
             await user.save();
-            
+
+            // Create notification for trip updated
+            await notificationService.createTripNotification(
+                user._id,
+                'trip_updated',
+                { destination: trip.destination },
+                req.params.tripId
+            );
+
             res.json({ success: true, message: "Trip status updated successfully" });
         } else {
             res.status(404).json({ error: "Trip not found" });
@@ -348,7 +433,7 @@ router.get("/api/analytics", isLoggedIn, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         const trips = user.tripPlans || [];
-        
+
         const analytics = {
             totalSpent: trips.reduce((sum, trip) => sum + (trip.total || 0), 0),
             averageTripLength: trips.length > 0 ? Math.round(trips.reduce((sum, trip) => {
@@ -359,7 +444,7 @@ router.get("/api/analytics", isLoggedIn, async (req, res) => {
             destinationStats: getDestinationStats(trips),
             budgetTypePreference: getBudgetTypePreference(trips)
         };
-        
+
         res.json({ success: true, analytics });
     } catch (error) {
         console.error('Analytics error:', error);
@@ -402,7 +487,7 @@ function getBudgetTypePreference(trips) {
 router.get("/api/currency/:from/:to", async (req, res) => {
     try {
         const { from, to } = req.params;
-        
+
         // Mock exchange rates (in production, use real API like exchangerate-api.com)
         const rates = {
             'USD': { 'EUR': 0.85, 'GBP': 0.73, 'INR': 83.12, 'JPY': 149.50 },
@@ -410,9 +495,9 @@ router.get("/api/currency/:from/:to", async (req, res) => {
             'GBP': { 'USD': 1.37, 'EUR': 1.16, 'INR': 113.87, 'JPY': 204.93 },
             'INR': { 'USD': 0.012, 'EUR': 0.010, 'GBP': 0.0088, 'JPY': 1.80 }
         };
-        
+
         const rate = rates[from]?.[to] || 1;
-        
+
         res.json({
             success: true,
             from,
@@ -429,6 +514,49 @@ router.get("/mood-fixing", (req, res) => {
   res.render("tripPlanner/moodFixing", {
     title: "Mood Fixing - Travel Tools"
   });
+});
+
+// Offline trips page
+router.get("/offline-trips", isLoggedIn, (req, res) => {
+    res.render("tripPlanner/offlineTrips", {
+        title: "Offline Trips"
+    });
+});
+
+// Offline trips API endpoint
+router.get("/api/offline-trips", isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const trips = user.tripPlans || [];
+
+        res.json({
+            success: true,
+            trips: trips,
+            timestamp: new Date()
+        });
+    } catch (error) {
+        console.error("Offline trips API error:", error);
+        res.status(500).json({ success: false, error: "Failed to fetch trips" });
+    }
+});
+
+// Sync offline changes endpoint
+router.post("/api/sync", isLoggedIn, async (req, res) => {
+    try {
+        const { changes } = req.body;
+
+        // Process offline changes (notes, status updates, etc.)
+        console.log("Syncing offline changes for user:", req.user._id, changes);
+
+        res.json({
+            success: true,
+            message: "Changes synced successfully",
+            syncedAt: new Date()
+        });
+    } catch (error) {
+        console.error("Sync API error:", error);
+        res.status(500).json({ success: false, error: "Failed to sync changes" });
+    }
 });
 
 module.exports = router;

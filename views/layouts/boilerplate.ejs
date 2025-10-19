@@ -1,155 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WanderLust</title>
-  <link rel="icon" type="image/x-icon" href="/images/compass.png" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="stylesheet" href="/CSS/style.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="/CSS/rating.css" />
-  <link rel="stylesheet" href="/CSS/loading.css" />
-  <link rel="stylesheet" href="/CSS/packingList.css" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="WanderLust - Find your perfect accommodation and travel experiences with enhanced accessibility features">
+    <meta name="keywords" content="travel, accommodation, accessibility, inclusive travel, wanderlust">
+    <meta name="author" content="WanderLust Team">
+    <meta name="theme-color" content="#007bff">
+    <title><% if (typeof title !== 'undefined') { %><%= title %> - WanderLust<% } else { %>WanderLust - Accessible Travel Platform<% } %></title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/compass.png">
+    <link rel="shortcut icon" type="image/png" href="/images/compass.png">
+    <link rel="apple-touch-icon" href="/images/compass.png">
+    
+    <!-- Accessibility Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- EMERGENCY CACHE CLEAR - Loads FIRST to clean corrupted caches -->
+    <script src="/JS/emergencyCacheClear.js?v=<%= Date.now() %>"></script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/CSS/theme-system.css?v=<%= Date.now() %>">
+    <link rel="stylesheet" href="/CSS/footer-theme.css?v=<%= Date.now() %>">
+    <link rel="stylesheet" href="/CSS/style.css?v=<%= Date.now() %>">
+    <link rel="stylesheet" href="/CSS/rating.css?v=<%= Date.now() %>">
+    <link rel="stylesheet" href="/CSS/loading.css?v=<%= Date.now() %>">
+    <link rel="stylesheet" href="/CSS/chatbot.css?v=<%= Date.now() %>">
+    <link rel="stylesheet" href="/CSS/theme-toggle.css?v=<%= Date.now() %>">
+    
+    <!-- Mapbox CSS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "WanderLust",
+      "description": "Accessible travel platform for finding accommodations and travel experiences",
+      "url": "<%= process.env.BASE_URL || 'https://wanderlust.com' %>",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Web Browser",
+      "accessibilityAPI": "ARIA",
+      "accessibilityControl": "fullKeyboardControl,fullMouseControl,fullTouchControl",
+      "accessibilityFeature": "alternativeText,captions,highContrastDisplay,largePrint,readingOrder,screenReader"
+    }
+    </script>
+    
+    <style>
+        /* Prevent horizontal overflow */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw;
+            position: relative;
+        }
+        
+        /* Fix navbar overflow issues */
+        .navbar {
+            overflow-x: hidden !important;
+            max-width: 100vw;
+        }
+        
+        .navbar .container-fluid {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Compact navbar styling */
+        .navbar-brand {
+            font-size: 1.2rem;
+            margin-right: 0.5rem !important;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.1rem;
+        }
+        
+        .navbar-nav .nav-link {
+            padding: 0.5rem 0.5rem !important;
+            font-size: 0.9rem;
+        }
+        
+        /* Search form styling */
+        .input-group .form-control {
+            border-radius: 0 !important;
+        }
+        
+        .input-group .input-group-text {
+            border-radius: 0.375rem 0 0 0.375rem !important;
+        }
+        
+        .input-group .btn {
+            border-radius: 0 0.375rem 0.375rem 0 !important;
+            white-space: nowrap;
+        }
+        
+        /* Compact buttons */
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        /* Hide scrollbar but allow scrolling */
+        .navbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .navbar-nav .nav-link {
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .navbar-brand span {
+                display: none;
+            }
+            
+            .navbar-brand i {
+                margin-right: 0 !important;
+            }
+        }
+        
+        @media (max-width: 991px) {
+            .navbar .d-flex.flex-grow-1 {
+                max-width: 100%;
+                margin: 0.5rem 0 !important;
+            }
+            
+            .navbar .container-fluid {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <!-- Loading Spinner Component -->
-  <div id="global-loading" class="loading-overlay" style="display: none;">
-    <div class="loading-spinner"></div>
-  </div>
-  
-  <canvas id="fluid-cursor"></canvas>
+    <%- include("../includes/navbar.ejs") %>
 
-  <%- include("../includes/navbar.ejs") %>
-
-    <div class="container">
-      <%- include("../includes/flash.ejs") %> <%- body %>
-    </div>
+    <!-- Skip Links (accessible navigation) -->
+    <a class="skip-link sr-only-focusable" href="#main-content">Skip to main content</a>
+    <a class="skip-link sr-only-focusable" href="#navigation">Skip to navigation</a>
+    
+    <!-- Main Content -->
+    <main id="main-content" role="main" class="container mt-3">
+        <%- include("../includes/flash.ejs") %>
+        <%- body %>
+    </main>
 
     <%- include("../includes/footer.ejs") %>
     <%- include("../includes/chatbot.ejs") %>
 
-
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-      <script src="/JS/script.js"></script>
-      <script src="/JS/loading.js"></script>
-      <script>
-        const canvas = document.getElementById("fluid-cursor");
-        const ctx = canvas.getContext("2d");
-
-        let width = (canvas.width = window.innerWidth);
-        let height = (canvas.height = window.innerHeight);
-
-        const particles = [];
-
-        class Particle {
-          constructor(x, y) {
-            this.x = x;
-            this.y = y;
-            this.size = Math.random() * 4 + 2;
-            this.speedX = (Math.random() - 0.5) * 3;
-            this.speedY = (Math.random() - 0.5) * 3;
-            this.hue = Math.random() * 360;
-            this.alpha = 1;
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+      
+    <!-- Custom JavaScript -->
+    <script src="/JS/accessibility.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/lazy-loading.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/script.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/loading.js?v=<%= Date.now() %>"></script>
+    <script src="/JS/phraseAssistant.js?v=<%= Date.now() %>"></script>
+    <!-- offlineManager.js removed - app now fetches fresh data directly from database -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    
+    <!-- Development Accessibility Testing -->
+    <% if (process.env.NODE_ENV === 'development') { %>
+    <script src="/JS/accessibility-test.js?v=<%= Date.now() %>"></script>
+    <% } %>
+    
+    <!-- Performance and Accessibility Monitoring -->
+    <script>
+      // Performance monitoring
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          if (perfData) {
+            console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart + 'ms');
           }
-          update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            this.alpha -= 0.02;
-          }
-          draw() {
-            ctx.beginPath();
-            ctx.fillStyle = `hsla(${this.hue}, 100%, 60%, ${this.alpha})`;
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = `hsl(${this.hue}, 100%, 60%)`;
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-          }
+        }, 0);
+      });
+      
+      // Accessibility error reporting
+      window.addEventListener('error', function(e) {
+        if (e.error && e.error.message && e.error.message.includes('accessibility')) {
+          console.warn('Accessibility error detected:', e.error.message);
         }
-
-        function handleParticles() {
-          for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-
-            if (particles[i].alpha <= 0) {
-              particles.splice(i, 1);
-              i--;
-            }
-          }
-        }
-
-        function animate() {
-          ctx.clearRect(0, 0, width, height);
-          handleParticles();
-          requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        window.addEventListener("resize", () => {
-          width = canvas.width = window.innerWidth;
-          height = canvas.height = window.innerHeight;
-        });
-
-        // document.addEventListener("mousemove", (e) => {
-        //   for (let i = 0; i < 5; i++) {
-        //     particles.push(new Particle(e.clientX, e.clientY));
-        //   }
-        // });
-      </script>
-
-      <!-- Service Worker Registration -->
-      <script>
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-              .then((registration) => {
-                console.log('Service Worker registered successfully:', registration.scope);
-                
-                // Register for background sync if supported
-                if ('serviceWorker' in navigator && 'SyncManager' in window) {
-                  registration.sync.register('sync-trips')
-                    .then(() => console.log('Background sync registered'))
-                    .catch((error) => console.log('Background sync registration failed:', error));
-                }
-              })
-              .catch((error) => {
-                console.log('Service Worker registration failed:', error);
-              });
-          });
-        }
-
-        // Listen for sync completion messages from SW
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data.type === 'SYNC_REQUEST') {
-              console.log('Sync request received:', event.data.message);
-              // Update UI if needed
-              if (window.showToast) {
-                showToast('Syncing offline changes...', 'info');
-              }
-            }
-          });
-        }
-      </script>
-      <div id="cursor-glow"></div>
-      <div id="page-glow" class="page-glow"></div>
-
-</body>
-
+      });
+    </script>
+  </body>
 </html>

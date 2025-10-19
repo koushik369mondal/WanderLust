@@ -91,7 +91,7 @@ screen and (min-resolution: 192dpi) {
 }
 
 .starability-slot>input:focus+label {
-    outline: 1px dotted #999;
+    outline: 1px dotted var(--rating-focus-color, #999);
 }
 
 .starability-slot .starability-focus-ring {
@@ -99,9 +99,15 @@ screen and (min-resolution: 192dpi) {
     left: 0;
     width: 100%;
     height: 30px;
-    outline: 2px dotted #999;
+    outline: 2px dotted var(--rating-focus-color, #999);
     pointer-events: none;
     opacity: 0;
+}
+
+/* Dark mode theme support */
+[data-theme="dark"] .starability-slot>input:focus+label,
+[data-theme="dark"] .starability-slot .starability-focus-ring {
+    --rating-focus-color: var(--text-secondary);
 }
 
 .starability-slot>.input-no-rate:focus~.starability-focus-ring {

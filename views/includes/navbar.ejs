@@ -1,151 +1,90 @@
 <style>
-  .search-btn {
-    background-color: #fe424d;
-    color: #fff;
-    border-radius: 25px;
-    padding: 0 1rem 0 1rem;
+  /* Force remove horizontal scrollbar */
+  body,
+  html {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
   }
 
-  .search-btn:hover {
-    background-color: #fe424d;
-    color: #fff;
+  .navbar {
+    overflow: visible !important;
+    max-width: 100% !important;
   }
 
-  .search-btn i {
-    display: inline;
-    margin-right: 0.5rem;
+  .navbar .container-fluid {
+    overflow: visible !important;
+    flex-wrap: nowrap;
   }
 
-  .search-inp {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 1rem;
-  }
-
-  /* Enhanced navbar brand styling */
+  /* Compact navbar items */
   .navbar-brand {
-    font-size: 1.5rem;
-    color: var(--accent-color) !important;
-    text-decoration: none;
-    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin-right: 0.5rem !important;
   }
 
-  .navbar-brand:hover {
-    color: var(--accent-color) !important;
-    transform: scale(1.05);
+  .navbar-nav .nav-link {
+    padding: 0.5rem 0.5rem !important;
+    font-size: 0.9rem;
   }
 
-  .navbar-brand i {
-    color: #fe424d;
-    font-size: 1.4rem;
-  }
-
-  /* Tablet view fixes */
-  @media (max-width: 991px) and (min-width: 768px) {
-    .navbar-nav .d-flex {
-      flex-wrap: nowrap;
-    }
-
-    .search-inp {
-      min-width: 200px;
-    }
-
-    .search-btn {
-      white-space: nowrap;
-    }
-  }
-
-  /* Mobile Responsiveness */
-  @media (max-width: 767px) {
-    .navbar-collapse {
-      background-color:var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-nav .d-flex {
-      flex-direction: column;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .search-inp {
-      width: 100%;
-      margin-bottom: 0.5rem;
-      margin-right: 0 !important;
-      padding: 0.5rem 1rem;
-    }
-
-    .search-btn {
-      width: 100%;
-    }
-
-    .navbar-nav {
-      text-align: center;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    #theme-toggle {
-      margin: 1rem auto 0.5rem auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .mobile-icon {
-      display: inline-block !important;
-    }
-
-    .desktop-hide-mobile {
-      display: none;
-    }
-  }
-
-  .mobile-icon {
-    display: none;
-  }
-
-  /* Desktop view - hide mobile icons */
-  @media (min-width: 768px) {
-    .mobile-icon {
-      display: none !important;
-    }
-  }
-
-  /* Search suggestions styling */
-  .search-container {
+  /* Search form styling */
+  .navbar-search-form {
     position: relative;
-    width: 100%;
+    flex-grow: 1;
+    max-width: 500px;
+    min-width: 200px;
   }
 
-  .search-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: rgb(6, 0, 0);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: none;
-    color: #fafafa;
-    font-size: 0.95rem;
-    z-index: 1000;
+  .navbar-search-form .input-group {
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .search-suggestions.show {
-    display: block;
+  .navbar-search-form .input-group-text {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    padding-left: 1rem;
+  }
+
+  .navbar-search-form .form-control {
+    border: 1px solid #dee2e6;
+    border-left: none;
+    border-right: none;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .navbar-search-form .form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+  }
+
+  .navbar-search-form .btn-primary {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    padding: 0.5rem 1.25rem;
+    white-space: nowrap;
+  }
+
+  /* Action buttons compact layout */
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
+
+  .navbar-actions .btn-sm {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .navbar-actions .dropdown-toggle {
+    padding: 0.375rem 0.5rem;
   }
 
   .search-suggestion-item {
@@ -158,91 +97,125 @@
     transition: background-color 0.2s ease;
   }
 
-  .search-suggestion-item:hover {
-    background-color: #f8f9fa;
+  /* Responsive navbar */
+  @media (max-width: 991px) {
+    .navbar-search-form {
+      max-width: 100%;
+      margin: 1rem 0;
+    }
+
+    .navbar-actions {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
   }
 
-  .search-suggestion-item:last-child {
-    border-bottom: none;
+  /* Notification badge styling */
+  #notificationBadge {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.4rem;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .search-suggestion-icon {
     color: #f1f3f6;
     width: 16px;
     text-align: center;
+  /* Dropdown menu improvements */
+  .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
   }
 
-  .search-suggestion-text {
-    flex: 1;
-    font-size: 0.95rem;
+  .notification-dropdown {
+    width: 350px;
   }
 
   .search-suggestion-type {
     font-size: 0.8rem;
     color: #fbfbfb;
     text-transform: capitalize;
+  @media (max-width: 576px) {
+    .notification-dropdown {
+      width: 280px;
+    }
   }
 </style>
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand mt-1 d-flex align-items-center" href="/listings">
-      <i class="fa-regular fa-compass me-2"></i>
-      <span class="fw-bold"><%= __('wanderlust') %></span>
+
+<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top" role="navigation"
+  aria-label="Main navigation">
+  <div class="container-fluid px-3 px-lg-4">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" href="/listings" aria-label="WanderLust - Go to home page">
+      <i class="fa-regular fa-compass me-2" aria-hidden="true"></i>
+      <span class="fw-bold">
+        <%= __('wanderlust') %>
+      </span>
     </a>
 
     <!-- Mobile Toggle -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation menu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navbarContent">
       <!-- Primary Navigation -->
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" href="/listings">
-            <i class="fa-regular fa-compass"></i>
-            <%= __('all_listings') %>
+            <i class="fa-regular fa-copy me-1" aria-hidden="true"></i>
+            <span>
+              <%= __('all_listings') %>
+            </span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/listings/about">
-            <i class="fa-solid fa-info-circle"></i>
-            About
+            <i class="fa-solid fa-info-circle me-1" aria-hidden="true"></i>
+            <span>
+              <%= __('about') %>
+            </span>
           </a>
         </li>
 
         <!-- Travel Tools Dropdown -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-tools"></i>
-            Travel Tools
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            id="travelToolsDropdown">
+            <i class="fa-solid fa-tools me-1" aria-hidden="true"></i>
+            <span>Travel Tools</span>
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" aria-labelledby="travelToolsDropdown">
             <li>
               <a class="dropdown-item" href="/trip-planner">
-                <i class="fa-solid fa-route me-2"></i>Trip Planner
+                <i class="fa-solid fa-route me-2" aria-hidden="true"></i>Trip Planner
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="/packing-list">
-                <i class="fa-solid fa-suitcase me-2"></i>Packing List Generator
+                <i class="fa-solid fa-suitcase me-2" aria-hidden="true"></i>Packing List Generator
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="/holiday">
-                <i class="fa-solid fa-calendar-days me-2"></i>Holiday Calendar
+                <i class="fa-solid fa-calendar-days me-2" aria-hidden="true"></i>Holiday Calendar
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="/listings/compare">
-                <i class="fa-solid fa-balance-scale me-2"></i>Compare Destinations
+                <i class="fa-solid fa-balance-scale me-2" aria-hidden="true"></i>Compare Destinations
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="/trip-planner/mood-fixing">
-                <i class="fa-solid fa-music me-2"></i>Mood Fixing
+                <i class="fa-solid fa-music me-2" aria-hidden="true"></i>Mood Fixing
               </a>
             </li>
             <li>
@@ -250,7 +223,7 @@
             </li>
             <li>
               <a class="dropdown-item" href="/weather">
-                <i class="fa-solid fa-cloud-sun me-2"></i>Weather Info
+                <i class="fa-solid fa-cloud-sun me-2" aria-hidden="true"></i>Weather Info
               </a>
             </li>
             <li>
@@ -258,12 +231,12 @@
             </li>
             <li>
               <a class="dropdown-item" href="/achievements">
-                <i class="fa-solid fa-trophy me-2"></i>Achievements
+                <i class="fa-solid fa-trophy me-2" aria-hidden="true"></i>Achievements
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="/leaderboard">
-                <i class="fa-solid fa-chart-line me-2"></i>Leaderboard
+                <i class="fa-solid fa-chart-line me-2" aria-hidden="true"></i>Leaderboard
               </a>
             </li>
           </ul>
@@ -271,122 +244,495 @@
       </ul>
 
       <!-- Search Bar -->
-      <div class="search-container me-3">
-        <form role="search" method="GET" action="/listings">
-          <div class="position-relative">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input class="search-input" type="search" name="search" placeholder="<%= __('search_destinations') %>"
-              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off" />
-            <button class="search-btn" type="submit">
-              <%= __('search') %>
-            </button>
-          </div>
-          <div class="search-suggestions" id="searchSuggestions"></div>
-        </form>
-      </div>
+      <form role="search" method="GET" action="/listings" class="navbar-search-form mx-lg-3"
+        aria-label="Search destinations">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass text-muted" aria-hidden="true"></i>
+          </span>
+          <input class="form-control" type="search" name="search" id="searchInput"
+            placeholder="<%= __('search_destinations') %>"
+            value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>" autocomplete="off"
+            aria-label="Search destinations" />
+          <button class="btn btn-primary" type="submit" aria-label="Submit search">
+            <%= __('search') %>
+          </button>
+        </div>
+        <div class="search-suggestions position-absolute bg-white shadow-sm" id="searchSuggestions" role="listbox"
+          aria-label="Search suggestions"
+          style="display: none; top: 100%; left: 0; right: 0; z-index: 1050; max-height: 300px; overflow-y: auto; border-radius: 8px; margin-top: 4px;">
+        </div>
+      </form>
 
-      <!-- Authentication & Profile -->
-      <div class="action-buttons">
-        <a class="nav-link" href="/listings/new"><%= __('add_new_listing') %></a>
-        <% if(typeof currentUser==='undefined' || !currentUser) { %>
-          <a class="btn btn-outline-primary" href="/login">
-            <i class="fa-solid fa-sign-in-alt me-1"></i>
-            <%= __('login') %>
+      <!-- Right Side Actions -->
+      <div class="navbar-actions">
+        <!-- Add New Listing -->
+        <a class="btn btn-sm btn-outline-primary text-nowrap" href="/listings/new">
+          <i class="fa-solid fa-plus me-1" aria-hidden="true"></i>
+          <span class="hide-text">
+            <%= __('add_new_listing') %>
+          </span>
+          <span class="d-inline d-xl-none">Add</span>
+        </a>
+
+        <% if (typeof currentUser==='undefined' || !currentUser) { %>
+          <!-- Login/Signup Buttons -->
+          <a class="btn btn-sm btn-outline-primary" href="/login">
+            <i class="fa-solid fa-sign-in-alt me-1" aria-hidden="true"></i>
+            <span>
+              <%= __('login') %>
+            </span>
           </a>
-          <a class="btn btn-primary" href="/signup">
-            <i class="fa-solid fa-user-plus me-1"></i>
-            <%= __('signup') %>
+          <a class="btn btn-sm btn-primary" href="/signup">
+            <i class="fa-solid fa-user-plus me-1" aria-hidden="true"></i>
+            <span>
+              <%= __('signup') %>
+            </span>
           </a>
           <% } else { %>
-            <div class="profile-dropdown dropdown">
-              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa-solid fa-user me-1"></i>
-                <%= __('profile') %>
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown"
+                data-bs-toggle="dropdown" aria-expanded="false" aria-label="User profile menu">
+                <i class="fa-solid fa-user me-1" aria-hidden="true"></i>
+                <span class="hide-text">
+                  <%= __('profile') %>
+                </span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end">
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                 <li>
                   <a class="dropdown-item" href="/profile">
-                    <i class="fa-solid fa-user me-2"></i>My Profile
+                    <i class="fa-solid fa-user me-2" aria-hidden="true"></i>My Profile
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="/profile/wishlist">
-                    <i class="fa-solid fa-bookmark me-2"></i>My Wishlist
+                    <i class="fa-solid fa-bookmark me-2" aria-hidden="true"></i>My Wishlist
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="/profile/likes">
-                    <i class="fa-solid fa-heart me-2"></i>Liked Listings
+                    <i class="fa-solid fa-heart me-2" aria-hidden="true"></i>Liked Listings
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="/profile/vacation-slots">
-                    <i class="fa-solid fa-calendar-check me-2"></i>My Vacation Slots
-                    <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length > 0) { %>
-                      <span class="badge bg-primary ms-2"><%= currentUser.vacationSlots.length %></span>
-                    <% } %>
+                    <i class="fa-solid fa-calendar-check me-2" aria-hidden="true"></i>My Vacation Slots
+                    <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length> 0) { %>
+                      <span class="badge bg-primary ms-2">
+                        <%= currentUser.vacationSlots.length %>
+                      </span>
+                      <% } %>
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="/trip-planner/my-trips">
-                    <i class="fa-solid fa-suitcase-rolling me-2"></i>My Trip Plans
+                    <i class="fa-solid fa-suitcase-rolling me-2" aria-hidden="true"></i>My Trip Plans
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/phrase-assistant">
+                    <i class="fa-solid fa-language me-2" aria-hidden="true"></i>Phrase Assistant
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" id="downloadsDropdownToggle">
+                    <i class="fa-solid fa-download me-2" aria-hidden="true"></i>My Downloads
+                    <span id="profileDownloadCount" class="badge bg-primary ms-2" style="display: none;">0</span>
                   </a>
                 </li>
                 <% if (currentUser && currentUser.isAdmin) { %>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/admin/dashboard">
-                    <i class="fa-solid fa-chart-line me-2"></i>Admin Dashboard
-                  </a>
-                </li>
-                <% } %>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/logout">
-                    <i class="fa-solid fa-sign-out-alt me-2"></i>
-                    <%= __('logout') %>
-                  </a>
-                </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/admin/dashboard">
+                      <i class="fa-solid fa-chart-line me-2" aria-hidden="true"></i>Admin Dashboard
+                    </a>
+                  </li>
+                  <% } %>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/logout">
+                        <i class="fa-solid fa-sign-out-alt me-2" aria-hidden="true"></i>
+                        <%= __('logout') %>
+                      </a>
+                    </li>
               </ul>
             </div>
+
+            <!-- Notification Bell -->
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary position-relative" type="button" id="notificationToggle"
+                data-bs-toggle="dropdown" aria-expanded="false" aria-label="View notifications">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span id="notificationBadge"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style="display: none;">0</span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationToggle">
+                <div class="dropdown-header d-flex justify-content-between align-items-center p-3 border-bottom">
+                  <h6 class="mb-0 fw-bold">Notifications</h6>
+                  <button id="markAllRead" class="btn btn-sm btn-link text-primary text-decoration-none p-0"
+                    type="button">
+                    Mark All Read
+                  </button>
+                </div>
+                <div id="notificationList" class="notification-list">
+                  <div class="text-center text-muted p-4" id="noNotifications">
+                    <i class="fa-solid fa-bell-slash fa-2x mb-3" aria-hidden="true"></i>
+                    <p class="mb-0 small">No notifications yet</p>
+                  </div>
+                </div>
+                <div class="dropdown-footer p-2 border-top text-center">
+                  <a href="/notifications" class="text-decoration-none small">
+                    View All Notifications
+                  </a>
+                </div>
+              </div>
+            </div>
             <% } %>
-      </div>
 
-      <!-- Utility Controls -->
-      <div class="utility-controls">
-        <!-- Language Dropdown -->
-        <div class="language-dropdown dropdown">
-          <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-globe"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'en' ? 'active' : '' %>" href="<%= buildLangUrl('en') %>">🇺🇸
-                English</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'hi' ? 'active' : '' %>" href="<%= buildLangUrl('hi') %>">🇮🇳
-                हिंदी</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'bn' ? 'active' : '' %>" href="<%= buildLangUrl('bn') %>">🇧🇩
-                বাংলা</a>
-            </li>
-            <li>
-              <a class="dropdown-item <%= getLocale() === 'as' ? 'active' : '' %>" href="<%= buildLangUrl('as') %>">🇮🇳
-                অসমীয়া</a>
-            </li>
-          </ul>
-        </div>
+              <!-- Language Dropdown -->
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="languageToggle"
+                  data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
+                  <span>
+                    <%= languageMap[getLocale()].flag %>
+                  </span>
+                  <span class="hide-text ms-1">
+                    <%= languageMap[getLocale()].name %>
+                  </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageToggle">
+                  <% Object.keys(languageMap).forEach(lang=> { %>
+                    <li>
+                      <a class="dropdown-item <%= getLocale() === lang ? 'active' : '' %>"
+                        href="<%= buildLangUrl(lang) %>">
+                        <%= languageMap[lang].flag %>
+                          <%= languageMap[lang].name %>
+                      </a>
+                    </li>
+                    <% }); %>
+                </ul>
+              </div>
 
-        <button id="theme-toggle" class="btn btn-outline-secondary">
-          <i id="theme-icon" class="fa-solid fa-moon"></i>
-        </button>
+              <!-- Theme Toggle -->
+              <%- include("../includes/theme-toggle.ejs") %>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- Scripts for Logged-in Users -->
+<% if (typeof currentUser !=='undefined' && currentUser) { %>
+  <script>
+    (function () {
+      'use strict';
+
+      // Initialize on DOM ready
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.OfflineManager) {
+          initializeDownloadsDropdown();
+        }
+
+        if (typeof currentUser !== 'undefined' && currentUser) {
+          window.notificationManager = new NotificationManager();
+        }
+      });
+
+      // Downloads Manager
+      async function initializeDownloadsDropdown() {
+        try {
+          const trips = await window.OfflineManager.getStoredPdfs();
+          updateDownloadsBadge(trips);
+        } catch (error) {
+          console.error('Error initializing downloads:', error);
+        }
+      }
+
+      function updateDownloadsBadge(trips) {
+        const badge = document.getElementById('profileDownloadCount');
+        if (!badge) return;
+
+        if (trips && trips.length > 0) {
+          badge.textContent = trips.length;
+          badge.style.display = 'inline-block';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      window.viewDownloadedTrip = async function (tripId) {
+        try {
+          if (!window.OfflineManager) return;
+
+          const pdfData = await window.OfflineManager.getTripPdf(tripId);
+          if (pdfData) {
+            const blob = new Blob([pdfData], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+          } else {
+            showToast('PDF not found', 'error');
+          }
+        } catch (error) {
+          console.error('Error viewing downloaded trip:', error);
+          showToast('Failed to open PDF', 'error');
+        }
+      };
+
+      // Notification Manager
+      class NotificationManager {
+        constructor() {
+          this.notifications = [];
+          this.unreadCount = 0;
+          this.isInitialized = false;
+          this.init();
+        }
+
+        async init() {
+          if (this.isInitialized) return;
+
+          try {
+            await this.loadNotifications();
+            this.setupEventListeners();
+            this.isInitialized = true;
+          } catch (error) {
+            console.error('Failed to initialize notifications:', error);
+          }
+        }
+
+        async loadNotifications() {
+          try {
+            const response = await fetch('/trip-planner/api/notifications');
+            if (response.ok) {
+              this.notifications = await response.json();
+              this.updateUnreadCount();
+              this.renderNotifications();
+            }
+          } catch (error) {
+            console.error('Failed to load notifications:', error);
+          }
+        }
+
+        updateUnreadCount() {
+          this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+          this.updateBadge();
+        }
+
+        updateBadge() {
+          const badge = document.getElementById('notificationBadge');
+          if (badge) {
+            if (this.unreadCount > 0) {
+              badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+              badge.style.display = 'inline-flex';
+            } else {
+              badge.style.display = 'none';
+            }
+          }
+        }
+
+        renderNotifications() {
+          const container = document.getElementById('notificationList');
+          const noNotifications = document.getElementById('noNotifications');
+
+          if (!container) return;
+
+          if (this.notifications.length === 0) {
+            if (noNotifications) noNotifications.style.display = 'block';
+            return;
+          }
+
+          if (noNotifications) noNotifications.style.display = 'none';
+
+          const recentNotifications = this.notifications.slice(0, 5);
+          container.innerHTML = recentNotifications.map(n => this.createNotificationHTML(n)).join('');
+        }
+
+        createNotificationHTML(notification) {
+          const timeAgo = this.getTimeAgo(notification.createdAt);
+          const unreadClass = notification.isRead ? '' : 'bg-light';
+
+          return `
+        <div class="p-3 border-bottom ${unreadClass}" data-id="${notification._id}" style="cursor: pointer;">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <h6 class="mb-1 fw-bold" style="font-size: 0.9rem;">${this.escapeHtml(notification.title)}</h6>
+              <p class="mb-1 text-muted" style="font-size: 0.85rem;">${this.escapeHtml(notification.message)}</p>
+              <small class="text-muted">${timeAgo}</small>
+            </div>
+            <div class="ms-2 d-flex flex-column gap-1">
+              ${!notification.isRead ? `
+                <button class="btn btn-sm btn-link p-0 text-success" 
+                        onclick="event.stopPropagation(); window.notificationManager.markAsRead('${notification._id}')" 
+                        title="Mark as read" 
+                        aria-label="Mark as read">
+                  <i class="fa-solid fa-check"></i>
+                </button>
+              ` : ''}
+              <button class="btn btn-sm btn-link p-0 text-danger" 
+                      onclick="event.stopPropagation(); window.notificationManager.deleteNotification('${notification._id}')" 
+                      title="Delete" 
+                      aria-label="Delete notification">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+        }
+
+        escapeHtml(text) {
+          const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          };
+          return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        getTimeAgo(dateString) {
+          const now = new Date();
+          const date = new Date(dateString);
+          const diffInSeconds = Math.floor((now - date) / 1000);
+
+          if (diffInSeconds < 60) return 'Just now';
+          if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+          if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+          return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        }
+
+        setupEventListeners() {
+          const markAllReadBtn = document.getElementById('markAllRead');
+          if (markAllReadBtn) {
+            markAllReadBtn.addEventListener('click', () => this.markAllAsRead());
+          }
+        }
+
+        async markAsRead(notificationId) {
+          try {
+            const response = await fetch(`/trip-planner/api/notifications/${notificationId}/read`, {
+              method: 'PATCH'
+            });
+
+            if (response.ok) {
+              const notification = this.notifications.find(n => n._id === notificationId);
+              if (notification) {
+                notification.isRead = true;
+                this.updateUnreadCount();
+                this.renderNotifications();
+              }
+            }
+          } catch (error) {
+            console.error('Failed to mark notification as read:', error);
+            showToast('Failed to mark notification as read', 'error');
+          }
+        }
+
+        async markAllAsRead() {
+          try {
+            const unreadNotifications = this.notifications.filter(n => !n.isRead);
+
+            for (const notification of unreadNotifications) {
+              await this.markAsRead(notification._id);
+            }
+
+            showToast('All notifications marked as read', 'success');
+          } catch (error) {
+            console.error('Failed to mark all notifications as read:', error);
+            showToast('Failed to mark all notifications as read', 'error');
+          }
+        }
+
+        async deleteNotification(notificationId) {
+          try {
+            const response = await fetch(`/trip-planner/api/notifications/${notificationId}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              this.notifications = this.notifications.filter(n => n._id !== notificationId);
+              this.updateUnreadCount();
+              this.renderNotifications();
+              showToast('Notification deleted', 'success');
+            }
+          } catch (error) {
+            console.error('Failed to delete notification:', error);
+            showToast('Failed to delete notification', 'error');
+          }
+        }
+
+        addNotification(notification) {
+          this.notifications.unshift(notification);
+          this.updateUnreadCount();
+          this.renderNotifications();
+          showToast(notification.title, 'info');
+        }
+      }
+
+      // Toast notification function
+      window.showToast = function (message, type) {
+        const alertClass = {
+          'success': 'alert-success',
+          'error': 'alert-danger',
+          'info': 'alert-info',
+          'warning': 'alert-warning'
+        }[type] || 'alert-info';
+
+        const iconClass = {
+          'success': 'fa-check-circle',
+          'error': 'fa-times-circle',
+          'info': 'fa-info-circle',
+          'warning': 'fa-exclamation-circle'
+        }[type] || 'fa-info-circle';
+
+        const toast = document.createElement('div');
+        toast.className = `alert ${alertClass} position-fixed shadow-lg`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideIn 0.3s ease-out;';
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+      <div class="d-flex align-items-center">
+        <i class="fa-solid ${iconClass} me-2"></i>
+        <span>${message}</span>
+      </div>
+    `;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.animation = 'slideOut 0.3s ease-in';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      };
+
+      // Add CSS animations
+      const style = document.createElement('style');
+      style.textContent = `
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+  `;
+      document.head.appendChild(style);
+    })();
+  </script>
+  <% } %>

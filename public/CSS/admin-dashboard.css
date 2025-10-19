@@ -14,6 +14,17 @@
     --admin-shadow-hover: 0 8px 25px rgba(0,0,0,0.15);
 }
 
+/* Dark mode theme for admin dashboard */
+[data-theme="dark"] {
+    --admin-primary: #1e2a38;
+    --admin-secondary: #2d3748;
+    --admin-light: #2d3748;
+    --admin-dark: #1a202c;
+    --admin-border: #4a5568;
+    --admin-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    --admin-shadow-hover: 0 8px 25px rgba(0,0,0,0.4);
+}
+
 .admin-dashboard {
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

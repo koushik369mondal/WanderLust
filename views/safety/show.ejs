@@ -1,0 +1,609 @@
+<% layout('/layouts/boilerplate') %>
+<% block('head').append(`<title><%= report.title %> - Travel Safety Alert</title>`) %>
+
+<div class="container mt-4">
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+      <div class="card shadow-lg mb-4">
+        <!-- Alert Header -->
+        <div class="card-header alert-header <%= report.alertLevel %>">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="alert-badges mb-2">
+                <% if (report.alertLevel === 'danger') { %>
+                  <span class="badge bg-danger fs-6">
+                    <i class="fa-solid fa-triangle-exclamation me-1"></i>Danger
+                  </span>
+                <% } else if (report.alertLevel === 'warning') { %>
+                  <span class="badge bg-warning text-dark fs-6">
+                    <i class="fa-solid fa-exclamation-triangle me-1"></i>Caution
+                  </span>
+                <% } else { %>
+                  <span class="badge bg-info fs-6">
+                    <i class="fa-solid fa-info-circle me-1"></i>Info
+                  </span>
+                <% } %>
+
+                <% if (report.verificationStatus === 'trusted') { %>
+                  <span class="badge bg-success ms-2">
+                    <i class="fa-solid fa-check-circle me-1"></i>Verified Report
+                  </span>
+                <% } else if (report.verificationStatus === 'under_review') { %>
+                  <span class="badge bg-warning text-dark ms-2">
+                    <i class="fa-solid fa-clock me-1"></i>Under Review
+                  </span>
+                <% } %>
+              </div>
+              <h1 class="alert-title mb-0"><%= report.title %></h1>
+            </div>
+
+            <% if (currentUser && (currentUser.isAdmin || report.reporter._id.equals(currentUser._id))) { %>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <% if (currentUser.isAdmin || report.reporter._id.equals(currentUser._id)) { %>
+                <li><a class="dropdown-item" href="/safety-alerts/<%= report._id %>/edit">
+                  <i class="fa-solid fa-edit me-2"></i>Edit Report
+                </a></li>
+                <% } %>
+                <% if (currentUser.isAdmin || report.reporter._id.equals(currentUser._id)) { %>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="confirmDelete()">
+                  <i class="fa-solid fa-trash me-2"></i>Delete Report
+                </a></li>
+                <% } %>
+              </ul>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Location and Details -->
+          <div class="alert-meta mb-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="meta-item">
+                  <i class="fa-solid fa-map-marker-alt text-primary me-2"></i>
+                  <strong>Location:</strong> <%= report.location %>, <%= report.country %>
+                  <% if (report.city) { %>
+                    (<%= report.city %>)
+                  <% } %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="meta-item">
+                  <i class="fa-solid fa-tag text-success me-2"></i>
+                  <strong>Category:</strong> <%= report.category %>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <div class="meta-item">
+                  <i class="fa-solid fa-calendar text-info me-2"></i>
+                  <strong>Incident Date:</strong> <%= new Date(report.incidentDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  }) %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="meta-item">
+                  <i class="fa-solid fa-clock text-warning me-2"></i>
+                  <strong>Reported:</strong> <%= new Date(report.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  }) %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="alert-description mb-4">
+            <h4 class="section-title">
+              <i class="fa-solid fa-file-alt me-2"></i>What Happened
+            </h4>
+            <div class="description-content">
+              <%= report.description.replace(/\n/g, '<br>') %>
+            </div>
+          </div>
+
+          <!-- Evidence -->
+          <% if (report.evidence && report.evidence.length > 0) { %>
+          <div class="alert-evidence mb-4">
+            <h4 class="section-title">
+              <i class="fa-solid fa-camera me-2"></i>Evidence
+            </h4>
+            <div class="evidence-gallery">
+              <div class="row">
+                <% report.evidence.forEach(evidence => { %>
+                <div class="col-md-4 mb-3">
+                  <div class="evidence-item">
+                    <img src="<%= evidence.url %>" alt="Evidence" class="img-fluid rounded"
+                         onclick="openLightbox('<%= evidence.url %>')" style="cursor: pointer;">
+                  </div>
+                </div>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
+          <!-- Reporter Info -->
+          <div class="reporter-info mb-4">
+            <h4 class="section-title">
+              <i class="fa-solid fa-user me-2"></i>Reported By
+            </h4>
+            <div class="reporter-details">
+              <% if (report.isAnonymous) { %>
+                <div class="anonymous-reporter">
+                  <i class="fa-solid fa-user-secret text-muted me-2"></i>
+                  <span class="text-muted">Anonymous</span>
+                </div>
+              <% } else { %>
+                <div class="named-reporter">
+                  <i class="fa-solid fa-user text-primary me-2"></i>
+                  <span><%= report.reporter.username %></span>
+                </div>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Admin Notes (if any) -->
+          <% if (report.adminNotes && currentUser && currentUser.isAdmin) { %>
+          <div class="admin-notes mb-4">
+            <h4 class="section-title">
+              <i class="fa-solid fa-shield-alt me-2"></i>Admin Notes
+            </h4>
+            <div class="alert alert-warning">
+              <strong>Internal Notes:</strong> <%= report.adminNotes %>
+            </div>
+          </div>
+          <% } %>
+        </div>
+
+        <!-- Voting Section -->
+        <div class="card-footer">
+          <div class="voting-section">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="vote-buttons">
+                <% if (currentUser) { %>
+                <div class="btn-group" role="group">
+                  <button class="btn <%= userVote === 'upvote' ? 'btn-success' : 'btn-outline-success' %> vote-btn upvote-btn"
+                          data-report-id="<%= report._id %>"
+                          data-vote-type="upvote">
+                    <i class="fa-solid fa-thumbs-up me-1"></i>
+                    <span class="vote-count"><%= report.upvotes.length %></span>
+                  </button>
+                  <button class="btn <%= userVote === 'downvote' ? 'btn-danger' : 'btn-outline-danger' %> vote-btn downvote-btn"
+                          data-report-id="<%= report._id %>"
+                          data-vote-type="downvote">
+                    <i class="fa-solid fa-thumbs-down me-1"></i>
+                    <span class="vote-count"><%= report.downvotes.length %></span>
+                  </button>
+                </div>
+                <% } else { %>
+                <div class="vote-display">
+                  <span class="text-success me-3">
+                    <i class="fa-solid fa-thumbs-up me-1"></i><%= report.upvotes.length %> Helpful
+                  </span>
+                  <span class="text-danger">
+                    <i class="fa-solid fa-thumbs-down me-1"></i><%= report.downvotes.length %> Not Helpful
+                  </span>
+                </div>
+                <% } %>
+              </div>
+
+              <div class="report-stats">
+                <small class="text-muted">
+                  <i class="fa-solid fa-eye me-1"></i><%= report.viewCount %> views
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Reports -->
+      <% if (relatedReports && relatedReports.length > 0) { %>
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="fa-solid fa-link me-2"></i>Related Safety Alerts
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <% relatedReports.forEach(related => { %>
+            <div class="col-md-6 mb-3">
+              <div class="related-alert-card">
+                <div class="alert-badge mb-2">
+                  <% if (related.alertLevel === 'danger') { %>
+                    <span class="badge bg-danger">Danger</span>
+                  <% } else if (related.alertLevel === 'warning') { %>
+                    <span class="badge bg-warning text-dark">Caution</span>
+                  <% } else { %>
+                    <span class="badge bg-info">Info</span>
+                  <% } %>
+                </div>
+                <h6>
+                  <a href="/safety-alerts/<%= related._id %>" class="text-decoration-none">
+                    <%= related.title.length > 50 ? related.title.substring(0, 50) + '...' : related.title %>
+                  </a>
+                </h6>
+                <small class="text-muted">
+                  <%= related.location %>, <%= related.country %> •
+                  <%= new Date(related.incidentDate).toLocaleDateString() %>
+                </small>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Quick Actions -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fa-solid fa-bolt me-2"></i>Quick Actions
+          </h5>
+        </div>
+        <div class="card-body">
+          <% if (currentUser) { %>
+          <a href="/safety-alerts/new" class="btn btn-primary w-100 mb-2">
+            <i class="fa-solid fa-plus me-2"></i>Report Similar Issue
+          </a>
+          <% } else { %>
+          <a href="/login" class="btn btn-outline-primary w-100 mb-2">
+            <i class="fa-solid fa-sign-in-alt me-2"></i>Login to Report
+          </a>
+          <% } %>
+
+          <a href="/safety-alerts?country=<%= encodeURIComponent(report.country) %>" class="btn btn-outline-secondary w-100 mb-2">
+            <i class="fa-solid fa-search me-2"></i>More from <%= report.country %>
+          </a>
+
+          <a href="/safety-alerts?category=<%= encodeURIComponent(report.category) %>" class="btn btn-outline-secondary w-100">
+            <i class="fa-solid fa-tag me-2"></i>More <%= report.category %> Reports
+          </a>
+        </div>
+      </div>
+
+      <!-- Safety Tips -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fa-solid fa-lightbulb me-2"></i>Safety Tips
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="safety-tips">
+            <div class="tip-item mb-3">
+              <i class="fa-solid fa-shield-alt text-primary me-2"></i>
+              <small>Always verify transportation costs before getting in</small>
+            </div>
+            <div class="tip-item mb-3">
+              <i class="fa-solid fa-users text-success me-2"></i>
+              <small>Use official guides and licensed services</small>
+            </div>
+            <div class="tip-item mb-3">
+              <i class="fa-solid fa-mobile-alt text-info me-2"></i>
+              <small>Keep emergency contacts saved and charged</small>
+            </div>
+            <div class="tip-item">
+              <i class="fa-solid fa-share-alt text-warning me-2"></i>
+              <small>Share your location with trusted contacts</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Statistics -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fa-solid fa-chart-bar me-2"></i>Report Stats
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-number"><%= report.upvotes.length %></div>
+              <div class="stat-label">Helpful Votes</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number"><%= report.viewCount %></div>
+              <div class="stat-label">Views</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number"><%= Math.round((report.upvotes.length / Math.max(report.upvotes.length + report.downvotes.length, 1)) * 100) %>%</div>
+              <div class="stat-label">Helpfulness</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox for Evidence -->
+<div id="lightbox" class="lightbox" style="display: none;">
+  <div class="lightbox-content">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="Evidence">
+  </div>
+</div>
+
+<!-- Hidden delete form -->
+<% if (currentUser && (currentUser.isAdmin || report.reporter._id.equals(currentUser._id))) { %>
+<form id="deleteForm" method="POST" action="/safety-alerts/<%= report._id %>?_method=DELETE" style="display: none;">
+</form>
+<% } %>
+
+<script>
+// Voting functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const voteButtons = document.querySelectorAll('.vote-btn');
+
+  voteButtons.forEach(button => {
+    button.addEventListener('click', async function() {
+      const reportId = this.dataset.reportId;
+      const voteType = this.dataset.voteType;
+
+      try {
+        const response = await fetch(`/safety-alerts/${reportId}/${voteType}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Update vote counts and button states
+          const upvoteBtn = document.querySelector('.upvote-btn');
+          const downvoteBtn = document.querySelector('.downvote-btn');
+
+          upvoteBtn.querySelector('.vote-count').textContent = data.upvotes;
+          downvoteBtn.querySelector('.vote-count').textContent = data.downvotes;
+
+          // Update button classes
+          if (voteType === 'upvote') {
+            upvoteBtn.classList.remove('btn-outline-success');
+            upvoteBtn.classList.add('btn-success');
+            downvoteBtn.classList.remove('btn-danger');
+            downvoteBtn.classList.add('btn-outline-danger');
+          } else {
+            downvoteBtn.classList.remove('btn-outline-danger');
+            downvoteBtn.classList.add('btn-danger');
+            upvoteBtn.classList.remove('btn-success');
+            upvoteBtn.classList.add('btn-outline-success');
+          }
+
+          // Show feedback
+          const originalHTML = this.innerHTML;
+          this.innerHTML = data.action === 'upvoted' || data.action === 'downvoted' ?
+            '<i class="fa-solid fa-check me-1"></i>Voted' : '<i class="fa-solid fa-rotate-left me-1"></i>Removed';
+
+          setTimeout(() => {
+            this.innerHTML = originalHTML;
+          }, 1500);
+        } else {
+          alert(data.message || 'Failed to vote');
+        }
+      } catch (error) {
+        console.error('Voting error:', error);
+        alert('Failed to submit vote');
+      }
+    });
+  });
+});
+
+// Lightbox functions
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').style.display = 'flex';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+}
+
+// Delete confirmation
+function confirmDelete() {
+  if (confirm('Are you sure you want to delete this safety report? This action cannot be undone.')) {
+    document.getElementById('deleteForm').submit();
+  }
+}
+
+// Close lightbox when clicking outside
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeLightbox();
+  }
+});
+</script>
+
+<style>
+.alert-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.alert-header.danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+}
+
+.alert-header.warning {
+  background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+}
+
+.alert-header.caution {
+  background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+}
+
+.alert-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.alert-meta {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.description-content {
+  line-height: 1.6;
+  color: #495057;
+}
+
+.evidence-gallery img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+  transition: transform 0.3s ease;
+}
+
+.evidence-gallery img:hover {
+  transform: scale(1.05);
+}
+
+.reporter-details {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.voting-section {
+  background: #f8f9fa;
+}
+
+.vote-btn {
+  transition: all 0.2s ease;
+}
+
+.vote-btn:hover {
+  transform: scale(1.05);
+}
+
+.related-alert-card {
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.related-alert-card:hover {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.safety-tips .tip-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Lightbox styles */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .alert-title {
+    font-size: 1.5rem;
+  }
+
+  .alert-meta {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lightbox-close {
+    top: 10px;
+    right: 10px;
+    color: black;
+  }
+}
+</style>

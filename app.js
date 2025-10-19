@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV != "production") {
-    require("dotenv").config();
+    require("dotenv").config({ quiet: true });
 }
 
 // Suppress util.isArray deprecation warning from lodash
@@ -31,6 +31,10 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_
 
 const express = require("express");
 const app = express();
+const http = require("http");
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+const io = socketIo(server);
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
@@ -44,16 +48,17 @@ const helmet = require("helmet");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const i18n = require('i18n');
+const cron = require('node-cron');
 // Import OAuth strategies
 require("./config/passport");
 const Listing = require("./models/listing");
-require("dotenv").config();
+require("dotenv").config({ quiet: true });
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const newsletterRouter = require("./routes/newsletter.js");
 const compareRoutes = require('./routes/compare'); //for comparison of listings
-
+const safetyRouter = require("./routes/safety.js");
 // Check for MongoDB connection string and provide a fallback for development
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 if (!process.env.ATLAS_DB_URL) {
@@ -105,7 +110,7 @@ app.use(helmet({
         directives: {
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://api.mapbox.com", "https://cdnjs.cloudflare.com"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://api.mapbox.com", "https://cdnjs.cloudflare.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "blob:", "https://cdn.jsdelivr.net", "https://api.mapbox.com", "https://cdnjs.cloudflare.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             imgSrc: ["'self'", "data:", "https:", "http:", "https://api.mapbox.com", "https://*.tiles.mapbox.com", "https://lh3.googleusercontent.com"],
             connectSrc: ["'self'", "https:", "http:", "https://api.mapbox.com", "https://events.mapbox.com", "https://accounts.google.com"],
@@ -119,7 +124,7 @@ app.use(helmet({
 
 // i18n configuration
 i18n.configure({
-    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur'],
+    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur', 'es', 'fr', 'de', 'ja', 'zh', 'it', 'pt'],
     directory: path.join(__dirname, 'locales'),
     defaultLocale: 'en',
     queryParameter: 'lang',
@@ -131,6 +136,30 @@ i18n.configure({
         '__n': '__n'
     }
 });
+
+// Language mapping for display names and flags
+const languageMap = {
+    'en': { name: 'English', flag: '🇺🇸' },
+    'hi': { name: 'हिंदी', flag: '🇮🇳' },
+    'bn': { name: 'বাংলা', flag: '🇧🇩' },
+    'te': { name: 'తెలుగు', flag: '🇮🇳' },
+    'mr': { name: 'मराठी', flag: '🇮🇳' },
+    'ta': { name: 'தமிழ்', flag: '🇮🇳' },
+    'gu': { name: 'ગુજરાતી', flag: '🇮🇳' },
+    'kn': { name: 'ಕನ್ನಡ', flag: '🇮🇳' },
+    'ml': { name: 'മലയാളം', flag: '🇮🇳' },
+    'pa': { name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
+    'or': { name: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
+    'as': { name: 'অসমীয়া', flag: '🇮🇳' },
+    'ur': { name: 'اردو', flag: '🇮🇳' },
+    'es': { name: 'Español', flag: '🇪🇸' },
+    'fr': { name: 'Français', flag: '🇫🇷' },
+    'de': { name: 'Deutsch', flag: '🇩🇪' },
+    'ja': { name: '日本語', flag: '🇯🇵' },
+    'zh': { name: '中文', flag: '🇨🇳' },
+    'it': { name: 'Italiano', flag: '🇮🇹' },
+    'pt': { name: 'Português', flag: '🇵🇹' }
+};
 
 app.use(i18n.init);
 
@@ -189,7 +218,16 @@ app.use((req, res, next) => {
     res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
     res.locals.searchQuery = req.query.search || '';
-    
+
+    // Debug logging for i18n
+    if (req.query.lang) {
+        console.log(`🌍 Language parameter detected: ${req.query.lang}`);
+        console.log(`🌍 Current locale: ${i18n.getLocale(req)}`);
+        // Set the locale manually if it's in the query parameter
+        i18n.setLocale(req, req.query.lang);
+        console.log(`🌍 Locale set to: ${i18n.getLocale(req)}`);
+    }
+
     // Language switching helper
     res.locals.buildLangUrl = (lang) => {
         const currentUrl = req.originalUrl.split('?')[0];
@@ -197,7 +235,56 @@ app.use((req, res, next) => {
         params.set('lang', lang);
         return currentUrl + '?' + params.toString();
     };
-    
+
+    // Make language map available to templates
+    res.locals.languageMap = languageMap;
+    res.locals.getLocale = () => i18n.getLocale(req);
+
+    next();
+});
+
+// No-cache middleware for dynamic HTML pages to prevent browsers or SW from serving stale content
+app.use((req, res, next) => {
+    try {
+        if (req.method === 'GET' && (req.path.startsWith('/listings') || req.path.startsWith('/safety-alerts') || req.path.startsWith('/trip-planner') || req.path.startsWith('/admin'))) {
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+            res.set('Pragma', 'no-cache');
+            res.set('Expires', '0');
+        }
+    } catch (e) {
+        console.warn('no-cache middleware error', e && e.message ? e.message : e);
+    }
+    next();
+});
+
+// Listing debug middleware: for GET /listings/:id, wrap res.send to log headers and a small response summary
+app.use((req, res, next) => {
+    try {
+        if (req.method === 'GET' && /^\/listings\/[a-fA-F0-9]{24}(?:\/.*)?$/.test(req.path)) {
+            const start = Date.now();
+            const origSend = res.send.bind(res);
+            res.send = function (body) {
+                try {
+                    console.log(`Listing Debug: ${req.method} ${req.originalUrl} - Response headers before send:`,
+                        res.getHeaders ? res.getHeaders() : {});
+                    let size = 0;
+                    if (typeof body === 'string') size = Buffer.byteLength(body, 'utf8');
+                    else if (body) size = JSON.stringify(body).length;
+                    console.log(`Listing Debug: approx response size ${size} bytes, took ${Date.now() - start}ms`);
+                    // include a short snippet for easier debugging (first 200 chars)
+                    if (typeof body === 'string') {
+                        const snippet = body.replace(/\n/g, ' ').slice(0, 200);
+                        console.log('Listing Debug: snippet:', snippet);
+                    }
+                } catch (e) {
+                    // swallow
+                }
+                return origSend(body);
+            };
+        }
+    } catch (e) {
+        // ignore
+    }
     next();
 });
 
@@ -206,14 +293,17 @@ app.use("/listings", compareRoutes); // for comparison of listings
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/notifications", require("./routes/notifications.js"));
 app.use("/newsletter", newsletterRouter);
 app.use("/weather", require("./routes/weather.js"));
 app.use("/packing-list", require("./routes/packingList.js"));
-app.use("/chatbot", require("./routes/chatbot.js"));
+app.use("/chatbot", require("./routes/chatbot.js")); // Re-enabled with voice features
 app.use("/holiday", require("./routes/holiday.js"));
 app.use("/admin", require("./routes/admin.js"));
 app.use("/trip-planner", require("./routes/tripPlanner.js"));
-
+app.use("/currency", require("./routes/currency.js"));
+app.use("/safety-alerts", safetyRouter);
+app.use("/phrase-assistant", require("./routes/phraseAssistant.js"));
 app.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
 });
@@ -290,9 +380,49 @@ app.use((err, req, res, next) => {
 });
 
 
+// Set up cron job for reminder notifications
+const notificationService = require('./services/notificationServiceNew');
+cron.schedule('0 9 * * *', async () => {
+    console.log('Running daily reminder notification check...');
+    try {
+        await notificationService.processScheduledReminders();
+        console.log('Reminder notifications processed successfully');
+    } catch (error) {
+        console.error('Error processing reminder notifications:', error);
+    }
+});
+
+// Socket.io configuration for real-time notifications
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+    
+    // Join user to their personal room for notifications
+    socket.on('join', (userId) => {
+        if (userId) {
+            socket.join(`user_${userId}`);
+            console.log(`User ${userId} joined their notification room`);
+        }
+    });
+    
+    // Handle notification acknowledgment
+    socket.on('notification_seen', (notificationId) => {
+        // Sanitize notification ID before logging to prevent log injection
+        const sanitizedId = String(notificationId).replace(/[\r\n\t]/g, '');
+        console.log('Notification seen by user:', sanitizedId);
+    });
+    
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+});
+
+// Make io available globally for notification service
+global.io = io;
+
 const { seedListings } = require('./init/data');
-app.listen(8080, async () => {
+server.listen(8080, async () => {
     await seedListings();
     console.log("Server is running on port 8080");
     console.log("Visit: http://localhost:8080/listings");
+    console.log("Socket.io server ready for real-time notifications ⚡");
 });

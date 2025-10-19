@@ -1,110 +1,182 @@
 const User = require("../models/user");
 const Listing = require("../models/listing");
 const SearchLog = require("../models/searchLog");
-// Keep your new utility import below the core model imports
-const phrases = require('../utils/phrases'); 
+const Wishlist = require('../models/wishlist');
+const Review = require('../models/review');
 
+// Utility imports
+const phrases = require('../utils/phrases');
+
+// Service imports
 const aiSummarizationService = require('../services/aiSummarizationService');
 const weatherService = require('../services/weatherService');
 
+// Mapbox SDK
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-// const mapToken = process.env.MAP_TOKEN; 
-// const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
-// ... other imports will follow here, if any ...
-//npm run devconst geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
-
-
-
-
-
-module.exports.index = async (req, res) => {
-  const { category, search, q } = req.query;
-  const filter = {};
-  let searchQuery = null;
-
-  // Category filtering
-  if (category) {
-    filter.category = category;
-  }
-
-  // Search functionality - handle both 'search' and 'q' parameters
-  const searchTerm = search || q;
-  if (searchTerm && searchTerm.trim()) {
-    searchQuery = searchTerm.trim();
-    // Create a case-insensitive regex search across multiple fields
-    const searchRegex = new RegExp(searchQuery, 'i');
-    filter.$or = [
-      { title: searchRegex },
-      { description: searchRegex },
-      { location: searchRegex },
-      { country: searchRegex }
-    ];
-  }
-
-  // Populate reviews (with author) for avgRating calculation
-  const allListings = await Listing.find(filter)
-    .populate({ path: 'reviews', populate: { path: 'author' } });
-
-  // Badge logic for each listing
-  for (const listing of allListings) {
-    // 1️⃣ New Badge: createdAt within last 7 days
-    const now = new Date();
-    const createdAt = new Date(listing.createdAt);
-    const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
-    listing.isNewBadge = daysOld <= 7;
-
-    // 2️⃣ Featured Badge: isFeatured
-    listing.isFeaturedBadge = !!listing.isFeatured;
-
-    // 3️⃣ Discount Badge: hasDiscount
-    listing.isDiscountBadge = !!listing.hasDiscount;
-
-    // 4️⃣ Highly Rated Badge: avgRating from reviews
-    let avgRating = 0;
-    if (listing.reviews && listing.reviews.length > 0) {
-      const total = listing.reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
-      avgRating = total / listing.reviews.length;
-    }
-    listing.avgRating = avgRating;
-    // Only show badge if avgRating >= 4.5 and has at least one review
-    listing.isHighlyRatedBadge = (listing.reviews && listing.reviews.length > 0 && avgRating >= 4.5);
-  }
-
-  // Log search queries for analytics (async, don't wait for completion)
-  if (searchQuery) {
-    SearchLog.create({
-      query: searchQuery,
-      resultsCount: allListings.length,
-      userAgent: req.headers['user-agent'] || '',
-      ipAddress: req.ip || req.connection.remoteAddress || '',
-      category: category || ''
-    }).catch(err => {
-      console.log('Search logging error:', err.message);
-    });
-  }
-
-  res.render("listings/index.ejs", { 
-    allListings, 
-    category: req.query.category,
-    searchQuery: searchQuery,
-    totalResults: allListings.length,
-    hasSearch: !!searchQuery,
-    noResults: searchQuery && allListings.length === 0
-  });
-
+// Country default coordinates mapping
+const COUNTRY_COORDINATES = {
+  'india': [77.2090, 28.6139],
+  'united states': [-95.7129, 37.0902],
+  'usa': [-95.7129, 37.0902],
+  'italy': [12.5674, 41.8719],
+  'mexico': [-102.5528, 23.6345],
+  'switzerland': [8.2275, 46.8182],
+  'tanzania': [34.8888, -6.3690],
+  'netherlands': [5.2913, 52.1326],
+  'fiji': [179.4144, -16.5780],
+  'united kingdom': [-3.4360, 55.3781],
+  'uk': [-3.4360, 55.3781],
+  'indonesia': [113.9213, -0.7893],
+  'canada': [-106.3468, 56.1304],
+  'thailand': [100.9925, 15.8700],
+  'united arab emirates': [53.8478, 23.4241],
+  'uae': [53.8478, 23.4241],
+  'greece': [21.8243, 39.0742],
+  'costa rica': [-83.7534, 9.7489],
+  'japan': [138.2529, 36.2048],
+  'maldives': [73.2207, 3.2028],
+  'france': [2.2137, 46.2276],
+  'spain': [-3.7492, 40.4637],
+  'australia': [133.7751, -25.2744],
+  'brazil': [-47.8825, -15.7942],
+  'china': [104.1954, 35.8617]
 };
 
-// Get search suggestions based on popular searches
-module.exports.getSearchSuggestions = async (req, res) => {
+// Helper function to get default coordinates
+const getDefaultCoordinates = (country) => {
+  const countryLower = (country || '').toLowerCase().trim();
+  return COUNTRY_COORDINATES[countryLower] || [77.2090, 28.6139]; // Default to India
+};
+
+// Helper function to add badges to listings
+const addBadgesToListing = (listing, avgRating = null) => {
+  const now = new Date();
+  const createdAt = new Date(listing.createdAt);
+  const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
+
+  listing.isNewBadge = daysOld <= 7;
+  listing.isFeaturedBadge = !!listing.isFeatured;
+  listing.isDiscountBadge = !!listing.hasDiscount;
+
+  // Calculate average rating if not provided
+  if (avgRating === null && listing.reviews && listing.reviews.length > 0) {
+    const total = listing.reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+    avgRating = total / listing.reviews.length;
+  }
+
+  listing.avgRating = avgRating || 0;
+  listing.isHighlyRatedBadge = listing.reviews && listing.reviews.length > 0 && avgRating >= 4.5;
+
+  return listing;
+};
+
+// Helper function to geocode location
+const geocodeLocation = async (location) => {
+  if (!geocodingClient) {
+    return null;
+  }
+
+  try {
+    const response = await geocodingClient
+      .forwardGeocode({
+        query: location,
+        limit: 1,
+      })
+      .send();
+
+    if (response && response.body.features && response.body.features.length > 0) {
+      return response.body.features[0].geometry;
+    }
+  } catch (error) {
+    console.warn(`Geocoding failed for "${location}":`, error.message);
+  }
+
+  return null;
+};
+
+// ===========================
+// MAIN CONTROLLER METHODS
+// ===========================
+
+/**
+ * Display all listings with optional category and search filters
+ */
+module.exports.index = async (req, res, next) => {
+  try {
+    const { category, search, q } = req.query;
+    const filter = {};
+    let searchQuery = null;
+
+    // Category filtering
+    if (category) {
+      filter.category = category;
+    }
+
+    // Search functionality - handle both 'search' and 'q' parameters
+    const searchTerm = search || q;
+    if (searchTerm && searchTerm.trim()) {
+      searchQuery = searchTerm.trim();
+      const searchRegex = new RegExp(searchQuery, 'i');
+      filter.$or = [
+        { title: searchRegex },
+        { description: searchRegex },
+        { location: searchRegex },
+        { country: searchRegex }
+      ];
+    }
+
+    // Fetch listings with populated reviews
+    const allListings = await Listing.find(filter)
+      .populate({ path: 'reviews', populate: { path: 'author' } })
+      .lean();
+
+    // Add badges to each listing
+    allListings.forEach(listing => {
+      addBadgesToListing(listing);
+    });
+
+    // Log search queries asynchronously (don't wait)
+    if (searchQuery) {
+      SearchLog.create({
+        query: searchQuery,
+        resultsCount: allListings.length,
+        userAgent: req.headers['user-agent'] || '',
+        ipAddress: req.ip || req.connection.remoteAddress || '',
+        category: category || ''
+      }).catch(err => {
+        console.error('Search logging error:', err.message);
+      });
+    }
+
+    res.render("listings/index.ejs", {
+      allListings,
+      category: req.query.category,
+      searchQuery,
+      totalResults: allListings.length,
+      hasSearch: !!searchQuery,
+      noResults: searchQuery && allListings.length === 0
+    });
+  } catch (error) {
+    console.error('Error in index controller:', error);
+    next(error);
+  }
+};
+
+/**
+ * Get search suggestions for autocomplete
+ */
+module.exports.getSearchSuggestions = async (req, res, next) => {
   try {
     const { q } = req.query;
-    
+
     if (!q || q.length < 2) {
       return res.json([]);
     }
-    
-    // Get unique locations and countries that match the query
+
+    // Optimized aggregation with early $match and $limit
     const suggestions = await Listing.aggregate([
       {
         $match: {
@@ -116,54 +188,68 @@ module.exports.getSearchSuggestions = async (req, res) => {
         }
       },
       {
+        $limit: 50 // Limit early to reduce processing
+      },
+      {
         $group: {
           _id: null,
           locations: { $addToSet: "$location" },
           countries: { $addToSet: "$country" },
           titles: { $addToSet: "$title" }
         }
+      },
+      {
+        $project: {
+          _id: 0,
+          locations: 1,
+          countries: 1,
+          titles: 1
+        }
       }
     ]);
 
     let results = [];
     if (suggestions.length > 0) {
-      const { locations, countries, titles } = suggestions[0];
-      
-      // Filter and format suggestions
+      const { locations = [], countries = [], titles = [] } = suggestions[0];
+      const qLower = q.toLowerCase();
+
+      // Filter and format suggestions efficiently
       const locationSuggestions = locations
-        .filter(loc => loc.toLowerCase().includes(q.toLowerCase()))
+        .filter(loc => loc && loc.toLowerCase().includes(qLower))
         .slice(0, 3)
         .map(loc => ({ type: 'location', value: loc, icon: 'fa-map-marker-alt' }));
-      
+
       const countrySuggestions = countries
-        .filter(country => country.toLowerCase().includes(q.toLowerCase()))
+        .filter(country => country && country.toLowerCase().includes(qLower))
         .slice(0, 2)
         .map(country => ({ type: 'country', value: country, icon: 'fa-globe' }));
-      
+
       const titleSuggestions = titles
-        .filter(title => title.toLowerCase().includes(q.toLowerCase()))
+        .filter(title => title && title.toLowerCase().includes(qLower))
         .slice(0, 2)
         .map(title => ({ type: 'property', value: title, icon: 'fa-home' }));
-      
-      results = [...locationSuggestions, ...countrySuggestions, ...titleSuggestions];
+
+      results = [...locationSuggestions, ...countrySuggestions, ...titleSuggestions].slice(0, 8);
     }
-    
-    res.json(results.slice(0, 8));
+
+    res.json(results);
   } catch (error) {
     console.error('Search suggestions error:', error);
-    res.json([]);
+    res.status(500).json([]);
   }
 };
 
-// Advanced filtering with MongoDB aggregation
-module.exports.getFilteredListings = async (req, res) => {
+/**
+ * Advanced filtering with MongoDB aggregation
+ */
+module.exports.getFilteredListings = async (req, res, next) => {
   try {
     // Handle countries request
     if (req.query.getCountries) {
       const countries = await Listing.distinct('country');
-      return res.json({ success: true, countries: countries.sort() });
+      return res.json({ success: true, countries: countries.filter(Boolean).sort() });
     }
-    
+
     const {
       search,
       category,
@@ -176,14 +262,14 @@ module.exports.getFilteredListings = async (req, res) => {
       limit = 12
     } = req.query;
 
-    // Build aggregation pipeline
+    // Build optimized aggregation pipeline
     const pipeline = [];
 
-    // Match stage - filtering
+    // Stage 1: Match - filter early for performance
     const matchStage = {};
-    
-    if (search) {
-      const searchRegex = new RegExp(search, 'i');
+
+    if (search && search.trim()) {
+      const searchRegex = new RegExp(search.trim(), 'i');
       matchStage.$or = [
         { title: searchRegex },
         { description: searchRegex },
@@ -191,18 +277,21 @@ module.exports.getFilteredListings = async (req, res) => {
         { country: searchRegex }
       ];
     }
-    
+
     if (category) matchStage.category = category;
     if (country) matchStage.country = country;
+
     if (minPrice || maxPrice) {
       matchStage.price = {};
       if (minPrice) matchStage.price.$gte = parseInt(minPrice);
       if (maxPrice) matchStage.price.$lte = parseInt(maxPrice);
     }
 
-    pipeline.push({ $match: matchStage });
+    if (Object.keys(matchStage).length > 0) {
+      pipeline.push({ $match: matchStage });
+    }
 
-    // Add reviews for rating calculation
+    // Stage 2: Lookup reviews
     pipeline.push({
       $lookup: {
         from: 'reviews',
@@ -212,9 +301,10 @@ module.exports.getFilteredListings = async (req, res) => {
       }
     });
 
-    // Calculate average rating
+    // Stage 3: Add computed fields
     pipeline.push({
       $addFields: {
+        reviewCount: { $size: '$reviews' },
         avgRating: {
           $cond: {
             if: { $gt: [{ $size: '$reviews' }, 0] },
@@ -222,47 +312,39 @@ module.exports.getFilteredListings = async (req, res) => {
             else: 0
           }
         },
-        reviewCount: { $size: '$reviews' },
         popularity: {
           $add: [
             { $size: '$reviews' },
-            { $ifNull: [{ $size: '$likes' }, 0] }
+            { $cond: { if: { $isArray: '$likes' }, then: { $size: '$likes' }, else: 0 } }
           ]
         }
       }
     });
 
-    // Filter by minimum rating
+    // Stage 4: Filter by minimum rating
     if (minRating) {
       pipeline.push({
         $match: { avgRating: { $gte: parseFloat(minRating) } }
       });
     }
 
-    // Sorting
-    let sortStage = {};
-    switch (sortBy) {
-      case 'price-low':
-        sortStage = { price: 1 };
-        break;
-      case 'price-high':
-        sortStage = { price: -1 };
-        break;
-      case 'rating':
-        sortStage = { avgRating: -1, reviewCount: -1 };
-        break;
-      case 'popularity':
-        sortStage = { popularity: -1, avgRating: -1 };
-        break;
-      case 'newest':
-        sortStage = { createdAt: -1 };
-        break;
-      default:
-        sortStage = { createdAt: -1 };
-    }
+    // Get total count before pagination
+    const countPipeline = [...pipeline, { $count: 'total' }];
+    const countResult = await Listing.aggregate(countPipeline);
+    const totalCount = countResult[0]?.total || 0;
+
+    // Stage 5: Sorting
+    const sortStage = {
+      'price-low': { price: 1 },
+      'price-high': { price: -1 },
+      'rating': { avgRating: -1, reviewCount: -1 },
+      'popularity': { popularity: -1, avgRating: -1 },
+      'newest': { createdAt: -1 }
+    }[sortBy] || { createdAt: -1 };
+
     pipeline.push({ $sort: sortStage });
 
-    // Pagination
+    // Stage 6: Pagination
     const skip = (parseInt(page) - 1) * parseInt(limit);
     pipeline.push({ $skip: skip });
     pipeline.push({ $limit: parseInt(limit) });
@@ -270,18 +352,12 @@ module.exports.getFilteredListings = async (req, res) => {
     // Execute aggregation
     const listings = await Listing.aggregate(pipeline);
 
-    // Get total count for pagination
-    const countPipeline = pipeline.slice(0, -2); // Remove skip and limit
-    countPipeline.push({ $count: 'total' });
-    const countResult = await Listing.aggregate(countPipeline);
-    const totalCount = countResult[0]?.total || 0;
-
     // Add badges to listings
     const now = new Date();
     listings.forEach(listing => {
       const createdAt = new Date(listing.createdAt);
       const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
-      
+
       listing.isNewBadge = daysOld <= 7;
       listing.isFeaturedBadge = !!listing.isFeatured;
       listing.isDiscountBadge = !!listing.hasDiscount;
@@ -298,15 +374,7 @@ module.exports.getFilteredListings = async (req, res) => {
         hasNext: skip + parseInt(limit) < totalCount,
         hasPrev: parseInt(page) > 1
       },
-      filters: {
-        search,
-        category,
-        country,
-        minPrice,
-        maxPrice,
-        minRating,
-        sortBy
-      }
+      filters: { search, category, country, minPrice, maxPrice, minRating, sortBy }
     });
   } catch (error) {
     console.error('Filter listings error:', error);
@@ -314,30 +382,38 @@ module.exports.getFilteredListings = async (req, res) => {
   }
 };
 
+/**
+ * Render new listing form
+ */
 module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
 
-
-
+/**
+ * Show individual listing details
+ */
 module.exports.showListing = async (req, res, next) => {
   try {
-    let { id } = req.params;
-    console.log("=== SHOW LISTING DEBUG ===");
-    console.log("Looking for listing with ID:", id);
-    console.log("Request URL:", req.url);
-    console.log("Request method:", req.method);
-    
+    const { id } = req.params;
+
+    // Validate MongoDB ObjectId format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      console.error('❌ Invalid ObjectId format:', id);
+      req.flash("error", "Invalid listing ID format! Please clear your browser cache.");
+      return res.redirect("/listings");
+    }
+
+    // Fetch listing with populated data
     const listing = await Listing.findById(id)
       .populate({
         path: "reviews",
         populate: { path: "author" },
       })
-      .populate("owner");
-
+      .populate("owner")
+      .lean();
 
     if (!listing) {
-      console.log(" Listing not found in database");
+      console.error('❌ Listing not found:', id);
       req.flash("error", "Listing not found!");
       return res.redirect("/listings");
     }
@@ -345,7 +421,6 @@ module.exports.showListing = async (req, res, next) => {
     // Check if listing is in user's wishlist
     let isInWishlist = false;
     if (req.user) {
-      const Wishlist = require('../models/wishlist');
       const wishlistItem = await Wishlist.findOne({
         user: req.user._id,
         listing: id
@@ -353,370 +428,353 @@ module.exports.showListing = async (req, res, next) => {
       isInWishlist = !!wishlistItem;
     }
 
-
-    // Badge logic for show page
-    const now = new Date();
-    const createdAt = new Date(listing.createdAt);
-    const daysOld = (now - createdAt) / (1000 * 60 * 60 * 24);
-    listing.isNewBadge = daysOld <= 7;
-    listing.isFeaturedBadge = !!listing.isFeatured;
-    listing.isDiscountBadge = !!listing.hasDiscount;
-    let avgRating = 0;
-    if (listing.reviews && listing.reviews.length > 0) {
-      const total = listing.reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
-      avgRating = total / listing.reviews.length;
-    }
-    listing.avgRating = avgRating;
-    listing.isHighlyRatedBadge = avgRating >= 4.5;
+    // Add badges to listing
+    addBadgesToListing(listing);
 
     // Generate or retrieve AI summary
     let aiSummary = listing.aiSummary;
     if (aiSummarizationService.needsUpdate(listing.aiSummaryLastUpdated, listing.reviews.length)) {
       try {
         aiSummary = await aiSummarizationService.generateSummary(listing.reviews, listing.title);
-        listing.aiSummary = aiSummary;
-        listing.aiSummaryLastUpdated = new Date();
-        await listing.save();
-        console.log('AI summary generated for listing:', listing.title);
+
+        // Update the document (need to convert from lean)
+        await Listing.findByIdAndUpdate(id, {
+          aiSummary,
+          aiSummaryLastUpdated: new Date()
+        });
+
+        console.log('✅ AI summary generated for:', listing.title);
       } catch (error) {
-        console.log('AI summary generation failed:', error.message);
+        console.error('AI summary generation failed:', error.message);
         aiSummary = listing.aiSummary || null;
       }
     }
 
-    // Get weather data for the listing
+    // Get weather data
     let weatherData = null;
     let forecast = null;
     let bestTimeToVisit = null;
-    
-    if (listing.geometry && listing.geometry.coordinates) {
+
+    if (listing.geometry?.coordinates) {
       const [lon, lat] = listing.geometry.coordinates;
       try {
-        weatherData = await weatherService.getCurrentWeather(lat, lon);
-        forecast = await weatherService.getForecast(lat, lon);
+        [weatherData, forecast] = await Promise.all([
+          weatherService.getCurrentWeather(lat, lon),
+          weatherService.getForecast(lat, lon)
+        ]);
         bestTimeToVisit = weatherService.getBestTimeToVisit(listing.location, listing.country);
       } catch (error) {
-        console.log('Weather service error:', error.message);
+        console.error('Weather service error:', error.message);
       }
     }
 
-    // AI Recommendations - "You may also like"
-    let recommendations = [];
-    try {
-      // Create a unique seed based on listing ID for consistent but different results
-      const listingSeed = parseInt(id.slice(-6), 16) % 1000;
-      
-      if (req.user) {
-        // Get user's review history for personalized recommendations
-        const Review = require('../models/review');
-        const userReviews = await Review.find({ author: req.user._id })
-          .populate('listing', 'category country')
-          .limit(10);
-        
-        if (userReviews.length > 0) {
-          const userCategories = [...new Set(userReviews.map(r => r.listing?.category).filter(Boolean))];
-          const userCountries = [...new Set(userReviews.map(r => r.listing?.country).filter(Boolean))];
-          
-          // Add randomization based on listing ID
-          const categoryQuery = userCategories.length > 0 ? 
-            { category: { $in: userCategories } } : 
-            { category: listing.category };
-          
-          recommendations = await Listing.aggregate([
-            { $match: { _id: { $ne: listing._id }, ...categoryQuery } },
-            { $sample: { size: 2 } }
-          ]);
-          
-          if (recommendations.length < 2 && userCountries.length > 0) {
-            const countryRecs = await Listing.aggregate([
-              { $match: { _id: { $ne: listing._id }, country: { $in: userCountries } } },
-              { $sample: { size: 2 - recommendations.length } }
-            ]);
-            recommendations = [...recommendations, ...countryRecs];
-          }
-        }
-      }
-      
-      // Smart fallback based on current listing attributes
-      if (recommendations.length < 4) {
-        // Mix of similar category and country with randomization
-        const similarCategory = await Listing.aggregate([
-          { $match: { _id: { $ne: listing._id }, category: listing.category } },
-          { $sample: { size: Math.min(2, 4 - recommendations.length) } }
-        ]);
-        recommendations = [...recommendations, ...similarCategory];
-        
-        if (recommendations.length < 4) {
-          const similarCountry = await Listing.aggregate([
-            { $match: { _id: { $ne: listing._id }, country: listing.country, category: { $ne: listing.category } } },
-            { $sample: { size: 4 - recommendations.length } }
-          ]);
-          recommendations = [...recommendations, ...similarCountry];
-        }
-      }
-      
-      // Final diverse fallback
-      if (recommendations.length < 4) {
-        const diverse = await Listing.aggregate([
-          { $match: { _id: { $ne: listing._id } } },
-          { $sample: { size: 4 - recommendations.length } }
-        ]);
-        recommendations = [...recommendations, ...diverse];
-      }
-      
-      // Remove duplicates and limit to 4
-      const uniqueRecs = recommendations.filter((rec, index, self) => 
-        index === self.findIndex(r => r._id.toString() === rec._id.toString())
-      ).slice(0, 4);
-      
-      recommendations = uniqueRecs;
-    } catch (recError) {
-      console.log('Recommendation error:', recError.message);
-    }
-    
-    console.log("Found listing:", listing.title);
-    console.log("About to render template...");
-    
-    // Check if template file exists
-    const path = require('path');
-    const templatePath = path.join(__dirname, '../views/listings/show.ejs');
-    console.log("Template path:", templatePath);
-    
-    // Add error handling for template rendering main
-    res.render("listings/show.ejs", { listing, currentUser: req.user, isInWishlist, recommendations, weatherData, forecast, bestTimeToVisit, phrases }, (err, html) => {
+    // Get personalized recommendations
+    const recommendations = await getRecommendations(listing, req.user);
 
-   
-      if (err) {
-        console.error(" TEMPLATE RENDERING ERROR:");
-        console.error("Error message:", err.message);
-        console.error("Error stack:", err.stack);
-        console.error("Template path:", templatePath);
-        return next(err);
-      }
-      console.log("Template rendered successfully, sending   response");
-      res.send(html);
+    // Render the listing page
+    res.render("listings/show.ejs", {
+      listing,
+      currentUser: req.user,
+      isInWishlist,
+      recommendations,
+      weatherData,
+      forecast,
+      bestTimeToVisit,
+      phrases
     });
-    
   } catch (error) {
-    console.error("ERROR in showListing:");
-    console.error("Error message:", error.message);
-    console.error("Error stack:", error.stack);
+    console.error('❌ Error in showListing:', error);
     next(error);
   }
 };
 
+/**
+ * Helper function to get personalized recommendations
+ */
+const getRecommendations = async (listing, user) => {
+  let recommendations = [];
 
-module.exports.createListing = async (req, res, next) => {
-  let response = null;
-  if (geocodingClient) {
-    try {
-      response = await geocodingClient
-        .forwardGeocode({
-          query: req.body.listing.location,
-          limit: 1,
-        })
-        .send();
-    } catch (error) {
-      console.warn("Geocoding failed:", error.message);
-    }
-  }
   try {
+    if (user) {
+      // Get user's review history for personalized recommendations
+      const userReviews = await Review.find({ author: user._id })
+        .populate('listing', 'category country')
+        .limit(10)
+        .lean();
 
-    let url = "";
-    let filename = "";
-    if (req.file) {
-      url = req.file.path;
-      filename = req.file.filename;
+      if (userReviews.length > 0) {
+        const userCategories = [...new Set(userReviews.map(r => r.listing?.category).filter(Boolean))];
+        const userCountries = [...new Set(userReviews.map(r => r.listing?.country).filter(Boolean))];
+
+        // Category-based recommendations
+        if (userCategories.length > 0) {
+          recommendations = await Listing.aggregate([
+            { $match: { _id: { $ne: listing._id }, category: { $in: userCategories } } },
+            { $sample: { size: 2 } }
+          ]);
+        }
+
+        // Country-based recommendations
+        if (recommendations.length < 2 && userCountries.length > 0) {
+          const countryRecs = await Listing.aggregate([
+            { $match: { _id: { $ne: listing._id }, country: { $in: userCountries } } },
+            { $sample: { size: 2 - recommendations.length } }
+          ]);
+          recommendations = [...recommendations, ...countryRecs];
+        }
+      }
     }
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = { url, filename };
 
-    // Set geometry from geocoding or use default coordinates
-    if (response && response.body.features && response.body.features.length > 0) {
-      newListing.geometry = response.body.features[0].geometry;
-      console.log(`Geocoded ${req.body.listing.location} to:`, response.body.features[0].geometry.coordinates);
-    } else {
-      // Default coordinates based on country
-      const countryDefaults = {
-        'india': [77.2090, 28.6139],
-        'united states': [-95.7129, 37.0902],
-        'usa': [-95.7129, 37.0902],
-        'italy': [12.5674, 41.8719],
-        'mexico': [-102.5528, 23.6345],
-        'switzerland': [8.2275, 46.8182],
-        'tanzania': [34.8888, -6.3690],
-        'netherlands': [5.2913, 52.1326],
-        'fiji': [179.4144, -16.5780],
-        'united kingdom': [-3.4360, 55.3781],
-        'uk': [-3.4360, 55.3781],
-        'indonesia': [113.9213, -0.7893],
-        'canada': [-106.3468, 56.1304],
-        'thailand': [100.9925, 15.8700],
-        'united arab emirates': [53.8478, 23.4241],
-        'greece': [21.8243, 39.0742],
-        'costa rica': [-83.7534, 9.7489],
-        'japan': [138.2529, 36.2048],
-        'maldives': [73.2207, 3.2028]
+    // Fallback: Similar category
+    if (recommendations.length < 4) {
+      const similarCategory = await Listing.aggregate([
+        { $match: { _id: { $ne: listing._id }, category: listing.category } },
+        { $sample: { size: Math.min(2, 4 - recommendations.length) } }
+      ]);
+      recommendations = [...recommendations, ...similarCategory];
+    }
+
+    // Fallback: Similar country
+    if (recommendations.length < 4) {
+      const similarCountry = await Listing.aggregate([
+        { $match: { _id: { $ne: listing._id }, country: listing.country, category: { $ne: listing.category } } },
+        { $sample: { size: 4 - recommendations.length } }
+      ]);
+      recommendations = [...recommendations, ...similarCountry];
+    }
+
+    // Final fallback: Random diverse listings
+    if (recommendations.length < 4) {
+      const diverse = await Listing.aggregate([
+        { $match: { _id: { $ne: listing._id } } },
+        { $sample: { size: 4 - recommendations.length } }
+      ]);
+      recommendations = [...recommendations, ...diverse];
+    }
+
+    // Remove duplicates and limit to 4
+    const uniqueRecs = recommendations.filter((rec, index, self) =>
+      index === self.findIndex(r => r._id.toString() === rec._id.toString())
+    ).slice(0, 4);
+
+    return uniqueRecs;
+  } catch (error) {
+    console.error('Recommendation error:', error.message);
+    return [];
+  }
+};
+
+/**
+ * Create new listing
+ */
+module.exports.createListing = async (req, res, next) => {
+  try {
+    const { listing } = req.body;
+
+    // Validate required fields
+    if (!listing || !listing.title || !listing.location) {
+      req.flash("error", "Missing required fields!");
+      return res.redirect("/listings/new");
+    }
+
+    // Geocode the location
+    const geometry = await geocodeLocation(listing.location);
+
+    // Create new listing
+    const newListing = new Listing(listing);
+    newListing.owner = req.user._id;
+
+    // Set image if uploaded
+    if (req.file) {
+      newListing.image = {
+        url: req.file.path,
+        filename: req.file.filename
       };
-      
-      const country = (req.body.listing.country || '').toLowerCase();
-      const defaultCoords = countryDefaults[country] || [77.2090, 28.6139];
-      
+    }
+
+    // Set geometry from geocoding or use default
+    if (geometry) {
+      newListing.geometry = geometry;
+      console.log(`✅ Geocoded ${listing.location}:`, geometry.coordinates);
+    } else {
+      const defaultCoords = getDefaultCoordinates(listing.country);
       newListing.geometry = {
         type: "Point",
         coordinates: defaultCoords
       };
-      
-      console.log(`Using default coordinates for ${country}: ${defaultCoords}`);
+      console.log(`ℹ️ Using default coordinates for ${listing.country}:`, defaultCoords);
     }
 
-    let savedListings = await newListing.save();
-    console.log(savedListings);
+    await newListing.save();
+
+    console.log('✅ Created new listing:', newListing.title);
     req.flash("success", "New listing created!");
-    res.redirect(`/listings`);
+    res.redirect(`/listings/${newListing._id}`);
   } catch (error) {
-    console.error("Error creating listing:", error);
+    console.error("❌ Error creating listing:", error);
     req.flash("error", "Failed to create listing.");
     res.redirect("/listings/new");
   }
 };
 
-module.exports.renderEditForm = async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  if (!listing) {
-    req.flash("error", "Listing does not exist");
-    res.redirect("/listings");
-  }
+/**
+ * Render edit form
+ */
+module.exports.renderEditForm = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const listing = await Listing.findById(id).lean();
 
-  let originalImageURL = listing.image.url;
-  originalImageURL = originalImageURL.replace("/upload", "/upload/w_250");
-  res.render("listings/edit.ejs", { listing, originalImageURL });
+    if (!listing) {
+      req.flash("error", "Listing does not exist");
+      return res.redirect("/listings");
+    }
+
+    // Generate thumbnail URL
+    let originalImageURL = listing.image?.url || '';
+    if (originalImageURL) {
+      originalImageURL = originalImageURL.replace("/upload", "/upload/w_250");
+    }
+
+    res.render("listings/edit.ejs", { listing, originalImageURL });
+  } catch (error) {
+    console.error("❌ Error rendering edit form:", error);
+    next(error);
+  }
 };
 
-module.exports.updateListing = async (req, res) => {
-  let { id } = req.params;
-  
+/**
+ * Update listing
+ */
+module.exports.updateListing = async (req, res, next) => {
   try {
-    // Get geocoding data for the updated location
-    let response = null;
-    if (geocodingClient) {
-      try {
-        response = await geocodingClient
-          .forwardGeocode({
-            query: req.body.listing.location,
-            limit: 1,
-          })
-          .send();
-      } catch (error) {
-        console.warn("Geocoding failed:", error.message);
-      }
+    const { id } = req.params;
+    const { listing: listingData } = req.body;
+
+    // Validate listing exists
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
     }
-    
-    // First update the listing without saving to get the document
-    let listing = await Listing.findById(id);
-    
-    // Update all fields from the form
-    Object.assign(listing, req.body.listing);
-    
-    // Update geometry with new coordinates or use default
-    if (response && response.body.features && response.body.features.length > 0) {
-      listing.geometry = response.body.features[0].geometry;
-    } else {
-      // Keep existing geometry or set default based on country
-      if (!listing.geometry || !listing.geometry.coordinates) {
-        const countryDefaults = {
-          'india': [77.2090, 28.6139],
-          'united states': [-95.7129, 37.0902],
-          'usa': [-95.7129, 37.0902],
-          'italy': [12.5674, 41.8719],
-          'mexico': [-102.5528, 23.6345],
-          'switzerland': [8.2275, 46.8182],
-          'tanzania': [34.8888, -6.3690],
-          'netherlands': [5.2913, 52.1326],
-          'fiji': [179.4144, -16.5780],
-          'united kingdom': [-3.4360, 55.3781],
-          'uk': [-3.4360, 55.3781],
-          'indonesia': [113.9213, -0.7893],
-          'canada': [-106.3468, 56.1304],
-          'thailand': [100.9925, 15.8700],
-          'united arab emirates': [53.8478, 23.4241],
-          'greece': [21.8243, 39.0742],
-          'costa rica': [-83.7534, 9.7489],
-          'japan': [138.2529, 36.2048],
-          'maldives': [73.2207, 3.2028]
-        };
-        
-        const country = (listing.country || '').toLowerCase();
-        const defaultCoords = countryDefaults[country] || [77.2090, 28.6139];
-        
+
+    // Update fields
+    Object.assign(listing, listingData);
+
+    // Update image if new one uploaded
+    if (req.file) {
+      listing.image = {
+        url: req.file.path,
+        filename: req.file.filename
+      };
+    }
+
+    // Update geometry if location changed
+    if (listingData.location !== listing.location) {
+      const geometry = await geocodeLocation(listingData.location);
+
+      if (geometry) {
+        listing.geometry = geometry;
+        console.log(`✅ Updated coordinates for ${listingData.location}`);
+      } else if (!listing.geometry?.coordinates) {
+        const defaultCoords = getDefaultCoordinates(listingData.country);
         listing.geometry = {
           type: "Point",
           coordinates: defaultCoords
         };
-        
-        console.log(`Using default coordinates for ${country}: ${defaultCoords}`);
+        console.log(`ℹ️ Using default coordinates for ${listingData.country}`);
       }
     }
-    
-    // Update image if a new one was uploaded
-    if (typeof req.file !== "undefined") {
-      listing.image = {
-        url: req.file.path,
-        filename: req.file.filename,
-      };
-    }
-    
-    // Save the updated listing
+
     await listing.save();
-    
+
+    console.log('✅ Updated listing:', listing.title);
     req.flash("success", "Listing updated!");
     res.redirect(`/listings/${id}`);
   } catch (error) {
-    console.error("Error updating listing:", error);
+    console.error("❌ Error updating listing:", error);
     req.flash("error", "Failed to update listing.");
-    res.redirect(`/listings/${id}/edit`);
+    res.redirect(`/listings/${req.params.id}/edit`);
   }
 };
 
-module.exports.destroyListing = async (req, res) => {
-  let { id } = req.params;
-  const deletedListing = await Listing.findByIdAndDelete(id);
-  console.log(deletedListing);
-  req.flash("success", "Listing deleted!");
-  res.redirect("/listings");
-};
+/**
+ * Delete listing
+ */
+module.exports.destroyListing = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedListing = await Listing.findByIdAndDelete(id);
 
-
-
-module.exports.likeListing = async (req, res) => {
-    const listing = await Listing.findById(req.params.id);
-    const user = await User.findById(req.user._id);
-
-    // Add user to listing's likes AND listing to user's likes
-    if (!listing.likes.includes(user._id)) {
-        listing.likes.push(user._id);
-        user.likes.push(listing._id);
-
-        await listing.save();
-        await user.save();
-        req.flash("success", "Added to your liked listings!");
+    if (!deletedListing) {
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
     }
-    res.redirect(`/listings/${req.params.id}`);
+
+    console.log('✅ Deleted listing:', deletedListing.title);
+    req.flash("success", "Listing deleted!");
+    res.redirect("/listings");
+  } catch (error) {
+    console.error("❌ Error deleting listing:", error);
+    next(error);
+  }
 };
 
-
-module.exports.unlikeListing = async (req, res) => {
+/**
+ * Like a listing
+ */
+module.exports.likeListing = async (req, res, next) => {
+  try {
     const { id } = req.params;
     const userId = req.user._id;
 
-    // Remove user ID from the listing's likes array
-    await Listing.findByIdAndUpdate(id, { $pull: { likes: userId } });
-    // Remove listing ID from the user's likes array
-    await User.findByIdAndUpdate(userId, { $pull: { likes: id } });
-    
-    req.flash("success", "Removed from your liked listings.");
+    // Use atomic operations for better performance
+    const listing = await Listing.findById(id);
+    const user = await User.findById(userId);
+
+    if (!listing || !user) {
+      req.flash("error", "Listing or user not found!");
+      return res.redirect("/listings");
+    }
+
+    // Check if already liked
+    if (listing.likes.includes(userId)) {
+      req.flash("info", "You already liked this listing!");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    // Add to both arrays atomically
+    await Promise.all([
+      Listing.findByIdAndUpdate(id, { $addToSet: { likes: userId } }),
+      User.findByIdAndUpdate(userId, { $addToSet: { likes: id } })
+    ]);
+
+    req.flash("success", "Added to your liked listings!");
     res.redirect(`/listings/${id}`);
+  } catch (error) {
+    console.error("❌ Error liking listing:", error);
+    next(error);
+  }
 };
 
+/**
+ * Unlike a listing
+ */
+module.exports.unlikeListing = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    // Remove from both arrays atomically
+    await Promise.all([
+      Listing.findByIdAndUpdate(id, { $pull: { likes: userId } }),
+      User.findByIdAndUpdate(userId, { $pull: { likes: id } })
+    ]);
+
+    req.flash("success", "Removed from your liked listings!");
+    res.redirect(`/listings/${id}`);
+  } catch (error) {
+    console.error("❌ Error unliking listing:", error);
+    next(error);
+  }
+};

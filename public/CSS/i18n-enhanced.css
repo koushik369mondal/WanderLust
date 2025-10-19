@@ -1,0 +1,485 @@
+/* ==========================================================================
+   WanderLust - Enhanced Internationalization (i18n) Styles
+   ========================================================================== */
+
+/* Language-specific font loading */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Oriya:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
+
+/* CSS Variables for dynamic font families */
+:root {
+  --font-family-primary: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family-devanagari: 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-family-bengali: 'Noto Sans Bengali', system-ui, sans-serif;
+  --font-family-gujarati: 'Noto Sans Gujarati', system-ui, sans-serif;
+  --font-family-kannada: 'Noto Sans Kannada', system-ui, sans-serif;
+  --font-family-malayalam: 'Noto Sans Malayalam', system-ui, sans-serif;
+  --font-family-oriya: 'Noto Sans Oriya', system-ui, sans-serif;
+  --font-family-gurmukhi: 'Noto Sans Gurmukhi', system-ui, sans-serif;
+  --font-family-tamil: 'Noto Sans Tamil', system-ui, sans-serif;
+  --font-family-telugu: 'Noto Sans Telugu', system-ui, sans-serif;
+  --font-family-urdu: 'Noto Nastaliq Urdu', system-ui, sans-serif;
+}
+
+/* Base internationalization styles */
+body {
+  font-family: var(--font-family-primary);
+  transition: font-family 0.3s ease;
+}
+
+/* Language-specific font applications */
+.lang-hi,
+.lang-mr {
+  --font-family-primary: var(--font-family-devanagari);
+}
+
+.lang-bn,
+.lang-as {
+  --font-family-primary: var(--font-family-bengali);
+}
+
+.lang-gu {
+  --font-family-primary: var(--font-family-gujarati);
+}
+
+.lang-kn {
+  --font-family-primary: var(--font-family-kannada);
+}
+
+.lang-ml {
+  --font-family-primary: var(--font-family-malayalam);
+}
+
+.lang-or {
+  --font-family-primary: var(--font-family-oriya);
+}
+
+.lang-pa {
+  --font-family-primary: var(--font-family-gurmukhi);
+}
+
+.lang-ta {
+  --font-family-primary: var(--font-family-tamil);
+}
+
+.lang-te {
+  --font-family-primary: var(--font-family-telugu);
+}
+
+.lang-ur {
+  --font-family-primary: var(--font-family-urdu);
+}
+
+/* RTL (Right-to-Left) Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .navbar-brand {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .text-start {
+  text-align: right !important;
+}
+
+[dir="rtl"] .text-end {
+  text-align: left !important;
+}
+
+[dir="rtl"] .me-2 {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .ms-2 {
+  margin-left: 0 !important;
+  margin-right: 0.5rem !important;
+}
+
+[dir="rtl"] .ps-3 {
+  padding-left: 0 !important;
+  padding-right: 1rem !important;
+}
+
+[dir="rtl"] .pe-3 {
+  padding-right: 0 !important;
+  padding-left: 1rem !important;
+}
+
+/* Language Selector Styles */
+.language-menu {
+  min-width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.language-option:hover {
+  background-color: #f8f9fa;
+  transform: translateX(2px);
+}
+
+.language-option.active {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.language-flag {
+  font-size: 1.2em;
+  min-width: 24px;
+  display: inline-block;
+}
+
+.language-native {
+  font-weight: 500;
+  flex: 1;
+}
+
+.language-english {
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+/* Mobile Language Selection */
+.mobile-language-section {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.language-btn {
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: 1px solid #dee2e6;
+}
+
+.language-btn:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.language-btn.active {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+/* Text Direction Utilities */
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Cultural Number Formatting */
+.number-format-indian {
+  /* Support for Indian numbering system (lakhs, crores) */
+  font-variant-numeric: tabular-nums;
+}
+
+.currency-symbol {
+  font-weight: 500;
+}
+
+/* Language-specific adjustments */
+
+/* Devanagari scripts (Hindi, Marathi) */
+.lang-hi *,
+.lang-mr * {
+  line-height: 1.6; /* Better line height for Devanagari */
+}
+
+/* Bengali and Assamese */
+.lang-bn *,
+.lang-as * {
+  line-height: 1.7; /* Extra space for Bengali conjuncts */
+}
+
+/* Tamil */
+.lang-ta * {
+  line-height: 1.65; /* Accommodate Tamil characters */
+}
+
+/* Telugu */
+.lang-te * {
+  line-height: 1.65;
+}
+
+/* Urdu (RTL) */
+.lang-ur {
+  direction: rtl;
+  text-align: right;
+}
+
+.lang-ur .navbar-nav {
+  flex-direction: row-reverse;
+}
+
+.lang-ur .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+/* Font size adjustments for complex scripts */
+.lang-kn .form-control,
+.lang-ml .form-control,
+.lang-te .form-control,
+.lang-or .form-control {
+  font-size: 1.1em; /* Slightly larger for complex scripts */
+}
+
+/* Button text adjustments */
+.lang-hi .btn,
+.lang-mr .btn,
+.lang-bn .btn,
+.lang-gu .btn,
+.lang-kn .btn,
+.lang-ml .btn,
+.lang-or .btn,
+.lang-pa .btn,
+.lang-ta .btn,
+.lang-te .btn,
+.lang-ur .btn {
+  font-weight: 500; /* Better readability for Indic scripts */
+}
+
+/* Loading states for language change */
+.language-changing {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.language-loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  animation: language-shimmer 1.5s infinite;
+}
+
+@keyframes language-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Accessibility improvements for i18n */
+.language-selector-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .language-option:hover {
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+  
+  .language-option.active {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .language-option {
+    transition: none;
+  }
+  
+  .language-loading::after {
+    animation: none;
+  }
+  
+  .language-changing {
+    transition: none;
+  }
+}
+
+/* Print styles for different languages */
+@media print {
+  .language-menu,
+  .mobile-language-section,
+  #language-selector {
+    display: none !important;
+  }
+  
+  /* Ensure proper fonts for printing in different scripts */
+  .lang-hi,
+  .lang-mr {
+    font-family: 'Noto Sans Devanagari', serif;
+  }
+  
+  .lang-bn,
+  .lang-as {
+    font-family: 'Noto Sans Bengali', serif;
+  }
+  
+  .lang-ta {
+    font-family: 'Noto Sans Tamil', serif;
+  }
+  
+  .lang-te {
+    font-family: 'Noto Sans Telugu', serif;
+  }
+  
+  .lang-ur {
+    font-family: 'Noto Nastaliq Urdu', serif;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .language-flag {
+    font-size: 1.1em;
+  }
+  
+  .language-native {
+    font-size: 0.9em;
+  }
+  
+  .language-english {
+    display: none; /* Hide English names on mobile for space */
+  }
+  
+  .language-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .language-menu {
+    min-width: 200px;
+  }
+  
+  .language-option {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .language-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .language-option {
+    min-height: 48px; /* Better touch targets */
+  }
+  
+  .language-btn {
+    min-height: 44px;
+  }
+}
+
+/* Cultural color adaptations */
+.region-IN {
+  /* Indian cultural colors */
+  --primary-cultural: #ff9933;
+  --secondary-cultural: #138808;
+  --accent-cultural: #000080;
+}
+
+.region-PK {
+  /* Pakistani cultural colors */
+  --primary-cultural: #01411c;
+  --secondary-cultural: #ffffff;
+}
+
+.region-BD {
+  /* Bangladeshi cultural colors */
+  --primary-cultural: #006a4e;
+  --secondary-cultural: #f42a41;
+}
+
+/* Typography fine-tuning for different scripts */
+.complex-script {
+  /* Common adjustments for complex scripts */
+  word-spacing: 0.1em;
+  letter-spacing: 0.02em;
+}
+
+.lang-kn,
+.lang-ml,
+.lang-te,
+.lang-or {
+  /* Complex Indic scripts need more spacing */
+  word-spacing: 0.15em;
+}
+
+/* Special handling for mixed content */
+.mixed-script {
+  /* When mixing Latin and non-Latin text */
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* Animation for language switching */
+@keyframes fadeInLanguage {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.language-transition {
+  animation: fadeInLanguage 0.3s ease-out;
+}
