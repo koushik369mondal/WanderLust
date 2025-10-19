@@ -75,14 +75,36 @@ body {
   background-color: transparent !important;
 }
 
-[data-theme="dark"].navbar {
-  height: 5rem;
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* FIX: Vibrant Glassmorphism and Color Sync for Navbar */
+.navbar {
+    height: 5rem;
+    
+    /* 1. APPLY GLASS BACKGROUND (Light Mode Default) */
+    /* Use a semi-transparent blue/teal color instead of the solid var(--bg-primary) */
+    background: rgba(65, 183, 204, 0.9) !important; 
+    
+    /* 2. ACTIVATE BLUR EFFECT (Crucial for the glassy look) */
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
+/* 3. Dark Mode Override: Ensure the dark gradient uses transparency */
+[data-theme="dark"] .navbar {
+    /* Use a darker, semi-transparent color in Dark Mode */
+    background: rgba(17, 35, 68, 0.9) !important; 
+        text-shadow: 1px 1px 2px #fffefe;
+
+}
+[data-theme="light"] .navbar {
+    /* Use a lighter, semi-transparent color in Light Mode */
+    background: rgba(136, 203, 244, 0.8) !important;
+    font-weight:bold;
+    backdrop-filter: blur(10px); /* optional: gives a frosted-glass effect */
+    text-shadow: 0.5px 0.5px 1px #0f0202;
+}
 .container {
   flex: 1;
   background-color: transparent !important;
