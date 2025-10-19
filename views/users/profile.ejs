@@ -2,14 +2,6 @@
 
 <style>
     :root {
-        --profile-header-bg: linear-gradient(135deg, #1ed9a8, #0f5a7c);
-        --profile-card-bg: rgba(15, 90, 124, 0.25);
-        --card-header-bg: linear-gradient(to right, rgba(10, 70, 100, 0.8), rgba(8, 50, 75, 0.9));
-        --accent-border-color: #1ed9a8;
-        --accent-border-color-dark: #0f5a7c;
-        --tag-bg: linear-gradient(135deg, #1ed9a8, #0f5a7c);
-        --link-color: #a7d8f9;
-        --header-text-color: #ffffff;
         --body-text-color: #e0f7ff;
         --text-primary: #0a2533;
         --shadow-color: rgba(0, 0, 0, 0.2);
@@ -127,6 +119,14 @@
     .profile-card-header h5 {
         margin: 0;
         font-size: 1.25rem;
+        font-weight: var(--font-weight-bold);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .profile-card-body {
         font-weight: var(--font-weight-bold);
         color: var(--text-primary);
         display: flex;
