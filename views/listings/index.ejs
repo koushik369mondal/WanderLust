@@ -81,6 +81,22 @@
             color: var(--text-primary);
             height: 50px;
         }
+        
+        /* Ensure label text is visible in both light and dark modes */
+        .tax-toggle .form-check-label {
+            color: var(--text-primary);
+        }
+        
+        /* Force black text in light mode */
+        [data-theme="light"] .tax-toggle .form-check-label,
+        body:not([data-theme="dark"]) .tax-toggle .form-check-label {
+            color: #000000;
+        }
+        
+        /* White text in dark mode */
+        [data-theme="dark"] .tax-toggle .form-check-label {
+            color: #ffffff;
+        }
 
         /* Hide scrollbar */
         #filters::-webkit-scrollbar {
