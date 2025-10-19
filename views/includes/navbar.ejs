@@ -87,11 +87,14 @@
     padding: 0.375rem 0.5rem;
   }
 
-  /* Hide text on smaller screens */
-  @media (max-width: 1400px) {
-    .navbar-actions .hide-text {
-      display: none !important;
-    }
+  .search-suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #0b0101;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s ease;
   }
 
   /* Responsive navbar */
@@ -119,6 +122,10 @@
     justify-content: center;
   }
 
+  .search-suggestion-icon {
+    color: #f1f3f6;
+    width: 16px;
+    text-align: center;
   /* Dropdown menu improvements */
   .dropdown-menu {
     max-height: 400px;
@@ -129,6 +136,10 @@
     width: 350px;
   }
 
+  .search-suggestion-type {
+    font-size: 0.8rem;
+    color: #fbfbfb;
+    text-transform: capitalize;
   @media (max-width: 576px) {
     .notification-dropdown {
       width: 280px;
