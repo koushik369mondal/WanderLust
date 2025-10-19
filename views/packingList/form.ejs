@@ -1,8 +1,14 @@
 <% layout('/layouts/boilerplate') %>
 
-  <main class="packing-list-form-container">
-    <div class="packing-list-header">
-      <h1>🧳 AI-Powered Packing List Generator</h1>
+  <main class="packing-list-form-container" style=" background: linear-gradient(
+    135deg, 
+    rgba(50, 135, 192, 0.9), 
+    rgba(17, 35, 68, 0.9), 
+    rgba(4, 134, 121, 0.9)
+  );
+; border-radius: 5px;">
+    <div class="packing-list-header" style="-webkit-text-fill-color: aliceblue;">
+      <h1 style = "-webkit-text-fill-color: white;">🧳 AI-Powered Packing List Generator </h1>
       <p>Get a personalized packing checklist tailored to your trip with AI assistance and weather insights.</p>
     </div>
 
@@ -17,7 +23,7 @@
     <% } %>
 
     <form action="/packing-list/generate" method="POST" class="packing-list-form">
-      <div class="form-group">
+      <div class="form-group"style = "background: rgb(143, 200, 243)">
         <label for="destination">🌍 Destination:</label>
         <input type="text"
                id="destination"
@@ -27,7 +33,7 @@
                value="<%= typeof formData !== 'undefined' ? formData.destination : '' %>">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" style = "background: rgb(143, 200, 243)">
         <label for="duration">📅 Trip Duration (days):</label>
         <input type="number"
                id="duration"
@@ -39,7 +45,7 @@
                value="<%= typeof formData !== 'undefined' ? formData.duration : '' %>">
       </div>
 
-      <div class="form-group">
+      <div class="form-group"style = "background: rgb(143, 200, 243)">
         <label for="travelType">👥 Travel Type:</label>
         <select id="travelType" name="travelType" required>
           <option value="">Select travel type</option>
@@ -50,7 +56,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group"style = "background: rgb(143, 200, 243)">
         <label>🎯 Planned Activities:</label>
         <div class="activities-grid">
           <% const activityOptions = [
@@ -88,7 +94,7 @@
     </form>
 
     <div class="features-preview">
-      <h3>✨ What You'll Get:</h3>
+      <h3 style = "-webkit-text-fill-color: aliceblue;">✨ What You'll Get:</h3>
       <div class="features-grid">
         <div class="feature-item">
           <span class="feature-icon">🧠</span>
