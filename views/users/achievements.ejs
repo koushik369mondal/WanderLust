@@ -27,19 +27,19 @@ function getCategoryDescription(category) {
 
 <style>
     :root {
-          --achievement-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          --achievement-bg: rgba(4, 56, 112, 0.7);
       --card-bg: rgba(255, 255, 255, 0.95);
       --card-bg-alt: rgba(255, 255, 255, 0.98);
       --text-primary: #2c3e50;
       --text-secondary: #7f8c8d;
-       --accent-color: #3498db;
+       --accent-color: #db3434;
        --success-color: #27ae60;
       --warning-color: #f39c12;
        --danger-color: #e74c3c;
         --glass-bg: rgba(255, 255, 255, 0.25);
        --glass-border: rgba(255, 255, 255, 0.18);
 
-        --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        --shadow-light: 0 8px 32px 0 rgba(145, 145, 149, 0.37);
         --shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
        
     }
@@ -56,6 +56,18 @@ function getCategoryDescription(category) {
         line-height: 1.6;
         color: var(--text-primary);
         overflow-x: hidden;
+          background: linear-gradient(
+      135deg,
+      rgba(102, 215, 243, 0.4),
+      rgba(190, 241, 248, 0.3)
+    ),
+    url("/images/beach.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  background-blend-mode: multiply;
+  color: var(--text-primary) !important;
+
+        
     }
 
     body::before {
@@ -77,19 +89,38 @@ function getCategoryDescription(category) {
         max-width: 1200px;
         margin: 2rem auto;
         padding: 0 1rem;
+        backdrop-filter: blur(10px); /* optional frosted-glass effect */
+
     }
+    [data-theme="light"] .achievements-container {
+    /* Use a lighter, semi-transparent color in Light Mode */
+    backdrop-filter: blur(10px); /* optional: gives a frosted-glass effect */
+      background: linear-gradient(
+      135deg,
+      rgba(102, 215, 243, 0.4),
+      rgba(190, 241, 248, 0.3)
+    ),
+    url("/images/beach.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  background-blend-mode: multiply;
+  color: var(--text-primary) !important;
+
+}
+
 
     .achievements-header {
         text-align: center;
         margin-bottom: 3rem;
         color: white;
+        text-shadow: 2px 2px 4px white;
     }
 
     .achievements-header h1 {
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        text-shadow: 2px 2px 4px rgba(255, 254, 254, 0.3);
     }
 
     .achievements-header p {
