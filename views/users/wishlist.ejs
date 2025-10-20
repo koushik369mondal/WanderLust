@@ -3,8 +3,8 @@
 <style>
     /* Modern Glass Container - Matching Navbar Design */
     .glass-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
+        background: rgba(6, 73, 87, 0.3);
+        backdrop-filter: blur(5px);
         border: 1px solid rgba(0, 0, 0, 0.08);
         border-radius: 1rem;
         padding: 2rem;
@@ -15,14 +15,24 @@
     }
 
     [data-theme="dark"] .glass-container {
-        background: rgba(30, 30, 30, 0.95);
+        background: rgba(10, 81, 97, 0.2);
         border-color: rgba(255, 255, 255, 0.1);
         color: var(--text-primary, white);
+        -webkit-text-fill-color: rgb(2, 0, 0);
+        text-shadow:(2px,2px,4px)rgb(252, 252, 252);
     }
+    [data-theme="light"] .glass-container {
+        background: rgba(10, 81, 97, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary, white);
+        -webkit-text-fill-color: rgb(2, 0, 0);
+        text-shadow:(2px,2px,4px)rgb(252, 252, 252);
+    }
+
     
     .glass-container h3 {
         font-weight: 700;
-        color: #fe424d;
+        color: #fefbfb;
         margin-bottom: 1rem;
     }
     
@@ -31,6 +41,7 @@
         color: var(--text-secondary, #666666);
         margin-bottom: 1rem;
     }
+    
 
     .glass-container .btn-primary {
         background: #fe424d;
@@ -217,7 +228,7 @@
     <div class="row">
         <div class="col-12 glass-container">
             <h3><i class="fa-solid fa-bookmark me-2"></i>My Wishlist</h3>
-            <p>Your saved destinations and dream stays!</p>
+            <p >Your saved destinations and dream stays!</p>
         </div>
     </div>
     
