@@ -1,11 +1,12 @@
 <style>
-  /* Force remove horizontal scrollbar */
+  /* Prevent horizontal scroll */
   body,
   html {
     overflow-x: hidden !important;
     max-width: 100vw !important;
   }
 
+  /* Navbar Base */
   .navbar {
     overflow: visible !important;
     max-width: 100% !important;
@@ -33,7 +34,7 @@
     font-size: 0.9rem;
   }
 
-  /* Search form styling */
+  /* Search Bar */
   .navbar-search-form {
     position: relative;
     flex-grow: 1;
@@ -67,15 +68,58 @@
   }
 
   .navbar-search-form .btn-primary {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
+    border-radius: 0 50px 50px 0;
     padding: 0.5rem 1.25rem;
     white-space: nowrap;
   }
 
-  /* Action buttons compact layout */
+  /* Search Suggestions */
+  .search-suggestions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 8px;
+    margin-top: 4px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .search-suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s ease;
+  }
+
+  .search-suggestion-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  .search-suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .search-suggestion-icon {
+    color: #6c757d;
+    width: 16px;
+    text-align: center;
+  }
+
+  .search-suggestion-type {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: capitalize;
+  }
+
+  /* Navbar Actions */
   .navbar-actions {
     display: flex;
     align-items: center;
@@ -98,7 +142,7 @@
     flex-shrink: 0;
   }
 
-  /* Language toggle - show only flag on smaller screens */
+  /* Language toggle - responsive text */
   #languageToggle .hide-text {
     display: inline;
   }
@@ -109,24 +153,48 @@
     }
   }
 
-  /* Theme toggle container */
-  .theme-toggle-container {
-    flex-shrink: 0;
-    display: flex;
+  /* Notification Badge */
+  #notificationBadge {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.4rem;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
   }
 
-  .search-suggestion-item {
-    padding: 12px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #0b0101;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  /* Dropdown Menus */
+  .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .notification-dropdown {
+    width: 350px;
+  }
+
+  .notification-list {
+    max-height: 350px;
+    overflow-y: auto;
+  }
+
+  .notification-item {
     transition: background-color 0.2s ease;
   }
 
-  /* Responsive navbar */
+  .notification-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .navbar-actions {
+      gap: 0.2rem;
+    }
+  }
+
   @media (max-width: 991px) {
     .navbar-search-form {
       max-width: 100%;
@@ -139,52 +207,41 @@
       margin-top: 1rem;
       width: 100%;
     }
-
-    .navbar-actions > * {
-      flex-shrink: 0;
-    }
   }
 
-  /* Additional responsive adjustments for navbar actions */
-  @media (max-width: 1200px) {
-    .navbar-actions {
-      gap: 0.2rem;
-    }
-  }
-
-  /* Notification badge styling */
-  #notificationBadge {
-    font-size: 0.6rem;
-    padding: 0.25rem 0.4rem;
-    min-width: 18px;
-    height: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .search-suggestion-icon {
-    color: #f1f3f6;
-    width: 16px;
-    text-align: center;
-  /* Dropdown menu improvements */
-  .dropdown-menu {
-    max-height: 400px;
-    overflow-y: auto;
-  }
-
-  .notification-dropdown {
-    width: 350px;
-  }
-
-  .search-suggestion-type {
-    font-size: 0.8rem;
-    color: #fbfbfb;
-    text-transform: capitalize;
   @media (max-width: 576px) {
     .notification-dropdown {
       width: 280px;
     }
+  }
+
+  /* Toast Animations */
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  .toast-notification {
+    animation: slideIn 0.3s ease-out;
   }
 </style>
 
@@ -234,52 +291,36 @@
             <span>Travel Tools</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="travelToolsDropdown">
-            <li>
-              <a class="dropdown-item" href="/trip-planner">
+            <li><a class="dropdown-item" href="/trip-planner">
                 <i class="fa-solid fa-route me-2" aria-hidden="true"></i>Trip Planner
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/packing-list">
+              </a></li>
+            <li><a class="dropdown-item" href="/packing-list">
                 <i class="fa-solid fa-suitcase me-2" aria-hidden="true"></i>Packing List Generator
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/holiday">
+              </a></li>
+            <li><a class="dropdown-item" href="/holiday">
                 <i class="fa-solid fa-calendar-days me-2" aria-hidden="true"></i>Holiday Calendar
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/listings/compare">
+              </a></li>
+            <li><a class="dropdown-item" href="/listings/compare">
                 <i class="fa-solid fa-balance-scale me-2" aria-hidden="true"></i>Compare Destinations
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/trip-planner/mood-fixing">
+              </a></li>
+            <li><a class="dropdown-item" href="/trip-planner/mood-fixing">
                 <i class="fa-solid fa-music me-2" aria-hidden="true"></i>Mood Fixing
-              </a>
-            </li>
+              </a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li>
-              <a class="dropdown-item" href="/weather">
+            <li><a class="dropdown-item" href="/weather">
                 <i class="fa-solid fa-cloud-sun me-2" aria-hidden="true"></i>Weather Info
-              </a>
-            </li>
+              </a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li>
-              <a class="dropdown-item" href="/achievements">
+            <li><a class="dropdown-item" href="/achievements">
                 <i class="fa-solid fa-trophy me-2" aria-hidden="true"></i>Achievements
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/leaderboard">
+              </a></li>
+            <li><a class="dropdown-item" href="/leaderboard">
                 <i class="fa-solid fa-chart-line me-2" aria-hidden="true"></i>Leaderboard
-              </a>
-            </li>
+              </a></li>
           </ul>
         </li>
       </ul>
@@ -299,10 +340,7 @@
             <%= __('search') %>
           </button>
         </div>
-        <div class="search-suggestions position-absolute bg-white shadow-sm" id="searchSuggestions" role="listbox"
-          aria-label="Search suggestions"
-          style="display: none; top: 100%; left: 0; right: 0; z-index: 1050; max-height: 300px; overflow-y: auto; border-radius: 8px; margin-top: 4px;">
-        </div>
+        <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
       </form>
 
       <!-- Right Side Actions -->
@@ -341,66 +379,48 @@
                 </span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li>
-                  <a class="dropdown-item" href="/profile">
+                <li><a class="dropdown-item" href="/profile">
                     <i class="fa-solid fa-user me-2" aria-hidden="true"></i>My Profile
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/profile/wishlist">
+                  </a></li>
+                <li><a class="dropdown-item" href="/profile/wishlist">
                     <i class="fa-solid fa-bookmark me-2" aria-hidden="true"></i>My Wishlist
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/profile/likes">
+                  </a></li>
+                <li><a class="dropdown-item" href="/profile/likes">
                     <i class="fa-solid fa-heart me-2" aria-hidden="true"></i>Liked Listings
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/profile/vacation-slots">
+                  </a></li>
+                <li><a class="dropdown-item" href="/profile/vacation-slots">
                     <i class="fa-solid fa-calendar-check me-2" aria-hidden="true"></i>My Vacation Slots
                     <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length> 0) { %>
                       <span class="badge bg-primary ms-2">
                         <%= currentUser.vacationSlots.length %>
                       </span>
                       <% } %>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/trip-planner/my-trips">
+                  </a></li>
+                <li><a class="dropdown-item" href="/trip-planner/my-trips">
                     <i class="fa-solid fa-suitcase-rolling me-2" aria-hidden="true"></i>My Trip Plans
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="/phrase-assistant">
+                  </a></li>
+                <li><a class="dropdown-item" href="/phrase-assistant">
                     <i class="fa-solid fa-language me-2" aria-hidden="true"></i>Phrase Assistant
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" id="downloadsDropdownToggle">
+                  </a></li>
+                <li><a class="dropdown-item" href="#" id="downloadsDropdownToggle">
                     <i class="fa-solid fa-download me-2" aria-hidden="true"></i>My Downloads
                     <span id="profileDownloadCount" class="badge bg-primary ms-2" style="display: none;">0</span>
-                  </a>
-                </li>
+                  </a></li>
                 <% if (currentUser && currentUser.isAdmin) { %>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li>
-                    <a class="dropdown-item" href="/admin/dashboard">
+                  <li><a class="dropdown-item" href="/admin/dashboard">
                       <i class="fa-solid fa-chart-line me-2" aria-hidden="true"></i>Admin Dashboard
-                    </a>
-                  </li>
+                    </a></li>
                   <% } %>
                     <li>
                       <hr class="dropdown-divider">
                     </li>
-                    <li>
-                      <a class="dropdown-item" href="/logout">
+                    <li><a class="dropdown-item" href="/logout">
                         <i class="fa-solid fa-sign-out-alt me-2" aria-hidden="true"></i>
                         <%= __('logout') %>
-                      </a>
-                    </li>
+                      </a></li>
               </ul>
             </div>
 
@@ -428,9 +448,7 @@
                   </div>
                 </div>
                 <div class="dropdown-footer p-2 border-top text-center">
-                  <a href="/notifications" class="text-decoration-none small">
-                    View All Notifications
-                  </a>
+                  <a href="/notifications" class="text-decoration-none small">View All Notifications</a>
                 </div>
               </div>
             </div>
@@ -565,13 +583,13 @@
 
         updateBadge() {
           const badge = document.getElementById('notificationBadge');
-          if (badge) {
-            if (this.unreadCount > 0) {
-              badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
-              badge.style.display = 'inline-flex';
-            } else {
-              badge.style.display = 'none';
-            }
+          if (!badge) return;
+
+          if (this.unreadCount > 0) {
+            badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+            badge.style.display = 'inline-flex';
+          } else {
+            badge.style.display = 'none';
           }
         }
 
@@ -597,7 +615,7 @@
           const unreadClass = notification.isRead ? '' : 'bg-light';
 
           return `
-        <div class="p-3 border-bottom ${unreadClass}" data-id="${notification._id}" style="cursor: pointer;">
+        <div class="notification-item p-3 border-bottom ${unreadClass}" data-id="${notification._id}" style="cursor: pointer;">
           <div class="d-flex justify-content-between align-items-start">
             <div class="flex-grow-1">
               <h6 class="mb-1 fw-bold" style="font-size: 0.9rem;">${this.escapeHtml(notification.title)}</h6>
@@ -608,15 +626,13 @@
               ${!notification.isRead ? `
                 <button class="btn btn-sm btn-link p-0 text-success" 
                         onclick="event.stopPropagation(); window.notificationManager.markAsRead('${notification._id}')" 
-                        title="Mark as read" 
-                        aria-label="Mark as read">
+                        title="Mark as read" aria-label="Mark as read">
                   <i class="fa-solid fa-check"></i>
                 </button>
               ` : ''}
               <button class="btn btn-sm btn-link p-0 text-danger" 
                       onclick="event.stopPropagation(); window.notificationManager.deleteNotification('${notification._id}')" 
-                      title="Delete" 
-                      aria-label="Delete notification">
+                      title="Delete" aria-label="Delete notification">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
@@ -633,7 +649,7 @@
             '"': '&quot;',
             "'": '&#039;'
           };
-          return text.replace(/[&<>"']/g, m => map[m]);
+          return String(text).replace(/[&<>"']/g, m => map[m]);
         }
 
         getTimeAgo(dateString) {
@@ -678,9 +694,7 @@
           try {
             const unreadNotifications = this.notifications.filter(n => !n.isRead);
 
-            for (const notification of unreadNotifications) {
-              await this.markAsRead(notification._id);
-            }
+            await Promise.all(unreadNotifications.map(n => this.markAsRead(n._id)));
 
             showToast('All notifications marked as read', 'success');
           } catch (error) {
@@ -716,7 +730,7 @@
       }
 
       // Toast notification function
-      window.showToast = function (message, type) {
+      window.showToast = function (message, type = 'info') {
         const alertClass = {
           'success': 'alert-success',
           'error': 'alert-danger',
@@ -732,8 +746,8 @@
         }[type] || 'fa-info-circle';
 
         const toast = document.createElement('div');
-        toast.className = `alert ${alertClass} position-fixed shadow-lg`;
-        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideIn 0.3s ease-out;';
+        toast.className = `alert ${alertClass} toast-notification position-fixed shadow-lg`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
         toast.setAttribute('role', 'alert');
         toast.innerHTML = `
       <div class="d-flex align-items-center">
@@ -748,32 +762,6 @@
           setTimeout(() => toast.remove(), 300);
         }, 3000);
       };
-
-      // Add CSS animations
-      const style = document.createElement('style');
-      style.textContent = `
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-    }
-  `;
-      document.head.appendChild(style);
     })();
   </script>
   <% } %>
