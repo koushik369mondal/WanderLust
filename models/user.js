@@ -369,6 +369,64 @@ const userSchema = new Schema({
             default: Date.now
         }
     }],
+    travelMemories: [{
+        destination: {
+            type: String,
+            required: true,
+            maxlength: 100
+        },
+        startDate: {
+            type: Date,
+            required: true
+        },
+        endDate: {
+            type: Date,
+            required: true
+        },
+        photos: [{
+            url: {
+                type: String,
+                required: true
+            },
+            filename: {
+                type: String,
+                required: true
+            },
+            caption: {
+                type: String,
+                maxlength: 200,
+                default: ""
+            }
+        }],
+        reflections: {
+            type: String,
+            maxlength: 1000,
+            default: ""
+        },
+        rating: {
+            type: Number,
+            min: 1,
+            max: 10,
+            default: 5
+        },
+        category: {
+            type: String,
+            enum: ['beach', 'mountain', 'city', 'cultural', 'adventure', 'relaxation', 'food', 'nature', 'other'],
+            default: 'other'
+        },
+        isPublic: {
+            type: Boolean,
+            default: false
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        updatedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     notificationSettings: {
         tripAdded: { type: Boolean, default: true },
         tripUpdated: { type: Boolean, default: true },
