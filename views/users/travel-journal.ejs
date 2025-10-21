@@ -1,0 +1,784 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+    :root {
+        --body-text-color: #e0f7ff;
+        --text-primary: #0a2533;
+        --shadow-color: rgba(0, 0, 0, 0.2);
+        --accent-border-color: #1ed9a8;
+        --bg-secondary: rgba(255, 255, 255, 0.05);
+        --border-light: rgba(255, 255, 255, 0.2);
+    }
+
+    .travel-journal-container {
+        background: var(--profile-header-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 1.25rem;
+        color: white;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .travel-journal-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(to right, #1ed9a8, #0f5a7c);
+    }
+
+    .journal-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .journal-header h1 {
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--text-primary);
+        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+        margin-bottom: 0.5rem;
+    }
+
+    .journal-header p {
+        color: var(--body-text-color);
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 1rem;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--accent-border-color), var(--accent-border-color-dark));
+        border-radius: 2px;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: -2.5rem;
+        top: 0;
+        width: 2.5rem;
+        height: 2.5rem;
+        background: var(--accent-border-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .timeline-content {
+        flex: 1;
+        background: var(--bg-secondary);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid var(--border-light);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .memory-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .memory-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .memory-dates {
+        color: var(--accent-border-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .memory-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .memory-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .memory-category {
+        background: var(--accent-border-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .memory-photos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .memory-photo {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .memory-photo:hover {
+        transform: scale(1.05);
+    }
+
+    .memory-reflections {
+        color: var(--body-text-color);
+        line-height: 1.6;
+        margin: 1rem 0;
+        font-style: italic;
+    }
+
+    .memory-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    .btn-edit, .btn-delete {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+        background: var(--accent-border-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-edit:hover {
+        background: #22e6b8;
+        transform: translateY(-2px);
+    }
+
+    .btn-delete {
+        background: transparent;
+        border: 1px solid #dc3545;
+        color: #dc3545;
+    }
+
+    .btn-delete:hover {
+        background: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .add-memory-section {
+        background: var(--bg-secondary);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-light);
+    }
+
+    .add-memory-section h2 {
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: var(--body-text-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--body-text-color);
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: var(--accent-border-color);
+        box-shadow: 0 0 0 0.2rem rgba(30, 217, 168, 0.25);
+        color: var(--body-text-color);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .rating-stars {
+        display: flex;
+        gap: 0.25rem;
+        margin-top: 0.5rem;
+    }
+
+    .star {
+        color: #ddd;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .star.active {
+        color: #ffd700;
+    }
+
+    .photo-upload-area {
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border-radius: 0.5rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        margin: 1rem 0;
+    }
+
+    .photo-upload-area:hover {
+        border-color: var(--accent-border-color);
+        background: rgba(30, 217, 168, 0.05);
+    }
+
+    .photo-upload-area.dragover {
+        border-color: var(--accent-border-color);
+        background: rgba(30, 217, 168, 0.1);
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, var(--accent-border-color), #0f5a7c);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #22e6b8, #11688e);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--body-text-color);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: rgba(255, 255, 255, 0.3);
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        opacity: 0.8;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        border: 1px solid var(--border-light);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent-border-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--body-text-color);
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+        .timeline {
+            padding-left: 2rem;
+        }
+
+        .timeline-marker {
+            left: -2.5rem;
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .memory-header {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .memory-title {
+            font-size: 1.25rem;
+        }
+
+        .memory-photos {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-section {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="travel-journal-container">
+    <div class="journal-header">
+        <h1><i class="fa-solid fa-book me-3"></i>My Travel Journal</h1>
+        <p>Document your adventures and cherish your memories</p>
+    </div>
+
+    <!-- Travel Stats -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <div class="stat-number"><%= travelMemories ? travelMemories.length : 0 %></div>
+            <div class="stat-label">Memories</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number"><%= uniqueDestinations ? uniqueDestinations.length : 0 %></div>
+            <div class="stat-label">Destinations</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number"><%= totalPhotos ? totalPhotos : 0 %></div>
+            <div class="stat-label">Photos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number"><%= averageRating ? averageRating.toFixed(1) : 0 %></div>
+            <div class="stat-label">Avg Rating</div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Memory Section -->
+    <div class="add-memory-section" id="addMemorySection" style="display: none;">
+        <h2 id="memoryFormTitle"><i class="fa-solid fa-plus me-2"></i>Add New Memory</h2>
+        <form id="addMemoryForm" enctype="multipart/form-data">
+            <input type="hidden" id="memoryId" name="memoryId">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="destination" class="form-label">Destination *</label>
+                        <input type="text" class="form-control" id="destination" name="destination" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate" class="form-label">Start Date *</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate" class="form-label">End Date *</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-control" id="category" name="category">
+                            <option value="Adventure">Adventure</option>
+                            <option value="Relaxation">Relaxation</option>
+                            <option value="Culture">Culture</option>
+                            <option value="Food">Food</option>
+                            <option value="Nature">Nature</option>
+                            <option value="City Break">City Break</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Rating</label>
+                        <div class="rating-stars" id="ratingStars">
+                            <i class="fa-solid fa-star star" data-rating="1"></i>
+                            <i class="fa-solid fa-star star" data-rating="2"></i>
+                            <i class="fa-solid fa-star star" data-rating="3"></i>
+                            <i class="fa-solid fa-star star" data-rating="4"></i>
+                            <i class="fa-solid fa-star star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="rating" name="rating" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="reflections" class="form-label">Reflections</label>
+                        <textarea class="form-control" id="reflections" name="reflections" rows="4" placeholder="Share your thoughts about this trip..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Photos</label>
+                        <div class="photo-upload-area" id="photoUploadArea">
+                            <i class="fa-solid fa-cloud-upload-alt fa-2x mb-2"></i>
+                            <p>Drag & drop photos here or click to browse</p>
+                            <input type="file" id="photos" name="photos" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div id="photoPreview" class="memory-photos" style="display: none;"></div>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isPublic" name="isPublic">
+                        <label class="form-check-label" for="isPublic">
+                            Make this memory public
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-secondary me-2" onclick="hideAddMemoryForm()">Cancel</button>
+                <button type="submit" class="btn btn-submit">Save Memory</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Add Memory Button -->
+    <div class="text-center mb-4">
+        <button class="btn btn-submit" id="addMemoryBtn">
+            <i class="fa-solid fa-plus me-2"></i>Add New Memory
+        </button>
+    </div>
+
+    <!-- Timeline -->
+    <% if (travelMemories && travelMemories.length > 0) { %>
+        <div class="timeline">
+            <% travelMemories.sort((a, b) => new Date(b.startDate) - new Date(a.startDate)).forEach((memory, index) => { %>
+                <div class="timeline-item">
+                    <div class="timeline-marker">
+                        <i class="fa-solid fa-map-marker-alt"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="memory-header">
+                            <h3 class="memory-title">
+                                <i class="fa-solid fa-location-dot me-2"></i>
+                                <%= memory.destination %>
+                            </h3>
+                            <div class="memory-dates">
+                                <%= new Date(memory.startDate).toLocaleDateString() %> - <%= new Date(memory.endDate).toLocaleDateString() %>
+                            </div>
+                        </div>
+
+                        <div class="memory-meta">
+                            <% if (memory.rating) { %>
+                                <div class="memory-rating">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <i class="fa-solid fa-star <%= i <= memory.rating ? 'active' : '' %>"></i>
+                                    <% } %>
+                                    <span>(<%= memory.rating %>)</span>
+                                </div>
+                            <% } %>
+                            <% if (memory.category) { %>
+                                <span class="memory-category"><%= memory.category %></span>
+                            <% } %>
+                            <% if (!memory.isPublic) { %>
+                                <span><i class="fa-solid fa-lock me-1"></i>Private</span>
+                            <% } %>
+                        </div>
+
+                        <% if (memory.photos && memory.photos.length > 0) { %>
+                            <div class="memory-photos">
+                                <% memory.photos.forEach(photo => { %>
+                                    <img src="<%= photo %>" alt="Travel photo" class="memory-photo" onclick="openPhotoModal('<%= photo %>')">
+                                <% }); %>
+                            </div>
+                        <% } %>
+
+                        <% if (memory.reflections) { %>
+                            <div class="memory-reflections">
+                                "<%= memory.reflections %>"
+                            </div>
+                        <% } %>
+
+                        <div class="memory-actions">
+                            <button class="btn btn-edit" onclick="editMemory('<%= memory._id %>')">
+                                <i class="fa-solid fa-edit me-1"></i>Edit
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteMemory('<%= memory._id %>')">
+                                <i class="fa-solid fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <div class="empty-state">
+            <i class="fa-solid fa-book-open"></i>
+            <h3>Your travel journal is empty</h3>
+            <p>Start documenting your adventures by adding your first travel memory!</p>
+        </div>
+    <% } %>
+</div>
+
+<!-- Photo Modal -->
+<div class="modal fade" id="photoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: var(--bg-secondary); color: var(--body-text-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Travel Photo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalPhoto" src="" alt="Travel photo" style="max-width: 100%; max-height: 70vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedFiles = [];
+let currentRating = 0;
+
+function showAddMemoryForm() {
+    document.getElementById('addMemorySection').style.display = 'block';
+    document.getElementById('addMemorySection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideAddMemoryForm() {
+    document.getElementById('addMemorySection').style.display = 'none';
+    document.getElementById('addMemoryForm').reset();
+    selectedFiles = [];
+    currentRating = 0;
+    updateRatingStars();
+    document.getElementById('photoPreview').style.display = 'none';
+    document.getElementById('photoPreview').innerHTML = '';
+}
+
+function updateRatingStars() {
+    const stars = document.querySelectorAll('#ratingStars .star');
+    stars.forEach((star, index) => {
+        if (index < currentRating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+    document.getElementById('rating').value = currentRating;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add Memory Button functionality
+    document.getElementById('addMemoryBtn').addEventListener('click', function() {
+        showAddMemoryForm();
+    });
+
+    // Rating stars functionality
+    document.querySelectorAll('#ratingStars .star').forEach(star => {
+        star.addEventListener('click', function() {
+            currentRating = parseInt(this.dataset.rating);
+            updateRatingStars();
+        });
+    });
+
+    // Photo upload functionality
+    const photoUploadArea = document.getElementById('photoUploadArea');
+    const photoInput = document.getElementById('photos');
+    const photoPreview = document.getElementById('photoPreview');
+
+    photoUploadArea.addEventListener('click', () => photoInput.click());
+
+    photoUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        photoUploadArea.classList.add('dragover');
+    });
+
+    photoUploadArea.addEventListener('dragleave', () => {
+        photoUploadArea.classList.remove('dragover');
+    });
+
+    photoUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        photoUploadArea.classList.remove('dragover');
+        const files = Array.from(e.dataTransfer.files);
+        handleFileSelection(files);
+    });
+
+    photoInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        handleFileSelection(files);
+    });
+
+    function handleFileSelection(files) {
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        selectedFiles = selectedFiles.concat(imageFiles);
+        updatePhotoPreview();
+    }
+
+    function updatePhotoPreview() {
+        if (selectedFiles.length > 0) {
+            photoPreview.style.display = 'grid';
+            photoPreview.innerHTML = selectedFiles.map((file, index) => `
+                <div style="position: relative;">
+                    <img src="${URL.createObjectURL(file)}" alt="Preview" class="memory-photo">
+                    <button type="button" class="btn btn-danger btn-sm" style="position: absolute; top: 5px; right: 5px;" onclick="removePhoto(${index})">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        } else {
+            photoPreview.style.display = 'none';
+            photoPreview.innerHTML = '';
+        }
+    }
+
+    window.removePhoto = function(index) {
+        selectedFiles.splice(index, 1);
+        updatePhotoPreview();
+    };
+
+    // Form submission
+    document.getElementById('addMemoryForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        selectedFiles.forEach(file => {
+            formData.append('photos', file);
+        });
+
+        const memoryId = document.getElementById('memoryId').value;
+        const method = memoryId ? 'PATCH' : 'POST';
+        const url = memoryId ? `/profile/travel-journal/${memoryId}` : '/profile/travel-journal';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                location.reload();
+            } else {
+                alert('Error saving memory: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error saving memory');
+        }
+    });
+});
+
+function openPhotoModal(photoSrc) {
+    document.getElementById('modalPhoto').src = photoSrc;
+    new bootstrap.Modal(document.getElementById('photoModal')).show();
+}
+
+function editMemory(memoryId) {
+    // Fetch memory data and populate form
+    fetch(`/profile/travel-journal/${memoryId}`)
+        .then(response => response.json())
+        .then(memory => {
+            // Populate form fields
+            document.getElementById('memoryId').value = memory._id;
+            document.getElementById('destination').value = memory.destination;
+            document.getElementById('startDate').value = new Date(memory.startDate).toISOString().split('T')[0];
+            document.getElementById('endDate').value = new Date(memory.endDate).toISOString().split('T')[0];
+            document.getElementById('category').value = memory.category || '';
+            document.getElementById('reflections').value = memory.reflections || '';
+            document.getElementById('isPublic').checked = memory.isPublic || false;
+
+            // Set rating
+            currentRating = memory.rating || 0;
+            updateRatingStars();
+
+            // Update form title
+            document.getElementById('memoryFormTitle').innerHTML = '<i class="fa-solid fa-edit me-2"></i>Edit Memory';
+
+            // Show form
+            showAddMemoryForm();
+        })
+        .catch(error => {
+            console.error('Error fetching memory:', error);
+            alert('Error loading memory for editing');
+        });
+}
+
+function deleteMemory(memoryId) {
+    if (confirm('Are you sure you want to delete this memory?')) {
+        fetch(`/profile/travel-journal/${memoryId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                location.reload();
+            } else {
+                alert('Error deleting memory');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting memory');
+        });
+    }
+}
+</script>

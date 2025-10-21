@@ -65,6 +65,12 @@ router.get("/achievements", isLoggedIn, wrapAsync(userController.showAchievement
 // Leaderboard Route
 router.get("/leaderboard", isLoggedIn, wrapAsync(userController.showLeaderboard));
 
+// Travel Journal Routes
+router.get("/profile/travel-journal", isLoggedIn, wrapAsync(userController.showTravelJournal));
+router.post("/profile/travel-journal", isLoggedIn, wrapAsync(userController.addTravelMemory));
+router.patch("/profile/travel-journal/:memoryId", isLoggedIn, wrapAsync(userController.updateTravelMemory));
+router.delete("/profile/travel-journal/:memoryId", isLoggedIn, wrapAsync(userController.deleteTravelMemory));
+
 // Smart Travel Recommendations Route
 router.get("/recommendations", (req, res) => {
     console.log("Direct route handler called");

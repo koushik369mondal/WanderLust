@@ -743,6 +743,212 @@ module.exports.showLeaderboard = async (req, res) => {
     }
 };
 
+// Travel Journal Controller Methods
+module.exports.showTravelJournal = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/listings");
+        }
+
+        // Filter out memories with invalid dates and sort by start date (most recent first)
+        const travelMemories = user.travelMemories.filter(memory => {
+            try {
+                const start = new Date(memory.startDate);
+                const end = new Date(memory.endDate);
+                // Check if dates are valid and start is before end
+                return !isNaN(start.getTime()) && !isNaN(end.getTime()) && start <= end;
+            } catch (error) {
+                console.warn('Invalid date in travel memory:', memory._id, error.message);
+                return false;
+            }
+        }).sort((a, b) => {
+            try {
+                return new Date(b.startDate) - new Date(a.startDate);
+            } catch (error) {
+                return 0; // Keep original order if sorting fails
+            }
+        });
+
+        // Calculate stats for the view
+        const uniqueDestinations = [...new Set(travelMemories.map(memory => memory.destination))];
+        const totalPhotos = travelMemories.reduce((total, memory) => total + (memory.photos ? memory.photos.length : 0), 0);
+        const totalRating = travelMemories.reduce((total, memory) => total + (memory.rating || 0), 0);
+        const averageRating = travelMemories.length > 0 ? totalRating / travelMemories.length : 0;
+
+        res.render("users/travel-journal.ejs", {
+            travelMemories,
+            uniqueDestinations,
+            totalPhotos,
+            averageRating,
+            name: user.username,
+            title: "My Travel Journal"
+        });
+    } catch (error) {
+        console.error("Error loading travel journal:", error);
+        req.flash("error", "Error loading travel journal. Please try again.");
+        res.redirect("/profile");
+    }
+};
+
+module.exports.addTravelMemory = async (req, res) => {
+    try {
+        const { destination, startDate, endDate, reflections, rating, category, isPublic } = req.body;
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/profile");
+        }
+
+        // Handle photo uploads
+        let photos = [];
+        if (req.files && req.files.length > 0) {
+            photos = req.files.map(file => ({
+                url: file.path,
+                filename: file.filename,
+                caption: ""
+            }));
+        }
+
+        const newMemory = {
+            destination,
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
+            photos,
+            reflections: reflections || "",
+            rating: parseInt(rating) || 5,
+            category: category || 'other',
+            isPublic: isPublic === 'on',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+
+        user.travelMemories.push(newMemory);
+        await user.save();
+
+        // Log activity
+        await user.logActivity('travel_memory_added', `Added travel memory: ${destination}`);
+
+        // Update travel stats
+        await updateTravelStats(user._id);
+
+        req.flash("success", "Travel memory added successfully!");
+        res.redirect("/profile/travel-journal");
+    } catch (error) {
+        console.error("Error adding travel memory:", error);
+        req.flash("error", "Error adding travel memory. Please try again.");
+        res.redirect("/profile/travel-journal");
+    }
+};
+
+module.exports.updateTravelMemory = async (req, res) => {
+    try {
+        const { memoryId } = req.params;
+        const { destination, startDate, endDate, reflections, rating, category, isPublic } = req.body;
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/profile");
+        }
+
+        const memory = user.travelMemories.id(memoryId);
+        if (!memory) {
+            req.flash("error", "Travel memory not found!");
+            return res.redirect("/profile/travel-journal");
+        }
+
+        // Update memory fields
+        memory.destination = destination;
+        memory.startDate = new Date(startDate);
+        memory.endDate = new Date(endDate);
+        memory.reflections = reflections || "";
+        memory.rating = parseInt(rating) || 5;
+        memory.category = category || 'other';
+        memory.isPublic = isPublic === 'on';
+        memory.updatedAt = new Date();
+
+        // Handle new photo uploads
+        if (req.files && req.files.length > 0) {
+            const newPhotos = req.files.map(file => ({
+                url: file.path,
+                filename: file.filename,
+                caption: ""
+            }));
+            memory.photos.push(...newPhotos);
+        }
+
+        await user.save();
+
+        // Log activity
+        await user.logActivity('travel_memory_updated', `Updated travel memory: ${destination}`);
+
+        req.flash("success", "Travel memory updated successfully!");
+        res.redirect("/profile/travel-journal");
+    } catch (error) {
+        console.error("Error updating travel memory:", error);
+        req.flash("error", "Error updating travel memory. Please try again.");
+        res.redirect("/profile/travel-journal");
+    }
+};
+
+module.exports.deleteTravelMemory = async (req, res) => {
+    try {
+        const { memoryId } = req.params;
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            req.flash("error", "User not found.");
+            return res.redirect("/profile");
+        }
+
+        const memory = user.travelMemories.id(memoryId);
+        if (!memory) {
+            req.flash("error", "Travel memory not found!");
+            return res.redirect("/profile/travel-journal");
+        }
+
+        const destination = memory.destination;
+        user.travelMemories.pull(memoryId);
+        await user.save();
+
+        // Log activity
+        await user.logActivity('travel_memory_deleted', `Deleted travel memory: ${destination}`);
+
+        // Update travel stats
+        await updateTravelStats(user._id);
+
+        req.flash("success", "Travel memory deleted successfully!");
+        res.redirect("/profile/travel-journal");
+    } catch (error) {
+        console.error("Error deleting travel memory:", error);
+        req.flash("error", "Error deleting travel memory. Please try again.");
+        res.redirect("/profile/travel-journal");
+    }
+};
+
+// Helper function to update travel stats
+async function updateTravelStats(userId) {
+    try {
+        const user = await User.findById(userId);
+        if (!user) return;
+
+        const memories = user.travelMemories;
+        const uniqueDestinations = [...new Set(memories.map(m => m.destination))];
+
+        // Update travel stats
+        user.travelStats.totalTrips = memories.length;
+        user.travelStats.citiesVisited = uniqueDestinations.length;
+
+        await user.save();
+    } catch (error) {
+        console.error("Error updating travel stats:", error);
+    }
+}
+
 // Get additional recommendations when we need more
 async function getAdditionalRecommendations(userId, existingRecommendations) {
     const Listing = require("../models/listing");

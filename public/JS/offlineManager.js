@@ -1,3 +1,4 @@
+
 class OfflineManager {
     constructor() {
         this.dbName = 'WanderLustOffline';
