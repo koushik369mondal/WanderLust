@@ -1,0 +1,30 @@
+/* Tailwind CSS Base Styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Tailwind Components */
+@layer components {
+  .tw-btn-primary {
+    @apply tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded tw-font-semibold hover:tw-bg-blue-600 tw-transition;
+  }
+
+  .tw-card {
+    @apply tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4 tw-transition hover:tw-shadow-lg;
+  }
+
+  .tw-badge {
+    @apply tw-inline-block tw-px-2 tw-py-1 tw-text-xs tw-font-semibold tw-rounded-full;
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .tw-text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .tw-text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
