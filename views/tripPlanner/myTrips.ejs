@@ -156,19 +156,19 @@
                                     <div class="cost-breakdown-mini mt-3">
                                         <div class="cost-item-mini">
                                             <i class="fa-solid fa-plane text-primary"></i>
-                                            $<%= trip.costs.flights.toLocaleString() %>
+                                            $<%= (trip.costs?.flights || 0).toLocaleString() %>
                                         </div>
                                         <div class="cost-item-mini">
                                             <i class="fa-solid fa-bed text-success"></i>
-                                            $<%= trip.costs.hotels.toLocaleString() %>
+                                            $<%= (trip.costs?.hotels || 0).toLocaleString() %>
                                         </div>
                                         <div class="cost-item-mini">
                                             <i class="fa-solid fa-utensils text-warning"></i>
-                                            $<%= trip.costs.food.toLocaleString() %>
+                                            $<%= (trip.costs?.food || 0).toLocaleString() %>
                                         </div>
                                         <div class="cost-item-mini">
                                             <i class="fa-solid fa-camera text-info"></i>
-                                            $<%= trip.costs.activities.toLocaleString() %>
+                                            $<%= (trip.costs?.activities || 0).toLocaleString() %>
                                         </div>
                                     </div>
                                 </div>
