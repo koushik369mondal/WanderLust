@@ -34,7 +34,7 @@ jobs:
             // LABEL DEFINITIONS
             // ============================================
             const REQUIRED_LABELS = [
-              { name: 'gssoc', description: 'GirlScript Summer of Code 2025', color: 'ff6b35' },
+              { name: 'GSSoC\'25', description: 'GirlScript Summer of Code 2025', color: 'ff6b35' },
               { name: 'level1', description: 'Beginner: 10 points - Good for newcomers', color: '28a745' },
               { name: 'level2', description: 'Intermediate: 25 points - Some experience needed', color: '0366d6' },
               { name: 'level3', description: 'Advanced: 45 points - Significant experience required', color: 'd73a49' },
@@ -455,7 +455,7 @@ jobs:
 
                 level = classifyIssue(itemData);
                 const contextLabels = getContextualLabels(itemData, level);
-                const allLabels = ['gssoc', level, ...contextLabels];
+                const allLabels = ['GSSoC\'25', level, ...contextLabels];
 
                 await removeConflictingLabels(itemNumber, level);
                 await applyLabels(itemNumber, allLabels);
@@ -485,7 +485,7 @@ jobs:
                   }
 
                   const contextLabels = getContextualLabels(itemData, level);
-                  const allLabels = ['gssoc', level, ...contextLabels];
+                  const allLabels = ['GSSoC\'25', level, ...contextLabels];
 
                   await removeConflictingLabels(itemNumber, level);
                   await applyLabels(itemNumber, allLabels);
@@ -498,7 +498,7 @@ jobs:
                   
                   // Try to get contextual labels even in fallback mode
                   const contextLabels = getContextualLabels(itemData, level);
-                  const allLabels = ['gssoc', level, ...contextLabels];
+                  const allLabels = ['GSSoC\'25', level, ...contextLabels];
                   
                   await removeConflictingLabels(itemNumber, level);
                   await applyLabels(itemNumber, allLabels);
@@ -516,7 +516,7 @@ jobs:
 
               const finalLabels = finalItem.labels.map(l => l.name);
               console.log(`📋 Final labels: ${finalLabels.join(', ')}`);
-              console.log(`✓ Has gssoc: ${finalLabels.includes('gssoc')}`);
+              console.log(`✓ Has GSSoC'25: ${finalLabels.includes('GSSoC\'25')}`);
               console.log(`✓ Has level: ${finalLabels.some(l => l.startsWith('level'))}`);
 
               console.log('\n🎉 Auto-labeler completed successfully!');
