@@ -232,7 +232,7 @@ jobs:
               }
 
               // Content quality indicators
-              const codeBlocks = (body.match(/``````/g) || []).length;
+              const codeBlocks = (body.match(/```[\s\S]*?```/g) || []).length;
               const inlineCode = (body.match(/`[^`]+`/g) || []).length;
               const urls = (content.match(/https?:\/\/[^\s]+/g) || []).length;
               const filePaths = (content.match(/[\w/-]+\.(js|jsx|ts|tsx|css|html|json|yml|yaml|py|java|cpp)/g) || []).length;
@@ -406,21 +406,28 @@ jobs:
                 labels.push('good first issue');
               }
 
-              // Bug detection
-              if (/bug|error|crash|broken|fix|fail|issue|not working|doesn't work/i.test(text) && 
-                  !/feature|enhancement/.test(text)) {
-                labels.push('bug');
-              }
-
-              // Enhancement detection
-              if (/feature|enhancement|improve|add|new|implement|support for|request/i.test(text) && 
-                  !/bug|error|fix/.test(text)) {
-                labels.push('enhancement');
-              }
-
-              // Documentation detection
+              // Priority: Documentation > Bug > Enhancement
+              // Documentation detection (highest priority for Level1)
               if (/documentation|docs|readme|comment|typo|spelling|grammar/i.test(text)) {
                 labels.push('documentation');
+              }
+              // Bug detection (prioritize over enhancement)
+              else if (/bug|error|crash|broken|fail|not working|doesn't work|defect/i.test(text)) {
+                labels.push('bug');
+              }
+              // Enhancement detection
+              else if (/feature|enhancement|improve|add|new|implement|support for|request|would be nice/i.test(text)) {
+                labels.push('enhancement');
+              }
+              // Fallback: check for "fix" which could be either
+              else if (/\bfix\b/i.test(text)) {
+                // If "fix" is mentioned with feature/add keywords, it's enhancement
+                if (/feature|add|new|implement/i.test(text)) {
+                  labels.push('enhancement');
+                } else {
+                  // Otherwise assume it's a bug fix
+                  labels.push('bug');
+                }
               }
 
               console.log(`🏷️ Contextual labels: ${labels.join(', ') || 'none'}`);
@@ -488,8 +495,14 @@ jobs:
                 } catch (error) {
                   console.error(`❌ Error analyzing PR:`, error.message);
                   level = 'level2';
-                  await applyLabels(itemNumber, ['gssoc', level]);
-                  console.log(`⚠️ Applied fallback labels to PR #${itemNumber}`);
+                  
+                  // Try to get contextual labels even in fallback mode
+                  const contextLabels = getContextualLabels(itemData, level);
+                  const allLabels = ['gssoc', level, ...contextLabels];
+                  
+                  await removeConflictingLabels(itemNumber, level);
+                  await applyLabels(itemNumber, allLabels);
+                  console.log(`⚠️ Applied fallback labels to PR #${itemNumber}: ${allLabels.join(', ')}`);
                 }
               }
 
@@ -510,5 +523,6 @@ jobs:
 
             } catch (error) {
               console.error('❌ CRITICAL ERROR:', error.message);
-              core.setFailed(`Auto-labeler failed: ${error.message}`);
+              console.error('Stack trace:', error.stack);
+              throw new Error(`Auto-labeler failed: ${error.message}`);
             }
