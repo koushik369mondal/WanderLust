@@ -367,6 +367,47 @@ jobs:
               return "Level1";
             }
 
+            // Determine additional contextual labels for issues and PRs
+            function getAdditionalLabels(content, level, itemType) {
+              const additionalLabels = [];
+              const title = (content.title || '').toLowerCase();
+              const body = (content.body || '').toLowerCase();
+              const text = title + ' ' + body;
+              
+              // Add "good first issue" for Level1 items
+              if (level === 'Level1') {
+                additionalLabels.push('good first issue');
+                console.log('✅ Added "good first issue" label for Level1 item');
+              }
+              
+              // Detect bug-related issues/PRs
+              const bugKeywords = ['bug', 'error', 'crash', 'broken', 'fix', 'issue', 'not working', 'doesn\'t work', 'fails', 'failure'];
+              const hasBugKeyword = bugKeywords.some(keyword => text.includes(keyword));
+              if (hasBugKeyword && !text.includes('feature') && !text.includes('enhancement')) {
+                additionalLabels.push('bug');
+                console.log('🐛 Added "bug" label');
+              }
+              
+              // Detect enhancement/feature requests
+              const enhancementKeywords = ['feature', 'enhancement', 'improve', 'add', 'new', 'implement', 'support for', 'would be nice', 'request'];
+              const hasEnhancementKeyword = enhancementKeywords.some(keyword => text.includes(keyword));
+              if (hasEnhancementKeyword && !hasBugKeyword) {
+                additionalLabels.push('enhancement');
+                console.log('✨ Added "enhancement" label');
+              }
+              
+              // Detect documentation-related items
+              const docKeywords = ['documentation', 'docs', 'readme', 'comment', 'typo', 'spelling', 'grammar'];
+              const hasDocKeyword = docKeywords.some(keyword => text.includes(keyword));
+              if (hasDocKeyword) {
+                additionalLabels.push('documentation');
+                console.log('📚 Added "documentation" label');
+              }
+              
+              console.log(`🏷️ Additional labels: ${additionalLabels.join(', ') || 'none'}`);
+              return additionalLabels;
+            }
+
             // Remove conflicting level labels
             async function removeOldLevelLabels(itemNumber, newLevel) {
               try {
@@ -431,7 +472,11 @@ jobs:
               { name: 'GSSoC\'25', description: 'Part of GirlScript Summer of Code 2025', color: 'ff6b35' },
               { name: 'Level1', description: 'Beginner level - Good for newcomers (1-5 points)', color: '28a745' },
               { name: 'Level2', description: 'Intermediate level - Some experience needed (10-25 points)', color: '0366d6' },
-              { name: 'Level3', description: 'Advanced level - Significant experience required (30+ points)', color: 'd73a49' }
+              { name: 'Level3', description: 'Advanced level - Significant experience required (30+ points)', color: 'd73a49' },
+              { name: 'good first issue', description: 'Good for newcomers - Easy to get started', color: '7057ff' },
+              { name: 'enhancement', description: 'New feature or request', color: 'a2eeef' },
+              { name: 'bug', description: 'Something isn\'t working', color: 'd73a49' },
+              { name: 'documentation', description: 'Improvements or additions to documentation', color: '0075ca' }
             ];
 
             for (const label of requiredLabels) {
@@ -448,13 +493,19 @@ jobs:
               console.log(`📋 Processing Issue #${itemNumber}: "${context.payload.issue.title}"`);
               console.log(`🎯 Determined level: ${level}`);
               
+              // Get additional contextual labels
+              const additionalLabels = getAdditionalLabels(context.payload.issue, level, 'issue');
+              
+              // Combine all labels
+              const allLabels = ['GSSoC\'25', level, ...additionalLabels];
+              
               // Remove conflicting labels first
               await removeOldLevelLabels(itemNumber, level);
               
               // Apply labels with retry mechanism
-              const success = await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', level]);
+              const success = await applyLabelsWithRetry(itemNumber, allLabels);
               if (success) {
-                console.log(`✅ Successfully labeled Issue #${itemNumber} with GSSoC'25 + ${level}`);
+                console.log(`✅ Successfully labeled Issue #${itemNumber} with ${allLabels.join(', ')}`);
               } else {
                 console.log(`❌ Failed to label Issue #${itemNumber} after multiple attempts`);
               }
@@ -489,13 +540,19 @@ jobs:
                 
                 console.log(`🎯 Determined level: ${level} for PR #${itemNumber}`);
                 
+                // Get additional contextual labels for PR
+                const additionalLabels = getAdditionalLabels(context.payload.pull_request, level, 'pr');
+                
+                // Combine all labels
+                const allLabels = ['GSSoC\'25', level, ...additionalLabels];
+                
                 // Remove conflicting labels first
                 await removeOldLevelLabels(itemNumber, level);
                 
                 // Apply labels with retry mechanism
-                const success = await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', level]);
+                const success = await applyLabelsWithRetry(itemNumber, allLabels);
                 if (success) {
-                  console.log(`✅ Successfully labeled PR #${itemNumber} with GSSoC'25 + ${level}`);
+                  console.log(`✅ Successfully labeled PR #${itemNumber} with ${allLabels.join(', ')}`);
                 } else {
                   console.log(`❌ Failed to label PR #${itemNumber} after multiple attempts`);
                 }
@@ -508,12 +565,16 @@ jobs:
                 console.log(`🔄 Using fallback level: ${level}`);
                 
                 try {
+                  // Get additional labels even in fallback mode
+                  const additionalLabels = getAdditionalLabels(context.payload.pull_request, level, 'pr');
+                  const allLabels = ['GSSoC\'25', level, ...additionalLabels];
+                  
                   // Remove old labels even in fallback mode
                   await removeOldLevelLabels(itemNumber, level);
                   
-                  const fallbackSuccess = await applyLabelsWithRetry(itemNumber, ['GSSoC\'25', level]);
+                  const fallbackSuccess = await applyLabelsWithRetry(itemNumber, allLabels);
                   if (fallbackSuccess) {
-                    console.log(`✅ Labeled PR #${itemNumber} with GSSoC'25 + ${level} (fallback mode)`);
+                    console.log(`✅ Labeled PR #${itemNumber} with ${allLabels.join(', ')} (fallback mode)`);
                   } else {
                     console.log(`❌ Critical: Failed to apply fallback labels to PR #${itemNumber}`);
                   }
