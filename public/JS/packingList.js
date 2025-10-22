@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Dynamically access jsPDF
-    const { jsPDF } = window.jspdf;
+    const { jsPDF } = window.jspdf || window;
     
     if (!jsPDF) {
       throw new Error('jsPDF library not properly initialized.');
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('PDF library not available for fallback method.');
     }
 
-    const { jsPDF } = window.jspdf;
+    const { jsPDF } = window.jspdf || window;
     const doc = new jsPDF();
     const packingListData = collectPackingListData();
     const tripDetails = getTripDetailsFromPage();

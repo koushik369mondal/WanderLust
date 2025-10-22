@@ -25,8 +25,22 @@ class OfflineManager {
     }
 
     async generateTripPDF(tripData) {
-        const { jsPDF } = window.jspdf;
+        // Check if jsPDF is available
+        if (typeof window.jspdf === 'undefined' && typeof jsPDF === 'undefined') {
+            throw new Error('jsPDF library not loaded. Please refresh the page and try again.');
+        }
+
+        // Dynamically access jsPDF
+        const { jsPDF } = window.jspdf || window;
+
+        if (!jsPDF) {
+            throw new Error('jsPDF library not properly initialized.');
+        }
+
         const doc = new jsPDF();
+
+        // Set encoding to handle special characters
+        doc.setFont('helvetica', 'normal');
 
         // Set up colors and fonts
         const primaryColor = [97, 188, 211]; // Blue
@@ -132,7 +146,9 @@ class OfflineManager {
             doc.setFont('helvetica', 'normal');
 
             tripData.recommendations.forEach(rec => {
-                doc.text(`• ${rec}`, 25, yPos);
+                // Sanitize text to handle special characters
+                const sanitizedRec = rec.replace(/[^\x20-\x7E]/g, '').trim();
+                doc.text(`• ${sanitizedRec}`, 25, yPos);
                 yPos += 8;
             });
         }
@@ -154,7 +170,9 @@ class OfflineManager {
             doc.setFont('helvetica', 'normal');
 
             tripData.savingTips.forEach(tip => {
-                doc.text(`• ${tip}`, 25, yPos);
+                // Sanitize text to handle special characters
+                const sanitizedTip = tip.replace(/[^\x20-\x7E]/g, '').trim();
+                doc.text(`• ${sanitizedTip}`, 25, yPos);
                 yPos += 8;
             });
         }
@@ -196,11 +214,44 @@ class OfflineManager {
             // Save back to localStorage
             localStorage.setItem('offlineTrips', JSON.stringify(filteredTrips));
 
+            // Also trigger PDF download
+            this.downloadTripPDF(tripData, pdfData);
+
             console.log('Trip PDF saved for offline:', tripInfo);
             return tripInfo;
         } catch (error) {
             console.error('Error saving trip for offline:', error);
             throw error;
+        }
+    }
+
+    downloadTripPDF(tripData, pdfData) {
+        try {
+            // Convert base64 to blob
+            const binaryString = atob(pdfData);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            const blob = new Blob([bytes], { type: 'application/pdf' });
+
+            // Create download link
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${tripData.destination.replace(/[^a-zA-Z0-9]/g, '_')}_Trip_Plan.pdf`;
+
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Clean up
+            URL.revokeObjectURL(url);
+
+            console.log('PDF download triggered for:', tripData.destination);
+        } catch (error) {
+            console.error('Error downloading PDF:', error);
         }
     }
 

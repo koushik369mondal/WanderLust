@@ -66,13 +66,72 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    loadOfflineTrips();
+    // Wait for OfflineManager to be available
+    waitForOfflineManager().then(() => {
+        loadOfflineTrips();
 
-    // Sync button functionality
-    document.getElementById('syncBtn').addEventListener('click', function() {
-        syncOfflineChanges();
+        // Sync button functionality
+        document.getElementById('syncBtn').addEventListener('click', function() {
+            syncOfflineChanges();
+        });
+
+        // Add event listeners for PDF actions
+        setupPdfEventListeners();
     });
 });
+
+// Function to set up event listeners for PDF actions
+function setupPdfEventListeners() {
+    // View PDF buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('view-pdf-btn') || e.target.closest('.view-pdf-btn')) {
+            e.preventDefault();
+            const btn = e.target.classList.contains('view-pdf-btn') ? e.target : e.target.closest('.view-pdf-btn');
+            const tripId = btn.getAttribute('data-trip-id');
+            if (tripId) {
+                viewPdf(tripId);
+            }
+        }
+    });
+
+    // Download PDF buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('download-pdf-btn') || e.target.closest('.download-pdf-btn')) {
+            e.preventDefault();
+            const btn = e.target.classList.contains('download-pdf-btn') ? e.target : e.target.closest('.download-pdf-btn');
+            const tripId = btn.getAttribute('data-trip-id');
+            if (tripId) {
+                downloadPdf(tripId);
+            }
+        }
+    });
+
+    // Delete PDF buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-pdf-btn') || e.target.closest('.delete-pdf-btn')) {
+            e.preventDefault();
+            const btn = e.target.classList.contains('delete-pdf-btn') ? e.target : e.target.closest('.delete-pdf-btn');
+            const tripId = btn.getAttribute('data-trip-id');
+            if (tripId) {
+                deletePdf(tripId);
+            }
+        }
+    });
+}
+
+// Function to wait for OfflineManager to be initialized
+function waitForOfflineManager() {
+    return new Promise((resolve) => {
+        const checkOfflineManager = () => {
+            if (window.OfflineManager) {
+                resolve();
+            } else {
+                setTimeout(checkOfflineManager, 100);
+            }
+        };
+        checkOfflineManager();
+    });
+}
 
 async function loadOfflineTrips() {
     const loadingState = document.getElementById('loadingState');
@@ -129,14 +188,14 @@ function createTripCard(trip) {
                             <i class="fa-solid fa-ellipsis-v"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="viewPdf('${trip.id}')">
+                            <li><a class="dropdown-item view-pdf-btn" href="#" data-trip-id="${trip.id}">
                                 <i class="fa-solid fa-eye me-2"></i>View PDF
                             </a></li>
-                            <li><a class="dropdown-item" href="#" onclick="downloadPdf('${trip.id}')">
+                            <li><a class="dropdown-item download-pdf-btn" href="#" data-trip-id="${trip.id}">
                                 <i class="fa-solid fa-download me-2"></i>Download Again
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="deletePdf('${trip.id}')">
+                            <li><a class="dropdown-item text-danger delete-pdf-btn" href="#" data-trip-id="${trip.id}">
                                 <i class="fa-solid fa-trash me-2"></i>Delete
                             </a></li>
                         </ul>
@@ -157,7 +216,7 @@ function createTripCard(trip) {
                 </div>
 
                 <div class="mt-3">
-                    <button class="btn btn-primary w-100" onclick="viewPdf('${trip.id}')">
+                    <button class="btn btn-primary w-100 view-pdf-btn" data-trip-id="${trip.id}">
                         <i class="fa-solid fa-eye me-2"></i>View PDF
                     </button>
                 </div>
