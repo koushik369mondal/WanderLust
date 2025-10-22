@@ -174,13 +174,16 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>
       
+    <!-- PDF Library for Offline Functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
+
     <!-- Custom JavaScript -->
     <script src="/JS/accessibility.js?v=<%= Date.now() %>"></script>
     <script src="/JS/lazy-loading.js?v=<%= Date.now() %>"></script>
     <script src="/JS/script.js?v=<%= Date.now() %>"></script>
     <script src="/JS/loading.js?v=<%= Date.now() %>"></script>
     <script src="/JS/phraseAssistant.js?v=<%= Date.now() %>"></script>
-    <!-- offlineManager.js removed - app now fetches fresh data directly from database -->
+    <script src="/JS/offlineManager.js?v=<%= Date.now() %>"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
     
     <!-- Development Accessibility Testing -->
