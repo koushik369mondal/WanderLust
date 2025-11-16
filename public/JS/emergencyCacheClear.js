@@ -3,30 +3,30 @@
  * Runs only ONCE per session to clear corrupted caches
  */
 
-(function() {
+(function () {
     'use strict';
-    
+
     // Check if already cleared in this session
     const CLEARED_FLAG = 'emergencyCacheCleared';
-    
+
     // Skip if already cleared
     if (sessionStorage.getItem(CLEARED_FLAG) === 'true') {
         console.log('%c✅ Cache already cleared this session', 'color: green; font-size: 14px;');
         return;
     }
-    
+
     console.log('%c🚨 EMERGENCY CACHE KILLER ACTIVATED', 'color: red; font-size: 20px; font-weight: bold;');
-    
+
     let cleared = false;
-    
+
     async function emergencyCacheClear() {
         if (cleared) return;
         cleared = true;
-        
+
         console.log('%c🧹 Starting emergency cache clear...', 'color: orange; font-size: 16px;');
-        
+
         const steps = [];
-        
+
         // Step 1: Unregister ALL service workers
         if ('serviceWorker' in navigator) {
             try {
@@ -41,7 +41,7 @@
                 console.error('Service Worker error:', e);
             }
         }
-        
+
         // Step 2: Delete ALL caches
         if ('caches' in window) {
             try {
@@ -56,7 +56,7 @@
                 console.error('Cache error:', e);
             }
         }
-        
+
         // Step 3: Delete ALL IndexedDB databases
         if ('indexedDB' in window) {
             try {
@@ -71,7 +71,7 @@
                 console.error('IndexedDB error:', e);
             }
         }
-        
+
         // Step 4: Clear localStorage (preserve emergency flag)
         try {
             const keysToPreserve = [];
@@ -87,18 +87,18 @@
         } catch (e) {
             console.error('localStorage error:', e);
         }
-        
+
         console.log('%c✅ CACHE CLEAR COMPLETE!', 'color: green; font-size: 18px; font-weight: bold;');
         console.log('Steps completed:', steps);
-        
+
         // Mark as cleared in this session
         sessionStorage.setItem(CLEARED_FLAG, 'true');
-        
-        // Show notification if body exists
-        if (document.body) {
-            showNotification(steps);
-        }
-        
+
+        // Show notification if body exists - DISABLED to remove popup
+        // if (document.body) {
+        //     showNotification(steps);
+        // }
+
         // ONE-TIME reload only if caches were found
         if (cacheNames && cacheNames.length > 0) {
             console.log('%c🔄 Reloading to apply changes...', 'color: blue; font-size: 16px;');
@@ -109,7 +109,7 @@
             console.log('%c✅ No reload needed - continuing...', 'color: green; font-size: 16px;');
         }
     }
-    
+
     function showNotification(steps) {
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -137,7 +137,7 @@
                 Page cleaned successfully!
             </p>
         `;
-        
+
         // Add animation
         const style = document.createElement('style');
         style.textContent = `
@@ -148,7 +148,7 @@
         `;
         document.head.appendChild(style);
         document.body.appendChild(notification);
-        
+
         // Auto-hide after 5 seconds
         setTimeout(() => {
             notification.style.transition = 'opacity 0.5s';
@@ -156,12 +156,12 @@
             setTimeout(() => notification.remove(), 500);
         }, 5000);
     }
-    
+
     // Run immediately
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', emergencyCacheClear);
     } else {
         emergencyCacheClear();
     }
-    
+
 })();
