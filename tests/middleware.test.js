@@ -7,7 +7,7 @@ describe('Middleware Tests', () => {
             const res = await request(app)
                 .get('/non-existent-route')
                 .expect(404);
-            
+
             expect(res.text).toContain('404');
         });
     });
@@ -16,7 +16,7 @@ describe('Middleware Tests', () => {
         it('should set session cookies', async () => {
             const res = await request(app)
                 .get('/listings');
-            
+
             expect(res.headers['set-cookie']).toBeDefined();
         });
     });
@@ -24,10 +24,10 @@ describe('Middleware Tests', () => {
     describe('Flash Messages', () => {
         it('should flash success messages', async () => {
             const agent = request.agent(app);
-            
+
             // First request to set up session
             await agent.get('/listings');
-            
+
             // Flash messages should work after session is established
             const res = await agent.get('/login');
             expect(res.status).toBe(200);
@@ -38,7 +38,7 @@ describe('Middleware Tests', () => {
         it('should set security headers with Helmet', async () => {
             const res = await request(app)
                 .get('/listings');
-            
+
             expect(res.headers['x-content-type-options']).toBeDefined();
         });
     });

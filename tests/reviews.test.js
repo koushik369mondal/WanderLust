@@ -11,7 +11,7 @@ describe('Review Routes', () => {
                     comment: 'Great place!'
                 })
                 .expect(302);
-            
+
             expect(res.headers.location).toContain('/login');
         });
 
@@ -22,7 +22,7 @@ describe('Review Routes', () => {
                     rating: 6, // Invalid rating (should be 1-5)
                     comment: 'Test comment'
                 });
-            
+
             expect(res.status).toBe(302);
         });
 
@@ -33,7 +33,7 @@ describe('Review Routes', () => {
                     rating: 5,
                     comment: ''
                 });
-            
+
             expect(res.status).toBe(302);
         });
     });
@@ -43,7 +43,7 @@ describe('Review Routes', () => {
             const res = await request(app)
                 .delete('/listings/123456789012345678901234/reviews/123456789012345678901234')
                 .expect(302);
-            
+
             expect(res.headers.location).toContain('/login');
         });
     });

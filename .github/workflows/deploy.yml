@@ -22,7 +22,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: 🌐 Production Deployment
-    
+
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - name: 🟢 Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'  # Use stable LTS version for production
+          node-version: "20.x" # Use stable LTS version for production
           cache: "npm"
 
       - name: 📦 Install Dependencies

@@ -90,7 +90,7 @@ async function main() {
             socketTimeoutMS: 45000,            // Close sockets after 45s of inactivity
         });
         console.log('Successfully connected to MongoDB✅');
-        
+
         // Initialize badge system
         const BadgeDefinition = require('./models/badgeDefinition');
         await BadgeDefinition.initializeDefaults();
@@ -305,17 +305,17 @@ app.use("/currency", require("./routes/currency.js"));
 app.use("/safety-alerts", safetyRouter);
 app.use("/phrase-assistant", require("./routes/phraseAssistant.js"));
 app.get("/about", (req, res) => {
-  res.render("about", { title: "About Us" });
+    res.render("about", { title: "About Us" });
 });
 
 
 
 app.get("/privacy", (req, res) => {
-  res.render("privacy", { title: "Privacy Policy" });
+    res.render("privacy", { title: "Privacy Policy" });
 });
 
 app.get("/terms", (req, res) => {
-  res.render("termCondition", { title: "Term & Condition" });
+    res.render("termCondition", { title: "Term & Condition" });
 });
 
 // Direct admin access route (temporary)
@@ -332,7 +332,7 @@ app.get('/direct-admin', async (req, res) => {
             await User.register(admin, '@Admin123');
             console.log('Admin user created');
         }
-        
+
         req.login(admin, (err) => {
             if (err) {
                 console.log('Login error:', err);
@@ -395,7 +395,7 @@ cron.schedule('0 9 * * *', async () => {
 // Socket.io configuration for real-time notifications
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
-    
+
     // Join user to their personal room for notifications
     socket.on('join', (userId) => {
         if (userId) {
@@ -403,14 +403,14 @@ io.on('connection', (socket) => {
             console.log(`User ${userId} joined their notification room`);
         }
     });
-    
+
     // Handle notification acknowledgment
     socket.on('notification_seen', (notificationId) => {
         // Sanitize notification ID before logging to prevent log injection
         const sanitizedId = String(notificationId).replace(/[\r\n\t]/g, '');
         console.log('Notification seen by user:', sanitizedId);
     });
-    
+
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
     });

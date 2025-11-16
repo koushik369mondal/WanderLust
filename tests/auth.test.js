@@ -8,7 +8,7 @@ describe('Authentication Routes', () => {
                 .get('/signup')
                 .expect('Content-Type', /html/)
                 .expect(200);
-            
+
             expect(res.text).toContain('Sign Up');
         });
     });
@@ -19,7 +19,7 @@ describe('Authentication Routes', () => {
                 .get('/login')
                 .expect('Content-Type', /html/)
                 .expect(200);
-            
+
             expect(res.text).toContain('Login');
         });
     });
@@ -33,7 +33,7 @@ describe('Authentication Routes', () => {
                     email: '',
                     password: ''
                 });
-            
+
             expect(res.status).toBe(302); // Redirect on validation error
         });
 
@@ -45,7 +45,7 @@ describe('Authentication Routes', () => {
                     email: 'invalid-email',
                     password: 'password123'
                 });
-            
+
             expect(res.status).toBe(302);
         });
     });
@@ -58,7 +58,7 @@ describe('Authentication Routes', () => {
                     username: 'nonexistent',
                     password: 'wrongpassword'
                 });
-            
+
             expect(res.status).toBe(302); // Redirect on failed login
         });
     });
@@ -68,7 +68,7 @@ describe('Authentication Routes', () => {
             const res = await request(app)
                 .get('/logout')
                 .expect(302);
-            
+
             expect(res.headers.location).toBe('/listings');
         });
     });

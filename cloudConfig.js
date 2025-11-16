@@ -9,7 +9,7 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME || "dummy_cloud_name",
-    api_key: process.env.CLOUD_API_KEY || "dummy_api_key", 
+    api_key: process.env.CLOUD_API_KEY || "dummy_api_key",
     api_secret: process.env.CLOUD_API_SECRET || "dummy_api_secret",
 });
 

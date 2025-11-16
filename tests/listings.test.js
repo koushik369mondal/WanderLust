@@ -8,7 +8,7 @@ describe('Listing Routes', () => {
                 .get('/listings')
                 .expect('Content-Type', /html/)
                 .expect(200);
-            
+
             expect(res.text).toContain('All Listings');
         });
     });
@@ -18,7 +18,7 @@ describe('Listing Routes', () => {
             const res = await request(app)
                 .get('/listings/new')
                 .expect(302);
-            
+
             expect(res.headers.location).toContain('/login');
         });
     });
@@ -43,7 +43,7 @@ describe('Listing Routes', () => {
                     country: 'Test Country'
                 })
                 .expect(302);
-            
+
             expect(res.headers.location).toContain('/login');
         });
 
@@ -54,7 +54,7 @@ describe('Listing Routes', () => {
                     title: '',
                     description: ''
                 });
-            
+
             expect(res.status).toBe(302);
         });
     });
@@ -64,7 +64,7 @@ describe('Listing Routes', () => {
             const res = await request(app)
                 .get('/listings/123456789012345678901234/edit')
                 .expect(302);
-            
+
             expect(res.headers.location).toContain('/login');
         });
     });
@@ -74,7 +74,7 @@ describe('Listing Routes', () => {
             const res = await request(app)
                 .delete('/listings/123456789012345678901234')
                 .expect(302);
-            
+
             expect(res.headers.location).toContain('/login');
         });
     });
