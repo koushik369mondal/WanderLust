@@ -6,7 +6,10 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "test:unit": "jest tests/models tests/utils",
+    "test:integration": "jest tests/auth.test.js tests/listings.test.js tests/reviews.test.js",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "build:css": "npx tailwindcss -i ./public/CSS/tailwind.input.css -o ./public/CSS/tailwind.output.css --minify",
@@ -69,5 +72,21 @@
     "nodemon": "^3.1.10",
     "postcss": "^8.5.6",
     "supertest": "^7.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!node_modules/**",
+      "!coverage/**",
+      "!tests/**",
+      "!jest.config.js"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "verbose": true
   }
 }
