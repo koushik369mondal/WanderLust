@@ -52,7 +52,7 @@
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.3",
     "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^2.2.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^4.2.1",
     "node-fetch": "^3.3.2",
     "openai": "^6.7.0",
