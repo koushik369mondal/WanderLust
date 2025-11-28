@@ -4,7 +4,7 @@ const { isLoggedIn } = require("../middleware");
 const User = require("../models/user");
 const Listing = require("../models/listing");
 const tripPlannerService = require("../services/tripPlannerService");
-const notificationService = require("../services/notificationService");
+const notificationService = require("../services/notificationServiceNew");
 
 // Notification API endpoints
 router.get('/api/notifications', isLoggedIn, async (req, res) => {
@@ -349,7 +349,7 @@ function getFavoriteDestinations(trips) {
         destinations[trip.destination] = (destinations[trip.destination] || 0) + 1;
     });
     return Object.entries(destinations)
-        .sort(([,a], [,b]) => b - a)
+        .sort(([, a], [, b]) => b - a)
         .slice(0, 3)
         .map(([dest, count]) => ({ destination: dest, count }));
 }
@@ -511,9 +511,9 @@ router.get("/api/currency/:from/:to", async (req, res) => {
 });
 
 router.get("/mood-fixing", (req, res) => {
-  res.render("tripPlanner/moodFixing", {
-    title: "Mood Fixing - Travel Tools"
-  });
+    res.render("tripPlanner/moodFixing", {
+        title: "Mood Fixing - Travel Tools"
+    });
 });
 
 // Offline trips page

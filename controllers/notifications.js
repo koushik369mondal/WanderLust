@@ -1,5 +1,5 @@
 const Notification = require('../models/notification');
-const NotificationService = require('../services/notificationService');
+const NotificationService = require('../services/notificationServiceNew');
 
 // Input sanitization helper
 const sanitizeInput = (input) => {
@@ -11,12 +11,12 @@ const sanitizeInput = (input) => {
 
 class NotificationController {
     constructor() {
-        this.notificationService = new NotificationService();
+        this.notificationService = NotificationService;
     }
 
     // Set Socket.io instance
     setSocketIO(io) {
-        this.notificationService.setSocketIO(io);
+        this.notificationService.setIo(io);
     }
 
     // Get user notifications with pagination
@@ -70,7 +70,7 @@ class NotificationController {
         try {
             const userId = req.user._id;
             const unreadCount = await Notification.getUnreadCount(userId);
-            
+
             res.json({
                 success: true,
                 count: unreadCount
@@ -91,7 +91,7 @@ class NotificationController {
             const userId = req.user._id;
 
             const notification = await this.notificationService.markAsRead(id, userId);
-            
+
             res.json({
                 success: true,
                 message: 'Notification marked as read',
@@ -111,7 +111,7 @@ class NotificationController {
         try {
             const userId = req.user._id;
             await this.notificationService.markAllAsRead(userId);
-            
+
             res.json({
                 success: true,
                 message: 'All notifications marked as read'
@@ -132,7 +132,7 @@ class NotificationController {
             const userId = req.user._id;
 
             const notification = await this.notificationService.dismissNotification(id, userId);
-            
+
             res.json({
                 success: true,
                 message: 'Notification dismissed',
@@ -152,9 +152,9 @@ class NotificationController {
         try {
             const userId = req.user._id;
             const User = require('../models/user');
-            
+
             const user = await User.findById(userId).select('notificationSettings');
-            
+
             res.render('notifications/settings', {
                 title: 'Notification Settings',
                 settings: user.notificationSettings || this.getDefaultSettings()
@@ -175,7 +175,7 @@ class NotificationController {
 
             // Validate settings
             const validatedSettings = this.validateSettings(settings);
-            
+
             await User.findByIdAndUpdate(userId, {
                 notificationSettings: validatedSettings
             });
@@ -207,7 +207,7 @@ class NotificationController {
         try {
             const userId = req.user._id;
             const stats = await this.notificationService.getNotificationStats(userId);
-            
+
             res.json({
                 success: true,
                 data: stats

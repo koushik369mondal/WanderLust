@@ -1,4 +1,4 @@
-const ScamReport = require("../models/scamReport");
+const ScamReport = require("../models/scamReport.js");
 const User = require("../models/user");
 const Listing = require("../models/listing");
 const ExpressError = require("../utils/ExpressError");
@@ -122,9 +122,9 @@ module.exports.showScamReport = async (req, res) => {
       verificationStatus: 'trusted',
       isActive: true
     })
-    .populate('reporter', 'username')
-    .sort({ totalVotes: -1 })
-    .limit(3);
+      .populate('reporter', 'username')
+      .sort({ totalVotes: -1 })
+      .limit(3);
 
     res.render("safety/show", {
       report,
