@@ -14,7 +14,16 @@ const weatherService = require('../services/weatherService');
 // Mapbox SDK
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
+
+let geocodingClient = null;
+if (mapToken && !mapToken.includes('test_token')) {
+  try {
+    geocodingClient = mbxGeocoding({ accessToken: mapToken });
+  } catch (error) {
+    console.warn('Failed to initialize geocoding client:', error.message);
+    geocodingClient = null;
+  }
+}
 
 // Country default coordinates mapping
 const COUNTRY_COORDINATES = {

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Listing = require('../models/listing');
+require('dotenv').config();
 
 // Country-based coordinate mappings
 const countryCoordinates = {
@@ -57,12 +58,16 @@ const cityCoordinates = {
 
 async function updateListingCoordinates() {
   try {
+    // Connect to database
+    await mongoose.connect(process.env.ATLAS_DB_URL);
+    console.log('✅ Connected to MongoDB');
+
     const listings = await Listing.find({});
     let updateCount = 0;
 
     for (const listing of listings) {
       let coordinates = [77.2090, 28.6139]; // Default Delhi
-      
+
       // Try city-specific coordinates first
       const locationKey = (listing.location || '').toLowerCase();
       if (cityCoordinates[locationKey]) {
@@ -82,14 +87,29 @@ async function updateListingCoordinates() {
           coordinates: coordinates
         }
       });
-      
+
       updateCount++;
     }
 
     console.log(`✅ Updated coordinates for ${updateCount} listings`);
   } catch (error) {
     console.error('❌ Error updating coordinates:', error);
+  } finally {
+    await mongoose.disconnect();
+    console.log('✅ Disconnected from MongoDB');
   }
 }
 
 module.exports = { updateListingCoordinates };
+
+// Run the update if script is executed directly
+if (require.main === module) {
+  console.log('🚀 Starting coordinate update process...');
+  updateListingCoordinates().then(() => {
+    console.log('✅ Update complete - all listings now have coordinates!');
+    process.exit(0);
+  }).catch(err => {
+    console.error('❌ Update failed:', err);
+    process.exit(1);
+  });
+}

@@ -26,11 +26,11 @@ self.addEventListener('activate', (event) => {
           return caches.delete(cacheName);
         })
       );
-      
+
       // Unregister this service worker
       const registrations = await self.registration.unregister();
       console.log('🔴 SERVICE WORKER: Self-destructed successfully!', registrations);
-      
+
       // Claim all clients to take control immediately
       return self.clients.claim();
     })()
@@ -39,7 +39,6 @@ self.addEventListener('activate', (event) => {
 
 // No fetch event handler - let all requests go to network
 self.addEventListener('fetch', (event) => {
-<<<<<<< HEAD
   const { request } = event;
   const url = new URL(request.url);
 
@@ -202,7 +201,4 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-=======
-  // Do nothing - all requests pass through to network
->>>>>>> db0e0818c2c9452899f84576225035f060b3fb67
 });
