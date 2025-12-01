@@ -56,11 +56,13 @@ const cityCoordinates = {
   'maldives': [73.2207, 3.2028]
 };
 
-async function updateListingCoordinates() {
+async function updateListingCoordinates(shouldDisconnect = false) {
   try {
-    // Connect to database
-    await mongoose.connect(process.env.ATLAS_DB_URL);
-    console.log('✅ Connected to MongoDB');
+    // Only connect if not already connected
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(process.env.ATLAS_DB_URL);
+      console.log('✅ Connected to MongoDB');
+    }
 
     const listings = await Listing.find({});
     let updateCount = 0;
@@ -95,8 +97,11 @@ async function updateListingCoordinates() {
   } catch (error) {
     console.error('❌ Error updating coordinates:', error);
   } finally {
-    await mongoose.disconnect();
-    console.log('✅ Disconnected from MongoDB');
+    // Only disconnect if explicitly requested (e.g., when run as standalone script)
+    if (shouldDisconnect) {
+      await mongoose.disconnect();
+      console.log('✅ Disconnected from MongoDB');
+    }
   }
 }
 
@@ -105,7 +110,7 @@ module.exports = { updateListingCoordinates };
 // Run the update if script is executed directly
 if (require.main === module) {
   console.log('🚀 Starting coordinate update process...');
-  updateListingCoordinates().then(() => {
+  updateListingCoordinates(true).then(() => {
     console.log('✅ Update complete - all listings now have coordinates!');
     process.exit(0);
   }).catch(err => {

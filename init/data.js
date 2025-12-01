@@ -146,7 +146,7 @@ const sampleListings = [
     price: 4000,
     location: "Serengeti National Park",
     country: "Tanzania",
-     category: "Farms",
+    category: "Farms",
     bestSeason: "Dry Season (Jun-Oct)",
     travelTip: "A hot air balloon ride at sunrise is unforgettable.",
   },
@@ -450,7 +450,7 @@ async function seedListings() {
   const demoReviews = [];
   for (let i = 0; i < 10; i++) {
     demoReviews.push(await Review.create({
-      comment: `Demo review ${i+1}`,
+      comment: `Demo review ${i + 1}`,
       rating: 4 + (i % 2), // 4 or 5
       createdAt: new Date(now.getTime() - (i * 12 * 60 * 60 * 1000)),
       author: null // can be set to a demo user if needed
@@ -469,7 +469,12 @@ async function seedListings() {
     return l;
   });
   await Listing.insertMany(listingsWithBadges);
-  console.log('✅ Database seeded successfully with listings, badges, and coordinates!');
+  console.log('✅ Database seeded with listings and badges!');
+
+  // Update all listings with proper coordinates
+  console.log('🗺️ Updating listing coordinates...');
+  await updateListingCoordinates();
+  console.log('✅ All coordinates updated!');
 }
 
 module.exports = { data: sampleListings, seedListings };
