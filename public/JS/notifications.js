@@ -11,31 +11,31 @@ class NotificationManager {
     init() {
         // Initialize Socket.io connection
         this.initSocket();
-        
+
         // Initialize DOM elements
         this.initDOM();
-        
+
         // Bind event listeners
         this.bindEvents();
-        
+
         // Request notification permissions
         this.requestNotificationPermission();
-        
+
         console.log('📢 Notification Manager initialized');
     }
 
     initSocket() {
         // Initialize Socket.io connection
         this.socket = io();
-        
+
         this.socket.on('connect', () => {
             console.log('🔌 Connected to notification server');
-            
+
             // Authenticate user if logged in
             if (this.currentUserId) {
                 this.socket.emit('authenticate', this.currentUserId);
             }
-            
+
             // Request current unread count
             if (this.currentUserId) {
                 this.socket.emit('get_unread_count', this.currentUserId);
@@ -93,13 +93,19 @@ class NotificationManager {
     }
 
     initNotificationBadge() {
-        // Create notification icon in navbar if it doesn't exist
+        // Skip notification badge injection - using Tailwind navbar structure
+        // Bootstrap .navbar-nav classes not present in Tailwind-only navbar
         const navbar = document.querySelector('.navbar');
         if (navbar && this.currentUserId) {
             let notificationIcon = navbar.querySelector('.notification-badge');
-            
+
             if (!notificationIcon) {
                 const navLinks = navbar.querySelector('.navbar-nav');
+                // Early return if no Bootstrap nav structure found
+                if (!navLinks) {
+                    console.log('Skipping notification badge injection - Tailwind navbar detected');
+                    return;
+                }
                 if (navLinks) {
                     const iconHTML = `
                         <li class="nav-item notification-badge me-2" id="notificationIcon">
@@ -168,12 +174,12 @@ class NotificationManager {
             if (notificationItem && !e.target.closest('.notification-actions')) {
                 const url = notificationItem.getAttribute('data-url');
                 const notificationId = notificationItem.getAttribute('data-id');
-                
+
                 // Mark as read first
                 if (notificationItem.classList.contains('unread')) {
                     this.markAsRead(notificationId, false); // Don't show success message
                 }
-                
+
                 // Navigate to URL if it exists and is not root
                 if (url && url !== '/') {
                     window.location.href = url;
@@ -209,8 +215,8 @@ class NotificationManager {
                 </div>
                 <div class="toast-body">
                     ${this.escapeHtml(notification.message)}
-                    ${notification.data && notification.data.url && notification.data.url !== '/' ? 
-                        `<div class="mt-2">
+                    ${notification.data && notification.data.url && notification.data.url !== '/' ?
+                `<div class="mt-2">
                             <a href="${notification.data.url}" class="btn btn-sm btn-primary">View</a>
                         </div>` : ''}
                 </div>
@@ -218,7 +224,7 @@ class NotificationManager {
         `;
 
         this.toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-        
+
         const toastElement = document.getElementById(toastId);
         const toast = new bootstrap.Toast(toastElement);
         toast.show();
@@ -267,8 +273,8 @@ class NotificationManager {
     createNotificationHTML(notification) {
         let iconClass = 'fas fa-bell';
         let iconColor = 'text-primary';
-        
-        switch(notification.type) {
+
+        switch (notification.type) {
             case 'new_review':
                 iconClass = 'fas fa-star';
                 iconColor = 'text-warning';
@@ -350,7 +356,7 @@ class NotificationManager {
     updateUnreadCount(count) {
         this.unreadCount = count;
         const badge = document.getElementById('notificationCount');
-        
+
         if (badge) {
             if (count > 0) {
                 badge.textContent = count > 99 ? '99+' : count;
@@ -378,20 +384,20 @@ class NotificationManager {
             });
 
             const result = await response.json();
-            
+
             if (result.success) {
                 // Update UI
                 const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
                 if (notificationElement) {
                     notificationElement.classList.remove('unread');
                     notificationElement.classList.add('read');
-                    
+
                     // Remove unread indicator
                     const unreadIndicator = notificationElement.querySelector('::before');
                     if (unreadIndicator) {
                         notificationElement.style.setProperty('--before-display', 'none');
                     }
-                    
+
                     // Hide mark as read button
                     const markReadBtn = notificationElement.querySelector('.mark-read-btn');
                     if (markReadBtn) {
@@ -425,14 +431,14 @@ class NotificationManager {
             });
 
             const result = await response.json();
-            
+
             if (result.success) {
                 // Update all unread notifications in UI
                 const unreadNotifications = document.querySelectorAll('.notification-item.unread');
                 unreadNotifications.forEach(notification => {
                     notification.classList.remove('unread');
                     notification.classList.add('read');
-                    
+
                     const markReadBtn = notification.querySelector('.mark-read-btn');
                     if (markReadBtn) {
                         markReadBtn.style.display = 'none';
@@ -465,14 +471,14 @@ class NotificationManager {
             });
 
             const result = await response.json();
-            
+
             if (result.success) {
                 // Remove notification from UI
                 const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
                 if (notificationElement) {
                     notificationElement.style.opacity = '0';
                     notificationElement.style.transform = 'translateX(100%)';
-                    
+
                     setTimeout(() => {
                         notificationElement.remove();
                     }, 300);
@@ -503,7 +509,7 @@ class NotificationManager {
             });
 
             const result = await response.json();
-            
+
             if (result.success) {
                 this.showAlert('Test notification sent!', 'success');
             } else {
@@ -527,21 +533,21 @@ class NotificationManager {
         const alertDiv = document.createElement('div');
         alertDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show position-fixed`;
         alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
-        
+
         // Safely set text content to prevent XSS
         const messageSpan = document.createElement('span');
         messageSpan.textContent = message; // Use textContent instead of innerHTML
-        
+
         const closeButton = document.createElement('button');
         closeButton.type = 'button';
         closeButton.className = 'btn-close';
         closeButton.setAttribute('data-bs-dismiss', 'alert');
-        
+
         alertDiv.appendChild(messageSpan);
         alertDiv.appendChild(closeButton);
-        
+
         document.body.appendChild(alertDiv);
-        
+
         // Auto-dismiss after 3 seconds
         setTimeout(() => {
             if (alertDiv.parentNode) {
@@ -566,9 +572,9 @@ class NotificationManager {
 // Initialize notification manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Only initialize if user is logged in
-    const userElement = document.querySelector('[data-user-id]') || 
-                       (window.currentUser && window.currentUser._id ? { getAttribute: () => window.currentUser._id } : null);
-    
+    const userElement = document.querySelector('[data-user-id]') ||
+        (window.currentUser && window.currentUser._id ? { getAttribute: () => window.currentUser._id } : null);
+
     if (userElement) {
         window.notificationManager = new NotificationManager();
     }
