@@ -1,286 +1,297 @@
-<!-- Premium Glassmorphism Navbar with Tailwind CSS - Fixed Layout -->
+<!-- Premium Glassmorphism Navbar with Tailwind CSS - Refactored Layout -->
+<!-- FIX (a): Removed excessive left padding - using proper centered container -->
+<!-- FIX (b): Balanced 3-section layout prevents right overflow -->
+<!-- FIX (c): Responsive gaps and max-widths ensure content stays in viewport -->
 <nav
-  class="tw-sticky tw-top-0 tw-z-50 tw-backdrop-blur-xl tw-bg-gradient-to-r tw-from-brand1/90 tw-via-brand2/90 tw-to-brand1/90 tw-shadow-2xl tw-border-b tw-border-white/10"
-  role="navigation" aria-label="Main navigation" style="min-height: 72px;">
-  <div class="tw-max-w-7xl tw-mx-auto tw-px-4 sm:tw-px-6 lg:tw-px-8">
-    <div class="tw-flex tw-items-center tw-justify-between tw-h-[72px]">
+  class="tw-w-full tw-sticky tw-top-0 tw-z-50 tw-backdrop-blur-xl tw-bg-gradient-to-r tw-from-brand1/90 tw-via-brand2/90 tw-to-brand1/90 tw-shadow-2xl tw-border-b tw-border-white/10"
+  role="navigation" aria-label="Main navigation">
+  <!-- FIX (a): Centered container with reasonable padding and max-width -->
+  <div class="tw-mx-auto tw-flex tw-items-center tw-justify-between tw-gap-4 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-max-w-7xl"
+    style="min-height: 72px;">
 
-      <!-- LEFT SECTION: Brand Logo -->
-      <div class="tw-flex-shrink-0">
+    <!-- LEFT SECTION: Brand Logo (flex-shrink-0 prevents squashing) -->
+    <div class="tw-flex tw-items-center tw-gap-2 tw-flex-shrink-0">
+      <a href="/listings"
+        class="tw-inline-flex tw-items-center tw-gap-2 tw-text-xl lg:tw-text-2xl tw-font-bold tw-text-white hover:tw-scale-105 tw-transition-transform tw-duration-300"
+        aria-label="WanderLust - Go to home page">
+        <i class="fa-regular fa-compass tw-text-aqua tw-animate-spin-slow tw-text-2xl" aria-hidden="true"></i>
+        <span
+          class="tw-bg-gradient-to-r tw-from-gold tw-to-coral tw-bg-clip-text tw-text-transparent tw-hidden sm:tw-inline">
+          <%= __('wanderlust') %>
+        </span>
+      </a>
+    </div>
+
+    <!-- CENTER SECTION: Nav Links + Search (Desktop Only) -->
+    <!-- FIX (a): Reduced px-6 to gap-4, flex-1 allows center to grow but not push right section -->
+    <div class="tw-hidden lg:tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-4">
+
+      <!-- Nav Links -->
+      <div class="tw-flex tw-items-center tw-gap-x-1">
         <a href="/listings"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-text-xl lg:tw-text-2xl tw-font-bold tw-text-white hover:tw-scale-105 tw-transition-transform tw-duration-300"
-          aria-label="WanderLust - Go to home page">
-          <i class="fa-regular fa-compass tw-text-aqua tw-animate-spin-slow tw-text-2xl" aria-hidden="true"></i>
-          <span
-            class="tw-bg-gradient-to-r tw-from-gold tw-to-coral tw-bg-clip-text tw-text-transparent tw-hidden sm:tw-inline">
-            <%= __('wanderlust') %>
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm">
+          <i class="fa-regular fa-copy tw-text-base" aria-hidden="true"></i>
+          <span>
+            <%= __('all_listings') %>
           </span>
         </a>
+        <a href="/listings/about"
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm">
+          <i class="fa-solid fa-info-circle tw-text-base" aria-hidden="true"></i>
+          <span>
+            <%= __('about') %>
+          </span>
+        </a>
+
+        <!-- Travel Tools Dropdown -->
+        <div class="dropdown tw-relative">
+          <button
+            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-bg-transparent tw-border-0 tw-text-sm tw-cursor-pointer"
+            data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown">
+            <i class="fa-solid fa-tools tw-text-base" aria-hidden="true"></i>
+            <span>Travel Tools</span>
+            <i class="fa-solid fa-chevron-down tw-text-xs"></i>
+          </button>
+          <ul class="dropdown-menu tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-mt-2"
+            aria-labelledby="travelToolsDropdown">
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/trip-planner"><i class="fa-solid fa-route tw-mr-2"></i>Trip Planner</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/packing-list"><i class="fa-solid fa-suitcase tw-mr-2"></i>Packing List</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/holiday"><i class="fa-solid fa-calendar-days tw-mr-2"></i>Holiday Calendar</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/listings/compare"><i class="fa-solid fa-balance-scale tw-mr-2"></i>Compare Destinations</a>
+            </li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/trip-planner/mood-fixing"><i class="fa-solid fa-music tw-mr-2"></i>Mood Fixing</a></li>
+            <li>
+              <hr class="tw-border-white/10 tw-my-1">
+            </li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/weather"><i class="fa-solid fa-cloud-sun tw-mr-2"></i>Weather Info</a></li>
+            <li>
+              <hr class="tw-border-white/10 tw-my-1">
+            </li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/achievements"><i class="fa-solid fa-trophy tw-mr-2"></i>Achievements</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                href="/leaderboard"><i class="fa-solid fa-chart-line tw-mr-2"></i>Leaderboard</a></li>
+          </ul>
+        </div>
       </div>
 
-      <!-- CENTER SECTION: Nav Links + Search (Desktop Only) -->
-      <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-x-6 tw-flex-1 tw-justify-center tw-px-6">
-
-        <!-- Nav Links -->
-        <div class="tw-flex tw-items-center tw-gap-x-1">
-          <a href="/listings"
-            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm">
-            <i class="fa-regular fa-copy tw-text-base" aria-hidden="true"></i>
-            <span>
-              <%= __('all_listings') %>
-            </span>
-          </a>
-          <a href="/listings/about"
-            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm">
-            <i class="fa-solid fa-info-circle tw-text-base" aria-hidden="true"></i>
-            <span>
-              <%= __('about') %>
-            </span>
-          </a>
-
-          <!-- Travel Tools Dropdown -->
-          <div class="dropdown tw-relative">
-            <button
-              class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-bg-transparent tw-border-0 tw-text-sm tw-cursor-pointer"
-              data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown">
-              <i class="fa-solid fa-tools tw-text-base" aria-hidden="true"></i>
-              <span>Travel Tools</span>
-              <i class="fa-solid fa-chevron-down tw-text-xs"></i>
-            </button>
-            <ul class="dropdown-menu tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-mt-2"
-              aria-labelledby="travelToolsDropdown">
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/trip-planner"><i class="fa-solid fa-route tw-mr-2"></i>Trip Planner</a></li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/packing-list"><i class="fa-solid fa-suitcase tw-mr-2"></i>Packing List</a></li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/holiday"><i class="fa-solid fa-calendar-days tw-mr-2"></i>Holiday Calendar</a></li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/listings/compare"><i class="fa-solid fa-balance-scale tw-mr-2"></i>Compare Destinations</a>
-              </li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/trip-planner/mood-fixing"><i class="fa-solid fa-music tw-mr-2"></i>Mood Fixing</a></li>
-              <li>
-                <hr class="tw-border-white/10 tw-my-1">
-              </li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/weather"><i class="fa-solid fa-cloud-sun tw-mr-2"></i>Weather Info</a></li>
-              <li>
-                <hr class="tw-border-white/10 tw-my-1">
-              </li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/achievements"><i class="fa-solid fa-trophy tw-mr-2"></i>Achievements</a></li>
-              <li><a
-                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                  href="/leaderboard"><i class="fa-solid fa-chart-line tw-mr-2"></i>Leaderboard</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="tw-relative tw-flex-1 tw-max-w-md">
-          <form method="GET" action="/listings" class="tw-w-full" role="search" aria-label="Search destinations">
-            <div
-              class="tw-flex tw-items-center tw-h-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-px-4 tw-gap-2 focus-within:tw-ring-2 focus-within:tw-ring-aqua focus-within:tw-shadow-lg tw-transition-all">
-              <i class="fa-solid fa-magnifying-glass tw-text-white/60 tw-text-sm" aria-hidden="true"></i>
-              <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
-                value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-                class="tw-bg-transparent tw-border-0 tw-text-white tw-placeholder-white/60 tw-outline-none tw-flex-1 tw-text-sm tw-h-full"
-                autocomplete="off" aria-label="Search destinations" />
-              <button type="submit"
-                class="tw-inline-flex tw-items-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-xs tw-font-semibold tw-px-3 tw-py-1.5 tw-rounded-full hover:tw-shadow-lg hover:tw-scale-105 tw-transition-all tw-duration-300"
-                aria-label="Submit search">
-                <%= __('search') %>
-              </button>
-            </div>
-          </form>
+      <!-- Search Bar (responsive width prevents overflow) -->
+      <!-- FIX (c): w-full max-w-xs allows search to shrink on smaller screens -->
+      <div class="tw-w-full tw-max-w-xs xl:tw-max-w-sm">
+        <form method="GET" action="/listings" class="tw-w-full" role="search" aria-label="Search destinations">
           <div
-            class="search-suggestions tw-absolute tw-top-full tw-left-0 tw-right-0 tw-glass-dark tw-rounded-2xl tw-mt-2 tw-border tw-border-white/20 tw-hidden"
-            id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
-        </div>
+            class="tw-flex tw-items-center tw-h-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-px-4 tw-gap-2 focus-within:tw-ring-2 focus-within:tw-ring-aqua focus-within:tw-shadow-lg tw-transition-all">
+            <i class="fa-solid fa-magnifying-glass tw-text-white/60 tw-text-sm" aria-hidden="true"></i>
+            <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
+              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+              class="tw-bg-transparent tw-border-0 tw-text-white tw-placeholder-white/60 tw-outline-none tw-flex-1 tw-text-sm tw-h-full tw-min-w-0"
+              autocomplete="off" aria-label="Search destinations" />
+            <button type="submit"
+              class="tw-inline-flex tw-items-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-xs tw-font-semibold tw-px-3 tw-py-1.5 tw-rounded-full hover:tw-shadow-lg hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0"
+              aria-label="Submit search">
+              <%= __('search') %>
+            </button>
+          </div>
+        </form>
+        <div
+          class="search-suggestions tw-absolute tw-top-full tw-left-0 tw-right-0 tw-glass-dark tw-rounded-2xl tw-mt-2 tw-border tw-border-white/20 tw-hidden"
+          id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
       </div>
+    </div>
 
-      <!-- RIGHT SECTION: Action Buttons -->
-      <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-x-2 tw-flex-shrink-0">
+    <!-- RIGHT SECTION: Action Buttons -->
+    <!-- FIX (b): flex-shrink-0 prevents right section from wrapping or overflowing -->
+    <!-- FIX (b): Reduced gap from gap-x-2 to gap-2 for tighter spacing -->
+    <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-2 tw-flex-shrink-0">
 
-        <!-- Add New Listing -->
-        <a href="/listings/new"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-whitespace-nowrap">
-          <i class="fa-solid fa-plus tw-text-sm" aria-hidden="true"></i>
-          <span class="tw-hidden xl:tw-inline">
-            <%= __('add_new_listing') %>
+      <!-- Add New Listing -->
+      <a href="/listings/new"
+        class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-3 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-whitespace-nowrap tw-flex-shrink-0">
+        <i class="fa-solid fa-plus tw-text-sm" aria-hidden="true"></i>
+        <span class="tw-hidden xl:tw-inline">
+          <%= __('add_new_listing') %>
+        </span>
+        <span class="tw-inline xl:tw-hidden">Add</span>
+      </a>
+
+      <% if (typeof currentUser==='undefined' || !currentUser) { %>
+        <!-- Login Button -->
+        <a href="/login"
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-3 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0">
+          <i class="fa-solid fa-sign-in-alt tw-text-sm" aria-hidden="true"></i>
+          <span>
+            <%= __('login') %>
           </span>
-          <span class="tw-inline xl:tw-hidden">Add</span>
         </a>
-
-        <% if (typeof currentUser==='undefined' || !currentUser) { %>
-          <!-- Login Button -->
-          <a href="/login"
-            class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300">
-            <i class="fa-solid fa-sign-in-alt tw-text-sm" aria-hidden="true"></i>
-            <span>
-              <%= __('login') %>
-            </span>
-          </a>
-          <!-- Signup Button (Premium Gradient) -->
-          <a href="/signup"
-            class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-5 tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-semibold tw-rounded-full tw-shadow-lg hover:tw-shadow-xl hover:tw-scale-105 tw-transition-all tw-duration-300">
-            <i class="fa-solid fa-user-plus tw-text-sm" aria-hidden="true"></i>
-            <span>
-              <%= __('signup') %>
-            </span>
-          </a>
-          <% } else { %>
-            <!-- Profile Dropdown -->
-            <div class="dropdown tw-relative">
-              <button
-                class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer"
-                data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown" aria-label="User profile menu">
-                <i class="fa-solid fa-user tw-text-sm" aria-hidden="true"></i>
-                <span class="tw-hidden xl:tw-inline">
-                  <%= __('profile') %>
-                </span>
-              </button>
-              <ul
-                class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-min-w-[250px] tw-mt-2"
-                aria-labelledby="profileDropdown">
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/profile"><i class="fa-solid fa-user tw-mr-2"></i>My Profile</a></li>
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/profile/wishlist"><i class="fa-solid fa-bookmark tw-mr-2"></i>My Wishlist</a></li>
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/profile/likes"><i class="fa-solid fa-heart tw-mr-2"></i>Liked Listings</a></li>
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/profile/vacation-slots">
-                    <i class="fa-solid fa-calendar-check tw-mr-2"></i>My Vacation Slots
-                    <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length> 0) { %>
-                      <span
-                        class="tw-inline-flex tw-items-center tw-justify-center tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5 tw-ml-2">
-                        <%= currentUser.vacationSlots.length %>
-                      </span>
-                      <% } %>
-                  </a></li>
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/trip-planner/my-trips"><i class="fa-solid fa-suitcase-rolling tw-mr-2"></i>My Trip Plans</a>
+        <!-- Signup Button (Premium Gradient) -->
+        <a href="/signup"
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-4 tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-semibold tw-rounded-full tw-shadow-lg hover:tw-shadow-xl hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0">
+          <i class="fa-solid fa-user-plus tw-text-sm" aria-hidden="true"></i>
+          <span>
+            <%= __('signup') %>
+          </span>
+        </a>
+        <% } else { %>
+          <!-- Profile Dropdown -->
+          <div class="dropdown tw-relative tw-flex-shrink-0">
+            <button
+              class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-3 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer"
+              data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown" aria-label="User profile menu">
+              <i class="fa-solid fa-user tw-text-sm" aria-hidden="true"></i>
+              <span class="tw-hidden xl:tw-inline">
+                <%= __('profile') %>
+              </span>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-min-w-[250px] tw-mt-2"
+              aria-labelledby="profileDropdown">
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/profile"><i class="fa-solid fa-user tw-mr-2"></i>My Profile</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/profile/wishlist"><i class="fa-solid fa-bookmark tw-mr-2"></i>My Wishlist</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/profile/likes"><i class="fa-solid fa-heart tw-mr-2"></i>Liked Listings</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/profile/vacation-slots">
+                  <i class="fa-solid fa-calendar-check tw-mr-2"></i>My Vacation Slots
+                  <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length> 0) { %>
+                    <span
+                      class="tw-inline-flex tw-items-center tw-justify-center tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5 tw-ml-2">
+                      <%= currentUser.vacationSlots.length %>
+                    </span>
+                    <% } %>
+                </a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/trip-planner/my-trips"><i class="fa-solid fa-suitcase-rolling tw-mr-2"></i>My Trip Plans</a>
+              </li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/phrase-assistant"><i class="fa-solid fa-language tw-mr-2"></i>Phrase Assistant</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/profile/travel-journal"><i class="fa-solid fa-book tw-mr-2"></i>Travel Journal</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
+                  href="/trip-planner/offline-trips">
+                  <i class="fa-solid fa-download tw-mr-2"></i>My Downloads
+                  <span id="profileDownloadCount"
+                    class="tw-inline-flex tw-items-center tw-justify-center tw-bg-aqua tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5 tw-ml-2"
+                    style="display: none;">0</span>
+                </a></li>
+              <% if (currentUser && currentUser.isAdmin) { %>
+                <li>
+                  <hr class="tw-border-white/10 tw-my-1">
                 </li>
                 <li><a
                     class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/phrase-assistant"><i class="fa-solid fa-language tw-mr-2"></i>Phrase Assistant</a></li>
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/profile/travel-journal"><i class="fa-solid fa-book tw-mr-2"></i>Travel Journal</a></li>
-                <li><a
-                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                    href="/trip-planner/offline-trips">
-                    <i class="fa-solid fa-download tw-mr-2"></i>My Downloads
-                    <span id="profileDownloadCount"
-                      class="tw-inline-flex tw-items-center tw-justify-center tw-bg-aqua tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5 tw-ml-2"
-                      style="display: none;">0</span>
-                  </a></li>
-                <% if (currentUser && currentUser.isAdmin) { %>
+                    href="/admin/dashboard"><i class="fa-solid fa-chart-line tw-mr-2"></i>Admin Dashboard</a></li>
+                <% } %>
                   <li>
                     <hr class="tw-border-white/10 tw-my-1">
                   </li>
                   <li><a
                       class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                      href="/admin/dashboard"><i class="fa-solid fa-chart-line tw-mr-2"></i>Admin Dashboard</a></li>
-                  <% } %>
-                    <li>
-                      <hr class="tw-border-white/10 tw-my-1">
-                    </li>
-                    <li><a
-                        class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2"
-                        href="/logout"><i class="fa-solid fa-sign-out-alt tw-mr-2"></i>
-                        <%= __('logout') %>
-                      </a></li>
+                      href="/logout"><i class="fa-solid fa-sign-out-alt tw-mr-2"></i>
+                      <%= __('logout') %>
+                    </a></li>
+            </ul>
+          </div>
+
+          <!-- Notifications Dropdown -->
+          <div class="dropdown tw-relative tw-flex-shrink-0">
+            <button
+              class="tw-inline-flex tw-items-center tw-justify-center tw-h-10 tw-w-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-relative"
+              data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle" aria-label="View notifications">
+              <i class="fa-solid fa-bell tw-text-sm" aria-hidden="true"></i>
+              <span id="notificationBadge"
+                class="tw-absolute tw--top-1 tw--right-1 tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-1.5 tw-py-0.5 tw-min-w-[18px] tw-text-center tw-shadow-lg"
+                style="display: none;">0</span>
+            </button>
+            <div
+              class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-0 tw-w-[350px] tw-mt-2"
+              aria-labelledby="notificationToggle">
+              <div class="tw-p-4 tw-border-b tw-border-white/10 tw-flex tw-justify-between tw-items-center">
+                <h6 class="tw-text-white tw-font-bold tw-mb-0 tw-text-sm">Notifications</h6>
+                <button id="markAllRead"
+                  class="tw-text-aqua tw-text-xs hover:tw-text-coral tw-transition tw-bg-transparent tw-border-0 tw-cursor-pointer"
+                  type="button">Mark All Read</button>
+              </div>
+              <div id="notificationList" class="tw-max-h-[350px] tw-overflow-y-auto">
+                <div class="tw-text-center tw-text-white/60 tw-p-8" id="noNotifications">
+                  <i class="fa-solid fa-bell-slash tw-text-4xl tw-mb-3" aria-hidden="true"></i>
+                  <p class="tw-mb-0 tw-text-sm">No notifications yet</p>
+                </div>
+              </div>
+              <div class="tw-p-3 tw-border-t tw-border-white/10 tw-text-center">
+                <a href="/notifications" class="tw-text-aqua tw-text-sm hover:tw-text-coral tw-transition">View All
+                  Notifications</a>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
+            <!-- Language Selector (hidden on smaller screens to prevent overflow) -->
+            <!-- FIX (c): Hidden on medium screens, shown on lg+ to prevent overflow -->
+            <div class="dropdown tw-relative tw-hidden xl:tw-block tw-flex-shrink-0">
+              <button
+                class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-3 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer"
+                data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle" aria-label="Select language">
+                <span class="tw-text-base">
+                  <%= languageMap[getLocale()].flag %>
+                </span>
+                <span class="tw-text-sm">
+                  <%= languageMap[getLocale()].name %>
+                </span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-mt-2"
+                aria-labelledby="languageToggle">
+                <% Object.keys(languageMap).forEach(lang=> { %>
+                  <li>
+                    <a class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 <%= getLocale() === lang ? 'tw-bg-white/20' : '' %>"
+                      href="<%= buildLangUrl(lang) %>">
+                      <%= languageMap[lang].flag %>
+                        <%= languageMap[lang].name %>
+                    </a>
+                  </li>
+                  <% }); %>
               </ul>
             </div>
 
-            <!-- Notifications Dropdown -->
-            <div class="dropdown tw-relative">
-              <button
-                class="tw-inline-flex tw-items-center tw-justify-center tw-h-10 tw-w-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-relative"
-                data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle" aria-label="View notifications">
-                <i class="fa-solid fa-bell tw-text-sm" aria-hidden="true"></i>
-                <span id="notificationBadge"
-                  class="tw-absolute tw--top-1 tw--right-1 tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-1.5 tw-py-0.5 tw-min-w-[18px] tw-text-center tw-shadow-lg"
-                  style="display: none;">0</span>
-              </button>
-              <div
-                class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-0 tw-w-[350px] tw-mt-2"
-                aria-labelledby="notificationToggle">
-                <div class="tw-p-4 tw-border-b tw-border-white/10 tw-flex tw-justify-between tw-items-center">
-                  <h6 class="tw-text-white tw-font-bold tw-mb-0 tw-text-sm">Notifications</h6>
-                  <button id="markAllRead"
-                    class="tw-text-aqua tw-text-xs hover:tw-text-coral tw-transition tw-bg-transparent tw-border-0 tw-cursor-pointer"
-                    type="button">Mark All Read</button>
-                </div>
-                <div id="notificationList" class="tw-max-h-[350px] tw-overflow-y-auto">
-                  <div class="tw-text-center tw-text-white/60 tw-p-8" id="noNotifications">
-                    <i class="fa-solid fa-bell-slash tw-text-4xl tw-mb-3" aria-hidden="true"></i>
-                    <p class="tw-mb-0 tw-text-sm">No notifications yet</p>
-                  </div>
-                </div>
-                <div class="tw-p-3 tw-border-t tw-border-white/10 tw-text-center">
-                  <a href="/notifications" class="tw-text-aqua tw-text-sm hover:tw-text-coral tw-transition">View All
-                    Notifications</a>
-                </div>
-              </div>
-            </div>
-            <% } %>
-
-              <!-- Language Selector -->
-              <div class="dropdown tw-relative">
-                <button
-                  class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-3 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer"
-                  data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle" aria-label="Select language">
-                  <span class="tw-text-base">
-                    <%= languageMap[getLocale()].flag %>
-                  </span>
-                  <span class="tw-hidden xl:tw-inline tw-text-sm">
-                    <%= languageMap[getLocale()].name %>
-                  </span>
-                </button>
-                <ul
-                  class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-mt-2"
-                  aria-labelledby="languageToggle">
-                  <% Object.keys(languageMap).forEach(lang=> { %>
-                    <li>
-                      <a class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 <%= getLocale() === lang ? 'tw-bg-white/20' : '' %>"
-                        href="<%= buildLangUrl(lang) %>">
-                        <%= languageMap[lang].flag %>
-                          <%= languageMap[lang].name %>
-                      </a>
-                    </li>
-                    <% }); %>
-                </ul>
-              </div>
-
-
-              <!-- Theme Toggle -->
+            <!-- Theme Toggle (with flex-shrink-0 to prevent squashing) -->
+            <!-- FIX (b): Wrapper div with flex-shrink-0 keeps toggle from being pushed off-screen -->
+            <div class="tw-flex-shrink-0">
               <%- include("../includes/theme-toggle.ejs") %>
-      </div>
-
-      <!-- Mobile Menu Toggle -->
-      <button
-        class="lg:tw-hidden tw-inline-flex tw-items-center tw-justify-center tw-h-10 tw-w-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300"
-        type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
-        aria-label="Toggle navigation menu">
-        <i class="fa-solid fa-bars tw-text-lg"></i>
-      </button>
+            </div>
     </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button
+      class="lg:tw-hidden tw-inline-flex tw-items-center tw-justify-center tw-h-10 tw-w-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300"
+      type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
+      aria-label="Toggle navigation menu">
+      <i class="fa-solid fa-bars tw-text-lg"></i>
+    </button>
+  </div>
   </div>
 </nav>
 
