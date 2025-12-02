@@ -79,6 +79,33 @@ body {
 }
 
 /* FIX: Enhanced Glassmorphism and Text Contrast for Navbar */
+/* COMPREHENSIVE CSS RESET: Override ALL Bootstrap navbar defaults */
+nav[role="navigation"],
+nav[role="navigation"]>*,
+nav[role="navigation"] * {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+nav[role="navigation"] {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  max-width: 100vw !important;
+}
+
+/* Reset ALL Bootstrap navbar-related classes */
+.navbar,
+.navbar *,
+.navbar-brand,
+.navbar-nav,
+.nav-link,
+.container-fluid,
+.container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .navbar {
   height: 5rem;
   position: relative;
@@ -2957,10 +2984,10 @@ body::before {
 
 /* 🎯 ENHANCED NAVBAR STYLING */
 .navbar {
-  padding: 0.5rem 0;
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden !important;
+  /* Removed padding: 0.5rem 0; to let Tailwind control all spacing */
 }
 
 .navbar .container-fluid {
@@ -2971,7 +2998,7 @@ body::before {
   max-width: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 0 0.75rem;
+  /* Removed padding: 0 0.75rem; - THIS WAS CAUSING THE LEFT SPACING! */
   overflow-x: hidden;
 }
 

@@ -1,15 +1,14 @@
-<!-- Premium Glassmorphism Navbar with Tailwind CSS - Refactored Layout -->
-<!-- FIX (a): Removed excessive left padding - using proper centered container -->
-<!-- FIX (b): Balanced 3-section layout prevents right overflow -->
-<!-- FIX (c): Responsive gaps and max-widths ensure content stays in viewport -->
+<!-- Premium Glassmorphism Navbar with Tailwind CSS - Perfectly Balanced Layout -->
 <nav
   class="tw-w-full tw-sticky tw-top-0 tw-z-50 tw-backdrop-blur-xl tw-bg-gradient-to-r tw-from-brand1/90 tw-via-brand2/90 tw-to-brand1/90 tw-shadow-2xl tw-border-b tw-border-white/10"
-  role="navigation" aria-label="Main navigation">
-  <!-- FIX (a): Centered container with reasonable padding and max-width -->
-  <div class="tw-mx-auto tw-flex tw-items-center tw-justify-between tw-gap-4 tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-max-w-7xl"
-    style="min-height: 72px;">
+  role="navigation" aria-label="Main navigation"
+  style="margin: 0 !important; padding: 0 !important; position: sticky !important; left: 0 !important; right: 0 !important;">
+  <!-- Single centered container with equal padding on both sides -->
+  <div
+    class="tw-max-w-7xl tw-mx-auto tw-w-full tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-flex tw-items-center tw-justify-between tw-gap-3"
+    style="min-height: 72px; margin-left: auto !important; margin-right: auto !important;">
 
-    <!-- LEFT SECTION: Brand Logo (flex-shrink-0 prevents squashing) -->
+    <!-- LEFT SECTION: Brand Logo (flex-shrink-0 keeps it at true left edge) -->
     <div class="tw-flex tw-items-center tw-gap-2 tw-flex-shrink-0">
       <a href="/listings"
         class="tw-inline-flex tw-items-center tw-gap-2 tw-text-xl lg:tw-text-2xl tw-font-bold tw-text-white hover:tw-scale-105 tw-transition-transform tw-duration-300"
@@ -22,21 +21,20 @@
       </a>
     </div>
 
-    <!-- CENTER SECTION: Nav Links + Search (Desktop Only) -->
-    <!-- FIX (a): Reduced px-6 to gap-4, flex-1 allows center to grow but not push right section -->
-    <div class="tw-hidden lg:tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-4">
+    <!-- CENTER SECTION: Nav Links + Search (flex-1 centers content perfectly) -->
+    <div class="tw-hidden lg:tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-6 tw-min-w-0">
 
       <!-- Nav Links -->
-      <div class="tw-flex tw-items-center tw-gap-x-1">
+      <div class="tw-flex tw-items-center tw-gap-x-2 tw-flex-shrink-0">
         <a href="/listings"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm">
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm tw-whitespace-nowrap tw-flex-shrink-0">
           <i class="fa-regular fa-copy tw-text-base" aria-hidden="true"></i>
           <span>
             <%= __('all_listings') %>
           </span>
         </a>
         <a href="/listings/about"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm">
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm tw-whitespace-nowrap tw-flex-shrink-0">
           <i class="fa-solid fa-info-circle tw-text-base" aria-hidden="true"></i>
           <span>
             <%= __('about') %>
@@ -46,7 +44,7 @@
         <!-- Travel Tools Dropdown -->
         <div class="dropdown tw-relative">
           <button
-            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-bg-transparent tw-border-0 tw-text-sm tw-cursor-pointer"
+            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-bg-transparent tw-border-0 tw-text-sm tw-cursor-pointer tw-whitespace-nowrap tw-flex-shrink-0"
             data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown">
             <i class="fa-solid fa-tools tw-text-base" aria-hidden="true"></i>
             <span>Travel Tools</span>
@@ -89,19 +87,18 @@
         </div>
       </div>
 
-      <!-- Search Bar (responsive width prevents overflow) -->
-      <!-- FIX (c): w-full max-w-xs allows search to shrink on smaller screens -->
-      <div class="tw-w-full tw-max-w-xs xl:tw-max-w-sm">
+      <!-- Search Bar (responsive width with premium button) -->
+      <div class="tw-w-full tw-max-w-xs xl:tw-max-w-sm tw-min-w-0 tw-flex-shrink">
         <form method="GET" action="/listings" class="tw-w-full" role="search" aria-label="Search destinations">
           <div
-            class="tw-flex tw-items-center tw-h-10 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-px-4 tw-gap-2 focus-within:tw-ring-2 focus-within:tw-ring-aqua focus-within:tw-shadow-lg tw-transition-all">
+            class="tw-flex tw-items-center tw-h-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-px-4 tw-gap-2 focus-within:tw-ring-2 focus-within:tw-ring-aqua focus-within:tw-shadow-lg tw-transition-all">
             <i class="fa-solid fa-magnifying-glass tw-text-white/60 tw-text-sm" aria-hidden="true"></i>
             <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
               value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
               class="tw-bg-transparent tw-border-0 tw-text-white tw-placeholder-white/60 tw-outline-none tw-flex-1 tw-text-sm tw-h-full tw-min-w-0"
               autocomplete="off" aria-label="Search destinations" />
             <button type="submit"
-              class="tw-inline-flex tw-items-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-xs tw-font-semibold tw-px-3 tw-py-1.5 tw-rounded-full hover:tw-shadow-lg hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0"
+              class="tw-inline-flex tw-items-center tw-justify-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-bold tw-px-5 tw-py-2.5 tw-rounded-full tw-min-w-[80px] hover:tw-shadow-xl hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0"
               aria-label="Submit search">
               <%= __('search') %>
             </button>
@@ -113,10 +110,8 @@
       </div>
     </div>
 
-    <!-- RIGHT SECTION: Action Buttons -->
-    <!-- FIX (b): flex-shrink-0 prevents right section from wrapping or overflowing -->
-    <!-- FIX (b): Reduced gap from gap-x-2 to gap-2 for tighter spacing -->
-    <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-2 tw-flex-shrink-0">
+    <!-- RIGHT SECTION: Action Buttons (flex-shrink-0 anchors to right edge) -->
+    <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-2.5 tw-flex-shrink-0">
 
       <!-- Add New Listing -->
       <a href="/listings/new"
@@ -249,8 +244,7 @@
           </div>
           <% } %>
 
-            <!-- Language Selector (hidden on smaller screens to prevent overflow) -->
-            <!-- FIX (c): Hidden on medium screens, shown on lg+ to prevent overflow -->
+            <!-- Language Selector (hidden on smaller screens) -->
             <div class="dropdown tw-relative tw-hidden xl:tw-block tw-flex-shrink-0">
               <button
                 class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-3 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer"
@@ -277,8 +271,7 @@
               </ul>
             </div>
 
-            <!-- Theme Toggle (with flex-shrink-0 to prevent squashing) -->
-            <!-- FIX (b): Wrapper div with flex-shrink-0 keeps toggle from being pushed off-screen -->
+            <!-- Theme Toggle (prevents squashing) -->
             <div class="tw-flex-shrink-0">
               <%- include("../includes/theme-toggle.ejs") %>
             </div>
