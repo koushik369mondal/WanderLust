@@ -12,8 +12,8 @@
     "test:integration": "jest tests/auth.test.js tests/listings.test.js tests/reviews.test.js",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build:css": "npx tailwindcss -i ./public/CSS/tailwind.input.css -o ./public/CSS/tailwind.output.css --minify",
-    "watch:css": "npx tailwindcss -i ./public/CSS/tailwind.input.css -o ./public/CSS/tailwind.output.css --watch",
+    "build:css": "tailwindcss -i ./public/CSS/tailwind.input.css -o ./public/CSS/tailwind.output.css --minify",
+    "watch:css": "tailwindcss -i ./public/CSS/tailwind.input.css -o ./public/CSS/tailwind.output.css --watch",
     "dev:all": "npm run watch:css & nodemon app.js"
   },
   "keywords": [
@@ -61,17 +61,17 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
     "playwright": "^1.56.0",
-    "socket.io": "^4.8.1",
-    "tailwindcss": "^4.1.16"
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "^10.4.22",
     "babel-plugin-istanbul": "^7.0.1",
     "jest": "^30.2.0",
     "js-yaml": "^4.1.1",
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
-    "supertest": "^7.1.4"
+    "supertest": "^7.1.4",
+    "tailwindcss": "^3.4.18"
   },
   "jest": {
     "testEnvironment": "node",
