@@ -87,26 +87,25 @@
         </div>
       </div>
 
-      <!-- Search Bar (responsive width with premium button) -->
-      <div class="tw-w-full tw-max-w-xs xl:tw-max-w-sm tw-min-w-0 tw-flex-shrink">
+      <!-- Airbnb-Style Search Bar -->
+      <div class="tw-w-full tw-max-w-md tw-min-w-0 tw-flex-shrink tw-relative">
         <form method="GET" action="/listings" class="tw-w-full" role="search" aria-label="Search destinations">
           <div
-            class="tw-flex tw-items-center tw-h-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-pl-5 tw-pr-2 tw-gap-3 focus-within:tw-ring-2 focus-within:tw-ring-aqua focus-within:tw-shadow-xl tw-transition-all">
-            <i class="fa-solid fa-magnifying-glass tw-text-white/70 tw-text-base tw-flex-shrink-0"
-              aria-hidden="true"></i>
+            class="tw-flex tw-items-center tw-gap-3 tw-h-12 tw-bg-white tw-rounded-full tw-shadow-md tw-border tw-border-gray-200 hover:tw-shadow-lg focus-within:tw-shadow-xl tw-transition-all tw-duration-300 tw-pl-5 tw-pr-2">
+            <i class="fa-solid fa-magnifying-glass tw-text-gray-400 tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
             <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
               value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-              class="tw-bg-transparent tw-border-0 tw-text-white tw-placeholder-white/60 tw-outline-none tw-flex-1 tw-text-sm tw-h-full tw-min-w-0 focus:tw-outline-none"
+              class="tw-bg-transparent tw-border-0 tw-text-gray-700 tw-placeholder-gray-400 tw-outline-none tw-flex-1 tw-text-sm tw-min-w-0 focus:tw-outline-none placeholder:tw-font-normal"
               autocomplete="off" aria-label="Search destinations" />
             <button type="submit"
-              class="tw-inline-flex tw-items-center tw-justify-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-bold tw-px-4 tw-h-11 tw-rounded-lg tw-min-w-[85px] tw-shadow-lg hover:tw-shadow-xl hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-white focus-visible:tw-ring-offset-1"
+              class="tw-inline-flex tw-items-center tw-justify-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-semibold tw-w-9 tw-h-9 tw-rounded-full tw-shadow-md hover:tw-shadow-lg hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-coral focus-visible:tw-ring-offset-2"
               aria-label="Submit search">
-              <%= __('search') %>
+              <i class="fa-solid fa-magnifying-glass tw-text-sm" aria-hidden="true"></i>
             </button>
           </div>
         </form>
         <div
-          class="search-suggestions tw-absolute tw-top-full tw-left-0 tw-right-0 tw-glass-dark tw-rounded-2xl tw-mt-2 tw-border tw-border-white/20 tw-hidden"
+          class="search-suggestions tw-absolute tw-top-full tw-w-full tw-glass-dark tw-rounded-2xl tw-mt-2 tw-border tw-border-white/20 tw-hidden"
           id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
       </div>
     </div>
