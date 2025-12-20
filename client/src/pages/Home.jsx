@@ -1,275 +1,153 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+import Sidebar from "../components/Sidebar";
+import Hero from "../components/Hero";
+import SearchCard from "../components/SearchCard";
+import PromotionalSection from "../components/PromotionalSection";
 
 const Home = () => {
     const [destinations, setDestinations] = useState([]);
-    const [search, setSearch] = useState("");
-    const [maxBudget, setMaxBudget] = useState("");
     const [loading, setLoading] = useState(false);
-    const [selected, setSelected] = useState(null);
-    const [bookingData, setBookingData] = useState({
-        fullName: "",
-        email: "",
-        travelers: 1,
-        food: false,
-        travel: false,
-        wifi: false
-    });
-    const [message, setMessage] = useState("");
-
-    const fetchDestinations = async () => {
-        try {
-            setLoading(true);
-            const params = new URLSearchParams();
-            if (search) params.append("search", search);
-            if (maxBudget) params.append("maxPrice", maxBudget);
-
-            const res = await fetch(`${API_BASE}/api/destinations?${params.toString()}`);
-            const data = await res.json();
-            setDestinations(data);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        fetchDestinations();
+        // Fetch destinations on mount if needed
     }, []);
 
-    const handleBook = async (e) => {
-        e.preventDefault();
-        if (!selected) return;
-
-        try {
-            const res = await fetch(`${API_BASE}/api/bookings`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    destinationId: selected._id,
-                    fullName: bookingData.fullName,
-                    email: bookingData.email,
-                    travelers: Number(bookingData.travelers),
-                    extras: {
-                        food: bookingData.food,
-                        travel: bookingData.travel,
-                        wifi: bookingData.wifi
-                    }
-                })
-            });
-
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "Booking failed");
-            setMessage("Booking confirmed! Check your email for details.");
-            setSelected(null);
-        } catch (err) {
-            setMessage(err.message);
-        }
-    };
-
     return (
-        <>
-            <Navbar />
-            <main className="px-8 py-6 max-w-6xl mx-auto">
-                <section className="mb-6">
-                    <h2 className="text-3xl font-semibold mb-2">
-                        Find your next **escape**
-                    </h2>
-                    <p className="text-slate-300 mb-4">
-                        Search premium destinations and filter by your budget.
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                        <input
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by place name"
-                            className="px-3 py-2 rounded-md bg-slate-900 border border-slate-700 w-64 text-sm"
-                        />
-                        <input
-                            type="number"
-                            value={maxBudget}
-                            onChange={(e) => setMaxBudget(e.target.value)}
-                            placeholder="Max budget"
-                            className="px-3 py-2 rounded-md bg-slate-900 border border-slate-700 w-40 text-sm"
-                        />
-                        <button
-                            onClick={fetchDestinations}
-                            className="px-4 py-2 rounded-md bg-sky-500 hover:bg-sky-600 text-sm"
-                        >
-                            Search
+        <div className="flex min-h-screen bg-gray-50">
+            {/* Sidebar Navigation */}
+            <Sidebar />
+
+            {/* Main Content */}
+            <main className="flex-1 min-h-screen">
+                {/* Hero Section */}
+                <Hero />
+
+                {/* Search Card */}
+                <SearchCard />
+
+                {/* Promotional Section */}
+                <PromotionalSection />
+
+                {/* Features Section */}
+                <section className="py-16 bg-white">
+                    <div className="container mx-auto px-4">
+                        <div className="text-center mb-12">
+                            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                                Why Choose WanderLust?
+                            </h2>
+                            <p className="text-xl text-gray-600">
+                                We make your travel dreams come true
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="text-center p-8 rounded-2xl bg-linear-to-br from-blue-50 to-cyan-50 hover:shadow-xl transition-all">
+                                <div className="w-16 h-16 bg-linear-to-br from-blue-600 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <span className="text-3xl">🌍</span>
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                    Global Coverage
+                                </h3>
+                                <p className="text-gray-600">
+                                    Access to over 1 million hotels and destinations worldwide
+                                </p>
+                            </div>
+
+                            <div className="text-center p-8 rounded-2xl bg-linear-to-br from-purple-50 to-pink-50 hover:shadow-xl transition-all">
+                                <div className="w-16 h-16 bg-linear-to-br from-purple-600 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <span className="text-3xl">💎</span>
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                    Best Prices
+                                </h3>
+                                <p className="text-gray-600">
+                                    Save up to 30% with our exclusive deals and price match guarantee
+                                </p>
+                            </div>
+
+                            <div className="text-center p-8 rounded-2xl bg-linear-to-br from-emerald-50 to-teal-50 hover:shadow-xl transition-all">
+                                <div className="w-16 h-16 bg-linear-to-br from-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <span className="text-3xl">🛡️</span>
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                    Secure Booking
+                                </h3>
+                                <p className="text-gray-600">
+                                    Your privacy and security are our top priority
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* CTA Section */}
+                <section className="py-20 bg-linear-to-br from-blue-900 via-blue-700 to-cyan-600 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-10">
+                        <div className="absolute top-10 left-10 w-64 h-64 bg-purple-500 rounded-full blur-3xl"></div>
+                        <div className="absolute bottom-10 right-10 w-64 h-64 bg-cyan-400 rounded-full blur-3xl"></div>
+                    </div>
+
+                    <div className="container mx-auto px-4 text-center relative z-10">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                            Ready to Start Your Journey?
+                        </h2>
+                        <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                            Join millions of travelers who trust WanderLust for their perfect getaway
+                        </p>
+                        <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                            Start Planning Now
                         </button>
                     </div>
                 </section>
 
-                <section className="grid md:grid-cols-3 gap-5">
-                    {loading && <p>Loading destinations...</p>}
-                    {!loading &&
-                        destinations.map((dest) => (
-                            <article
-                                key={dest._id}
-                                className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 flex flex-col"
-                            >
-                                {dest.imageUrl && (
-                                    <img
-                                        src={dest.imageUrl}
-                                        alt={dest.name}
-                                        className="h-40 w-full object-cover"
-                                    />
-                                )}
-                                <div className="p-4 flex-1 flex flex-col">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <h3 className="font-semibold">{dest.name}</h3>
-                                        <span className="text-sm text-sky-400">
-                                            ₹{dest.basePrice.toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-slate-400 mb-2">
-                                        {dest.city}, {dest.country}
-                                    </p>
-                                    <p className="text-sm text-slate-300 line-clamp-3 mb-3">
-                                        {dest.description}
-                                    </p>
-                                    <div className="flex flex-wrap gap-1 text-xs mb-3">
-                                        {dest.includesFood && (
-                                            <span className="px-2 py-1 rounded-full bg-emerald-600/20 border border-emerald-500/40">
-                                                Food
-                                            </span>
-                                        )}
-                                        {dest.includesTravel && (
-                                            <span className="px-2 py-1 rounded-full bg-sky-600/20 border border-sky-500/40">
-                                                Travel
-                                            </span>
-                                        )}
-                                        {dest.includesWifi && (
-                                            <span className="px-2 py-1 rounded-full bg-violet-600/20 border border-violet-500/40">
-                                                Wifi
-                                            </span>
-                                        )}
-                                    </div>
-                                    <button
-                                        onClick={() => {
-                                            setSelected(dest);
-                                            setMessage("");
-                                        }}
-                                        className="mt-auto w-full py-2 rounded-md bg-sky-500 hover:bg-sky-600 text-sm"
-                                    >
-                                        Book now
-                                    </button>
+                {/* Footer */}
+                <footer className="bg-gray-900 text-gray-300 py-12">
+                    <div className="container mx-auto px-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div>
+                                <h3 className="text-white font-bold text-xl mb-4">WanderLust</h3>
+                                <p className="text-sm">
+                                    Your trusted travel companion for unforgettable adventures.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 className="text-white font-semibold mb-4">Company</h4>
+                                <ul className="space-y-2 text-sm">
+                                    <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="text-white font-semibold mb-4">Support</h4>
+                                <ul className="space-y-2 text-sm">
+                                    <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="text-white font-semibold mb-4">Follow Us</h4>
+                                <div className="flex gap-4">
+                                    <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
+                                        <span className="text-xl">f</span>
+                                    </a>
+                                    <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-blue-400 rounded-lg flex items-center justify-center transition-colors">
+                                        <span className="text-xl">𝕏</span>
+                                    </a>
+                                    <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-pink-600 rounded-lg flex items-center justify-center transition-colors">
+                                        <span className="text-xl">📷</span>
+                                    </a>
                                 </div>
-                            </article>
-                        ))}
-                </section>
-
-                {selected && (
-                    <section className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-                        <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-md">
-                            <h3 className="text-xl font-semibold mb-2">
-                                Book {selected.name}
-                            </h3>
-                            <form className="space-y-3" onSubmit={handleBook}>
-                                <input
-                                    required
-                                    placeholder="Full name"
-                                    className="w-full px-3 py-2 rounded-md bg-slate-950 border border-slate-700 text-sm"
-                                    value={bookingData.fullName}
-                                    onChange={(e) =>
-                                        setBookingData({ ...bookingData, fullName: e.target.value })
-                                    }
-                                />
-                                <input
-                                    required
-                                    type="email"
-                                    placeholder="Email"
-                                    className="w-full px-3 py-2 rounded-md bg-slate-950 border border-slate-700 text-sm"
-                                    value={bookingData.email}
-                                    onChange={(e) =>
-                                        setBookingData({ ...bookingData, email: e.target.value })
-                                    }
-                                />
-                                <input
-                                    required
-                                    type="number"
-                                    min="1"
-                                    placeholder="Travelers"
-                                    className="w-full px-3 py-2 rounded-md bg-slate-950 border border-slate-700 text-sm"
-                                    value={bookingData.travelers}
-                                    onChange={(e) =>
-                                        setBookingData({
-                                            ...bookingData,
-                                            travelers: e.target.value
-                                        })
-                                    }
-                                />
-
-                                <div className="flex flex-col gap-1 text-sm">
-                                    <label className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={bookingData.food}
-                                            onChange={(e) =>
-                                                setBookingData({
-                                                    ...bookingData,
-                                                    food: e.target.checked
-                                                })
-                                            }
-                                        />
-                                        Include food plan
-                                    </label>
-                                    <label className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={bookingData.travel}
-                                            onChange={(e) =>
-                                                setBookingData({
-                                                    ...bookingData,
-                                                    travel: e.target.checked
-                                                })
-                                            }
-                                        />
-                                        Include local travel
-                                    </label>
-                                    <label className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={bookingData.wifi}
-                                            onChange={(e) =>
-                                                setBookingData({
-                                                    ...bookingData,
-                                                    wifi: e.target.checked
-                                                })
-                                            }
-                                        />
-                                        Include free wifi
-                                    </label>
-                                </div>
-
-                                <div className="flex gap-2 justify-end mt-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => setSelected(null)}
-                                        className="px-3 py-2 rounded-md bg-slate-800 text-sm"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="px-4 py-2 rounded-md bg-sky-500 hover:bg-sky-600 text-sm"
-                                    >
-                                        Confirm booking
-                                    </button>
-                                </div>
-                            </form>
-                            {message && (
-                                <p className="text-xs text-emerald-400 mt-3">{message}</p>
-                            )}
+                            </div>
                         </div>
-                    </section>
-                )}
+                        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+                            <p>&copy; 2024 WanderLust. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
             </main>
-        </>
+        </div>
     );
 };
 
