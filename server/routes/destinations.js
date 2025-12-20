@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const destinationController = require('../controllers/destinationController');
+const destinationController = require("../controllers/destinationController");
 
-// GET /api/destinations - Get all destinations
-router.get('/', destinationController.getAllDestinations);
+router.get("/", destinationController.getDestinations);
+router.post("/", destinationController.createDestination); // protect later
 
 module.exports = router;
