@@ -1,14 +1,11 @@
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
+import Home from "./pages/Home";
 
-function App() {
+const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <div className="min-h-screen bg-slate-950 text-white">
       <Home />
     </div>
-  )
-}
+  );
+};
 
-export default App
-
+export default App;
