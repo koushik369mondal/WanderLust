@@ -55,7 +55,7 @@
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.2.1",
     "node-fetch": "^3.3.2",
-    "openai": "^6.10.0",
+    "openai": "^6.15.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
