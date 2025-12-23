@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const passportLocalMongoose = require("passport-local-mongoose");
+const passportLocalMongoose = require("passport-local-mongoose").default;
 
 const userSchema = new Schema({
-     username: {
+    username: {
         type: String,
         required: true,
     },
@@ -460,50 +460,50 @@ userSchema.index({ 'badges.earnedAt': -1 });
 userSchema.index({ lastActive: -1 });
 
 // Virtual for total wishlisted items
-userSchema.virtual('wishlistCount').get(function() {
+userSchema.virtual('wishlistCount').get(function () {
     return this.wishlist.length;
 });
 
 // Virtual for profile completion percentage
-userSchema.virtual('profileCompletion').get(function() {
+userSchema.virtual('profileCompletion').get(function () {
     let completion = 0;
     const fields = [
-        this.bio, 
-        this.location, 
+        this.bio,
+        this.location,
         this.avatar.url,
         this.hobbies.length > 0,
         this.interests.length > 0,
         this.favoriteDestinations.length > 0,
         Object.values(this.socialLinks).some(link => link)
     ];
-    
+
     fields.forEach(field => {
         if (field) completion += (100 / fields.length);
     });
-    
+
     return Math.round(completion);
 });
 
 // Method to add activity to log
-userSchema.methods.logActivity = function(action, details, relatedId) {
+userSchema.methods.logActivity = function (action, details, relatedId) {
     this.activityLog.unshift({
         action,
         details,
         relatedId,
         timestamp: new Date()
     });
-    
+
     // Keep only last 50 activities to prevent bloating
     if (this.activityLog.length > 50) {
         this.activityLog = this.activityLog.slice(0, 50);
     }
-    
+
     this.lastActive = new Date();
     return this.save();
 };
 
 // Method to award badge
-userSchema.methods.awardBadge = function(badgeData) {
+userSchema.methods.awardBadge = function (badgeData) {
     // Check if badge already exists
     const existingBadge = this.badges.find(badge => badge.name === badgeData.name);
     if (!existingBadge) {
@@ -515,7 +515,7 @@ userSchema.methods.awardBadge = function(badgeData) {
 };
 
 // Method to add notification
-userSchema.methods.addNotification = function(notificationData) {
+userSchema.methods.addNotification = function (notificationData) {
     this.notifications.unshift(notificationData);
 
     // Keep only last 100 notifications to prevent bloating
@@ -527,7 +527,7 @@ userSchema.methods.addNotification = function(notificationData) {
 };
 
 // Method to mark notification as read
-userSchema.methods.markNotificationAsRead = function(notificationId) {
+userSchema.methods.markNotificationAsRead = function (notificationId) {
     const notification = this.notifications.id(notificationId);
     if (notification) {
         notification.isRead = true;
@@ -537,7 +537,7 @@ userSchema.methods.markNotificationAsRead = function(notificationId) {
 };
 
 // Method to get unread notification count
-userSchema.methods.getUnreadNotificationCount = function() {
+userSchema.methods.getUnreadNotificationCount = function () {
     return this.notifications.filter(n => !n.isRead).length;
 };
 
