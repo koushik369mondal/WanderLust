@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import SearchCard from "../components/SearchCard";
 import PromotionalSection from "../components/PromotionalSection";
@@ -15,7 +15,7 @@ const Home = () => {
     return (
         <div className="flex min-h-screen bg-gray-50">
             {/* Sidebar Navigation */}
-            <Sidebar />
+            <Navbar />
 
             {/* Main Content */}
             <main className="flex-1 min-h-screen">

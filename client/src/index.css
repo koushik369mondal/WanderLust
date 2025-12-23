@@ -215,6 +215,18 @@ body {
   }
 }
 
+@keyframes bounce-slow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 /* Animation Classes */
 .animate-fade-in {
   animation: fadeIn 0.6s ease-out;
@@ -234,6 +246,10 @@ body {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
 }
 
 /* Gradient Text */
@@ -263,4 +279,21 @@ button:focus {
 /* Utilities */
 .text-balance {
   text-wrap: balance;
+}
+
+/* Slide Down Animation for Mobile Menu */
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
 }
