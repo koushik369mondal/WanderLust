@@ -1,41 +1,38 @@
-<!-- Premium Glassmorphism Navbar with Tailwind CSS - Perfectly Balanced Layout -->
-<nav
-  class="tw-w-full tw-sticky tw-top-0 tw-z-50 tw-backdrop-blur-xl tw-bg-gradient-to-r tw-from-brand1/90 tw-via-brand2/90 tw-to-brand1/90 tw-shadow-2xl tw-border-b tw-border-white/10"
-  role="navigation" aria-label="Main navigation">
-  <!-- Single centered container with equal padding on both sides -->
-  <div
-    class="tw-max-w-7xl tw-mx-auto tw-w-full tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-py-4 tw-flex tw-items-center tw-justify-between tw-gap-3">
+<!-- WanderLust Navbar - Matching Footer Design Language -->
+<nav class="wander-navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-container">
     <!-- Navbar verification badge -->
     <span class="tw-hidden" data-testid="navbar-check">TAILWIND-OK</span>
 
     <!-- LEFT SECTION: Brand Logo (flex-shrink-0 keeps it at true left edge) -->
-    <div class="tw-flex tw-items-center tw-gap-2 tw-flex-shrink-0">
+    <div class="tw-flex tw-items-center tw-gap-3 tw-flex-shrink-0">
       <a href="/listings"
-        class="tw-inline-flex tw-items-center tw-gap-2 tw-text-xl lg:tw-text-2xl tw-font-bold tw-text-white hover:tw-scale-105 tw-transition-transform tw-duration-300"
+        class="tw-inline-flex tw-items-center tw-gap-3 tw-text-2xl lg:tw-text-3xl tw-font-bold tw-text-white hover:tw-scale-105 tw-transition-transform tw-duration-300 tw-drop-shadow-lg"
         aria-label="WanderLust - Go to home page">
-        <i class="fa-regular fa-compass tw-text-aqua tw-animate-spin-slow tw-text-2xl" aria-hidden="true"></i>
+        <i class="fa-regular fa-compass tw-text-aqua tw-animate-spin-slow tw-text-3xl tw-drop-shadow-lg"
+          aria-hidden="true"></i>
         <span
-          class="tw-bg-gradient-to-r tw-from-gold tw-to-coral tw-bg-clip-text tw-text-transparent tw-hidden sm:tw-inline">
+          class="tw-bg-gradient-to-r tw-from-gold tw-to-coral tw-bg-clip-text tw-text-transparent tw-hidden sm:tw-inline tw-drop-shadow-2xl">
           <%= __('wanderlust') %>
         </span>
       </a>
     </div>
 
     <!-- CENTER SECTION: Nav Links + Search (flex-1 centers content, min-w-0 allows truncation) -->
-    <div class="tw-hidden lg:tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-6 tw-min-w-0">
+    <div class="tw-hidden lg:tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-8 tw-min-w-0">
 
       <!-- Nav Links (min-w-0 allows compression without pushing siblings) -->
-      <div class="tw-flex tw-items-center tw-gap-x-3 tw-min-w-0 tw-flex-shrink">
+      <div class="tw-flex tw-items-center tw-gap-x-5 tw-min-w-0 tw-flex-shrink">
         <a href="/listings"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm tw-whitespace-nowrap tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
-          <i class="fa-regular fa-copy tw-text-base" aria-hidden="true"></i>
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-text-white tw-font-semibold hover:tw-text-aqua hover:tw-bg-white/10 tw-rounded-xl tw-transition-all tw-duration-300 tw-text-base tw-whitespace-nowrap tw-flex-shrink-0 tw-drop-shadow-md hover:tw-drop-shadow-xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
+          <i class="fa-regular fa-copy tw-text-lg" aria-hidden="true"></i>
           <span>
             <%= __('all_listings') %>
           </span>
         </a>
         <a href="/listings/about"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-text-sm tw-whitespace-nowrap tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
-          <i class="fa-solid fa-info-circle tw-text-base" aria-hidden="true"></i>
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-text-white tw-font-semibold hover:tw-text-aqua hover:tw-bg-white/10 tw-rounded-xl tw-transition-all tw-duration-300 tw-text-base tw-whitespace-nowrap tw-flex-shrink-0 tw-drop-shadow-md hover:tw-drop-shadow-xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
+          <i class="fa-solid fa-info-circle tw-text-lg" aria-hidden="true"></i>
           <span>
             <%= __('about') %>
           </span>
@@ -44,11 +41,11 @@
         <!-- Travel Tools Dropdown -->
         <div class="dropdown tw-relative">
           <button
-            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-white tw-font-medium hover:tw-text-aqua hover:tw-bg-white/5 tw-rounded-lg tw-transition-all tw-duration-300 tw-bg-transparent tw-border-0 tw-text-sm tw-cursor-pointer tw-whitespace-nowrap tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-text-white tw-font-semibold hover:tw-text-aqua hover:tw-bg-white/10 tw-rounded-xl tw-transition-all tw-duration-300 tw-bg-transparent tw-border-0 tw-text-base tw-cursor-pointer tw-whitespace-nowrap tw-flex-shrink-0 tw-drop-shadow-md hover:tw-drop-shadow-xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
             data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown">
-            <i class="fa-solid fa-tools tw-text-base" aria-hidden="true"></i>
+            <i class="fa-solid fa-tools tw-text-lg" aria-hidden="true"></i>
             <span>Travel Tools</span>
-            <i class="fa-solid fa-chevron-down tw-text-xs"></i>
+            <i class="fa-solid fa-chevron-down tw-text-sm"></i>
           </button>
           <ul class="dropdown-menu tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-mt-2"
             aria-labelledby="travelToolsDropdown">
@@ -91,7 +88,7 @@
       <div class="tw-w-full tw-max-w-md tw-min-w-0 tw-flex-shrink tw-relative">
         <form method="GET" action="/listings" class="tw-w-full" role="search" aria-label="Search destinations">
           <div
-            class="tw-flex tw-items-center tw-gap-3 tw-h-12 tw-bg-white tw-rounded-full tw-shadow-md tw-border tw-border-gray-200 hover:tw-shadow-lg focus-within:tw-shadow-xl tw-transition-all tw-duration-300 tw-pl-5 tw-pr-2">
+            class="tw-flex tw-items-center tw-gap-3 tw-h-14 tw-bg-white tw-rounded-full tw-shadow-lg tw-border-2 tw-border-gray-300 hover:tw-shadow-2xl hover:tw-border-aqua focus-within:tw-shadow-2xl focus-within:tw-border-coral tw-transition-all tw-duration-300 tw-pl-6 tw-pr-2">
             <i class="fa-solid fa-magnifying-glass tw-text-gray-400 tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
             <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
               value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
@@ -111,11 +108,11 @@
     </div>
 
     <!-- RIGHT SECTION: Action Buttons (flex-shrink-0 anchors to right edge) -->
-    <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-2.5 tw-flex-shrink-0">
+    <div class="tw-hidden lg:tw-flex tw-items-center tw-gap-4 tw-flex-shrink-0">
 
       <!-- Add New Listing -->
       <a href="/listings/new"
-        class="tw-inline-flex tw-items-center tw-gap-2 tw-h-11 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-whitespace-nowrap tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
+        class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white tw-text-base tw-font-semibold hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-whitespace-nowrap tw-flex-shrink-0 tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
         <i class="fa-solid fa-plus tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
         <span class="tw-hidden xl:tw-inline tw-truncate tw-max-w-[140px]">
           <%= __('add_new_listing') %>
@@ -126,16 +123,16 @@
       <% if (typeof currentUser==='undefined' || !currentUser) { %>
         <!-- Login Button -->
         <a href="/login"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-11 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
-          <i class="fa-solid fa-sign-in-alt tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white tw-text-base tw-font-semibold hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0 tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
+          <i class="fa-solid fa-sign-in-alt tw-text-base tw-flex-shrink-0" aria-hidden="true"></i>
           <span class="tw-whitespace-nowrap">
             <%= __('login') %>
           </span>
         </a>
         <!-- Signup Button (Premium Gradient) -->
         <a href="/signup"
-          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-11 tw-px-4 tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-semibold tw-rounded-xl tw-shadow-lg hover:tw-shadow-xl hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-white focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
-          <i class="fa-solid fa-user-plus tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-base tw-font-bold tw-rounded-xl tw-shadow-xl hover:tw-shadow-2xl hover:tw-scale-110 tw-transition-all tw-duration-300 tw-flex-shrink-0 tw-border-2 tw-border-white/20 focus-visible:tw-ring-2 focus-visible:tw-ring-white focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1">
+          <i class="fa-solid fa-user-plus tw-text-base tw-flex-shrink-0" aria-hidden="true"></i>
           <span class="tw-whitespace-nowrap">
             <%= __('signup') %>
           </span>
@@ -144,9 +141,9 @@
           <!-- Profile Dropdown -->
           <div class="dropdown tw-relative tw-flex-shrink-0">
             <button
-              class="tw-inline-flex tw-items-center tw-gap-2 tw-h-11 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white tw-text-sm tw-font-medium hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+              class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white tw-text-base tw-font-semibold hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
               data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown" aria-label="User profile menu">
-              <i class="fa-solid fa-user tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
+              <i class="fa-solid fa-user tw-text-base tw-flex-shrink-0" aria-hidden="true"></i>
               <span class="tw-hidden xl:tw-inline tw-whitespace-nowrap">
                 <%= __('profile') %>
               </span>
@@ -214,9 +211,9 @@
           <!-- Notifications Dropdown -->
           <div class="dropdown tw-relative tw-flex-shrink-0">
             <button
-              class="tw-inline-flex tw-items-center tw-justify-center tw-h-11 tw-w-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-relative focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+              class="tw-inline-flex tw-items-center tw-justify-center tw-h-12 tw-w-12 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-relative tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
               data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle" aria-label="View notifications">
-              <i class="fa-solid fa-bell tw-text-sm" aria-hidden="true"></i>
+              <i class="fa-solid fa-bell tw-text-base" aria-hidden="true"></i>
               <span id="notificationBadge"
                 class="tw-absolute tw--top-1 tw--right-1 tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-1.5 tw-py-0.5 tw-min-w-[18px] tw-text-center tw-shadow-lg"
                 style="display: none;">0</span>
@@ -247,7 +244,7 @@
             <!-- Language Selector (hidden on smaller screens) -->
             <div class="dropdown tw-relative tw-hidden xl:tw-block tw-flex-shrink-0">
               <button
-                class="tw-inline-flex tw-items-center tw-gap-2 tw-h-11 tw-px-4 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-max-w-[140px] focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+                class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-max-w-[160px] tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
                 data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle" aria-label="Select language">
                 <span class="tw-text-base tw-flex-shrink-0">
                   <%= languageMap[getLocale()].flag %>
@@ -279,12 +276,11 @@
 
     <!-- Mobile Menu Toggle -->
     <button
-      class="lg:tw-hidden tw-inline-flex tw-items-center tw-justify-center tw-h-11 tw-w-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+      class="lg:tw-hidden tw-inline-flex tw-items-center tw-justify-center tw-h-12 tw-w-12 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
       type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
       aria-label="Toggle navigation menu">
-      <i class="fa-solid fa-bars tw-text-lg"></i>
+      <i class="fa-solid fa-bars tw-text-xl"></i>
     </button>
-  </div>
   </div>
 </nav>
 
@@ -674,3 +670,27 @@
         margin-top: 8px;
       }
     </style>
+
+    <!-- Enhanced Navbar Scroll Effect Script -->
+    <script>
+      (function () {
+        'use strict';
+        // Add scroll effect to navbar for enhanced visibility
+        const navbar = document.querySelector('.premium-navbar');
+        if (navbar) {
+          let lastScroll = 0;
+          window.addEventListener('scroll', function () {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Add 'scrolled' class when scrolled down
+            if (currentScroll > 50) {
+              navbar.classList.add('scrolled');
+            } else {
+              navbar.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+          });
+        }
+      })();
+    </script>

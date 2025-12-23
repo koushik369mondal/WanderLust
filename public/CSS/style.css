@@ -78,10 +78,11 @@ body {
   background-blend-mode: overlay;
 }
 
-/* FIX: Enhanced Glassmorphism and Text Contrast for Navbar */
+/* FIX: Enhanced Glassmorphism and Text Contrast for Navbar - Premium Edition */
 /* SCOPED CSS RESET: Override Bootstrap navbar defaults WITHOUT breaking Tailwind utilities */
 nav[role="navigation"] {
   margin: 0 !important;
+  padding: 0 !important;
   width: 100% !important;
   left: 0 !important;
   right: 0 !important;
@@ -103,36 +104,69 @@ nav[role="navigation"] {
   padding: 0 !important;
 }
 
-/* Preserve navbar height and styling */
+/* Premium Navbar Styling with Enhanced Visibility and Sticky Behavior */
+.premium-navbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 9999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+
+  /* Enhanced blur effect for premium look */
+  backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
+
+  /* Stronger background for better readability over images */
+  background: linear-gradient(135deg, rgba(17, 35, 68, 0.96) 0%, rgba(45, 62, 80, 0.96) 50%, rgba(17, 35, 68, 0.96) 100%) !important;
+
+  /* Premium shadow for depth */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+
+  /* Smooth transitions */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  /* Border enhancement */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Legacy navbar class - minimal interference */
 .navbar {
-  height: 5rem;
   position: relative;
   z-index: 1030;
-
-  /* Light Mode: Semi-transparent with excellent backdrop blur */
-  background: rgba(136, 203, 244, 0.85) !important;
-  backdrop-filter: blur(15px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
-
-  border-bottom: 1px solid var(--border-color);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 /* Dark Mode Override: Enhanced glass effect with better contrast */
-[data-theme="dark"] .navbar {
-  background: rgba(17, 35, 68, 0.95) !important;
-  backdrop-filter: blur(15px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .premium-navbar {
+  background: linear-gradient(135deg, rgba(17, 35, 68, 0.97) 0%, rgba(45, 62, 80, 0.97) 50%, rgba(17, 35, 68, 0.97) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Light Mode Override: Ensure proper styling */
-[data-theme="light"] .navbar {
-  background: rgba(136, 203, 244, 0.85) !important;
-  backdrop-filter: blur(15px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+/* Light Mode Override: Ensure proper styling with strong contrast */
+[data-theme="light"] .navbar,
+[data-theme="light"] .premium-navbar {
+  background: linear-gradient(135deg, rgba(136, 203, 244, 0.92) 0%, rgba(156, 213, 254, 0.92) 50%, rgba(136, 203, 244, 0.92) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Scrolled state - even stronger background */
+.premium-navbar.scrolled {
+  background: linear-gradient(135deg, rgba(17, 35, 68, 0.98) 0%, rgba(45, 62, 80, 0.98) 50%, rgba(17, 35, 68, 0.98) 100%) !important;
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .premium-navbar.scrolled {
+  background: linear-gradient(135deg, rgba(136, 203, 244, 0.95) 0%, rgba(156, 213, 254, 0.95) 50%, rgba(136, 203, 244, 0.95) 100%) !important;
 }
 
 .container {
@@ -149,6 +183,11 @@ nav[role="navigation"] {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
+
+  /* Enhanced mobile navbar for better visibility */
+  .premium-navbar {
+    padding: 0 !important;
+  }
 }
 
 .fa-compass {
@@ -156,31 +195,37 @@ nav[role="navigation"] {
   font-size: 2rem;
 }
 
-/* Enhanced navbar text visibility with proper contrast ratios */
+/* Enhanced navbar text visibility with proper contrast ratios - Premium Edition */
 .nav-link {
   font-weight: 600;
   font-size: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Enhanced text shadow for better readability over images */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Light mode text with WCAG AA compliant contrast */
+/* Light mode text with WCAG AA compliant contrast - Enhanced */
 [data-theme="light"] .nav-link {
-  color: #1a1a1a !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  color: #0a0a0a !important;
+  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] .nav-link:hover {
   color: #000000 !important;
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9), 0 1px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Dark mode text with proper contrast */
+/* Dark mode text with proper contrast - Enhanced */
 [data-theme="dark"] .nav-link {
   color: #ffffff !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 1px 4px rgba(0, 0, 0, 0.4) !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="dark"] .nav-link:hover {
   color: #f0f0f0 !important;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7), 0 2px 5px rgba(0, 0, 0, 0.5) !important;
 }
 
 .nav-link:hover {
