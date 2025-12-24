@@ -1,0 +1,32 @@
+<!-- Premium Category Bar with Glassmorphism -->
+<div class="wander-category-bar">
+    <div class="category-bar-container">
+        <!-- Category Pills - Horizontally Scrollable -->
+        <div class="category-scroll-wrapper">
+            <% const categories=[ {name: 'Trending' , icon: 'fa-fire' , gradient: 'category-gradient-trending' },
+                {name: 'Rooms' , icon: 'fa-bed' , gradient: 'category-gradient-rooms' }, {name: 'Iconic Cities' ,
+                icon: 'fa-mountain-city' , gradient: 'category-gradient-cities' }, {name: 'Mountains' ,
+                icon: 'fa-mountain' , gradient: 'category-gradient-mountains' }, {name: 'Castles' ,
+                icon: 'fa-chess-rook' , gradient: 'category-gradient-castles' }, {name: 'Amazing pool' ,
+                icon: 'fa-person-swimming' , gradient: 'category-gradient-pool' }, {name: 'Camping' , icon: 'fa-tents' ,
+                gradient: 'category-gradient-camping' }, {name: 'Farms' , icon: 'fa-tractor' ,
+                gradient: 'category-gradient-farms' }, {name: 'Arctic' , icon: 'fa-snowflake' ,
+                gradient: 'category-gradient-arctic' }, {name: 'Domes' , icon: 'fa-igloo' ,
+                gradient: 'category-gradient-domes' }, {name: 'Boats' , icon: 'fa-ship' ,
+                gradient: 'category-gradient-boats' } ]; %>
+
+                <% categories.forEach(cat=> { %>
+                    <a href="/listings?category=<%= cat.name %>" class="category-item"
+                        aria-label="Filter by <%= cat.name %>">
+                        <div
+                            class="category-pill <%= (typeof category !== 'undefined' && category === cat.name) ? cat.gradient + ' active' : '' %>">
+                            <i class="fa-solid <%= cat.icon %>" aria-hidden="true"></i>
+                            <span>
+                                <%= cat.name %>
+                            </span>
+                        </div>
+                    </a>
+                    <% }); %>
+        </div>
+    </div>
+</div>

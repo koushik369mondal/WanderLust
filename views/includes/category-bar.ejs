@@ -1,32 +1,71 @@
 <!-- Premium Category Bar with Glassmorphism -->
 <div class="wander-category-bar">
     <div class="category-bar-container">
-        <!-- Category Pills - Horizontally Scrollable -->
-        <div class="category-scroll-wrapper">
-            <% const categories=[ {name: 'Trending' , icon: 'fa-fire' , gradient: 'category-gradient-trending' },
-                {name: 'Rooms' , icon: 'fa-bed' , gradient: 'category-gradient-rooms' }, {name: 'Iconic Cities' ,
-                icon: 'fa-mountain-city' , gradient: 'category-gradient-cities' }, {name: 'Mountains' ,
-                icon: 'fa-mountain' , gradient: 'category-gradient-mountains' }, {name: 'Castles' ,
-                icon: 'fa-chess-rook' , gradient: 'category-gradient-castles' }, {name: 'Amazing pool' ,
-                icon: 'fa-person-swimming' , gradient: 'category-gradient-pool' }, {name: 'Camping' , icon: 'fa-tents' ,
-                gradient: 'category-gradient-camping' }, {name: 'Farms' , icon: 'fa-tractor' ,
-                gradient: 'category-gradient-farms' }, {name: 'Arctic' , icon: 'fa-snowflake' ,
-                gradient: 'category-gradient-arctic' }, {name: 'Domes' , icon: 'fa-igloo' ,
-                gradient: 'category-gradient-domes' }, {name: 'Boats' , icon: 'fa-ship' ,
-                gradient: 'category-gradient-boats' } ]; %>
+        <!-- Scroll Navigation Arrows -->
+        <button class="category-nav-arrow left" aria-label="Scroll categories left" id="scrollLeft">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="category-nav-arrow right" aria-label="Scroll categories right" id="scrollRight">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
 
-                <% categories.forEach(cat=> { %>
-                    <a href="/listings?category=<%= cat.name %>" class="category-item"
-                        aria-label="Filter by <%= cat.name %>">
-                        <div
-                            class="category-pill <%= (typeof category !== 'undefined' && category === cat.name) ? cat.gradient + ' active' : '' %>">
-                            <i class="fa-solid <%= cat.icon %>" aria-hidden="true"></i>
-                            <span>
-                                <%= cat.name %>
-                            </span>
-                        </div>
-                    </a>
-                    <% }); %>
+        <!-- Category Pills - Horizontally Scrollable -->
+        <div class="category-scroll-wrapper" id="categoryScroll">
+            <% const categories=[ 
+                {name: 'Trending', icon: 'fa-fire', gradient: 'category-gradient-trending' },
+                {name: 'Rooms', icon: 'fa-bed', gradient: 'category-gradient-rooms' }, 
+                {name: 'Iconic Cities', icon: 'fa-mountain-city', gradient: 'category-gradient-cities' }, 
+                {name: 'Mountains', icon: 'fa-mountain', gradient: 'category-gradient-mountains' }, 
+                {name: 'Castles', icon: 'fa-chess-rook', gradient: 'category-gradient-castles' }, 
+                {name: 'Amazing pool', icon: 'fa-person-swimming', gradient: 'category-gradient-pool' }, 
+                {name: 'Camping', icon: 'fa-tents', gradient: 'category-gradient-camping' }, 
+                {name: 'Farms', icon: 'fa-tractor', gradient: 'category-gradient-farms' }, 
+                {name: 'Arctic', icon: 'fa-snowflake', gradient: 'category-gradient-arctic' }, 
+                {name: 'Domes', icon: 'fa-igloo', gradient: 'category-gradient-domes' }, 
+                {name: 'Boats', icon: 'fa-ship', gradient: 'category-gradient-boats' } 
+            ]; %>
+
+            <% categories.forEach(cat => { %>
+                <a href="/listings?category=<%= cat.name %>" class="category-item"
+                    aria-label="Filter by <%= cat.name %>">
+                    <div class="category-pill <%= (typeof category !== 'undefined' && category === cat.name) ? cat.gradient + ' active' : '' %>">
+                        <i class="fa-solid <%= cat.icon %>" aria-hidden="true"></i>
+                        <span><%= cat.name %></span>
+                    </div>
+                </a>
+            <% }); %>
         </div>
     </div>
 </div>
+
+<script>
+// Category scroll navigation
+(function() {
+    const scrollContainer = document.getElementById('categoryScroll');
+    const scrollLeftBtn = document.getElementById('scrollLeft');
+    const scrollRightBtn = document.getElementById('scrollRight');
+    
+    if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
+    
+    const scrollAmount = 300;
+    
+    scrollLeftBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+    
+    scrollRightBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+    
+    // Update arrow states based on scroll position
+    function updateArrows() {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
+        scrollLeftBtn.disabled = scrollLeft <= 0;
+        scrollRightBtn.disabled = scrollLeft + clientWidth >= scrollWidth - 1;
+    }
+    
+    scrollContainer.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
+})();
+</script>
