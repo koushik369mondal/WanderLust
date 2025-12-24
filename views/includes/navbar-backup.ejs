@@ -1,0 +1,879 @@
+<!-- WanderLust Navbar - Enhanced & Fixed -->
+<nav class="wander-navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-container">
+    <!-- Navbar verification badge -->
+    <span class="navbar-hidden" data-testid="navbar-check">NAVBAR-OK</span>
+
+    <!-- LEFT SECTION: Brand Logo -->
+    <div class="navbar-flex navbar-items-center navbar-gap-3 navbar-flex-shrink-0">
+      <a href="/listings"
+        class="navbar-brand-link navbar-text-2xl lg-navbar-text-3xl"
+        aria-label="WanderLust - Go to home page">
+        <i class="fa-regular fa-compass navbar-brand-icon"
+          aria-hidden="true"></i>
+        <span
+          class="navbar-brand-text navbar-hidden sm-navbar-inline">
+          <%= __('wanderlust') %>
+        </span>
+      </a>
+    </div>
+
+    <!-- CENTER SECTION: Nav Links + Search -->
+    <div
+      class="navbar-center-section lg-navbar-flex navbar-flex-1 navbar-items-center navbar-justify-center navbar-gap-6 xl-navbar-gap-8 navbar-min-w-0 navbar-px-4">
+      <!-- Nav Links -->
+      <div class="navbar-nav-links-wrapper navbar-gap-3 xl-navbar-gap-5">
+        <a href="/listings"
+          class="nav-link navbar-px-3 xl-navbar-px-4 navbar-py-2\.5 navbar-text-sm xl-navbar-text-base navbar-no-underline">
+          <i class="fa-regular fa-copy navbar-text-base xl-navbar-text-lg" aria-hidden="true"></i>
+          <span>
+            <%= __('all_listings') %>
+          </span>
+        </a>
+
+        <a href="/listings/about"
+          class="nav-link navbar-px-3 xl-navbar-px-4 navbar-py-2\.5 navbar-text-sm xl-navbar-text-base navbar-no-underline">
+          <i class="fa-solid fa-info-circle navbar-text-base xl-navbar-text-lg" aria-hidden="true"></i>
+          <span>
+            <%= __('about') %>
+          </span>
+        </a>
+
+        <!-- Travel Tools Dropdown -->
+        <div class="dropdown navbar-relative">
+          <button
+            class="nav-link navbar-px-3 xl-navbar-px-4 navbar-py-2\.5 navbar-text-sm xl-navbar-text-base"
+            data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown" type="button">
+            <i class="fa-solid fa-tools navbar-text-base xl-navbar-text-lg" aria-hidden="true"></i>
+            <span>Travel Tools</span>
+            <i class="fa-solid fa-chevron-down navbar-text-xs navbar-transition-transform" aria-hidden="true"></i>
+          </button>
+          <ul
+            class="dropdown-menu navbar-dropdown-menu navbar-glass-dark navbar-border navbar-border-white-20 navbar-rounded-2xl navbar-p-2 navbar-mt-2 navbar-shadow-2xl"
+            aria-labelledby="travelToolsDropdown">
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/trip-planner"><i class="fa-solid fa-route tw-mr-2"></i>Trip Planner</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/packing-list"><i class="fa-solid fa-suitcase tw-mr-2"></i>Packing List</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/holiday"><i class="fa-solid fa-calendar-days tw-mr-2"></i>Holiday Calendar</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/listings/compare"><i class="fa-solid fa-balance-scale tw-mr-2"></i>Compare Destinations</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/trip-planner/mood-fixing"><i class="fa-solid fa-music tw-mr-2"></i>Mood Fixing</a></li>
+            <li>
+              <hr class="tw-border-white/10 tw-my-1">
+            </li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/weather"><i class="fa-solid fa-cloud-sun tw-mr-2"></i>Weather Info</a></li>
+            <li>
+              <hr class="tw-border-white/10 tw-my-1">
+            </li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/achievements"><i class="fa-solid fa-trophy tw-mr-2"></i>Achievements</a></li>
+            <li><a
+                class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                href="/leaderboard"><i class="fa-solid fa-chart-line tw-mr-2"></i>Leaderboard</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Airbnb-Style Search Bar -->
+      <div class="tw-w-full tw-max-w-xs xl:tw-max-w-md tw-flex-shrink tw-relative">
+        <form method="GET" action="/listings" class="tw-w-full" role="search" aria-label="Search destinations">
+          <div
+            class="tw-flex tw-items-center tw-gap-2 xl:tw-gap-3 tw-h-12 xl:tw-h-14 tw-bg-white tw-rounded-full tw-shadow-lg tw-border-2 tw-border-gray-300 hover:tw-shadow-2xl hover:tw-border-aqua focus-within:tw-shadow-2xl focus-within:tw-border-coral tw-transition-all tw-duration-300 tw-pl-4 xl:tw-pl-6 tw-pr-2">
+            <i class="fa-solid fa-magnifying-glass tw-text-gray-400 tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
+            <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
+              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+              class="tw-bg-transparent tw-border-0 tw-text-gray-700 tw-placeholder-gray-400 tw-outline-none tw-flex-1 tw-text-sm tw-min-w-0 focus:tw-outline-none placeholder:tw-font-normal"
+              autocomplete="off" aria-label="Search destinations" />
+            <button type="submit"
+              class="tw-inline-flex tw-items-center tw-justify-center tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-sm tw-font-semibold tw-w-8 tw-h-8 xl:tw-w-9 xl:tw-h-9 tw-rounded-full tw-shadow-md hover:tw-shadow-lg hover:tw-scale-105 tw-transition-all tw-duration-300 tw-flex-shrink-0 focus-visible:tw-ring-2 focus-visible:tw-ring-coral focus-visible:tw-ring-offset-2"
+              aria-label="Submit search">
+              <i class="fa-solid fa-magnifying-glass tw-text-xs xl:tw-text-sm" aria-hidden="true"></i>
+            </button>
+          </div>
+        </form>
+        <div
+          class="search-suggestions tw-absolute tw-top-full tw-w-full tw-glass-dark tw-rounded-2xl tw-mt-2 tw-border tw-border-white/20 tw-hidden tw-z-50"
+          id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT SECTION: Action Buttons -->
+    <div class="tw-flex lg:tw-hidden xl:tw-flex tw-items-center tw-gap-2 xl:tw-gap-4 tw-flex-shrink-0">
+      <!-- Add New Listing -->
+      <a href="/listings/new"
+        class="tw-hidden xl:tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white tw-text-base tw-font-semibold hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-whitespace-nowrap tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1 tw-no-underline">
+        <i class="fa-solid fa-plus tw-text-sm tw-flex-shrink-0" aria-hidden="true"></i>
+        <span>
+          <%= __('add_new_listing') %>
+        </span>
+      </a>
+
+      <% if (typeof currentUser==='undefined' || !currentUser) { %>
+        <!-- Login Button -->
+        <a href="/login"
+          class="tw-hidden xl:tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white tw-text-base tw-font-semibold hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1 tw-no-underline">
+          <i class="fa-solid fa-sign-in-alt tw-text-base tw-flex-shrink-0" aria-hidden="true"></i>
+          <span class="tw-whitespace-nowrap">
+            <%= __('login') %>
+          </span>
+        </a>
+
+        <!-- Signup Button -->
+        <a href="/signup"
+          class="tw-hidden xl:tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-text-base tw-font-bold tw-rounded-xl tw-shadow-xl hover:tw-shadow-2xl hover:tw-scale-110 tw-transition-all tw-duration-300 tw-border-2 tw-border-white/20 focus-visible:tw-ring-2 focus-visible:tw-ring-white focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1 tw-no-underline">
+          <i class="fa-solid fa-user-plus tw-text-base tw-flex-shrink-0" aria-hidden="true"></i>
+          <span class="tw-whitespace-nowrap">
+            <%= __('signup') %>
+          </span>
+        </a>
+        <% } else { %>
+          <!-- Profile Dropdown -->
+          <div class="dropdown tw-relative tw-flex-shrink-0 tw-hidden xl:tw-block">
+            <button
+              class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-5 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white tw-text-base tw-font-semibold hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+              data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown" aria-label="User profile menu"
+              type="button">
+              <i class="fa-solid fa-user tw-text-base tw-flex-shrink-0" aria-hidden="true"></i>
+              <span class="tw-whitespace-nowrap">
+                <%= __('profile') %>
+              </span>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-min-w-[250px] tw-mt-2 tw-shadow-2xl"
+              aria-labelledby="profileDropdown">
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/profile"><i class="fa-solid fa-user tw-mr-2"></i>My Profile</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/profile/wishlist"><i class="fa-solid fa-bookmark tw-mr-2"></i>My Wishlist</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/profile/likes"><i class="fa-solid fa-heart tw-mr-2"></i>Liked Listings</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/profile/vacation-slots">
+                  <i class="fa-solid fa-calendar-check tw-mr-2"></i>My Vacation Slots
+                  <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length> 0) { %>
+                    <span
+                      class="tw-inline-flex tw-items-center tw-justify-center tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5 tw-ml-2">
+                      <%= currentUser.vacationSlots.length %>
+                    </span>
+                    <% } %>
+                </a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/trip-planner/my-trips"><i class="fa-solid fa-suitcase-rolling tw-mr-2"></i>My Trip Plans</a>
+              </li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/phrase-assistant"><i class="fa-solid fa-language tw-mr-2"></i>Phrase Assistant</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/profile/travel-journal"><i class="fa-solid fa-book tw-mr-2"></i>Travel Journal</a></li>
+              <li><a
+                  class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                  href="/trip-planner/offline-trips">
+                  <i class="fa-solid fa-download tw-mr-2"></i>My Downloads
+                  <span id="profileDownloadCount"
+                    class="tw-inline-flex tw-items-center tw-justify-center tw-bg-aqua tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5 tw-ml-2"
+                    style="display: none;">0</span>
+                </a></li>
+              <% if (currentUser && currentUser.isAdmin) { %>
+                <li>
+                  <hr class="tw-border-white/10 tw-my-1">
+                </li>
+                <li><a
+                    class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                    href="/admin/dashboard"><i class="fa-solid fa-chart-line tw-mr-2"></i>Admin Dashboard</a></li>
+                <% } %>
+                  <li>
+                    <hr class="tw-border-white/10 tw-my-1">
+                  </li>
+                  <li><a
+                      class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline"
+                      href="/logout"><i class="fa-solid fa-sign-out-alt tw-mr-2"></i>
+                      <%= __('logout') %>
+                    </a></li>
+            </ul>
+          </div>
+
+          <!-- Notifications Dropdown -->
+          <div class="dropdown tw-relative tw-flex-shrink-0 tw-hidden xl:tw-block">
+            <button
+              class="tw-inline-flex tw-items-center tw-justify-center tw-h-12 tw-w-12 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-relative tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+              data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle" aria-label="View notifications"
+              type="button">
+              <i class="fa-solid fa-bell tw-text-base" aria-hidden="true"></i>
+              <span id="notificationBadge"
+                class="tw-absolute tw--top-1 tw--right-1 tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-1.5 tw-py-0.5 tw-min-w-[18px] tw-text-center tw-shadow-lg"
+                style="display: none;">0</span>
+            </button>
+            <div
+              class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-0 tw-w-[350px] tw-mt-2 tw-shadow-2xl"
+              aria-labelledby="notificationToggle">
+              <div class="tw-p-4 tw-border-b tw-border-white/10 tw-flex tw-justify-between tw-items-center">
+                <h6 class="tw-text-white tw-font-bold tw-mb-0 tw-text-sm">Notifications</h6>
+                <button id="markAllRead"
+                  class="tw-text-aqua tw-text-xs hover:tw-text-coral tw-transition tw-bg-transparent tw-border-0 tw-cursor-pointer"
+                  type="button">Mark All Read</button>
+              </div>
+              <div id="notificationList" class="tw-max-h-[350px] tw-overflow-y-auto">
+                <div class="tw-text-center tw-text-white/60 tw-p-8" id="noNotifications">
+                  <i class="fa-solid fa-bell-slash tw-text-4xl tw-mb-3" aria-hidden="true"></i>
+                  <p class="tw-mb-0 tw-text-sm">No notifications yet</p>
+                </div>
+              </div>
+              <div class="tw-p-3 tw-border-t tw-border-white/10 tw-text-center">
+                <a href="/notifications"
+                  class="tw-text-aqua tw-text-sm hover:tw-text-coral tw-transition tw-no-underline">View All
+                  Notifications</a>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
+            <!-- Language Selector -->
+            <div class="dropdown tw-relative tw-hidden xl:tw-block tw-flex-shrink-0">
+              <button
+                class="tw-inline-flex tw-items-center tw-gap-2 tw-h-12 tw-px-4 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-max-w-[140px] tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
+                data-bs-toggle="dropdown" aria-expanded="false" id="languageToggle" aria-label="Select language"
+                type="button">
+                <span class="tw-text-base tw-flex-shrink-0">
+                  <%= languageMap[getLocale()].flag %>
+                </span>
+                <span class="tw-text-sm tw-truncate">
+                  <%= languageMap[getLocale()].name %>
+                </span>
+              </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end tw-glass-dark tw-border tw-border-white/20 tw-rounded-2xl tw-p-2 tw-mt-2 tw-shadow-2xl"
+                aria-labelledby="languageToggle">
+                <% Object.keys(languageMap).forEach(lang=> { %>
+                  <li>
+                    <a class="dropdown-item tw-text-white hover:tw-bg-white/10 tw-rounded-lg tw-transition tw-text-sm tw-px-3 tw-py-2 tw-no-underline <%= getLocale() === lang ? 'tw-bg-white/20' : '' %>"
+                      href="<%= buildLangUrl(lang) %>">
+                      <%= languageMap[lang].flag %>
+                        <%= languageMap[lang].name %>
+                    </a>
+                  </li>
+                  <% }); %>
+              </ul>
+            </div>
+
+            <!-- Theme Toggle -->
+            <div class="tw-flex-shrink-0 tw-hidden xl:tw-block">
+              <%- include("../includes/theme-toggle.ejs") %>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button
+              class="lg:tw-inline-flex tw-inline-flex tw-items-center tw-justify-center tw-h-12 tw-w-12 tw-bg-white/15 tw-backdrop-blur-md tw-border-2 tw-border-white/30 tw-rounded-xl tw-text-white hover:tw-bg-white/25 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-drop-shadow-lg hover:tw-drop-shadow-2xl focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1 xl:tw-hidden"
+              type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
+              aria-label="Toggle navigation menu">
+              <i class="fa-solid fa-bars tw-text-xl" aria-hidden="true"></i>
+            </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu (Offcanvas) -->
+<div class="offcanvas offcanvas-end tw-glass-dark tw-border-l tw-border-white/20 wander-mobile-menu"
+  style="width: 85%; max-width: 320px;" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+  <div class="offcanvas-header tw-border-b tw-border-white/10 tw-p-4">
+    <h5 class="offcanvas-title tw-text-white tw-font-bold tw-text-lg tw-flex tw-items-center tw-gap-2"
+      id="mobileMenuLabel">
+      <i class="fa-regular fa-compass tw-text-aqua" aria-hidden="true"></i>
+      <span>Menu</span>
+    </h5>
+    <button type="button"
+      class="tw-inline-flex tw-items-center tw-justify-center tw-h-9 tw-w-9 tw-bg-white/10 tw-border tw-border-white/20 tw-rounded-full tw-text-white hover:tw-bg-white/20 tw-transition"
+      data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="offcanvas-body tw-p-4">
+    <!-- Mobile Search -->
+    <form method="GET" action="/listings" class="tw-mb-6" role="search">
+      <div
+        class="tw-flex tw-items-center tw-h-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-px-4 tw-gap-2 focus-within:tw-ring-2 focus-within:tw-ring-aqua tw-transition">
+        <i class="fa-solid fa-magnifying-glass tw-text-white/60 tw-text-sm" aria-hidden="true"></i>
+        <input type="search" name="search" placeholder="<%= __('search_destinations') %>"
+          class="tw-bg-transparent tw-border-0 tw-text-white tw-placeholder-white/60 tw-outline-none tw-flex-1 tw-text-sm focus:tw-outline-none" />
+      </div>
+    </form>
+
+    <!-- Mobile Nav Links -->
+    <div class="tw-space-y-1 tw-mb-6">
+      <a href="/listings"
+        class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-font-medium tw-py-3 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+        <i class="fa-regular fa-copy tw-text-lg tw-w-5 tw-text-center" aria-hidden="true"></i>
+        <span>
+          <%= __('all_listings') %>
+        </span>
+      </a>
+
+      <a href="/listings/about"
+        class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-font-medium tw-py-3 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+        <i class="fa-solid fa-info-circle tw-text-lg tw-w-5 tw-text-center" aria-hidden="true"></i>
+        <span>
+          <%= __('about') %>
+        </span>
+      </a>
+
+      <a href="/listings/new"
+        class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-font-medium tw-py-3 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+        <i class="fa-solid fa-plus tw-text-lg tw-w-5 tw-text-center" aria-hidden="true"></i>
+        <span>
+          <%= __('add_new_listing') %>
+        </span>
+      </a>
+
+      <!-- Mobile Travel Tools Section -->
+      <div class="tw-border-t tw-border-white/10 tw-mt-4 tw-pt-4">
+        <p class="tw-text-white/60 tw-text-xs tw-font-semibold tw-uppercase tw-mb-3 tw-px-4">Travel Tools</p>
+        <a href="/trip-planner"
+          class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+          <i class="fa-solid fa-route tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+          <span>Trip Planner</span>
+        </a>
+        <a href="/packing-list"
+          class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+          <i class="fa-solid fa-suitcase tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+          <span>Packing List</span>
+        </a>
+        <a href="/holiday"
+          class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+          <i class="fa-solid fa-calendar-days tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+          <span>Holiday Calendar</span>
+        </a>
+        <a href="/weather"
+          class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+          <i class="fa-solid fa-cloud-sun tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+          <span>Weather Info</span>
+        </a>
+      </div>
+    </div>
+
+    <% if (typeof currentUser==='undefined' || !currentUser) { %>
+      <!-- Mobile Auth Buttons -->
+      <div class="tw-space-y-3 tw-mt-6">
+        <a href="/login"
+          class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-h-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-full tw-text-white tw-font-medium tw-transition hover:tw-bg-white/20 tw-text-sm tw-no-underline">
+          <i class="fa-solid fa-sign-in-alt" aria-hidden="true"></i>
+          <span>
+            <%= __('login') %>
+          </span>
+        </a>
+        <a href="/signup"
+          class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-h-11 tw-bg-gradient-to-r tw-from-coral tw-to-gold tw-text-white tw-font-semibold tw-rounded-full tw-shadow-lg hover:tw-shadow-xl tw-transition tw-text-sm tw-no-underline">
+          <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+          <span>
+            <%= __('signup') %>
+          </span>
+        </a>
+      </div>
+      <% } else { %>
+        <!-- Mobile User Menu -->
+        <div class="tw-border-t tw-border-white/10 tw-pt-4 tw-mt-4">
+          <p class="tw-text-white/60 tw-text-xs tw-font-semibold tw-uppercase tw-mb-3 tw-px-4">Account</p>
+          <div class="tw-space-y-1">
+            <a href="/profile"
+              class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+              <i class="fa-solid fa-user tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+              <span>My Profile</span>
+            </a>
+            <a href="/profile/wishlist"
+              class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+              <i class="fa-solid fa-bookmark tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+              <span>My Wishlist</span>
+            </a>
+            <a href="/profile/likes"
+              class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+              <i class="fa-solid fa-heart tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+              <span>Liked Listings</span>
+            </a>
+            <a href="/trip-planner/my-trips"
+              class="tw-flex tw-items-center tw-gap-3 tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+              <i class="fa-solid fa-suitcase-rolling tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+              <span>My Trip Plans</span>
+            </a>
+            <a href="/notifications"
+              class="tw-flex tw-items-center tw-justify-between tw-text-white tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-text-sm tw-no-underline">
+              <div class="tw-flex tw-items-center tw-gap-3">
+                <i class="fa-solid fa-bell tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+                <span>Notifications</span>
+              </div>
+              <span id="mobileNotificationBadge"
+                class="tw-bg-coral tw-text-white tw-text-xs tw-rounded-full tw-px-2 tw-py-0.5"
+                style="display: none;">0</span>
+            </a>
+            <a href="/logout"
+              class="tw-flex tw-items-center tw-gap-3 tw-text-coral tw-py-2.5 tw-px-4 tw-rounded-xl hover:tw-bg-white/10 tw-transition tw-font-medium tw-text-sm tw-mt-3 tw-no-underline">
+              <i class="fa-solid fa-sign-out-alt tw-text-base tw-w-5 tw-text-center" aria-hidden="true"></i>
+              <span>
+                <%= __('logout') %>
+              </span>
+            </a>
+          </div>
+        </div>
+        <% } %>
+  </div>
+</div>
+
+<% if (typeof currentUser !=='undefined' && currentUser) { %>
+  <script>
+    (function () {
+      'use strict';
+
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.OfflineManager) {
+          initializeDownloadsDropdown();
+        }
+        if (typeof currentUser !== 'undefined' && currentUser) {
+          window.notificationManager = new NotificationManager();
+        }
+      });
+
+      async function initializeDownloadsDropdown() {
+        try {
+          const trips = await window.OfflineManager.getStoredPdfs();
+          updateDownloadsBadge(trips);
+        } catch (error) {
+          console.error('Error initializing downloads:', error);
+        }
+      }
+
+      function updateDownloadsBadge(trips) {
+        const badge = document.getElementById('profileDownloadCount');
+        if (!badge) return;
+
+        if (trips && trips.length > 0) {
+          badge.textContent = trips.length;
+          badge.style.display = 'inline-flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      window.viewDownloadedTrip = async function (tripId) {
+        try {
+          if (!window.OfflineManager) return;
+          const pdfData = await window.OfflineManager.getTripPdf(tripId);
+
+          if (pdfData) {
+            const blob = new Blob([pdfData], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+          } else {
+            showToast('PDF not found', 'error');
+          }
+        } catch (error) {
+          console.error('Error viewing downloaded trip:', error);
+          showToast('Failed to open PDF', 'error');
+        }
+      };
+
+      class NotificationManager {
+        constructor() {
+          this.notifications = [];
+          this.unreadCount = 0;
+          this.isInitialized = false;
+          this.init();
+        }
+
+        async init() {
+          if (this.isInitialized) return;
+
+          try {
+            await this.loadNotifications();
+            this.setupEventListeners();
+            this.isInitialized = true;
+          } catch (error) {
+            console.error('Failed to initialize notifications:', error);
+          }
+        }
+
+        async loadNotifications() {
+          try {
+            const response = await fetch('/trip-planner/api/notifications');
+            if (response.ok) {
+              this.notifications = await response.json();
+              this.updateUnreadCount();
+              this.renderNotifications();
+            }
+          } catch (error) {
+            console.error('Failed to load notifications:', error);
+          }
+        }
+
+        updateUnreadCount() {
+          this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+          this.updateBadge();
+        }
+
+        updateBadge() {
+          const badge = document.getElementById('notificationBadge');
+          const mobileBadge = document.getElementById('mobileNotificationBadge');
+
+          if (badge) {
+            if (this.unreadCount > 0) {
+              badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+              badge.style.display = 'inline-block';
+            } else {
+              badge.style.display = 'none';
+            }
+          }
+
+          if (mobileBadge) {
+            if (this.unreadCount > 0) {
+              mobileBadge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+              mobileBadge.style.display = 'inline-block';
+            } else {
+              mobileBadge.style.display = 'none';
+            }
+          }
+        }
+
+        renderNotifications() {
+          const container = document.getElementById('notificationList');
+          const noNotifications = document.getElementById('noNotifications');
+
+          if (!container) return;
+
+          if (this.notifications.length === 0) {
+            if (noNotifications) noNotifications.style.display = 'block';
+            return;
+          }
+
+          if (noNotifications) noNotifications.style.display = 'none';
+
+          const recentNotifications = this.notifications.slice(0, 5);
+          container.innerHTML = recentNotifications.map(n => this.createNotificationHTML(n)).join('');
+        }
+
+        createNotificationHTML(notification) {
+          const timeAgo = this.getTimeAgo(notification.createdAt);
+          const unreadClass = notification.isRead ? '' : 'tw-bg-white/5';
+
+          return `
+        <div class="tw-p-3 tw-border-b tw-border-white/10 ${unreadClass} hover:tw-bg-white/10 tw-transition tw-cursor-pointer" data-id="${notification._id}">
+          <div class="tw-flex tw-justify-between tw-items-start tw-gap-2">
+            <div class="tw-flex-grow tw-min-w-0">
+              <h6 class="tw-text-white tw-font-bold tw-mb-1 tw-text-sm tw-truncate">${this.escapeHtml(notification.title)}</h6>
+              <p class="tw-text-white/70 tw-mb-1 tw-text-xs tw-line-clamp-2">${this.escapeHtml(notification.message)}</p>
+              <small class="tw-text-white/50 tw-text-xs">${timeAgo}</small>
+            </div>
+            <div class="tw-flex tw-flex-col tw-gap-2 tw-flex-shrink-0">
+              ${!notification.isRead ? `
+                <button class="tw-text-green-400 hover:tw-text-green-300 tw-transition tw-text-sm" onclick="event.stopPropagation(); window.notificationManager.markAsRead('${notification._id}')" title="Mark as read" aria-label="Mark as read">
+                  <i class="fa-solid fa-check"></i>
+                </button>
+              ` : ''}
+              <button class="tw-text-red-400 hover:tw-text-red-300 tw-transition tw-text-sm" onclick="event.stopPropagation(); window.notificationManager.deleteNotification('${notification._id}')" title="Delete" aria-label="Delete notification">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+        }
+
+        escapeHtml(text) {
+          const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          };
+          return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        getTimeAgo(dateString) {
+          const now = new Date();
+          const date = new Date(dateString);
+          const diffInSeconds = Math.floor((now - date) / 1000);
+
+          if (diffInSeconds < 60) return 'Just now';
+          if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+          if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+          return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        }
+
+        setupEventListeners() {
+          const markAllReadBtn = document.getElementById('markAllRead');
+          if (markAllReadBtn) {
+            markAllReadBtn.addEventListener('click', () => this.markAllAsRead());
+          }
+        }
+
+        async markAsRead(notificationId) {
+          try {
+            const response = await fetch(`/trip-planner/api/notifications/${notificationId}/read`, {
+              method: 'PATCH'
+            });
+
+            if (response.ok) {
+              const notification = this.notifications.find(n => n._id === notificationId);
+              if (notification) {
+                notification.isRead = true;
+                this.updateUnreadCount();
+                this.renderNotifications();
+              }
+            }
+          } catch (error) {
+            console.error('Failed to mark notification as read:', error);
+            showToast('Failed to mark notification as read', 'error');
+          }
+        }
+
+        async markAllAsRead() {
+          try {
+            const unreadNotifications = this.notifications.filter(n => !n.isRead);
+            await Promise.all(unreadNotifications.map(n => this.markAsRead(n._id)));
+            showToast('All notifications marked as read', 'success');
+          } catch (error) {
+            console.error('Failed to mark all notifications as read:', error);
+            showToast('Failed to mark all notifications as read', 'error');
+          }
+        }
+
+        async deleteNotification(notificationId) {
+          try {
+            const response = await fetch(`/trip-planner/api/notifications/${notificationId}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              this.notifications = this.notifications.filter(n => n._id !== notificationId);
+              this.updateUnreadCount();
+              this.renderNotifications();
+              showToast('Notification deleted', 'success');
+            }
+          } catch (error) {
+            console.error('Failed to delete notification:', error);
+            showToast('Failed to delete notification', 'error');
+          }
+        }
+
+        addNotification(notification) {
+          this.notifications.unshift(notification);
+          this.updateUnreadCount();
+          this.renderNotifications();
+          showToast(notification.title, 'info');
+        }
+      }
+
+      window.showToast = function (message, type = 'info') {
+        const alertClass = {
+          'success': 'alert-success',
+          'error': 'alert-danger',
+          'info': 'alert-info',
+          'warning': 'alert-warning'
+        }[type] || 'alert-info';
+
+        const iconClass = {
+          'success': 'fa-check-circle',
+          'error': 'fa-times-circle',
+          'info': 'fa-info-circle',
+          'warning': 'fa-exclamation-circle'
+        }[type] || 'fa-info-circle';
+
+        const toast = document.createElement('div');
+        toast.className = `alert ${alertClass} position-fixed shadow-lg`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 90vw; animation: slideIn 0.3s ease-out;';
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+      <div class="d-flex align-items-center">
+        <i class="fa-solid ${iconClass} me-2"></i>
+        <span>${message}</span>
+      </div>
+    `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.animation = 'slideOut 0.3s ease-in';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      };
+    })();
+  </script>
+  <% } %>
+
+    <style>
+      /* Keyframe Animations */
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
+      .tw-animate-spin-slow {
+        animation: spin 3s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Navbar Base Styles */
+      .wander-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        gap: 1rem;
+      }
+
+      /* Search Suggestions */
+      .search-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      /* Navbar Scroll Effect */
+      .wander-navbar.scrolled {
+        backdrop-filter: blur(20px);
+        background-color: rgba(0, 0, 0, 0.8);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Dropdown Menu Styles */
+      .dropdown-menu {
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Glass Effect */
+      .tw-glass-dark {
+        background: rgba(20, 20, 30, 0.95);
+        backdrop-filter: blur(10px);
+      }
+
+      /* Mobile Menu Styles */
+      .wander-mobile-menu {
+        backdrop-filter: blur(20px);
+      }
+
+      /* Line Clamp Utility */
+      .tw-line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 1024px) {
+        .navbar-container {
+          padding: 0.75rem 1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar-container {
+          padding: 0.75rem;
+        }
+      }
+
+      /* Fix for dropdown chevron rotation */
+      .dropdown.show .tw-chevron-down,
+      [aria-expanded="true"] .tw-chevron-down {
+        transform: rotate(180deg);
+      }
+    </style>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.wander-navbar');
+        if (navbar) {
+          let lastScroll = 0;
+
+          window.addEventListener('scroll', function () {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScroll > 50) {
+              navbar.classList.add('scrolled');
+            } else {
+              navbar.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+          }, { passive: true });
+        }
+
+        // Close mobile menu on navigation
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+          link.addEventListener('click', function () {
+            const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu'));
+            if (offcanvas) {
+              offcanvas.hide();
+            }
+          });
+        });
+      })();
+    </script>
