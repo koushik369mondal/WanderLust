@@ -6,6 +6,36 @@
 body {
     overflow-x: hidden;
     max-width: 100vw;
+    padding-top: 70px;
+    /* Account for fixed navbar height */
+}
+
+/* Additional padding for pages with category bar */
+body:has(.wander-category-bar) {
+    padding-top: 140px;
+    /* navbar (70px) + category bar (~70px) */
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 64px;
+    }
+
+    body:has(.wander-category-bar) {
+        padding-top: 128px;
+        /* navbar (64px) + category bar (~64px) */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 60px;
+    }
+
+    body:has(.wander-category-bar) {
+        padding-top: 120px;
+        /* navbar (60px) + category bar (~60px) */
+    }
 }
 
 /* Navbar CSS Variables (matching footer) */
@@ -1927,9 +1957,12 @@ body {
    ============================================ */
 
 .wander-category-bar {
-    position: sticky;
+    position: fixed;
     top: 70px;
-    z-index: 40;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 50;
     background: linear-gradient(135deg,
             rgba(65, 183, 204, 0.92),
             rgba(72, 118, 203, 0.92),
@@ -1994,6 +2027,7 @@ body {
 
     .wander-category-bar {
         top: 60px;
+        padding: 0.625rem 0;
     }
 }
 
