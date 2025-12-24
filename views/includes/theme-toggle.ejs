@@ -1,14 +1,17 @@
-<!-- Premium Tailwind Theme Toggle - Simple Button Design -->
-<div class="tw-flex-shrink-0">
-  <button type="button" id="theme-toggle-btn"
-    class="tw-inline-flex tw-items-center tw-justify-center tw-h-11 tw-w-11 tw-bg-white/10 tw-backdrop-blur-md tw-border tw-border-white/20 tw-rounded-xl tw-text-white hover:tw-bg-white/20 hover:tw-scale-105 tw-transition-all tw-duration-300 tw-cursor-pointer tw-relative focus-visible:tw-ring-2 focus-visible:tw-ring-aqua focus-visible:tw-ring-offset-2 focus-visible:tw-ring-offset-brand1"
-    aria-label="Toggle dark mode" role="switch" aria-checked="false">
-    <!-- Sun Icon (Light Mode) -->
-    <i class="fa-solid fa-sun tw-text-base tw-transition-all tw-duration-300" id="theme-icon-light"
-      aria-hidden="true"></i>
-    <!-- Moon Icon (Dark Mode) - Hidden by default -->
-    <i class="fa-solid fa-moon tw-text-base tw-transition-all tw-duration-300 tw-hidden" id="theme-icon-dark"
-      aria-hidden="true"></i>
+<!-- Premium Glassmorphism Theme Toggle -->
+<div class="theme-toggle-glass-container">
+  <button type="button" id="theme-toggle-btn" class="theme-toggle-glass-btn" aria-label="Toggle dark mode" role="switch"
+    aria-checked="false">
+    <!-- Animated Background Glow -->
+    <span class="theme-toggle-glow"></span>
+
+    <!-- Icon Container -->
+    <span class="theme-toggle-icon-wrapper">
+      <!-- Sun Icon (Light Mode) -->
+      <i class="fa-solid fa-sun theme-icon theme-icon-light" id="theme-icon-light" aria-hidden="true"></i>
+      <!-- Moon Icon (Dark Mode) - Hidden by default -->
+      <i class="fa-solid fa-moon theme-icon theme-icon-dark" id="theme-icon-dark" aria-hidden="true"></i>
+    </span>
   </button>
 </div>
 
@@ -35,15 +38,15 @@
       if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         document.body.classList.add('dark-mode');
-        iconLight.classList.add('tw-hidden');
-        iconDark.classList.remove('tw-hidden');
+        iconLight.classList.add('theme-icon-hidden');
+        iconDark.classList.remove('theme-icon-hidden');
         btn.setAttribute('aria-checked', 'true');
         btn.setAttribute('aria-label', 'Switch to light mode');
       } else {
         document.documentElement.removeAttribute('data-theme');
         document.body.classList.remove('dark-mode');
-        iconLight.classList.remove('tw-hidden');
-        iconDark.classList.add('tw-hidden');
+        iconLight.classList.remove('theme-icon-hidden');
+        iconDark.classList.add('theme-icon-hidden');
         btn.setAttribute('aria-checked', 'false');
         btn.setAttribute('aria-label', 'Switch to dark mode');
       }

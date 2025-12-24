@@ -2281,6 +2281,197 @@ body {
     }
 }
 
+/* ============================================
+   GLASSMORPHISM THEME TOGGLE
+   ============================================ */
+
+.theme-toggle-glass-container {
+    flex-shrink: 0;
+    display: inline-flex;
+}
+
+.theme-toggle-glass-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.875rem;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-toggle-glass-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 20px rgba(78, 219, 205, 0.3);
+}
+
+.theme-toggle-glass-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.theme-toggle-glass-btn:focus-visible {
+    outline: 2px solid #4edbcd;
+    outline-offset: 3px;
+}
+
+/* Animated Glow Effect */
+.theme-toggle-glow {
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(from 0deg,
+            transparent 0deg,
+            rgba(78, 219, 205, 0.4) 90deg,
+            rgba(254, 66, 77, 0.4) 180deg,
+            rgba(247, 163, 31, 0.4) 270deg,
+            transparent 360deg);
+    animation: rotate-glow 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.theme-toggle-glass-btn:hover .theme-toggle-glow {
+    opacity: 1;
+}
+
+@keyframes rotate-glow {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Icon Wrapper */
+.theme-toggle-icon-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Theme Icons */
+.theme-icon {
+    position: absolute;
+    font-size: 1.125rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #ffffff;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.theme-icon-light {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.theme-icon-dark {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.5);
+}
+
+.theme-icon-hidden {
+    opacity: 0 !important;
+    transform: rotate(180deg) scale(0.5) !important;
+}
+
+.theme-icon:not(.theme-icon-hidden) {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Hover Animation */
+.theme-toggle-glass-btn:hover .theme-icon:not(.theme-icon-hidden) {
+    transform: rotate(0deg) scale(1.15);
+    animation: theme-icon-bounce 0.6s ease-in-out;
+}
+
+@keyframes theme-icon-bounce {
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1.15);
+    }
+
+    50% {
+        transform: rotate(10deg) scale(1.25);
+    }
+}
+
+/* Dark Mode Specific Styles */
+[data-theme="dark"] .theme-toggle-glass-btn {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #4edbcd;
+}
+
+[data-theme="dark"] .theme-toggle-glass-btn:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(148, 163, 184, 0.5);
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(148, 163, 184, 0.2),
+        0 0 20px rgba(78, 219, 205, 0.4);
+}
+
+[data-theme="dark"] .theme-icon {
+    color: #4edbcd;
+}
+
+/* Responsive Sizes */
+@media (max-width: 1200px) {
+    .theme-toggle-glass-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .theme-icon {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .theme-toggle-glass-btn {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .theme-icon {
+        font-size: 0.9375rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-toggle-glass-btn {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .theme-icon {
+        font-size: 0.875rem;
+    }
+}
+
 /* Dark theme adjustments */
 [data-theme="dark"] .category-pill {
     background: rgba(255, 255, 255, 0.1);
