@@ -6,7 +6,20 @@
             background: var(--bg-primary);
             border-radius: 15px;
             padding: 1rem;
+            margin: 0 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .controls-bar {
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls-bar {
+                margin: 0 0.75rem;
+            }
         }
 
         .controls-bar .btn {
@@ -284,6 +297,7 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 15px;
             padding: 1.5rem;
+            margin: 0 1.5rem;
             border-left: 4px solid #007bff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
@@ -291,8 +305,26 @@
         .no-results-container {
             background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
             border-radius: 20px;
-            margin: 2rem 0;
+            margin: 2rem 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+
+            .search-results-header,
+            .no-results-container {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .search-results-header,
+            .no-results-container {
+                margin-left: 0.75rem;
+                margin-right: 0.75rem;
+            }
         }
 
         /* Loading */
@@ -300,10 +332,39 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             padding: 2rem;
+            margin: 0 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .loading-indicator {
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .loading-indicator {
+                margin: 0 0.75rem;
+            }
+        }
+
+        .listings-container {
+            padding: 0 1.5rem;
         }
 
         .listings-container.loading {
             opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .listings-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .listings-container {
+                padding: 0 0.75rem;
+            }
         }
 
         /* Responsive */
@@ -317,6 +378,43 @@
                 left: 1rem;
                 padding: 0.6rem 1rem;
                 font-size: 0.9rem;
+            }
+        }
+
+        /* Advanced Filters Container */
+        .advanced-filters-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 0 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .advanced-filters-container {
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .advanced-filters-container {
+                margin: 0 0.75rem;
+            }
+        }
+
+        .active-filters {
+            margin: 0 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .active-filters {
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .active-filters {
+                margin: 0 0.75rem;
             }
         }
     </style>
@@ -401,7 +499,7 @@
         </div>
 
         <!-- Loading Indicator -->
-        <div class="loading-indicator text-center my-4" id="loadingIndicator" style="display: none;">
+        <div class="loading-indicator text-center my-4" id="loadingIndicator" style="display: none; padding: 0 1.5rem;">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
@@ -410,7 +508,7 @@
 
         <!-- Search Results Header -->
         <% if (searchQuery) { %>
-            <div class="search-results-header mt-4 mb-3">
+            <div class="search-results-header mt-4 mb-3" style="padding: 0 1.5rem;">
                 <div class="row align-items-center">
                     <div class="col-md-8">
                         <h4 class="mb-1">
@@ -437,7 +535,7 @@
 
                 <!-- No Results Message -->
                 <% if (searchQuery && totalResults===0) { %>
-                    <div class="no-results-container text-center py-5">
+                    <div class="no-results-container text-center py-5" style="padding: 0 1.5rem;">
                         <i class="fas fa-search fa-4x text-muted mb-4"></i>
                         <h3 class="text-muted mb-3">No listings found</h3>
                         <p class="text-muted mb-4">

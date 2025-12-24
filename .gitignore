@@ -4,6 +4,3 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
-
-# Tailwind CSS compiled output
-public/CSS/tailwind.output.css
