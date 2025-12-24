@@ -50,7 +50,7 @@
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
     "mongodb": "^7.0.0",
-    "mongoose": "^8.20.2",
+    "mongoose": "^8.20.4",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.2.1",
