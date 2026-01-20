@@ -28,7 +28,7 @@
     "@mapbox/mapbox-sdk": "^0.16.2",
     "@playwright/test": "^1.57.0",
     "axios": "^1.13.2",
-    "cloudinary": "^2.8.0",
+    "cloudinary": "^2.9.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",
