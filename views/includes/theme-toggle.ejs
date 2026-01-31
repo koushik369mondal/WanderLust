@@ -1,19 +1,9 @@
-<!-- Premium Glassmorphism Theme Toggle -->
-<div class="theme-toggle-glass-container">
-  <button type="button" id="theme-toggle-btn" class="theme-toggle-glass-btn" aria-label="Toggle dark mode" role="switch"
-    aria-checked="false">
-    <!-- Animated Background Glow -->
-    <span class="theme-toggle-glow"></span>
-
-    <!-- Icon Container -->
-    <span class="theme-toggle-icon-wrapper">
-      <!-- Sun Icon (Light Mode) -->
-      <i class="fa-solid fa-sun theme-icon theme-icon-light" id="theme-icon-light" aria-hidden="true"></i>
-      <!-- Moon Icon (Dark Mode) - Hidden by default -->
-      <i class="fa-solid fa-moon theme-icon theme-icon-dark" id="theme-icon-dark" aria-hidden="true"></i>
-    </span>
-  </button>
-</div>
+<!-- Minimal Theme Toggle -->
+<button type="button" id="theme-toggle-btn" class="theme-toggle-minimal" aria-label="Toggle dark mode" role="switch"
+  aria-checked="false">
+  <i class="fa-solid fa-sun theme-icon-light" id="theme-icon-light" aria-hidden="true"></i>
+  <i class="fa-solid fa-moon theme-icon-dark" id="theme-icon-dark" aria-hidden="true"></i>
+</button>
 
 <script>
   // Lightweight Theme Manager with Tailwind
@@ -38,15 +28,11 @@
       if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         document.body.classList.add('dark-mode');
-        iconLight.classList.add('theme-icon-hidden');
-        iconDark.classList.remove('theme-icon-hidden');
         btn.setAttribute('aria-checked', 'true');
         btn.setAttribute('aria-label', 'Switch to light mode');
       } else {
         document.documentElement.removeAttribute('data-theme');
         document.body.classList.remove('dark-mode');
-        iconLight.classList.remove('theme-icon-hidden');
-        iconDark.classList.add('theme-icon-hidden');
         btn.setAttribute('aria-checked', 'false');
         btn.setAttribute('aria-label', 'Switch to dark mode');
       }
