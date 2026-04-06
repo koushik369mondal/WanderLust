@@ -37,7 +37,7 @@
     "ejs-mate": "^4.0.0",
     "express": "^4.22.1",
     "express-session": "^1.19.0",
-    "express-validator": "^7.3.1",
+    "express-validator": "^7.3.2",
     "google-translate-api-x": "^10.7.2",
     "helmet": "^8.1.0",
     "i18n": "^0.15.3",
