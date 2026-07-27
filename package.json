@@ -26,7 +26,7 @@
   "dependencies": {
     "@google-cloud/translate": "^9.4.2",
     "@mapbox/mapbox-sdk": "^0.16.2",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.0",
     "axios": "^1.18.1",
     "cloudinary": "^2.10.0",
     "connect-flash": "^0.1.1",
@@ -52,7 +52,7 @@
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.6.0",
     "node-fetch": "^3.3.2",
-    "openai": "^6.48.0",
+    "openai": "^6.49.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "babel-plugin-istanbul": "^8.0.0",
     "jest": "^30.4.2",
-    "js-yaml": "^5.2.1",
+    "js-yaml": "^5.2.2",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"
   },
