@@ -423,22 +423,24 @@ const { seedListings } = require('./init/data');
 
 const PORT = process.env.PORT || 8080;
 
-server.listen(PORT, async () => {
-    await seedListings();
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Visit: http://localhost:${PORT}/listings`);
-    console.log("Socket.io server ready for real-time notifications ⚡");
-}).on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`❌ Port ${PORT} is already in use!`);
-        console.log('💡 Try one of these solutions:');
-        console.log(`   1. Kill the process using port ${PORT}`);
-        console.log(`   2. Set a different PORT in your .env file`);
-        console.log(`   3. Run: npx kill-port ${PORT}`);
-        process.exit(1);
-    } else {
-        throw err;
-    }
-});
+if (process.env.NODE_ENV !== 'test') {
+    server.listen(PORT, async () => {
+        await seedListings();
+        console.log(`Server is running on port ${PORT}`);
+        console.log(`Visit: http://localhost:${PORT}/listings`);
+        console.log("Socket.io server ready for real-time notifications ⚡");
+    }).on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`❌ Port ${PORT} is already in use!`);
+            console.log('💡 Try one of these solutions:');
+            console.log(`   1. Kill the process using port ${PORT}`);
+            console.log(`   2. Set a different PORT in your .env file`);
+            console.log(`   3. Run: npx kill-port ${PORT}`);
+            process.exit(1);
+        } else {
+            throw err;
+        }
+    });
+}
 
 module.exports = app;

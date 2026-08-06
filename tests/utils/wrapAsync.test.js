@@ -1,4 +1,4 @@
-const wrapAsync = require('../utils/wrapAsync');
+const wrapAsync = require('../../utils/wrapAsync');
 
 describe('wrapAsync Utility', () => {
     it('should wrap async function and catch errors', async () => {

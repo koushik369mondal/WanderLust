@@ -1,5 +1,4 @@
 const Phrase = require('../models/phrase');
-const fetch = require('node-fetch');
 const OpenAI = require('openai');
 
 const hasOpenAI = !!process.env.OPENAI_API_KEY;

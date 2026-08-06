@@ -1,4 +1,4 @@
-const ExpressError = require('../utils/ExpressError');
+const ExpressError = require('../../utils/ExpressError');
 
 describe('ExpressError Utility', () => {
     it('should create error with status and message', () => {

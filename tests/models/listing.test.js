@@ -1,4 +1,4 @@
-const Listing = require('../models/listing');
+const Listing = require('../../models/listing');
 const mongoose = require('mongoose');
 
 describe('Listing Model', () => {
