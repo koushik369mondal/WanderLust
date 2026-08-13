@@ -161,15 +161,24 @@ class NotificationService {
     // Get notifications for a user
     async getUserNotifications(userId, { page = 1, limit = 20, type = null, unreadOnly = false } = {}) {
         try {
-            const query = { recipient: userId };
+            const safeUserId = typeof userId === 'string' ? userId : (userId ? String(userId) : '');
+            const query = { recipient: { $eq: safeUserId } };
             
-            if (type) query.type = type;
-            if (unreadOnly) query.read = false;
+            if (type) {
+                const safeType = typeof type === 'string' ? type : String(type);
+                query.type = { $eq: safeType };
+            }
+            if (unreadOnly) {
+                query.read = false;
+            }
+
+            const pageNum = parseInt(String(page), 10) || 1;
+            const limitNum = parseInt(String(limit), 10) || 20;
 
             const notifications = await Notification.find(query)
                 .sort({ createdAt: -1 })
-                .limit(limit * 1)
-                .skip((page - 1) * limit)
+                .limit(limitNum)
+                .skip((pageNum - 1) * limitNum)
                 .populate('recipient', 'username');
 
             const total = await Notification.countDocuments(query);
@@ -177,8 +186,8 @@ class NotificationService {
             return {
                 notifications,
                 total,
-                page,
-                pages: Math.ceil(total / limit)
+                page: pageNum,
+                pages: Math.ceil(total / limitNum)
             };
         } catch (error) {
             console.error('Error fetching user notifications:', error);
@@ -189,8 +198,10 @@ class NotificationService {
     // Mark notification as read
     async markAsRead(notificationId, userId) {
         try {
+            const safeId = typeof notificationId === 'string' ? notificationId : String(notificationId || '');
+            const safeUserId = typeof userId === 'string' ? userId : String(userId || '');
             const notification = await Notification.findOneAndUpdate(
-                { _id: notificationId, recipient: userId },
+                { _id: { $eq: safeId }, recipient: { $eq: safeUserId } },
                 { read: true, readAt: new Date() },
                 { new: true }
             );
@@ -204,8 +215,9 @@ class NotificationService {
     // Mark all notifications as read for a user
     async markAllAsRead(userId) {
         try {
+            const safeUserId = typeof userId === 'string' ? userId : String(userId || '');
             const result = await Notification.updateMany(
-                { recipient: userId, read: false },
+                { recipient: { $eq: safeUserId }, read: false },
                 { read: true, readAt: new Date() }
             );
             return result;
@@ -218,9 +230,11 @@ class NotificationService {
     // Delete notification
     async deleteNotification(notificationId, userId) {
         try {
+            const safeId = typeof notificationId === 'string' ? notificationId : String(notificationId || '');
+            const safeUserId = typeof userId === 'string' ? userId : String(userId || '');
             const notification = await Notification.findOneAndDelete({
-                _id: notificationId,
-                recipient: userId
+                _id: { $eq: safeId },
+                recipient: { $eq: safeUserId }
             });
             return notification;
         } catch (error) {
@@ -232,8 +246,9 @@ class NotificationService {
     // Get unread count for a user
     async getUnreadCount(userId) {
         try {
+            const safeUserId = typeof userId === 'string' ? userId : String(userId || '');
             const count = await Notification.countDocuments({
-                recipient: userId,
+                recipient: { $eq: safeUserId },
                 read: false
             });
             return count;
@@ -246,8 +261,9 @@ class NotificationService {
     // Get notification statistics
     async getNotificationStats(userId) {
         try {
+            const safeUserId = typeof userId === 'string' ? userId : String(userId || '');
             const stats = await Notification.aggregate([
-                { $match: { recipient: userId } },
+                { $match: { recipient: { $eq: safeUserId } } },
                 {
                     $group: {
                         _id: '$type',

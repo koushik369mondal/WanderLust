@@ -6,6 +6,16 @@ const scamsController = require("../controllers/scams.js");
 const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
+const rateLimit = require("express-rate-limit");
+
+// Rate limiter for safety report creation, updates, and voting
+const safetyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30, // limit each IP to 30 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many safety report requests, please try again after 15 minutes."
+});
 
 // Validation middleware
 const { body } = require('express-validator');
@@ -59,6 +69,7 @@ router
   .get(wrapAsync(scamsController.getSafetyAlerts)) // Safety alerts feed
   .post(
     isLoggedIn,
+    safetyLimiter,
     upload.array("evidence", 5), // Allow up to 5 evidence files
     validateScamReport,
     wrapAsync(scamsController.createScamReport)
@@ -73,18 +84,19 @@ router
   .get(wrapAsync(scamsController.showScamReport))
   .put(
     isLoggedIn,
+    safetyLimiter,
     upload.array("evidence", 5),
     validateScamReport,
     wrapAsync(scamsController.updateScamReport)
   )
-  .delete(isLoggedIn, wrapAsync(scamsController.deleteScamReport));
+  .delete(isLoggedIn, safetyLimiter, wrapAsync(scamsController.deleteScamReport));
 
 // Edit form
 router.get("/:id/edit", isLoggedIn, wrapAsync(scamsController.renderEditForm));
 
 // Voting routes
-router.post("/:id/upvote", isLoggedIn, wrapAsync(scamsController.upvoteReport));
-router.post("/:id/downvote", isLoggedIn, wrapAsync(scamsController.downvoteReport));
+router.post("/:id/upvote", isLoggedIn, safetyLimiter, wrapAsync(scamsController.upvoteReport));
+router.post("/:id/downvote", isLoggedIn, safetyLimiter, wrapAsync(scamsController.downvoteReport));
 
 // Admin routes - TODO: Implement admin verification UI
 // router.put("/:id/verify", isLoggedIn, isAdmin, wrapAsync(scamsController.verifyReport));

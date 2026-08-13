@@ -3,19 +3,30 @@ const router = express.Router();
 const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
+const rateLimit = require("express-rate-limit");
 const { saveRedirectUrl, isLoggedIn } = require("../middleware.js");
 
 const userController = require("../controllers/users.js");
 
+// Rate limiting for sensitive authentication routes
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // limit each IP to 20 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "Too many authentication requests, please try again after 15 minutes."
+});
+
 router
     .route("/signup")
     .get(userController.renderSignupForm)
-    .post(wrapAsync(userController.signup));
+    .post(authLimiter, wrapAsync(userController.signup));
 
 router
     .route("/login")
     .get(userController.renderLoginForm)
     .post(
+        authLimiter,
         saveRedirectUrl,
         passport.authenticate("local", {
             failureRedirect: "/login",
@@ -28,10 +39,12 @@ router.get("/logout", userController.logout);
 
 // Google OAuth routes
 router.get("/auth/google", 
+    authLimiter,
     passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 router.get("/auth/google/callback", 
+    authLimiter,
     passport.authenticate("google", { failureRedirect: "/signup" }),
     userController.googleCallback
 );

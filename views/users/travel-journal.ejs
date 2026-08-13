@@ -609,7 +609,7 @@ function hideAddMemoryForm() {
     currentRating = 0;
     updateRatingStars();
     document.getElementById('photoPreview').style.display = 'none';
-    document.getElementById('photoPreview').innerHTML = '';
+    document.getElementById('photoPreview').textContent = '';
 }
 
 function updateRatingStars() {
@@ -673,19 +673,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePhotoPreview() {
+        photoPreview.textContent = '';
         if (selectedFiles.length > 0) {
             photoPreview.style.display = 'grid';
-            photoPreview.innerHTML = selectedFiles.map((file, index) => `
-                <div style="position: relative;">
-                    <img src="${URL.createObjectURL(file)}" alt="Preview" class="memory-photo">
-                    <button type="button" class="btn btn-danger btn-sm" style="position: absolute; top: 5px; right: 5px;" onclick="removePhoto(${index})">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
+            selectedFiles.forEach((file, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.alt = 'Preview';
+                img.className = 'memory-photo';
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-danger btn-sm';
+                btn.style.position = 'absolute';
+                btn.style.top = '5px';
+                btn.style.right = '5px';
+                btn.onclick = function() { removePhoto(index); };
+
+                const icon = document.createElement('i');
+                icon.className = 'fa-solid fa-times';
+
+                btn.appendChild(icon);
+                wrapper.appendChild(img);
+                wrapper.appendChild(btn);
+                photoPreview.appendChild(wrapper);
+            });
         } else {
             photoPreview.style.display = 'none';
-            photoPreview.innerHTML = '';
         }
     }
 
@@ -750,8 +767,13 @@ function editMemory(memoryId) {
             currentRating = memory.rating || 0;
             updateRatingStars();
 
-            // Update form title
-            document.getElementById('memoryFormTitle').innerHTML = '<i class="fa-solid fa-edit me-2"></i>Edit Memory';
+            // Update form title safely using DOM methods
+            const titleEl = document.getElementById('memoryFormTitle');
+            titleEl.textContent = '';
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-edit me-2';
+            titleEl.appendChild(icon);
+            titleEl.appendChild(document.createTextNode('Edit Memory'));
 
             // Show form
             showAddMemoryForm();

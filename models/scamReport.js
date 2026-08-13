@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const escapeStringRegexp = require('escape-string-regexp');
 
 const scamReportSchema = new Schema({
   title: {
@@ -210,15 +211,19 @@ scamReportSchema.methods.toggleVote = function(userId, voteType) {
 
 // Static method to get scam alerts for a location
 scamReportSchema.statics.getAlertsForLocation = function(location, country, limit = 5) {
+  const safeLocation = typeof location === 'string' ? location : String(location || '');
+  const safeCountry = typeof country === 'string' ? country : String(country || '');
+  const limitNum = parseInt(String(limit), 10) || 5;
+
   return this.find({
-    location: new RegExp(location, 'i'),
-    country: new RegExp(country, 'i'),
+    location: new RegExp(escapeStringRegexp(safeLocation), 'i'),
+    country: new RegExp(escapeStringRegexp(safeCountry), 'i'),
     verificationStatus: 'trusted',
     isActive: true
   })
   .populate('reporter', 'username')
   .sort({ totalVotes: -1, createdAt: -1 })
-  .limit(limit);
+  .limit(limitNum);
 };
 
 const ScamReport = mongoose.model("ScamReport", scamReportSchema);

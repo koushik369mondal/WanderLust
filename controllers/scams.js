@@ -3,27 +3,34 @@ const User = require("../models/user");
 const Listing = require("../models/listing");
 const ExpressError = require("../utils/ExpressError");
 const { validationResult } = require('express-validator');
+const escapeStringRegexp = require('escape-string-regexp');
 
 // Get safety alerts feed
 module.exports.getSafetyAlerts = async (req, res) => {
   try {
-    const {
-      category,
-      country,
-      city,
-      verificationStatus = 'trusted',
-      sortBy = 'newest',
-      page = 1,
-      limit = 12
-    } = req.query;
+    const rawCategory = req.query.category;
+    const rawCountry = req.query.country;
+    const rawCity = req.query.city;
+    const rawVerificationStatus = req.query.verificationStatus;
+    const rawSortBy = req.query.sortBy;
+    const rawPage = req.query.page;
+    const rawLimit = req.query.limit;
+
+    const category = typeof rawCategory === 'string' ? rawCategory : (rawCategory ? String(rawCategory) : '');
+    const country = typeof rawCountry === 'string' ? rawCountry : (rawCountry ? String(rawCountry) : '');
+    const city = typeof rawCity === 'string' ? rawCity : (rawCity ? String(rawCity) : '');
+    const verificationStatus = typeof rawVerificationStatus === 'string' ? rawVerificationStatus : 'trusted';
+    const sortBy = typeof rawSortBy === 'string' ? rawSortBy : 'newest';
+    const pageNum = parseInt(String(rawPage || 1), 10) || 1;
+    const limitNum = parseInt(String(rawLimit || 12), 10) || 12;
 
     // Build filter
     const filter = { isActive: true };
 
-    if (category && category !== 'all') filter.category = category;
-    if (country && country !== 'all') filter.country = new RegExp(country, 'i');
-    if (city) filter.city = new RegExp(city, 'i');
-    if (verificationStatus !== 'all') filter.verificationStatus = verificationStatus;
+    if (category && category !== 'all') filter.category = { $eq: category };
+    if (country && country !== 'all') filter.country = new RegExp(escapeStringRegexp(country), 'i');
+    if (city && city.trim()) filter.city = new RegExp(escapeStringRegexp(city.trim()), 'i');
+    if (verificationStatus && verificationStatus !== 'all') filter.verificationStatus = { $eq: verificationStatus };
 
     // Build sort
     let sort = {};
@@ -45,13 +52,13 @@ module.exports.getSafetyAlerts = async (req, res) => {
     }
 
     // Get reports with pagination
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
     const reports = await ScamReport.find(filter)
       .populate('reporter', 'username')
       .populate('verifiedBy', 'username')
       .sort(sort)
       .skip(skip)
-      .limit(parseInt(limit));
+      .limit(limitNum);
 
     // Get total count for pagination
     const totalCount = await ScamReport.countDocuments(filter);
@@ -70,15 +77,15 @@ module.exports.getSafetyAlerts = async (req, res) => {
         city: city || '',
         verificationStatus,
         sortBy,
-        page: parseInt(page),
-        limit: parseInt(limit)
+        page: pageNum,
+        limit: limitNum
       },
       pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(totalCount / parseInt(limit)),
+        currentPage: pageNum,
+        totalPages: Math.ceil(totalCount / limitNum),
         totalCount,
-        hasNext: skip + parseInt(limit) < totalCount,
-        hasPrev: parseInt(page) > 1
+        hasNext: skip + limitNum < totalCount,
+        hasPrev: pageNum > 1
       }
     });
   } catch (error) {
@@ -91,8 +98,10 @@ module.exports.getSafetyAlerts = async (req, res) => {
 // Show individual scam report
 module.exports.showScamReport = async (req, res) => {
   try {
-    const { id } = req.params;
-    const report = await ScamReport.findById(id)
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+
+    const report = await ScamReport.findOne({ _id: { $eq: id } })
       .populate('reporter', 'username')
       .populate('verifiedBy', 'username')
       .populate('upvotes.user', 'username')
@@ -117,8 +126,8 @@ module.exports.showScamReport = async (req, res) => {
     // Get related reports in same area
     const relatedReports = await ScamReport.find({
       _id: { $ne: report._id },
-      location: new RegExp(report.location, 'i'),
-      country: report.country,
+      location: new RegExp(escapeStringRegexp(String(report.location || '')), 'i'),
+      country: { $eq: String(report.country || '') },
       verificationStatus: 'trusted',
       isActive: true
     })
@@ -153,6 +162,7 @@ module.exports.createScamReport = async (req, res) => {
       return res.redirect('/safety-alerts/new');
     }
 
+    const scamReportData = req.body.scamReport || {};
     const {
       title,
       location,
@@ -163,17 +173,17 @@ module.exports.createScamReport = async (req, res) => {
       severity,
       incidentDate,
       isAnonymous
-    } = req.body.scamReport;
+    } = scamReportData;
 
     // Create new report
     const newReport = new ScamReport({
-      title,
-      location,
-      city,
-      country,
-      description,
-      category,
-      severity,
+      title: typeof title === 'string' ? title : String(title || ''),
+      location: typeof location === 'string' ? location : String(location || ''),
+      city: typeof city === 'string' ? city : String(city || ''),
+      country: typeof country === 'string' ? country : String(country || ''),
+      description: typeof description === 'string' ? description : String(description || ''),
+      category: typeof category === 'string' ? category : String(category || ''),
+      severity: typeof severity === 'string' ? severity : String(severity || ''),
       incidentDate: new Date(incidentDate),
       reporter: req.user._id,
       isAnonymous: isAnonymous === 'on'
@@ -187,11 +197,6 @@ module.exports.createScamReport = async (req, res) => {
       }));
     }
 
-    // Set geometry if coordinates provided (you can add geocoding here)
-    // For now, we'll skip geocoding and let it be set later if needed
-
-    // AI moderation placeholder (you can integrate OpenAI/Gemini here)
-    // For now, we'll mark as safe
     newReport.aiModerationResult = 'safe';
     newReport.aiModerationScore = 0.9;
 
@@ -209,8 +214,9 @@ module.exports.createScamReport = async (req, res) => {
 // Render edit form
 module.exports.renderEditForm = async (req, res) => {
   try {
-    const { id } = req.params;
-    const report = await ScamReport.findById(id);
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+    const report = await ScamReport.findOne({ _id: { $eq: id } });
 
     if (!report) {
       req.flash('error', 'Scam report not found');
@@ -234,8 +240,9 @@ module.exports.renderEditForm = async (req, res) => {
 // Update scam report
 module.exports.updateScamReport = async (req, res) => {
   try {
-    const { id } = req.params;
-    const report = await ScamReport.findById(id);
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+    const report = await ScamReport.findOne({ _id: { $eq: id } });
 
     if (!report) {
       req.flash('error', 'Scam report not found');
@@ -248,6 +255,7 @@ module.exports.updateScamReport = async (req, res) => {
       return res.redirect(`/safety-alerts/${id}`);
     }
 
+    const scamReportData = req.body.scamReport || {};
     const {
       title,
       location,
@@ -257,16 +265,16 @@ module.exports.updateScamReport = async (req, res) => {
       category,
       severity,
       incidentDate
-    } = req.body.scamReport;
+    } = scamReportData;
 
     // Update fields
-    report.title = title;
-    report.location = location;
-    report.city = city;
-    report.country = country;
-    report.description = description;
-    report.category = category;
-    report.severity = severity;
+    report.title = typeof title === 'string' ? title : String(title || '');
+    report.location = typeof location === 'string' ? location : String(location || '');
+    report.city = typeof city === 'string' ? city : String(city || '');
+    report.country = typeof country === 'string' ? country : String(country || '');
+    report.description = typeof description === 'string' ? description : String(description || '');
+    report.category = typeof category === 'string' ? category : String(category || '');
+    report.severity = typeof severity === 'string' ? severity : String(severity || '');
     report.incidentDate = new Date(incidentDate);
 
     // Handle new file uploads
@@ -285,15 +293,16 @@ module.exports.updateScamReport = async (req, res) => {
   } catch (error) {
     console.error('Error updating scam report:', error);
     req.flash('error', 'Failed to update scam report');
-    res.redirect(`/safety-alerts/${id}/edit`);
+    res.redirect(`/safety-alerts/${req.params.id}/edit`);
   }
 };
 
 // Delete scam report
 module.exports.deleteScamReport = async (req, res) => {
   try {
-    const { id } = req.params;
-    const report = await ScamReport.findById(id);
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+    const report = await ScamReport.findOne({ _id: { $eq: id } });
 
     if (!report) {
       req.flash('error', 'Scam report not found');
@@ -306,7 +315,7 @@ module.exports.deleteScamReport = async (req, res) => {
       return res.redirect(`/safety-alerts/${id}`);
     }
 
-    await ScamReport.findByIdAndDelete(id);
+    await ScamReport.findOneAndDelete({ _id: { $eq: id } });
     req.flash('success', 'Scam report deleted successfully!');
     res.redirect('/safety-alerts');
   } catch (error) {
@@ -319,8 +328,9 @@ module.exports.deleteScamReport = async (req, res) => {
 // Handle upvotes
 module.exports.upvoteReport = async (req, res) => {
   try {
-    const { id } = req.params;
-    const report = await ScamReport.findById(id);
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+    const report = await ScamReport.findOne({ _id: { $eq: id } });
 
     if (!report) {
       return res.status(404).json({ success: false, message: 'Report not found' });
@@ -345,8 +355,9 @@ module.exports.upvoteReport = async (req, res) => {
 // Handle downvotes
 module.exports.downvoteReport = async (req, res) => {
   try {
-    const { id } = req.params;
-    const report = await ScamReport.findById(id);
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+    const report = await ScamReport.findOne({ _id: { $eq: id } });
 
     if (!report) {
       return res.status(404).json({ success: false, message: 'Report not found' });
@@ -375,18 +386,19 @@ module.exports.verifyReport = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Admin access required' });
     }
 
-    const { id } = req.params;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
     const { status, adminNotes } = req.body;
 
-    const report = await ScamReport.findById(id);
+    const report = await ScamReport.findOne({ _id: { $eq: id } });
     if (!report) {
       return res.status(404).json({ success: false, message: 'Report not found' });
     }
 
-    report.verificationStatus = status;
+    report.verificationStatus = typeof status === 'string' ? status : String(status || '');
     report.verifiedBy = req.user._id;
     report.verifiedAt = new Date();
-    if (adminNotes) report.adminNotes = adminNotes;
+    if (adminNotes) report.adminNotes = typeof adminNotes === 'string' ? adminNotes : String(adminNotes);
 
     await report.save();
 
@@ -400,13 +412,19 @@ module.exports.verifyReport = async (req, res) => {
 // Get scam alerts for a specific location (API endpoint)
 module.exports.getLocationAlerts = async (req, res) => {
   try {
-    const { location, country, limit = 5 } = req.query;
+    const rawLocation = req.query.location;
+    const rawCountry = req.query.country;
+    const rawLimit = req.query.limit;
+
+    const location = typeof rawLocation === 'string' ? rawLocation : (rawLocation ? String(rawLocation) : '');
+    const country = typeof rawCountry === 'string' ? rawCountry : (rawCountry ? String(rawCountry) : '');
+    const limitNum = parseInt(String(rawLimit || 5), 10) || 5;
 
     if (!location || !country) {
       return res.status(400).json({ success: false, message: 'Location and country are required' });
     }
 
-    const alerts = await ScamReport.getAlertsForLocation(location, country, parseInt(limit));
+    const alerts = await ScamReport.getAlertsForLocation(location, country, limitNum);
 
     res.json({
       success: true,

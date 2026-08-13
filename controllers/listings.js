@@ -3,6 +3,7 @@ const Listing = require("../models/listing");
 const SearchLog = require("../models/searchLog");
 const Wishlist = require('../models/wishlist');
 const Review = require('../models/review');
+const escapeStringRegexp = require('escape-string-regexp');
 
 // Utility imports
 const phrases = require('../utils/phrases');
@@ -115,20 +116,28 @@ const geocodeLocation = async (location) => {
  */
 module.exports.index = async (req, res, next) => {
   try {
-    const { category, search, q } = req.query;
+    const rawCategory = req.query.category;
+    const rawSearch = req.query.search;
+    const rawQ = req.query.q;
+
+    const category = typeof rawCategory === 'string' ? rawCategory : (rawCategory ? String(rawCategory) : '');
+    const search = typeof rawSearch === 'string' ? rawSearch : (rawSearch ? String(rawSearch) : '');
+    const q = typeof rawQ === 'string' ? rawQ : (rawQ ? String(rawQ) : '');
+
     const filter = {};
     let searchQuery = null;
 
     // Category filtering
-    if (category) {
-      filter.category = category;
+    if (category && category.trim()) {
+      filter.category = category.trim();
     }
 
     // Search functionality - handle both 'search' and 'q' parameters
     const searchTerm = search || q;
     if (searchTerm && searchTerm.trim()) {
       searchQuery = searchTerm.trim();
-      const searchRegex = new RegExp(searchQuery, 'i');
+      const escapedQuery = escapeStringRegexp(searchQuery);
+      const searchRegex = new RegExp(escapedQuery, 'i');
       filter.$or = [
         { title: searchRegex },
         { description: searchRegex },
@@ -162,7 +171,7 @@ module.exports.index = async (req, res, next) => {
 
     res.render("listings/index.ejs", {
       allListings,
-      category: req.query.category,
+      category: category || undefined,
       searchQuery,
       totalResults: allListings.length,
       hasSearch: !!searchQuery,
@@ -179,20 +188,24 @@ module.exports.index = async (req, res, next) => {
  */
 module.exports.getSearchSuggestions = async (req, res, next) => {
   try {
-    const { q } = req.query;
+    const rawQ = req.query.q;
+    const q = typeof rawQ === 'string' ? rawQ : (rawQ ? String(rawQ) : '');
 
-    if (!q || q.length < 2) {
+    if (!q || q.trim().length < 2) {
       return res.json([]);
     }
+
+    const searchQuery = q.trim();
+    const escapedQuery = escapeStringRegexp(searchQuery);
 
     // Optimized aggregation with early $match and $limit
     const suggestions = await Listing.aggregate([
       {
         $match: {
           $or: [
-            { location: { $regex: q, $options: 'i' } },
-            { country: { $regex: q, $options: 'i' } },
-            { title: { $regex: q, $options: 'i' } }
+            { location: { $regex: escapedQuery, $options: 'i' } },
+            { country: { $regex: escapedQuery, $options: 'i' } },
+            { title: { $regex: escapedQuery, $options: 'i' } }
           ]
         }
       },
@@ -220,21 +233,21 @@ module.exports.getSearchSuggestions = async (req, res, next) => {
     let results = [];
     if (suggestions.length > 0) {
       const { locations = [], countries = [], titles = [] } = suggestions[0];
-      const qLower = q.toLowerCase();
+      const qLower = searchQuery.toLowerCase();
 
       // Filter and format suggestions efficiently
       const locationSuggestions = locations
-        .filter(loc => loc && loc.toLowerCase().includes(qLower))
+        .filter(loc => loc && String(loc).toLowerCase().includes(qLower))
         .slice(0, 3)
         .map(loc => ({ type: 'location', value: loc, icon: 'fa-map-marker-alt' }));
 
       const countrySuggestions = countries
-        .filter(country => country && country.toLowerCase().includes(qLower))
+        .filter(country => country && String(country).toLowerCase().includes(qLower))
         .slice(0, 2)
         .map(country => ({ type: 'country', value: country, icon: 'fa-globe' }));
 
       const titleSuggestions = titles
-        .filter(title => title && title.toLowerCase().includes(qLower))
+        .filter(title => title && String(title).toLowerCase().includes(qLower))
         .slice(0, 2)
         .map(title => ({ type: 'property', value: title, icon: 'fa-home' }));
 
@@ -259,17 +272,18 @@ module.exports.getFilteredListings = async (req, res, next) => {
       return res.json({ success: true, countries: countries.filter(Boolean).sort() });
     }
 
-    const {
-      search,
-      category,
-      country,
-      minPrice,
-      maxPrice,
-      minRating,
-      sortBy,
-      page = 1,
-      limit = 12
-    } = req.query;
+    const search = typeof req.query.search === 'string' ? req.query.search : (req.query.search ? String(req.query.search) : '');
+    const category = typeof req.query.category === 'string' ? req.query.category : (req.query.category ? String(req.query.category) : '');
+    const country = typeof req.query.country === 'string' ? req.query.country : (req.query.country ? String(req.query.country) : '');
+    const minPrice = typeof req.query.minPrice === 'string' ? req.query.minPrice : (req.query.minPrice ? String(req.query.minPrice) : '');
+    const maxPrice = typeof req.query.maxPrice === 'string' ? req.query.maxPrice : (req.query.maxPrice ? String(req.query.maxPrice) : '');
+    const minRating = typeof req.query.minRating === 'string' ? req.query.minRating : (req.query.minRating ? String(req.query.minRating) : '');
+    const sortBy = typeof req.query.sortBy === 'string' ? req.query.sortBy : (req.query.sortBy ? String(req.query.sortBy) : '');
+    const page = req.query.page ? String(req.query.page) : '1';
+    const limit = req.query.limit ? String(req.query.limit) : '12';
+
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 12;
 
     // Build optimized aggregation pipeline
     const pipeline = [];
@@ -278,7 +292,7 @@ module.exports.getFilteredListings = async (req, res, next) => {
     const matchStage = {};
 
     if (search && search.trim()) {
-      const searchRegex = new RegExp(search.trim(), 'i');
+      const searchRegex = new RegExp(escapeStringRegexp(search.trim()), 'i');
       matchStage.$or = [
         { title: searchRegex },
         { description: searchRegex },
@@ -287,13 +301,14 @@ module.exports.getFilteredListings = async (req, res, next) => {
       ];
     }
 
-    if (category) matchStage.category = category;
-    if (country) matchStage.country = country;
+    if (category && category.trim()) matchStage.category = category.trim();
+    if (country && country.trim()) matchStage.country = country.trim();
 
     if (minPrice || maxPrice) {
       matchStage.price = {};
-      if (minPrice) matchStage.price.$gte = parseInt(minPrice);
-      if (maxPrice) matchStage.price.$lte = parseInt(maxPrice);
+      if (minPrice && !isNaN(Number(minPrice))) matchStage.price.$gte = parseInt(minPrice, 10);
+      if (maxPrice && !isNaN(Number(maxPrice))) matchStage.price.$lte = parseInt(maxPrice, 10);
+      if (Object.keys(matchStage.price).length === 0) delete matchStage.price;
     }
 
     if (Object.keys(matchStage).length > 0) {
@@ -331,7 +346,7 @@ module.exports.getFilteredListings = async (req, res, next) => {
     });
 
     // Stage 4: Filter by minimum rating
-    if (minRating) {
+    if (minRating && !isNaN(Number(minRating))) {
       pipeline.push({
         $match: { avgRating: { $gte: parseFloat(minRating) } }
       });
@@ -354,9 +369,9 @@ module.exports.getFilteredListings = async (req, res, next) => {
     pipeline.push({ $sort: sortStage });
 
     // Stage 6: Pagination
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
     pipeline.push({ $skip: skip });
-    pipeline.push({ $limit: parseInt(limit) });
+    pipeline.push({ $limit: limitNum });
 
     // Execute aggregation
     const listings = await Listing.aggregate(pipeline);
@@ -377,11 +392,11 @@ module.exports.getFilteredListings = async (req, res, next) => {
       success: true,
       listings,
       pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(totalCount / parseInt(limit)),
+        currentPage: pageNum,
+        totalPages: Math.ceil(totalCount / limitNum),
         totalCount,
-        hasNext: skip + parseInt(limit) < totalCount,
-        hasPrev: parseInt(page) > 1
+        hasNext: skip + limitNum < totalCount,
+        hasPrev: pageNum > 1
       },
       filters: { search, category, country, minPrice, maxPrice, minRating, sortBy }
     });
@@ -403,10 +418,11 @@ module.exports.renderNewForm = (req, res) => {
  */
 module.exports.showListing = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
 
     // Validate MongoDB ObjectId format
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
       console.error('❌ Invalid ObjectId format:', id);
       req.flash("error", "Invalid listing ID format! Please clear your browser cache.");
       return res.redirect("/listings");
@@ -578,16 +594,25 @@ const getRecommendations = async (listing, user) => {
  */
 module.exports.createListing = async (req, res, next) => {
   try {
-    const { listing } = req.body;
+    const listing = req.body.listing;
 
     // Validate required fields
-    if (!listing || !listing.title || !listing.location) {
+    if (!listing || typeof listing !== 'object' || Array.isArray(listing)) {
+      req.flash("error", "Missing required fields!");
+      return res.redirect("/listings/new");
+    }
+
+    const title = typeof listing.title === 'string' ? listing.title : (listing.title ? String(listing.title) : '');
+    const location = typeof listing.location === 'string' ? listing.location : (listing.location ? String(listing.location) : '');
+    const country = typeof listing.country === 'string' ? listing.country : (listing.country ? String(listing.country) : '');
+
+    if (!title || !location) {
       req.flash("error", "Missing required fields!");
       return res.redirect("/listings/new");
     }
 
     // Geocode the location
-    const geometry = await geocodeLocation(listing.location);
+    const geometry = await geocodeLocation(location);
 
     // Create new listing
     const newListing = new Listing(listing);
@@ -604,14 +629,14 @@ module.exports.createListing = async (req, res, next) => {
     // Set geometry from geocoding or use default
     if (geometry) {
       newListing.geometry = geometry;
-      console.log(`✅ Geocoded ${listing.location}:`, geometry.coordinates);
+      console.log(`✅ Geocoded ${location}:`, geometry.coordinates);
     } else {
-      const defaultCoords = getDefaultCoordinates(listing.country);
+      const defaultCoords = getDefaultCoordinates(country);
       newListing.geometry = {
         type: "Point",
         coordinates: defaultCoords
       };
-      console.log(`ℹ️ Using default coordinates for ${listing.country}:`, defaultCoords);
+      console.log(`ℹ️ Using default coordinates for ${country}:`, defaultCoords);
     }
 
     await newListing.save();
@@ -631,7 +656,8 @@ module.exports.createListing = async (req, res, next) => {
  */
 module.exports.renderEditForm = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
     const listing = await Listing.findById(id).lean();
 
     if (!listing) {
@@ -657,8 +683,14 @@ module.exports.renderEditForm = async (req, res, next) => {
  */
 module.exports.updateListing = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { listing: listingData } = req.body;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
+    const listingData = req.body.listing;
+
+    if (!listingData || typeof listingData !== 'object' || Array.isArray(listingData)) {
+      req.flash("error", "Invalid listing data!");
+      return res.redirect(`/listings/${id}/edit`);
+    }
 
     // Validate listing exists
     const listing = await Listing.findById(id);
@@ -679,19 +711,21 @@ module.exports.updateListing = async (req, res, next) => {
     }
 
     // Update geometry if location changed
-    if (listingData.location !== listing.location) {
-      const geometry = await geocodeLocation(listingData.location);
+    if (listingData.location && listingData.location !== listing.location) {
+      const locationStr = String(listingData.location);
+      const countryStr = listingData.country ? String(listingData.country) : '';
+      const geometry = await geocodeLocation(locationStr);
 
       if (geometry) {
         listing.geometry = geometry;
-        console.log(`✅ Updated coordinates for ${listingData.location}`);
+        console.log(`✅ Updated coordinates for ${locationStr}`);
       } else if (!listing.geometry?.coordinates) {
-        const defaultCoords = getDefaultCoordinates(listingData.country);
+        const defaultCoords = getDefaultCoordinates(countryStr);
         listing.geometry = {
           type: "Point",
           coordinates: defaultCoords
         };
-        console.log(`ℹ️ Using default coordinates for ${listingData.country}`);
+        console.log(`ℹ️ Using default coordinates for ${countryStr}`);
       }
     }
 
@@ -712,7 +746,8 @@ module.exports.updateListing = async (req, res, next) => {
  */
 module.exports.destroyListing = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
     const deletedListing = await Listing.findByIdAndDelete(id);
 
     if (!deletedListing) {
@@ -734,7 +769,8 @@ module.exports.destroyListing = async (req, res, next) => {
  */
 module.exports.likeListing = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
     const userId = req.user._id;
 
     // Use atomic operations for better performance
@@ -771,7 +807,8 @@ module.exports.likeListing = async (req, res, next) => {
  */
 module.exports.unlikeListing = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const rawId = req.params.id;
+    const id = typeof rawId === 'string' ? rawId : String(rawId || '');
     const userId = req.user._id;
 
     // Remove from both arrays atomically
