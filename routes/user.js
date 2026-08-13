@@ -84,12 +84,6 @@ router.post("/profile/travel-journal", isLoggedIn, wrapAsync(userController.addT
 router.patch("/profile/travel-journal/:memoryId", isLoggedIn, wrapAsync(userController.updateTravelMemory));
 router.delete("/profile/travel-journal/:memoryId", isLoggedIn, wrapAsync(userController.deleteTravelMemory));
 
-// Smart Travel Recommendations Route
-router.get("/recommendations", (req, res) => {
-    console.log("Direct route handler called");
-    res.send("Direct route handler working!");
-});
-
 // Root route - redirect to listings
 router.get("/", (req, res) => {
     res.redirect("/listings");
