@@ -127,7 +127,7 @@ cp .env.example .env
 5. **Get Connection String:** Replace username and password in the connection string
 6. **Add to `.env`:**
    ```env
-   ATLAS_DB_URL=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   ATLAS_DB_URL=mongodb+srv://<username>:<password>@cluster0.example.mongodb.net/dbname?retryWrites=true&w=majority
    ```
 
 ### 🌤️ OpenWeatherMap API Setup (Weather Service)
@@ -180,7 +180,7 @@ CLOUD_API_SECRET=your_cloudinary_api_secret
 
 MAP_TOKEN=pk.eyJ1IjoieW91cl91c2VybmFtZSIsImEiOiJjbTls...
 
-ATLAS_DB_URL=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+ATLAS_DB_URL=mongodb+srv://<username>:<password>@cluster0.example.mongodb.net/dbname?retryWrites=true&w=majority
 
 WEATHER_API_KEY=your_openweathermap_api_key
 OPENAI_API_KEY=your_openai_api_key
