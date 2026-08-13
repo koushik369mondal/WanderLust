@@ -58,7 +58,8 @@ module.exports.getSafetyAlerts = async (req, res) => {
       .populate('verifiedBy', 'username')
       .sort(sort)
       .skip(skip)
-      .limit(limitNum);
+      .limit(limitNum)
+      .lean();
 
     // Get total count for pagination
     const totalCount = await ScamReport.countDocuments(filter);
@@ -133,7 +134,8 @@ module.exports.showScamReport = async (req, res) => {
     })
       .populate('reporter', 'username')
       .sort({ totalVotes: -1 })
-      .limit(3);
+      .limit(3)
+      .lean();
 
     res.render("safety/show", {
       report,

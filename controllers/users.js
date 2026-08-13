@@ -144,7 +144,7 @@ module.exports.renderProfile = async (req, res) => {
 };
 
 module.exports.showLikedListings = async (req, res) => {
-    const user = await User.findById(req.user._id).populate("likes");
+    const user = await User.findById(req.user._id).populate("likes").lean();
 
     if (!user) {
         req.flash("error", "User not found.");
@@ -306,7 +306,8 @@ module.exports.showWishlist = async (req, res) => {
 
         const wishlistItems = await Wishlist.find({ user: req.user._id })
             .populate('listing')
-            .sort({ addedAt: -1 });
+            .sort({ addedAt: -1 })
+            .lean();
 
         console.log("Wishlist items being sent to the page:", wishlistItems);
 

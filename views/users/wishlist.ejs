@@ -254,9 +254,9 @@
                                 </form>
                             </div>
                             
-                            <div class="card-img-container">
-                                <img src="<%= item.listing.image && item.listing.image.url ? item.listing.image.url : 'https://via.placeholder.com/300' %>" 
-                                     class="card-img-top" alt="<%= item.listing.title || 'Listing Image' %>">
+                            <div class="card-img-container" style="aspect-ratio: 16/10; overflow: hidden;">
+                                <img src="<%= item.listing.image && item.listing.image.url ? item.listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_600/') : 'https://via.placeholder.com/300' %>" 
+                                     class="card-img-top" alt="<%= item.listing.title || 'Listing Image' %>" loading="lazy" width="300" height="200" style="width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/10;">
                             </div>
                             
                             <div class="card-body">

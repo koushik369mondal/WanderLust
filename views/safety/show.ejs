@@ -126,8 +126,8 @@
                 <% report.evidence.forEach(evidence => { %>
                 <div class="col-md-4 mb-3">
                   <div class="evidence-item">
-                    <img src="<%= evidence.url %>" alt="Evidence" class="img-fluid rounded"
-                         onclick="openLightbox('<%= evidence.url %>')" style="cursor: pointer;">
+                    <img src="<%= evidence.url.replace('/upload/', '/upload/f_auto,q_auto,w_400/') %>" alt="Evidence" class="img-fluid rounded"
+                         onclick="openLightbox('<%= evidence.url %>')" loading="lazy" width="250" height="180" style="aspect-ratio: 4/3; object-fit: cover; cursor: pointer;">
                   </div>
                 </div>
                 <% }) %>

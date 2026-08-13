@@ -155,10 +155,12 @@
                         <% listings.forEach((listing, index) => { %>
                         <div class="comparison-value">
                             <div class="comparison-card card">
-                                <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>" 
+                                <img src="<%= listing.image && listing.image.url ? listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_600/') : 'https://via.placeholder.com/300' %>" 
                                      class="card-img-top" 
                                      alt="<%= listing.title %>" 
-                                     style="height: 200px; object-fit: cover;">
+                                     loading="lazy"
+                                     width="300" height="200"
+                                     style="height: 200px; aspect-ratio: 16/10; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title"><%= listing.title %></h5>
                                     <p class="card-text text-muted">

@@ -31,6 +31,8 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_
 
 const express = require("express");
 const app = express();
+const compression = require("compression");
+app.use(compression());
 const http = require("http");
 const socketIo = require("socket.io");
 const server = http.createServer(app);
@@ -167,7 +169,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
-app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "/public"), { maxAge: '1d' }));
 
 // Add logging for static file requests in development
 if (process.env.NODE_ENV !== "production") {

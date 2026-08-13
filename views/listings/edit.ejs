@@ -44,7 +44,7 @@
 
             <div class="mb-3">
                 <h6>Original Listing Image</h6>
-                <img src="<%= listing.image.url %>" class="edit-img-preview"/>
+                <img src="<%= listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_300/') %>" class="edit-img-preview" alt="Original listing image" loading="lazy" width="250" height="180" style="aspect-ratio: 4/3; object-fit: cover;" />
             </div>
 
             <div class="mb-3">

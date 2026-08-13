@@ -44,8 +44,8 @@
       <h3 class="d-flex justify-content-center mt-3">
         <%= listing.title %>
       </h3>
-      <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/300' %>"
-        class="card-img-top mt-3 show-img" alt="listing_image" />
+      <img src="<%= listing.image && listing.image.url ? listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_1200/') : 'https://via.placeholder.com/300' %>"
+        class="card-img-top mt-3 show-img" alt="<%= listing.title %>" style="width: 100%; aspect-ratio: 16/9; object-fit: cover;" width="800" height="450" />
 
       <div class="card-body ">
         <p class="card-text">
@@ -386,8 +386,8 @@
                         <div class="col-md-6 col-lg-3 mb-3">
                           <div class="card h-100">
                             <img
-                              src="<%= rec.image && rec.image.url ? rec.image.url : 'https://via.placeholder.com/300' %>"
-                              class="card-img-top" style="height: 150px; object-fit: cover;" alt="<%= rec.title %>">
+                              src="<%= rec.image && rec.image.url ? rec.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_400/') : 'https://via.placeholder.com/300' %>"
+                              class="card-img-top" style="height: 150px; aspect-ratio: 16/10; object-fit: cover;" alt="<%= rec.title %>" loading="lazy" width="200" height="150">
                             <div class="card-body p-2">
                               <h6 class="card-title mb-1">
                                 <%= rec.title %>
@@ -608,7 +608,11 @@
               // Add loading state to submit button
               const submitBtn = this.querySelector('.btn-submit');
               if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Submitting...';
+                submitBtn.textContent = '';
+                const spinner = document.createElement('i');
+                spinner.className = 'fa-solid fa-spinner fa-spin me-2';
+                submitBtn.appendChild(spinner);
+                submitBtn.appendChild(document.createTextNode('Submitting...'));
                 submitBtn.disabled = true;
               }
             });
@@ -647,7 +651,11 @@
 
               // Show loading
               const originalBtnText = translateTextEl.textContent;
-              translateTextEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Translating...';
+              translateTextEl.textContent = '';
+              const spinner = document.createElement('i');
+              spinner.className = 'fa-solid fa-spinner fa-spin me-1';
+              translateTextEl.appendChild(spinner);
+              translateTextEl.appendChild(document.createTextNode('Translating...'));
               this.disabled = true;
 
               try {

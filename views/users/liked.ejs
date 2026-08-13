@@ -107,9 +107,9 @@
                     <a href="/listings/<%= listing._id %>" class="listing-link">
                         <div class="card listing-card h-100">
                             
-                            <div class="card-img-container">
-    <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
-</div>
+                            <div class="card-img-container" style="aspect-ratio: 16/10; overflow: hidden;">
+                                <img src="<%= listing.image && listing.image.url ? listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_600/') : 'https://via.placeholder.com/300' %>" class="card-img-top" alt="<%= listing.title %>" loading="lazy" width="300" height="200" style="width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/10;">
+                            </div>
                             <div class="card-body">
                                 <p class="card-text">
                                     <b><%= listing.title %></b><br>

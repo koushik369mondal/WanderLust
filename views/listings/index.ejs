@@ -584,11 +584,11 @@
                                                                                     <% } %>
                                                     </div>
 
-                                                    <!-- Image -->
-                                                    <div class="listing-image-container">
-                                                        <img src="<%= listing.image?.url || 'https://via.placeholder.com/300' %>"
-                                                            class="listing-image" alt="<%= listing.title %>">
-                                                    </div>
+                                                     <!-- Image -->
+                                                     <div class="listing-image-container" style="aspect-ratio: 16/10; overflow: hidden; background-color: #f0f0f0;">
+                                                         <img src="<%= listing.image?.url ? listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_600/') : 'https://via.placeholder.com/300' %>"
+                                                             class="listing-image" alt="<%= listing.title %>" loading="lazy" width="300" height="200" style="width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/10;">
+                                                     </div>
 
                                                     <!-- Card Body -->
                                                     <div class="card-body">
