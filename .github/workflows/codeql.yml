@@ -8,20 +8,24 @@ on:
   # Trigger on pushes to main branches
   push:
     branches: [ "main", "develop" ]
-    paths:
-      - '**.js'
-      - '**.ts'
-      - '**.json'
-      - '.github/workflows/codeql.yml'
-  
+    paths-ignore:
+      - 'node_modules/**'
+      - 'coverage/**'
+      - 'dist/**'
+      - 'build/**'
+      - 'public/**'
+      - '**.md'
+
   # Trigger on pull requests targeting main branches  
   pull_request:
     branches: [ "main", "develop" ]
-    paths:
-      - '**.js'
-      - '**.ts'
-      - '**.json'
-      - '.github/workflows/codeql.yml'
+    paths-ignore:
+      - 'node_modules/**'
+      - 'coverage/**'
+      - 'dist/**'
+      - 'build/**'
+      - 'public/**'
+      - '**.md'
     
   # Run weekly security scans (every Monday at 2 AM UTC)
   schedule:
@@ -34,7 +38,7 @@ jobs:
   analyze:
     name: 🛡️ Security Analysis
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Prevent workflow from running too long
+    timeout-minutes: 30
     
     # Required permissions for CodeQL
     permissions:
@@ -45,63 +49,39 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Analyze JavaScript/TypeScript code
         language: [ 'javascript-typescript' ]
         include:
           - language: 'javascript-typescript'
             build-mode: none
         
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout repository with full history depth for accurate analysis
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Step 2: Initialize CodeQL analysis
+      # Step 2: Initialize CodeQL analysis using latest v3 actions
       - name: 🔧 Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Use built-in query suite for security analysis
           queries: +security-and-quality
-          # Add config file if needed
-          # config-file: ./.github/codeql/codeql-config.yml
-          
-      # Step 3: Set up Node.js for dependency analysis
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          config: |
+            paths-ignore:
+              - 'node_modules'
+              - 'coverage'
+              - 'dist'
+              - 'build'
 
-      # Step 4: Install dependencies (needed for complete analysis)
-      - name: 📦 Install Dependencies
-        run: |
-          echo "Installing dependencies for comprehensive security analysis..."
-          # Use npm ci for faster, more reliable builds in CI
-          npm ci --ignore-scripts --only=production
-        continue-on-error: true
-
-      # Step 5: Build the application (helps with analysis)
-      - name: 🏗️ Build Application  
-        run: |
-          echo "Building application for enhanced CodeQL analysis..."
-          # Only build if build script exists
-          if npm run --silent build --dry-run 2>/dev/null; then
-            npm run build
-          else
-            echo "No build script found, skipping build step"
-          fi
-        continue-on-error: true
-
-      # Step 6: Perform CodeQL Analysis
+      # Step 3: Perform CodeQL Analysis using latest v3 actions
       - name: 🔍 Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
-          # Upload results even if there are no findings
           upload: always
 
-      # Step 7: Security scan summary
+      # Step 4: Security scan summary
       - name: ✅ Security Scan Summary
         if: always()
         run: |
