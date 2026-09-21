@@ -45,7 +45,7 @@
     "jspdf": "^4.2.1",
     "method-override": "^3.0.0",
     "mongoose": "^8.24.4",
-    "multer": "^2.3.0",
+    "multer": "^2.4.0",
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.6.0",
     "openai": "^7.18.0",
