@@ -31,7 +31,7 @@
     "compression": "^1.8.2",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^6.0.0",
-    "dotenv": "^18.0.0",
+    "dotenv": "^18.0.3",
     "ejs": "^6.0.1",
     "ejs-mate": "^4.0.0",
     "express": "^5.2.1",
@@ -48,17 +48,17 @@
     "multer": "^2.4.0",
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.6.0",
-    "openai": "^7.18.0",
+    "openai": "^7.23.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^9.1.0",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.4"
   },
   "devDependencies": {
     "jest": "^30.5.1",
     "nodemon": "^3.1.14",
-    "supertest": "^7.2.2"
+    "supertest": "^7.3.0"
   },
   "jest": {
     "testEnvironment": "node",
