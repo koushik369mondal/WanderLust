@@ -34,8 +34,8 @@
     "dotenv": "^18.0.5",
     "ejs": "^6.0.1",
     "ejs-mate": "^4.0.0",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.7.0",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
     "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
     "google-translate-api-x": "^10.7.3",
@@ -44,7 +44,7 @@
     "joi": "^18.2.9",
     "jspdf": "^4.2.1",
     "method-override": "^3.0.0",
-    "mongoose": "^8.24.4",
+    "mongoose": "^8.24.5",
     "multer": "^2.4.0",
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.6.0",
@@ -52,7 +52,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^9.2.0",
+    "passport-local-mongoose": "^9.2.1",
     "socket.io": "^4.8.4"
   },
   "devDependencies": {
