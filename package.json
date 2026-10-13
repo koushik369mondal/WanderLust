@@ -24,14 +24,14 @@
   "license": "MIT",
   "description": "Wanderlust - a travel experience sharing platform built with Node.js, Express, MongoDB, and EJS.",
   "dependencies": {
-    "@google-cloud/translate": "^10.1.1",
+    "@google-cloud/translate": "^10.2.0",
     "@mapbox/mapbox-sdk": "^0.16.2",
     "axios": "^1.20.0",
     "cloudinary": "^2.11.0",
     "compression": "^1.8.2",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^6.0.0",
-    "dotenv": "^18.0.5",
+    "dotenv": "^18.0.7",
     "ejs": "^6.0.1",
     "ejs-mate": "^4.0.0",
     "express": "^5.2.1",
@@ -48,7 +48,7 @@
     "multer": "^2.4.0",
     "multer-storage-cloudinary": "^2.2.1",
     "node-cron": "^4.6.0",
-    "openai": "^7.27.0",
+    "openai": "^7.32.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "jest": "^30.5.2",
     "nodemon": "^3.1.14",
-    "supertest": "^7.3.0"
+    "supertest": "^7.3.1"
   },
   "jest": {
     "testEnvironment": "node",
