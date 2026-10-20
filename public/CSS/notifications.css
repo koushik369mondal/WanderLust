@@ -1,28 +1,22 @@
-/* Notification System Styles with Glassmorphism */
+/* Notification System Styles - ChaiUI Standardized */
 
 /* Main notification container */
 #notificationsList {
     max-height: 70vh;
     overflow-y: auto;
-    padding: 1rem;
-    background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.1), 
-        rgba(255, 255, 255, 0.05)
-    );
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    background: var(--card-fill);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    border: 1px solid var(--card-edge);
+    box-shadow: none;
 }
 
 [data-theme="dark"] #notificationsList {
-    background: linear-gradient(135deg, 
-        rgba(45, 55, 72, 0.2), 
-        rgba(45, 55, 72, 0.1)
-    );
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    background: var(--card-fill);
+    border: 1px solid var(--card-edge);
+    box-shadow: none;
 }
 
 /* Custom scrollbar for notifications list */
@@ -31,86 +25,60 @@
 }
 
 #notificationsList::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    background: transparent;
 }
 
 #notificationsList::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, 
-        rgba(0, 123, 255, 0.6), 
-        rgba(0, 123, 255, 0.3)
-    );
-    border-radius: 10px;
-    backdrop-filter: blur(4px);
+    background: var(--card-edge);
+    border-radius: 9999px;
 }
 
-[data-theme="dark"] #notificationsList::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, 
-        rgba(99, 179, 237, 0.6), 
-        rgba(99, 179, 237, 0.3)
-    );
-}
-
-/* Individual notification item with glassmorphism */
+/* Individual notification item */
 .notification-item {
     display: flex;
     align-items: flex-start;
     padding: 1.25rem;
-    margin-bottom: 1rem;
-    /* Glassmorphism background */
-    background: rgba(255, 255, 255, 0.25);
+    margin-bottom: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--card-edge);
+    border-radius: 0.75rem;
+    box-shadow: none;
+    transition: all 0.2s ease;
     position: relative;
     cursor: pointer;
-    /* Better text contrast */
-    color: #2d3748;
+    color: var(--foreground);
 }
 
-/* Dark theme glassmorphism */
 [data-theme="dark"] .notification-item {
-    background: rgba(45, 55, 72, 0.3);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-edge);
+    color: var(--foreground);
 }
 
 .notification-item:hover {
-    border-color: rgba(0, 123, 255, 0.4);
-    box-shadow: 0 12px 40px rgba(0, 123, 255, 0.2);
-    transform: translateY(-4px) scale(1.02);
-    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 [data-theme="dark"] .notification-item:hover {
-    background: rgba(45, 55, 72, 0.4);
-    border-color: rgba(99, 179, 237, 0.4);
-    box-shadow: 0 12px 40px rgba(99, 179, 237, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
 }
 
-/* Unread notification styling with enhanced glassmorphism */
+/* Unread notification styling */
 .notification-item.unread {
-    border-left: 4px solid #007bff;
-    background: linear-gradient(135deg, 
-        rgba(0, 123, 255, 0.15), 
-        rgba(0, 123, 255, 0.08)
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.2);
+    border-left: 3px solid var(--brand);
+    background: rgba(255, 125, 12, 0.04);
 }
 
 [data-theme="dark"] .notification-item.unread {
-    background: linear-gradient(135deg, 
-        rgba(99, 179, 237, 0.2), 
-        rgba(99, 179, 237, 0.1)
-    );
-    border-left-color: #63b3ed;
+    background: rgba(255, 125, 12, 0.06);
+    border-left-color: var(--brand);
 }
 
 .notification-item.unread::before {
@@ -118,30 +86,26 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    width: 10px;
-    height: 10px;
-    background: linear-gradient(45deg, #007bff, #0056b3);
+    width: 8px;
+    height: 8px;
+    background: var(--brand);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
-    animation: pulse 2s infinite;
+    box-shadow: none;
 }
 
 [data-theme="dark"] .notification-item.unread::before {
-    background: linear-gradient(45deg, #63b3ed, #3182ce);
-    box-shadow: 0 0 8px rgba(99, 179, 237, 0.6);
+    background: var(--brand);
+    box-shadow: none;
 }
 
 /* Priority indicators */
 .notification-item.high {
-    border-color: #ffc107;
+    border-color: #f59e0b;
 }
 
 .notification-item.urgent {
-    border-color: #dc3545;
-    background: linear-gradient(135deg, 
-        rgba(220, 53, 69, 0.02), 
-        rgba(220, 53, 69, 0.05)
-    );
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.04);
 }
 
 /* Priority indicator dot */
@@ -149,51 +113,47 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    border: 2px solid #fff;
+    border: 1px solid var(--card-edge);
 }
 
 .priority-indicator.high {
-    background: #ffc107;
-    animation: pulse 2s infinite;
+    background: #f59e0b;
 }
 
 .priority-indicator.urgent {
-    background: #dc3545;
-    animation: pulse 1s infinite;
+    background: #ef4444;
 }
 
-/* Notification icon with glassmorphism */
+/* Notification icon */
 .notification-icon {
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 42px;
+    height: 42px;
+    background: var(--card-fill);
+    border: 1px solid var(--card-edge);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 1rem;
-    font-size: 1.2rem;
-    color: #4a5568;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    color: var(--foreground);
+    box-shadow: none;
+    transition: all 0.2s ease;
 }
 
 [data-theme="dark"] .notification-icon {
-    background: rgba(74, 85, 104, 0.4);
-    color: #cbd5e0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-fill);
+    color: var(--foreground);
+    border: 1px solid var(--card-edge);
 }
 
 .notification-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    box-shadow: none;
 }
 
 /* Notification content with improved text visibility */

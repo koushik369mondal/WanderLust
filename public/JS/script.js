@@ -178,160 +178,367 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------
     // SEARCH MANAGER
     // ------------------
-    // Handles the search form submission and auto-suggestions
+    // Handles the Airbnb-style Search Bar & Rich Suggestions Popover
+    // ------------------
     class SearchManager {
         constructor() {
-            this.searchForm = document.querySelector('form[role="search"]');
-            this.searchInput = document.querySelector(".search-input");
+            this.searchForm = document.querySelector('.wander-search-box form[role="search"]');
+            this.searchInput = document.getElementById("searchInput");
+            this.searchWrapper = document.getElementById("wanderSearchWrapper");
+            this.clearBtn = document.getElementById("searchClearBtn");
             this.suggestionsContainer = document.getElementById("searchSuggestions");
+            
+            // Mobile search elements
+            this.mobileInput = document.getElementById("mobileSearchInput");
+            this.mobileClearBtn = document.getElementById("mobileSearchClearBtn");
+            
             this.debounceTimer = null;
+            this.activeIndex = -1;
+            this.trendingDestinations = [
+                { name: "Goa", subtitle: "Beachfront villas & parties", icon: "fa-umbrella-beach" },
+                { name: "Manali", subtitle: "Mountain escapes & snow", icon: "fa-mountain" },
+                { name: "Phuket", subtitle: "Island paradises & resorts", icon: "fa-water" },
+                { name: "Dubai", subtitle: "Luxury desert & city skyline", icon: "fa-city" },
+                { name: "Tokyo", subtitle: "Culture, food & vibrant stays", icon: "fa-torii-gate" },
+                { name: "Scottish Highlands", subtitle: "Castles & historic lochs", icon: "fa-chess-rook" }
+            ];
+            this.topCategories = [
+                { name: "Trending", icon: "fa-fire" },
+                { name: "Beachfront", icon: "fa-umbrella-beach" },
+                { name: "Mountains", icon: "fa-mountain" },
+                { name: "Iconic Cities", icon: "fa-mountain-city" },
+                { name: "Cabins", icon: "fa-tents" },
+                { name: "Castles", icon: "fa-chess-rook" }
+            ];
+
             this.init();
         }
 
         init() {
-            if (this.searchForm && this.searchInput) {
+            this.setupDesktopSearch();
+            this.setupMobileSearch();
+            this.setupGlobalKeyboardShortcut();
+        }
+
+        setupDesktopSearch() {
+            if (!this.searchInput) return;
+
+            // Update clear button & kbd visibility initially
+            this.updateClearState();
+
+            // Form Submit
+            if (this.searchForm) {
                 this.searchForm.addEventListener("submit", (e) => {
                     e.preventDefault();
                     const query = this.searchInput.value.trim();
+                    this.hideSuggestions();
                     if (query) {
-                        this.hideSuggestions();
                         window.location.href = `/listings?search=${encodeURIComponent(query)}`;
+                    } else {
+                        window.location.href = `/listings`;
                     }
                 });
+            }
 
-                // Auto-suggestions
-                if (this.suggestionsContainer) {
-                    this.searchInput.addEventListener("input", (e) => {
-                        this.handleSearchInput(e.target.value);
-                    });
+            // Input listener
+            this.searchInput.addEventListener("input", (e) => {
+                const val = e.target.value;
+                this.updateClearState();
+                if (val.trim().length >= 2) {
+                    this.handleDebouncedSearch(val.trim());
+                } else if (val.trim().length === 0) {
+                    this.renderDefaultSuggestions();
+                } else {
+                    this.hideSuggestions();
+                }
+            });
 
-                    this.searchInput.addEventListener("focus", (e) => {
-                        if (e.target.value.length > 1) {
-                            this.handleSearchInput(e.target.value);
-                        }
-                    });
+            // Focus listener: show default trending popover if empty, or search suggestions if text
+            this.searchInput.addEventListener("focus", (e) => {
+                const val = e.target.value.trim();
+                if (val.length >= 2) {
+                    this.handleDebouncedSearch(val);
+                } else {
+                    this.renderDefaultSuggestions();
+                }
+            });
 
-                    this.searchInput.addEventListener("blur", (e) => {
-                        // Only hide if not clicking on suggestions
-                        if (!this.suggestionsContainer.contains(e.relatedTarget)) {
-                            setTimeout(() => this.hideSuggestions(), 200);
-                        }
-                    });
+            // Clear button
+            if (this.clearBtn) {
+                this.clearBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.searchInput.value = "";
+                    this.updateClearState();
+                    this.searchInput.focus();
+                    this.renderDefaultSuggestions();
+                });
+            }
 
-                    // Prevent suggestions from losing focus when clicked
-                    this.suggestionsContainer.addEventListener("mousedown", (e) => {
+            // Click outside to hide suggestions
+            document.addEventListener("click", (e) => {
+                if (
+                    this.suggestionsContainer &&
+                    !this.suggestionsContainer.contains(e.target) &&
+                    !this.searchInput.contains(e.target) &&
+                    !(this.clearBtn && this.clearBtn.contains(e.target))
+                ) {
+                    this.hideSuggestions();
+                }
+            });
+
+            // Keyboard navigation
+            this.searchInput.addEventListener("keydown", (e) => {
+                if (!this.suggestionsContainer || !this.suggestionsContainer.classList.contains("show")) {
+                    return;
+                }
+
+                const items = this.suggestionsContainer.querySelectorAll(".search-suggestion-item, .search-suggestion-chip");
+                if (!items.length) return;
+
+                if (e.key === "Escape") {
+                    this.hideSuggestions();
+                    this.searchInput.blur();
+                } else if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    if (this.activeIndex >= 0 && items[this.activeIndex]) {
+                        items[this.activeIndex].classList.remove("active");
+                    }
+                    this.activeIndex = (this.activeIndex + 1) % items.length;
+                    items[this.activeIndex].classList.add("active");
+                    items[this.activeIndex].scrollIntoView({ block: "nearest" });
+                } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    if (this.activeIndex >= 0 && items[this.activeIndex]) {
+                        items[this.activeIndex].classList.remove("active");
+                    }
+                    this.activeIndex = this.activeIndex <= 0 ? items.length - 1 : this.activeIndex - 1;
+                    items[this.activeIndex].classList.add("active");
+                    items[this.activeIndex].scrollIntoView({ block: "nearest" });
+                } else if (e.key === "Enter") {
+                    if (this.activeIndex >= 0 && items[this.activeIndex]) {
                         e.preventDefault();
-                    });
+                        items[this.activeIndex].click();
+                    }
+                }
+            });
+        }
 
-                    // Handle keyboard navigation
-                    this.searchInput.addEventListener("keydown", (e) => {
-                        const suggestions = this.suggestionsContainer.querySelectorAll('.search-suggestion-item');
-                        const currentActive = this.suggestionsContainer.querySelector('.search-suggestion-item.active');
-                        let activeIndex = currentActive ? Array.from(suggestions).indexOf(currentActive) : -1;
+        setupMobileSearch() {
+            if (!this.mobileInput) return;
 
-                        switch (e.key) {
-                            case "Escape":
-                                this.hideSuggestions();
-                                break;
-                            case "ArrowDown":
-                                e.preventDefault();
-                                if (suggestions.length > 0) {
-                                    if (currentActive) currentActive.classList.remove('active');
-                                    activeIndex = (activeIndex + 1) % suggestions.length;
-                                    suggestions[activeIndex].classList.add('active');
-                                }
-                                break;
-                            case "ArrowUp":
-                                e.preventDefault();
-                                if (suggestions.length > 0) {
-                                    if (currentActive) currentActive.classList.remove('active');
-                                    activeIndex = activeIndex <= 0 ? suggestions.length - 1 : activeIndex - 1;
-                                    suggestions[activeIndex].classList.add('active');
-                                }
-                                break;
-                            case "Enter":
-                                if (currentActive) {
-                                    e.preventDefault();
-                                    currentActive.click();
-                                }
-                                break;
+            const updateMobileClear = () => {
+                if (!this.mobileClearBtn) return;
+                this.mobileClearBtn.style.display = this.mobileInput.value.trim().length > 0 ? "inline-flex" : "none";
+            };
+
+            this.mobileInput.addEventListener("input", updateMobileClear);
+
+            if (this.mobileClearBtn) {
+                this.mobileClearBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    this.mobileInput.value = "";
+                    updateMobileClear();
+                    this.mobileInput.focus();
+                });
+            }
+        }
+
+        setupGlobalKeyboardShortcut() {
+            // Pressing "/" focuses search input anywhere on the page
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+                    const isEditable = document.activeElement && document.activeElement.isContentEditable;
+                    if (tag !== "input" && tag !== "textarea" && !isEditable) {
+                        e.preventDefault();
+                        if (this.searchInput) {
+                            this.searchInput.focus();
+                            this.searchInput.select();
                         }
-                    });
+                    }
+                }
+            });
+        }
+
+        updateClearState() {
+            const hasVal = this.searchInput && this.searchInput.value.trim().length > 0;
+            if (this.clearBtn) {
+                this.clearBtn.style.display = hasVal ? "inline-flex" : "none";
+            }
+            if (this.searchWrapper) {
+                if (hasVal) {
+                    this.searchWrapper.classList.add("has-value");
+                } else {
+                    this.searchWrapper.classList.remove("has-value");
                 }
             }
         }
 
-        handleSearchInput(query) {
+        handleDebouncedSearch(query) {
             clearTimeout(this.debounceTimer);
-            
-            if (query.length < 2) {
-                this.hideSuggestions();
-                return;
-            }
-
             this.debounceTimer = setTimeout(() => {
                 this.fetchSuggestions(query);
-            }, 300);
+            }, 250);
         }
 
         async fetchSuggestions(query) {
             try {
                 const response = await fetch(`/listings/search/suggestions?q=${encodeURIComponent(query)}`);
-                const suggestions = await response.json();
-                this.displaySuggestions(suggestions);
+                if (response.ok) {
+                    const suggestions = await response.json();
+                    this.renderQuerySuggestions(query, suggestions);
+                } else {
+                    this.hideSuggestions();
+                }
             } catch (error) {
-                console.error('Error fetching suggestions:', error);
+                console.error("Error fetching search suggestions:", error);
                 this.hideSuggestions();
             }
         }
 
-        displaySuggestions(suggestions) {
-            if (!suggestions || suggestions.length === 0) {
-                this.hideSuggestions();
-                return;
-            }
+        renderDefaultSuggestions() {
+            if (!this.suggestionsContainer) return;
 
-            this.suggestionsContainer.innerHTML = '';
-            // Reset any active states
             this.activeIndex = -1;
-            // Reset any active states
-            this.activeIndex = -1;
-            
-            suggestions.forEach(suggestion => {
-                const item = document.createElement('div');
-                item.className = 'search-suggestion-item';
-                item.innerHTML = `
-                    <i class="fas ${suggestion.icon} search-suggestion-icon"></i>
-                    <span class="search-suggestion-text">${suggestion.value}</span>
-                    <small class="search-suggestion-type">${suggestion.type}</small>
-                `;
-                
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.searchInput.value = suggestion.value;
-                    this.hideSuggestions();
-                    // Use window.location instead of form.submit() for better reliability
-                    window.location.href = `/listings?search=${encodeURIComponent(suggestion.value)}`;
-                });
-                
-                // Also handle mousedown to prevent blur
-                item.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                });
-                
-                this.suggestionsContainer.appendChild(item);
-            });
+            let html = `
+                <div class="search-suggestions-section">
+                    <div class="search-suggestions-title">
+                        <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                        <span>Trending Destinations</span>
+                    </div>
+                    <div class="d-flex flex-column gap-1">
+                        ${this.trendingDestinations.map(d => `
+                            <div class="search-suggestion-item" data-search="${this.escapeHtml(d.name)}" role="option">
+                                <span class="search-suggestion-icon"><i class="fa-solid ${d.icon}" aria-hidden="true"></i></span>
+                                <div class="d-flex flex-column min-w-0 flex-1">
+                                    <span class="search-suggestion-text">${this.escapeHtml(d.name)}</span>
+                                    <small class="text-muted" style="font-size: 0.7rem;">${this.escapeHtml(d.subtitle)}</small>
+                                </div>
+                                <span class="search-suggestion-type">Popular</span>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
 
+                <div class="search-suggestions-section">
+                    <div class="search-suggestions-title">
+                        <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                        <span>Explore Categories</span>
+                    </div>
+                    <div class="search-suggestions-grid">
+                        ${this.topCategories.map(c => `
+                            <div class="search-suggestion-chip" data-category="${this.escapeHtml(c.name)}" role="option">
+                                <i class="fa-solid ${c.icon}" aria-hidden="true"></i>
+                                <span>${this.escapeHtml(c.name)}</span>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+
+            this.suggestionsContainer.innerHTML = html;
+            this.bindSuggestionEvents();
             this.showSuggestions();
         }
 
+        renderQuerySuggestions(query, suggestions) {
+            if (!this.suggestionsContainer) return;
+            if (!suggestions || suggestions.length === 0) {
+                this.suggestionsContainer.innerHTML = `
+                    <div class="p-3 text-center text-muted" style="font-size: 0.8125rem;">
+                        <i class="fa-solid fa-magnifying-glass mb-2" style="font-size: 1.25rem; opacity: 0.5;"></i>
+                        <div>No destinations found for "${this.escapeHtml(query)}"</div>
+                        <small class="d-block mt-1">Press Enter to search all listings</small>
+                    </div>
+                `;
+                this.showSuggestions();
+                return;
+            }
+
+            this.activeIndex = -1;
+            const qLower = query.toLowerCase();
+
+            let itemsHtml = suggestions.map(s => {
+                const val = s.value;
+                const idx = val.toLowerCase().indexOf(qLower);
+                let highlighted = this.escapeHtml(val);
+                if (idx !== -1) {
+                    const before = this.escapeHtml(val.substring(0, idx));
+                    const match = this.escapeHtml(val.substring(idx, idx + query.length));
+                    const after = this.escapeHtml(val.substring(idx + query.length));
+                    highlighted = `${before}<mark>${match}</mark>${after}`;
+                }
+
+                return `
+                    <div class="search-suggestion-item" data-search="${this.escapeHtml(val)}" role="option">
+                        <span class="search-suggestion-icon"><i class="fa-solid ${s.icon || 'fa-location-dot'}" aria-hidden="true"></i></span>
+                        <span class="search-suggestion-text">${highlighted}</span>
+                        <span class="search-suggestion-type">${this.escapeHtml(s.type || 'destination')}</span>
+                    </div>
+                `;
+            }).join("");
+
+            this.suggestionsContainer.innerHTML = `
+                <div class="search-suggestions-section">
+                    <div class="search-suggestions-title">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                        <span>Matching Results</span>
+                    </div>
+                    <div class="d-flex flex-column gap-1">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            `;
+
+            this.bindSuggestionEvents();
+            this.showSuggestions();
+        }
+
+        bindSuggestionEvents() {
+            if (!this.suggestionsContainer) return;
+
+            // Destination clicks
+            this.suggestionsContainer.querySelectorAll("[data-search]").forEach(item => {
+                item.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const query = item.getAttribute("data-search");
+                    if (this.searchInput) this.searchInput.value = query;
+                    this.hideSuggestions();
+                    window.location.href = `/listings?search=${encodeURIComponent(query)}`;
+                });
+            });
+
+            // Category chip clicks
+            this.suggestionsContainer.querySelectorAll("[data-category]").forEach(chip => {
+                chip.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const cat = chip.getAttribute("data-category");
+                    this.hideSuggestions();
+                    window.location.href = `/listings?category=${encodeURIComponent(cat)}`;
+                });
+            });
+        }
+
+        escapeHtml(str) {
+            if (!str) return "";
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return String(str).replace(/[&<>"']/g, m => map[m]);
+        }
+
         showSuggestions() {
-            this.suggestionsContainer.classList.add('show');
+            if (this.suggestionsContainer) {
+                this.suggestionsContainer.classList.add("show");
+            }
         }
 
         hideSuggestions() {
-            this.suggestionsContainer.classList.remove('show');
+            if (this.suggestionsContainer) {
+                this.suggestionsContainer.classList.remove("show");
+                this.activeIndex = -1;
+            }
         }
     }
 

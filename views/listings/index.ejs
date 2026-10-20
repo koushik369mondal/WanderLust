@@ -1,397 +1,84 @@
 <% layout('/layouts/boilerplate') %>
 
     <style>
-        /* Core Controls */
+        /* Listing Controls & Filters */
         .controls-bar {
             width: 100%;
-            margin: 0;
-            padding: 0.75rem 1rem;
-            box-shadow: none;
+            margin: 1rem 0;
+            padding: 0;
         }
 
-        .controls-bar .btn {
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Filters Bar */
-        #filters {
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            padding: 1rem;
-            margin-top: 10px;
-            border-radius: 20px;
-            background: var(--bg-primary);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        #filters::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filters-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: space-evenly;
-            gap: 0.5rem;
-            min-width: 0;
-        }
-
-        .filter {
-            text-align: center;
-            color: white;
-            white-space: nowrap;
-            flex-shrink: 0;
-            padding: 0.5rem;
-            border-radius: 0.75rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .filter:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .filter.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Tax Toggle */
         .tax-toggle {
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--bg-secondary);
+            border: 1px solid var(--card-edge);
+            border-radius: 0.625rem;
+            padding: 0.625rem 1rem;
+            background: var(--card-fill);
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 50px;
+            height: 44px;
         }
 
-        /* Default: Black text for light mode - Maximum Specificity */
-        .tax-toggle .form-check-label,
-        .tax-toggle .form-check-label.tax-label-text,
-        .tax-toggle .form-check-label b,
-        .tax-toggle .form-check-label b.tax-text,
-        .tax-toggle .form-check-label *,
-        .tax-toggle .tax-label-text,
-        .tax-toggle .tax-text {
-            color: #000000 !important;
-            fill: #000000 !important;
-        }
-
-        /* White text ONLY in dark mode - Multiple selectors for compatibility */
-        [data-theme="dark"] .tax-toggle .form-check-label,
-        [data-theme="dark"] .tax-toggle .form-check-label.tax-label-text,
-        [data-theme="dark"] .tax-toggle .form-check-label b,
-        [data-theme="dark"] .tax-toggle .form-check-label b.tax-text,
-        [data-theme="dark"] .tax-toggle .form-check-label *,
-        [data-theme="dark"] .tax-toggle .tax-label-text,
-        [data-theme="dark"] .tax-toggle .tax-text,
-        html[data-theme="dark"] .tax-toggle .form-check-label,
-        html[data-theme="dark"] .tax-toggle .form-check-label b,
-        html[data-theme="dark"] .tax-toggle .tax-label-text,
-        html[data-theme="dark"] .tax-toggle .tax-text,
-        body[data-theme="dark"] .tax-toggle .form-check-label,
-        body[data-theme="dark"] .tax-toggle .form-check-label b,
-        body[data-theme="dark"] .tax-toggle .tax-label-text,
-        body[data-theme="dark"] .tax-toggle .tax-text {
-            color: #ffffff !important;
-            fill: #ffffff !important;
-        }
-
-        /* Tax Info */
-        .tax-info {
-            color: var(--text-muted, #6c757d);
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-
-        /* Advanced Filters */
-        .advanced-filters-container {
-            background: var(--bg-primary);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--border-color);
-        }
-
-        .filters-panel .form-label {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .filters-panel .form-control,
-        .filters-panel .form-select {
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-        }
-
-        /* Active Filters Tags */
-        .active-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .filter-tag {
-            background: var(--accent-color);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .filter-tag .remove-filter {
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Listing Cards */
-        .listing-card {
-            border: none;
-            border-radius: 1.2rem;
-            overflow: hidden;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .listing-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
-        }
-
-        .listing-image-container {
-            height: 18rem;
-            position: relative;
-        }
-
-        .listing-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Badges */
-        .listing-badges {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            z-index: 10;
-        }
-
-        .badge {
-            padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .badge-new {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .badge-featured {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .badge-discount {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .badge-rated {
-            background-color: #ffc107;
-            color: white;
-        }
-
-        /* Compare Checkbox (Top Left of Card Image) */
-        .compare-checkbox {
-            position: absolute;
-            top: 0.65rem;
-            left: 0.65rem;
-            bottom: auto;
-            right: auto;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 247, 237, 0.2);
-            border-radius: 6px;
-            padding: 0.25rem 0.6rem;
-            font-size: 0.78rem;
+        .tax-toggle .form-check-label {
+            color: var(--foreground) !important;
+            font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
-            z-index: 25;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: #fafafa;
-            transition: all 0.2s ease;
-        }
-
-        .compare-checkbox:hover {
-            border-color: rgba(255, 255, 255, 0.4);
-            color: #ffffff;
-            box-shadow: none;
-        }
-
-        .compare-checkbox input[type="checkbox"] {
-            cursor: pointer;
-            width: 14px;
-            height: 14px;
-            accent-color: #ff7d0c;
-        }
-
-        /* Compare Button */
-        #compare-btn {
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            background: #fe424d;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: 2px solid #fe424d;
-            border-radius: 25px;
-            box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
-            font-weight: 700;
-            cursor: pointer;
-            display: none;
-            z-index: 9999;
-            transition: all 0.2s ease;
-        }
-
-        #compare-btn:hover {
-            background: #e53e3e;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(254, 66, 77, 0.5);
-        }
-
-        /* Search Results */
-        .search-results-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 0 1.5rem;
-            border-left: 4px solid #007bff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .no-results-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            border-radius: 20px;
-            margin: 2rem 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-
-            .search-results-header,
-            .no-results-container {
-                margin-left: 1rem;
-                margin-right: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-
-            .search-results-header,
-            .no-results-container {
-                margin-left: 0.75rem;
-                margin-right: 0.75rem;
-            }
-        }
-
-        /* Loading */
-        .loading-indicator {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 0 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .loading-indicator {
-                margin: 0 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .loading-indicator {
-                margin: 0 0.75rem;
-            }
-        }
-
-        .listings-container {
-            padding: 0;
-            width: 100%;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .advanced-filters-container {
-                padding: 1rem;
-            }
-
-            #compare-btn {
-                bottom: 1rem;
-                left: 1rem;
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
         }
 
         /* Advanced Filters Container */
         .advanced-filters-container {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
+            background: var(--card-fill);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
             padding: 1.5rem;
-            margin: 0 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--card-edge);
+            box-shadow: none;
         }
 
-        @media (max-width: 768px) {
-            .advanced-filters-container {
-                margin: 0 1rem;
-            }
+        .filters-panel .form-label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            margin-bottom: 0.35rem;
         }
 
-        @media (max-width: 480px) {
-            .advanced-filters-container {
-                margin: 0 0.75rem;
-            }
+        .filters-panel .form-control,
+        .filters-panel .form-select {
+            border-radius: 0.5rem;
+            border: 1px solid var(--card-edge);
+            background: var(--background);
+            color: var(--foreground);
+            font-size: 0.875rem;
         }
 
-        .active-filters {
-            margin: 0 1.5rem;
+        /* Floating Compare Button */
+        #compare-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1040;
+            display: none;
+            background: #ffffff;
+            color: #0a0a0a;
+            border: none;
+            border-radius: 0 var(--radius) 0 var(--radius);
+            padding: 0.75rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            transition: transform 150ms ease, background-color 150ms ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
-        @media (max-width: 768px) {
-            .active-filters {
-                margin: 0 1rem;
-            }
+        :root:not(.dark) #compare-btn {
+            background: #18181b;
+            color: #ffffff;
         }
 
-        @media (max-width: 480px) {
-            .active-filters {
-                margin: 0 0.75rem;
-            }
+        #compare-btn:hover {
+            transform: translateY(-2px);
         }
     </style>
 
@@ -400,7 +87,7 @@
     <section class="chai-hero">
         <div class="chai-animated-badge">
             <span class="chai-animated-badge-inner">
-                <i class="fa-solid fa-compass" style="color: #ff7d0c;" aria-hidden="true"></i>
+                <i class="fa-solid fa-sparkles" style="color: #ff7d0c;" aria-hidden="true"></i>
                 Handcrafted stays and escapes
             </span>
         </div>
@@ -426,7 +113,7 @@
         <div class="controls-bar mt-3 mb-3">
             <div class="row g-3 align-items-center">
                 <div class="col-md-6">
-                    <button class="btn btn-outline-secondary w-100 btn-asym-mirror" id="showAdvancedFilters">
+                    <button class="btn-outline-asym w-100" style="height: 44px;" id="showAdvancedFilters">
                         <i class="fa-solid fa-sliders-h me-2"></i>Filter listings
                     </button>
                 </div>
@@ -487,10 +174,10 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-12">
-                        <button class="btn btn-primary" id="applyFilters">
+                        <button class="btn-solid-asym" id="applyFilters">
                             <i class="fa-solid fa-filter me-2"></i>Apply Filters
                         </button>
-                        <button class="btn btn-outline-secondary ms-2" id="clearFilters">
+                        <button class="btn-outline-asym ms-2" id="clearFilters">
                             <i class="fa-solid fa-times me-2"></i>Clear All
                         </button>
                     </div>

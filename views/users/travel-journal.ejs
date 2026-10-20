@@ -2,23 +2,24 @@
 
 <style>
     :root {
-        --body-text-color: #e0f7ff;
-        --text-primary: #0a2533;
-        --shadow-color: rgba(0, 0, 0, 0.2);
-        --accent-border-color: #1ed9a8;
-        --bg-secondary: rgba(255, 255, 255, 0.05);
-        --border-light: rgba(255, 255, 255, 0.2);
+        --body-text-color: var(--foreground);
+        --text-primary: var(--foreground);
+        --shadow-color: transparent;
+        --accent-border-color: var(--brand);
+        --bg-secondary: var(--card-fill);
+        --border-light: var(--card-edge);
     }
 
     .travel-journal-container {
-        background: var(--profile-header-bg);
+        background: var(--card-fill);
         backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 1.25rem;
-        color: white;
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--card-edge);
+        border-radius: 1rem;
+        color: var(--foreground);
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        box-shadow: none;
         position: relative;
         overflow: hidden;
     }
@@ -29,8 +30,9 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: linear-gradient(to right, #1ed9a8, #0f5a7c);
+        height: 2px;
+        background: var(--brand);
+        opacity: 0.8;
     }
 
     .journal-header {
@@ -39,17 +41,17 @@
     }
 
     .journal-header h1 {
-        font-weight: 800;
-        font-size: 2.5rem;
-        color: var(--text-primary);
-        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 2.25rem;
+        color: var(--foreground);
+        letter-spacing: -0.02em;
         margin-bottom: 0.5rem;
     }
 
     .journal-header p {
-        color: var(--body-text-color);
-        font-size: 1.1rem;
-        opacity: 0.9;
+        color: var(--muted-foreground);
+        font-size: 1rem;
     }
 
     .timeline {
@@ -63,9 +65,8 @@
         left: 1rem;
         top: 0;
         bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, var(--accent-border-color), var(--accent-border-color-dark));
-        border-radius: 2px;
+        width: 1px;
+        background: var(--card-edge);
     }
 
     .timeline-item {
@@ -80,33 +81,33 @@
         position: absolute;
         left: -2.5rem;
         top: 0;
-        width: 2.5rem;
-        height: 2.5rem;
-        background: var(--accent-border-color);
+        width: 2.25rem;
+        height: 2.25rem;
+        background: var(--card-fill);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 1rem;
-        border: 4px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        color: var(--brand);
+        font-size: 0.9rem;
+        border: 1px solid var(--card-edge);
+        box-shadow: none;
     }
 
     .timeline-content {
         flex: 1;
-        background: var(--bg-secondary);
+        background: var(--card-fill);
         backdrop-filter: blur(10px);
-        border-radius: 1rem;
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 0.75rem;
         padding: 1.5rem;
-        border: 1px solid var(--border-light);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--card-edge);
+        transition: border-color 0.2s ease;
+        box-shadow: none;
     }
 
     .timeline-content:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-color: rgba(255, 255, 255, 0.2);
     }
 
     .memory-header {
@@ -303,19 +304,22 @@
     }
 
     .btn-submit {
-        background: linear-gradient(135deg, var(--accent-border-color), #0f5a7c);
-        color: white;
-        border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 0.5rem;
+        background: var(--foreground);
+        color: var(--background);
+        border: 1px solid var(--foreground);
+        padding: 0.65rem 1.75rem;
+        border-radius: var(--radius-asym);
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        box-shadow: none;
     }
 
     .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(135deg, #22e6b8, #11688e);
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: none;
+        background: var(--foreground);
+        color: var(--background);
     }
 
     .empty-state {

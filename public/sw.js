@@ -158,8 +158,8 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: '/images/compass.png',
-      badge: '/images/compass.png',
+      icon: '/images/logo.svg',
+      badge: '/images/logo.svg',
       vibrate: [100, 50, 100],
       data: data.data
     };

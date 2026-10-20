@@ -439,73 +439,84 @@ document.getElementById('lightbox').addEventListener('click', function(e) {
 
 <style>
 .alert-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-bottom: none;
+  background: var(--card-fill);
+  color: var(--foreground);
+  border-bottom: 1px solid var(--card-edge);
 }
 
 .alert-header.danger {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  background: rgba(239, 68, 68, 0.08);
+  border-left: 3px solid #ef4444;
 }
 
 .alert-header.warning {
-  background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 3px solid #f59e0b;
 }
 
 .alert-header.caution {
-  background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+  background: rgba(59, 130, 246, 0.08);
+  border-left: 3px solid #3b82f6;
 }
 
 .alert-title {
-  font-size: 1.8rem;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
   font-weight: 700;
+  color: var(--foreground);
 }
 
 .alert-meta {
-  background: #f8f9fa;
+  background: var(--card-fill);
+  border: 1px solid var(--card-edge);
   padding: 1.5rem;
-  border-radius: 10px;
+  border-radius: 0.75rem;
 }
 
 .meta-item {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
+  color: var(--muted-foreground);
 }
 
 .section-title {
-  color: #495057;
+  color: var(--foreground);
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e9ecef;
+  border-bottom: 1px solid var(--card-edge);
 }
 
 .description-content {
   line-height: 1.6;
-  color: #495057;
+  color: var(--muted-foreground);
 }
 
 .evidence-gallery img {
   width: 100%;
   height: 150px;
   object-fit: cover;
-  border: 2px solid #e9ecef;
-  transition: transform 0.3s ease;
+  border: 1px solid var(--card-edge);
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease;
 }
 
 .evidence-gallery img:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .reporter-details {
   padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: var(--card-fill);
+  border: 1px solid var(--card-edge);
+  border-radius: 0.75rem;
 }
 
 .voting-section {
-  background: #f8f9fa;
+  background: var(--card-fill);
+  border: 1px solid var(--card-edge);
+  border-radius: 0.75rem;
 }
 
 .vote-btn {

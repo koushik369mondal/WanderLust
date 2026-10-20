@@ -223,7 +223,7 @@
                             Plan Your First Trip
                         </a>
                         <a href="/listings" class="btn btn-outline-primary btn-lg">
-                            <i class="fa-solid fa-compass me-2"></i>
+                            <i class="fa-solid fa-earth-americas me-2"></i>
                             Explore Destinations
                         </a>
                     </div>
@@ -236,106 +236,63 @@
 
 <style>
 .magical-bg-wrapper {
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.5s ease;
-}
-
-/* Default/Light Theme - Subtle blue overlay merging with beach UI */
-.magical-bg-wrapper {
-    background: linear-gradient(135deg, rgba(97, 188, 211, 0.4) 0%, rgba(78, 219, 205, 0.3) 50%, rgba(102, 215, 243, 0.2) 100%),
-                var(--bg-primary, #f8f9fa);
-    --text-primary: #333333;
-    --text-secondary: #666666;
-    --text-muted: #999999;
-    --border-color: rgba(0, 0, 0, 0.1);
-    --bg-primary-solid: rgba(255, 255, 255, 0.9);
-    --card-bg: rgba(255, 255, 255, 0.95);
-    --shadow: rgba(0, 0, 0, 0.1);
-    --particle-color: rgba(97, 188, 211, 0.2);
+    min-height: 80vh;
+    background: transparent;
+    --text-primary: var(--foreground);
+    --text-secondary: var(--muted-foreground);
+    --text-muted: var(--muted-foreground);
+    --border-color: var(--card-edge);
+    --bg-primary-solid: var(--card-fill);
+    --card-bg: var(--card-fill);
+    --shadow: none;
 }
 
 .magical-bg-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image:
-        radial-gradient(circle at 20% 80%, var(--particle-color) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(78, 219, 205, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(102, 215, 243, 0.1) 0%, transparent 50%);
-    animation: magical-float 20s ease-in-out infinite;
+    display: none;
 }
 
-@keyframes magical-float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    33% { transform: translateY(-10px) rotate(120deg); }
-    66% { transform: translateY(10px) rotate(240deg); }
-}
-
-/* Dark Theme */
 [data-theme="dark"] .magical-bg-wrapper {
-    background: linear-gradient(135deg, rgba(50, 135, 192, 0.6) 0%, rgba(4, 134, 121, 0.5) 50%, rgba(7, 41, 46, 0.4) 100%),
-                var(--bg-primary, #121212);
-    --text-primary: #ffffff;
-    --text-secondary: #e0e0e0;
-    --text-muted: #b0b0b0;
-    --border-color: rgba(255, 255, 255, 0.1);
-    --bg-primary-solid: rgba(255, 255, 255, 0.1);
-    --card-bg: rgba(255, 255, 255, 0.15);
-    --shadow: rgba(0, 0, 0, 0.4);
-    --particle-color: rgba(50, 135, 192, 0.2);
+    background: transparent;
+    --text-primary: var(--foreground);
+    --text-secondary: var(--muted-foreground);
+    --text-muted: var(--muted-foreground);
+    --border-color: var(--card-edge);
+    --bg-primary-solid: var(--card-fill);
+    --card-bg: var(--card-fill);
+    --shadow: none;
 }
 
 [data-theme="dark"] .magical-bg-wrapper::before {
-    background-image:
-        radial-gradient(circle at 20% 80%, var(--particle-color) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(4, 134, 121, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(7, 41, 46, 0.1) 0%, transparent 50%);
+    display: none;
 }
 
 .trip-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(15px);
-    border-radius: 15px;
+    background: var(--card-fill);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 0.75rem;
     padding: 1.5rem;
-    box-shadow: 0 8px 32px var(--shadow);
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    box-shadow: none;
+    border: 1px solid var(--card-edge);
+    transition: border-color 0.2s ease, transform 0.2s ease;
     height: 100%;
     position: relative;
     overflow: hidden;
-    color: var(--text-primary);
+    color: var(--foreground);
 }
 
 .trip-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-    animation: shimmer 3s ease-in-out infinite;
-    pointer-events: none;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    display: none;
 }
 
 [data-theme="dark"] .trip-card::before {
-    background: linear-gradient(45deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+    display: none;
 }
 
 .trip-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px var(--shadow);
-    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
 }
 
 [data-theme="dark"] .trip-card:hover {

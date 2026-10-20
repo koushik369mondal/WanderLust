@@ -4,10 +4,11 @@
   <div class="footer-container">
     <!-- Brand / About -->
     <div class="footer-col">
-      <div class="footer-brand">
-        <i class="fa-solid fa-compass footer-logo"></i>
-        <h5>WanderLust</h5>
-      </div>
+      <!-- Unified WanderLust Brand Logo -->
+      <a href="/listings" class="wander-brand footer-brand" aria-label="WanderLust - Go to home page">
+        <img src="/images/logo.svg" alt="WanderLust logo" class="wander-brand-icon" width="28" height="28" />
+        <span class="wander-brand-name">WanderLust</span>
+      </a>
       <p class="footer-description">
         🌍 Explore the world with us<br>
         Discover hidden gems, book your stays, and make every trip unforgettable.
@@ -61,16 +62,16 @@
       <p class="newsletter-text">Subscribe for travel tips & exclusive deals ✈️</p>
       <form action="/newsletter/subscribe" method="POST" class="newsletter-form">
         <div class="input-group">
-          <input type="email" name="email" placeholder="Enter your email" required>
-          <button type="submit">
-            <i class="fa-solid fa-arrow-right"></i>
+          <input type="email" name="email" placeholder="Enter your email" required aria-label="Your email address">
+          <button type="submit" aria-label="Subscribe to newsletter">
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </button>
         </div>
         <input type="hidden" name="source" value="footer">
       </form>
       <div class="newsletter-benefits">
-        <small><i class="fa-solid fa-check me-1"></i>Weekly travel tips</small>
-        <small><i class="fa-solid fa-check me-1"></i>Exclusive deals</small>
+        <small><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Weekly travel tips</small>
+        <small><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Exclusive deals</small>
       </div>
     </div>
   </div>
@@ -79,21 +80,21 @@
     <div class="footer-bottom-content">
       <div class="socials">
         <span class="social-label">Follow us:</span>
-        <a href="https://www.facebook.com/koushik.mondal.481562" title="Facebook">
-          <i class="fab fa-facebook"></i>
+        <a href="https://www.facebook.com/koushik.mondal.481562" title="Facebook" aria-label="Follow WanderLust on Facebook" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-facebook" aria-hidden="true"></i>
         </a>
-        <a href="https://www.instagram.com/koushik369mondal/" title="Instagram">
-          <i class="fab fa-instagram"></i>
+        <a href="https://www.instagram.com/koushik369mondal/" title="Instagram" aria-label="Follow WanderLust on Instagram" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
         </a>
-        <a href="https://www.linkedin.com/in/koushik369mondal/" title="LinkedIn">
-          <i class="fab fa-linkedin"></i>
+        <a href="https://www.linkedin.com/in/koushik369mondal/" title="LinkedIn" aria-label="Connect with us on LinkedIn" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
         </a>
-        <a href="https://x.com/Koushik369m" title="Twitter">
-          <i class="fab fa-twitter"></i>
+        <a href="https://x.com/Koushik369m" title="Twitter" aria-label="Follow WanderLust on Twitter / X" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-twitter" aria-hidden="true"></i>
         </a>
       </div>
       <div class="copyright">
-        <p>© 2025 <strong>WanderLust Pvt. Ltd.</strong> | Made with <i class="fa-solid fa-heart text-danger"></i> for Travelers</p>
+        <p>© 2025 <strong>WanderLust Pvt. Ltd.</strong> | Made with <i class="fa-solid fa-heart text-danger" aria-hidden="true"></i> for Travelers</p>
       </div>
     </div>
   </div>

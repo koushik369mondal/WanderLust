@@ -1,117 +1,123 @@
 <% layout('/layouts/boilerplate') %>
 
-  <main class="packing-list-form-container" style=" background: linear-gradient(
-    135deg, 
-    rgba(50, 135, 192, 0.9), 
-    rgba(17, 35, 68, 0.9), 
-    rgba(4, 134, 121, 0.9)
-  );
-; border-radius: 5px;">
-    <div class="packing-list-header" style="-webkit-text-fill-color: aliceblue;">
-      <h1 style = "-webkit-text-fill-color: white;">🧳 AI-Powered Packing List Generator </h1>
-      <p>Get a personalized packing checklist tailored to your trip with AI assistance and weather insights.</p>
+<div class="chai-container py-4 my-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="card-chai p-4 p-sm-5">
+        <div class="text-center mb-4">
+          <h1 class="h2 mb-2" style="font-family: var(--font-sans); font-weight: 700; color: var(--foreground);">
+            Packing list generator
+          </h1>
+          <p class="text-muted small">
+            Get a personalized packing checklist tailored to your trip with <span class="highlight">smart travel insights</span>.
+          </p>
+        </div>
+
+        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+          <div class="error-messages mb-4 p-3 rounded-2 border border-danger border-opacity-25 bg-danger bg-opacity-10 text-danger">
+            <ul class="mb-0 ps-3">
+              <% errors.forEach(error => { %>
+                <li><%= error %></li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+
+        <form action="/packing-list/generate" method="POST" class="packing-list-form bg-transparent p-0 border-0 shadow-none">
+          <div class="mb-3">
+            <label for="destination" class="form-label small font-semibold">Destination</label>
+            <input type="text"
+                   id="destination"
+                   name="destination"
+                   class="form-control"
+                   required
+                   placeholder="e.g., Paris, Tokyo, Goa"
+                   value="<%= typeof formData !== 'undefined' ? formData.destination : '' %>">
+          </div>
+
+          <div class="mb-3">
+            <label for="duration" class="form-label small font-semibold">Trip duration (days)</label>
+            <input type="number"
+                   id="duration"
+                   name="duration"
+                   class="form-control"
+                   min="1"
+                   max="365"
+                   required
+                   placeholder="e.g., 7"
+                   value="<%= typeof formData !== 'undefined' ? formData.duration : '' %>">
+          </div>
+
+          <div class="mb-3">
+            <label for="travelType" class="form-label small font-semibold">Travel type</label>
+            <select id="travelType" name="travelType" class="form-select" required>
+              <option value="">Select travel type</option>
+              <option value="solo" <%= typeof formData !== 'undefined' && formData.travelType === 'solo' ? 'selected' : '' %>>Solo traveler</option>
+              <option value="couple" <%= typeof formData !== 'undefined' && formData.travelType === 'couple' ? 'selected' : '' %>>Couple</option>
+              <option value="family" <%= typeof formData !== 'undefined' && formData.travelType === 'family' ? 'selected' : '' %>>Family</option>
+              <option value="group" <%= typeof formData !== 'undefined' && formData.travelType === 'group' ? 'selected' : '' %>>Group/Friends</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small font-semibold d-block">Planned activities</label>
+            <div class="activities-grid">
+              <% const activityOptions = [
+                { value: 'beach', label: 'Beach & Swimming', icon: '🏖️' },
+                { value: 'trekking', label: 'Trekking & Hiking', icon: '🥾' },
+                { value: 'city_tour', label: 'City Sightseeing', icon: '🏙️' },
+                { value: 'cultural', label: 'Cultural Sites', icon: '🏛️' },
+                { value: 'business', label: 'Business Meetings', icon: '💼' },
+                { value: 'religious', label: 'Religious Sites', icon: '🙏' },
+                { value: 'adventure', label: 'Adventure Sports', icon: '🏂' },
+                { value: 'food', label: 'Food & Cuisine', icon: '🍽️' },
+                { value: 'photography', label: 'Photography', icon: '📸' },
+                { value: 'shopping', label: 'Shopping', icon: '🛍️' },
+                { value: 'spa', label: 'Spa & Relaxation', icon: '🧘' },
+                { value: 'nightlife', label: 'Nightlife', icon: '🌃' }
+              ] %>
+
+              <% activityOptions.forEach(activity => { %>
+                <label class="activity-option">
+                  <input type="checkbox"
+                         name="activities"
+                         value="<%= activity.value %>"
+                         <%= typeof formData !== 'undefined' && formData.activities && formData.activities.includes(activity.value) ? 'checked' : '' %>>
+                  <span class="activity-label">
+                    <%= activity.icon %> <%= activity.label %>
+                  </span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-solid-asym w-100 justify-content-center" style="height: 44px; font-size: 0.95rem;">
+            Generate my packing list <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size: 0.75rem;" aria-hidden="true"></i>
+          </button>
+        </form>
+
+        <div class="features-preview mt-4 pt-4 border-top" style="border-color: var(--card-edge) !important;">
+          <h3 class="h6 mb-3" style="color: var(--foreground); font-weight: 600;">What you'll get:</h3>
+          <div class="features-grid">
+            <div class="feature-item">
+              <span class="feature-icon">🧠</span>
+              <span>Smart recommendations</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🌤️</span>
+              <span>Weather-adjusted suggestions</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📋</span>
+              <span>Categorized checklist</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">💾</span>
+              <span>Save to My Trips</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
-      <div class="error-messages">
-        <ul>
-          <% errors.forEach(error => { %>
-            <li><%= error %></li>
-          <% }) %>
-        </ul>
-      </div>
-    <% } %>
-
-    <form action="/packing-list/generate" method="POST" class="packing-list-form">
-      <div class="form-group"style = "background: rgb(143, 200, 243)">
-        <label for="destination">🌍 Destination:</label>
-        <input type="text"
-               id="destination"
-               name="destination"
-               required
-               placeholder="e.g., Paris, Tokyo, Goa"
-               value="<%= typeof formData !== 'undefined' ? formData.destination : '' %>">
-      </div>
-
-      <div class="form-group" style = "background: rgb(143, 200, 243)">
-        <label for="duration">📅 Trip Duration (days):</label>
-        <input type="number"
-               id="duration"
-               name="duration"
-               min="1"
-               max="365"
-               required
-               placeholder="e.g., 7"
-               value="<%= typeof formData !== 'undefined' ? formData.duration : '' %>">
-      </div>
-
-      <div class="form-group"style = "background: rgb(143, 200, 243)">
-        <label for="travelType">👥 Travel Type:</label>
-        <select id="travelType" name="travelType" required>
-          <option value="">Select travel type</option>
-          <option value="solo" <%= typeof formData !== 'undefined' && formData.travelType === 'solo' ? 'selected' : '' %>>Solo Traveler</option>
-          <option value="couple" <%= typeof formData !== 'undefined' && formData.travelType === 'couple' ? 'selected' : '' %>>Couple</option>
-          <option value="family" <%= typeof formData !== 'undefined' && formData.travelType === 'family' ? 'selected' : '' %>>Family</option>
-          <option value="group" <%= typeof formData !== 'undefined' && formData.travelType === 'group' ? 'selected' : '' %>>Group/Friends</option>
-        </select>
-      </div>
-
-      <div class="form-group"style = "background: rgb(143, 200, 243)">
-        <label>🎯 Planned Activities:</label>
-        <div class="activities-grid">
-          <% const activityOptions = [
-            { value: 'beach', label: 'Beach & Swimming', icon: '🏖️' },
-            { value: 'trekking', label: 'Trekking & Hiking', icon: '🥾' },
-            { value: 'city_tour', label: 'City Sightseeing', icon: '🏙️' },
-            { value: 'cultural', label: 'Cultural Sites', icon: '🏛️' },
-            { value: 'business', label: 'Business Meetings', icon: '💼' },
-            { value: 'religious', label: 'Religious Sites', icon: '🙏' },
-            { value: 'adventure', label: 'Adventure Sports', icon: '🏂' },
-            { value: 'food', label: 'Food & Cuisine', icon: '🍽️' },
-            { value: 'photography', label: 'Photography', icon: '📸' },
-            { value: 'shopping', label: 'Shopping', icon: '🛍️' },
-            { value: 'spa', label: 'Spa & Relaxation', icon: '🧘' },
-            { value: 'nightlife', label: 'Nightlife', icon: '🌃' }
-          ] %>
-
-          <% activityOptions.forEach(activity => { %>
-            <label class="activity-option">
-              <input type="checkbox"
-                     name="activities"
-                     value="<%= activity.value %>"
-                     <%= typeof formData !== 'undefined' && formData.activities && formData.activities.includes(activity.value) ? 'checked' : '' %>>
-              <span class="activity-label">
-                <%= activity.icon %> <%= activity.label %>
-              </span>
-            </label>
-          <% }) %>
-        </div>
-      </div>
-
-      <button type="submit" class="generate-btn">
-        🤖 Generate My Packing List
-      </button>
-    </form>
-
-    <div class="features-preview">
-      <h3 style = "-webkit-text-fill-color: aliceblue;">✨ What You'll Get:</h3>
-      <div class="features-grid">
-        <div class="feature-item">
-          <span class="feature-icon">🧠</span>
-          <span>AI-powered recommendations</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">🌤️</span>
-          <span>Weather-adjusted suggestions</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">📋</span>
-          <span>Categorized checklist</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">💾</span>
-          <span>Save to My Trips</span>
-        </div>
-      </div>
-    </div>
-  </main>
+  </div>
+</div>

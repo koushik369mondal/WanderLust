@@ -38,10 +38,9 @@
         })();
     </script>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/images/compass.png">
-    <link rel="shortcut icon" type="image/png" href="/images/compass.png">
-    <link rel="apple-touch-icon" href="/images/compass.png">
+    <!-- Favicon: Canonical WanderLust Brand Logo -->
+    <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+    <link rel="apple-touch-icon" href="/images/logo.svg">
 
     <!-- Fonts: Manrope, Montserrat, Onest, Geist Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,67 +87,15 @@
     </script>
 
     <style>
-        /* Smooth scrolling */
+        /* Base page layout */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Prevent horizontal overflow */
-        html,
-        body {
-            overflow-x: hidden !important;
+        html, body {
+            overflow-x: hidden;
             max-width: 100vw;
             position: relative;
-        }
-
-        /* Fix navbar overflow issues - minimal styling to avoid conflicts */
-        .navbar {
-            overflow-x: hidden !important;
-            max-width: 100vw;
-        }
-
-        /* Offset content for fixed navbar */
-        body {
-            padding-top: 70px;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding-top: 64px;
-            }
-        }
-
-        /* Hide scrollbar but allow scrolling */
-        .navbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 1400px) {
-            .navbar-nav .nav-link {
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .navbar-brand span {
-                display: none;
-            }
-
-            .navbar-brand i {
-                margin-right: 0 !important;
-            }
-        }
-
-        @media (max-width: 991px) {
-            .navbar .d-flex.flex-grow-1 {
-                max-width: 100%;
-                margin: 0.5rem 0 !important;
-            }
-
-            .navbar .container-fluid {
-                flex-wrap: wrap;
-            }
         }
     </style>
 </head>
@@ -173,23 +120,6 @@
         <%- include("../includes/footer.ejs") %>
         <%- include("../includes/chatbot.ejs") %>
     </div>
-
-    <!-- Sticky Navbar Scroll Handler (Transparent at top, blurs on scroll) -->
-    <script>
-        (function() {
-            function updateNavbarBlur() {
-                var navbar = document.querySelector('.wander-navbar');
-                if (!navbar) return;
-                if (window.scrollY > 15) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            }
-            window.addEventListener('scroll', updateNavbarBlur, { passive: true });
-            document.addEventListener('DOMContentLoaded', updateNavbarBlur);
-        })();
-    </script>
 
     <!-- JavaScript Libraries -->
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

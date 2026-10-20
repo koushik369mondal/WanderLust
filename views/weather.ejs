@@ -87,36 +87,32 @@
 }
 
 .weather-refresh-btn {
-  background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
-  color: white;
+  background: var(--foreground);
+  color: var(--background);
   border: none;
-  border-radius: 15px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 0 var(--radius) 0 var(--radius);
+  padding: 0.65rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(254, 66, 77, 0.3);
+  transition: opacity 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .weather-refresh-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
-  background: linear-gradient(135deg, #d63641, #e55555);
+  opacity: 0.85;
 }
 
 .weather-refresh-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
 }
 
 .weather-last-updated {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
   font-weight: 500;
   margin-top: 0.5rem;
 }
@@ -130,22 +126,21 @@
 
 .weather-search-input {
   width: 100%;
-  padding: 1rem 3rem 1rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 50px;
-  font-size: 1.1rem;
-  background: var(--card);
+  padding: 0.875rem 3.5rem 0.875rem 1.25rem;
+  border: 1px solid var(--card-edge);
+  border-radius: 9999px;
+  font-size: 1rem;
+  background: var(--card-fill);
   backdrop-filter: blur(10px);
   color: var(--foreground);
   box-shadow: none;
   outline: none;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .weather-search-input:focus {
-  border-color: var(--brand);
+  border-color: var(--card-edge-hover);
   box-shadow: none;
-  transform: translateY(-2px);
 }
 
 .weather-search-input::placeholder {
@@ -154,26 +149,24 @@
 
 .weather-search-btn {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
-  color: white;
+  background: var(--foreground);
+  color: var(--background);
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(254, 66, 77, 0.3);
+  transition: opacity 0.2s ease;
 }
 
 .weather-search-btn:hover {
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 6px 20px rgba(254, 66, 77, 0.4);
+  opacity: 0.85;
 }
 
 /* Weather Results Container */
@@ -184,19 +177,21 @@
 
 /* Main Weather Card */
 .weather-main-card {
-  background: var(--bg-primary-solid);
-  backdrop-filter: blur(20px);
-  border-radius: 30px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  background: var(--card-fill);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  box-shadow: none;
   overflow: hidden;
   margin-bottom: 2rem;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
+  border: 1px solid var(--card-edge);
+  transition: border-color 0.2s ease;
 }
 
 .weather-main-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+  border-color: var(--card-edge-hover);
+  transform: none;
+  box-shadow: none;
 }
 
 /* Weather Header */

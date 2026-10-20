@@ -1,676 +1,493 @@
-<!-- WanderLust Navbar - External CSS Only -->
-<nav class="wander-navbar" role="navigation" aria-label="Main navigation">
-  <div class="navbar-container">
-    <!-- LEFT SECTION: Brand Logo -->
-    <div class="navbar-flex navbar-items-center navbar-gap-3 navbar-flex-shrink-0">
-      <a href="/listings" class="navbar-brand-link navbar-text-2xl lg-navbar-text-3xl"
-        aria-label="WanderLust - Go to home page">
-        <i class="fa-regular fa-compass navbar-brand-icon" aria-hidden="true"></i>
-        <span class="navbar-brand-text navbar-hidden sm-navbar-inline">
-          <%= __('wanderlust') %>
-        </span>
-      </a>
-    </div>
+<!-- WanderLust Navbar - ChaiUI Design System -->
+<header class="wander-navbar" role="banner">
+  <div class="wander-nav-container">
+    <!-- LEFT: Brand Logo -->
+    <a href="/listings" class="wander-brand" aria-label="WanderLust - Go to home page">
+      <img src="/images/logo.svg" alt="WanderLust logo" class="wander-brand-icon" width="28" height="28" />
+      <span class="wander-brand-name">WanderLust</span>
+    </a>
 
-    <!-- CENTER SECTION: Nav Links + Search -->
-    <div
-      class="navbar-center-section lg-navbar-flex navbar-flex-1 navbar-items-center navbar-justify-center navbar-gap-6 xl-navbar-gap-8 navbar-min-w-0 navbar-px-4">
-      <!-- Nav Links -->
-      <div class="navbar-nav-links-wrapper navbar-gap-3 xl-navbar-gap-5">
-        <a href="/listings"
-          class="nav-link navbar-px-3 xl-navbar-px-4 navbar-py-2\.5 navbar-text-sm xl-navbar-text-base navbar-no-underline">
-          <i class="fa-regular fa-copy navbar-text-base xl-navbar-text-lg" aria-hidden="true"></i>
-          <span>
-            <%= __('all_listings') %>
-          </span>
+    <!-- CENTER: Nav Links & Search -->
+    <div class="wander-nav-center">
+      <div class="wander-nav-links">
+        <a href="/listings" class="wander-nav-link">
+          <i class="fa-solid fa-earth-americas" aria-hidden="true"></i>
+          <span>All listings</span>
         </a>
 
-        <a href="/listings/about"
-          class="nav-link navbar-px-3 xl-navbar-px-4 navbar-py-2\.5 navbar-text-sm xl-navbar-text-base navbar-no-underline">
-          <i class="fa-solid fa-info-circle navbar-text-base xl-navbar-text-lg" aria-hidden="true"></i>
-          <span>
-            <%= __('about') %>
-          </span>
+        <a href="/about" class="wander-nav-link">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <span>About</span>
         </a>
 
         <!-- Travel Tools Dropdown -->
-        <div class="dropdown navbar-relative">
-          <button class="nav-link navbar-px-3 xl-navbar-px-4 navbar-py-2\.5 navbar-text-sm xl-navbar-text-base"
-            data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown" type="button">
-            <i class="fa-solid fa-tools navbar-text-base xl-navbar-text-lg" aria-hidden="true"></i>
-            <span>Travel Tools</span>
-            <i class="fa-solid fa-chevron-down navbar-text-xs navbar-transition-transform" aria-hidden="true"></i>
+        <div class="dropdown">
+          <button class="wander-nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="travelToolsDropdown">
+            <i class="fa-solid fa-toolbox" aria-hidden="true"></i>
+            <span>Travel tools</span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
           </button>
-          <ul
-            class="dropdown-menu navbar-dropdown-menu navbar-glass-dark navbar-border navbar-border-white-20 navbar-rounded-2xl navbar-p-2 navbar-mt-2 navbar-shadow-2xl"
-            aria-labelledby="travelToolsDropdown">
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/trip-planner"><i
-                  class="fa-solid fa-route navbar-mr-2"></i>Trip Planner</a></li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/packing-list"><i
-                  class="fa-solid fa-suitcase navbar-mr-2"></i>Packing List</a></li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/holiday"><i
-                  class="fa-solid fa-calendar-days navbar-mr-2"></i>Holiday Calendar</a></li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/listings/compare"><i
-                  class="fa-solid fa-balance-scale navbar-mr-2"></i>Compare Destinations</a>
-            </li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/trip-planner/mood-fixing"><i
-                  class="fa-solid fa-music navbar-mr-2"></i>Mood Fixing</a></li>
-            <li>
-              <hr class="navbar-border-white-10 navbar-my-1">
-            </li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/weather"><i
-                  class="fa-solid fa-cloud-sun navbar-mr-2"></i>Weather Info</a></li>
-            <li>
-              <hr class="navbar-border-white-10 navbar-my-1">
-            </li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/achievements"><i
-                  class="fa-solid fa-trophy navbar-mr-2"></i>Achievements</a></li>
-            <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/leaderboard"><i
-                  class="fa-solid fa-chart-line navbar-mr-2"></i>Leaderboard</a></li>
+          <ul class="dropdown-menu wander-dropdown-menu" aria-labelledby="travelToolsDropdown">
+            <li><a class="dropdown-item" href="/trip-planner"><i class="fa-solid fa-route"></i>Trip planner</a></li>
+            <li><a class="dropdown-item" href="/packing-list"><i class="fa-solid fa-suitcase"></i>Packing list</a></li>
+            <li><a class="dropdown-item" href="/holiday"><i class="fa-solid fa-calendar-days"></i>Holiday calendar</a></li>
+            <li><a class="dropdown-item" href="/listings/compare"><i class="fa-solid fa-scale-balanced"></i>Compare destinations</a></li>
+            <li><a class="dropdown-item" href="/trip-planner/mood-fixing"><i class="fa-solid fa-music"></i>Mood fixing</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/weather"><i class="fa-solid fa-cloud-sun"></i>Weather info</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/achievements"><i class="fa-solid fa-trophy"></i>Achievements</a></li>
+            <li><a class="dropdown-item" href="/leaderboard"><i class="fa-solid fa-chart-line"></i>Leaderboard</a></li>
           </ul>
         </div>
       </div>
 
-      <!-- Airbnb-Style Search Bar -->
-      <div class="navbar-search-container xl-navbar-max-w-md">
-        <form method="GET" action="/listings" class="navbar-w-full" role="search" aria-label="Search destinations">
-          <div class="navbar-search-wrapper navbar-gap-2 xl-navbar-gap-3 navbar-h-12 xl-navbar-h-14">
-            <i class="fa-solid fa-magnifying-glass navbar-text-gray-400 navbar-text-sm navbar-flex-shrink-0"
-              aria-hidden="true"></i>
-            <input type="search" name="search" id="searchInput" placeholder="<%= __('search_destinations') %>"
-              value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
-              class="navbar-search-input" autocomplete="off" aria-label="Search destinations" />
-            <button type="submit" class="navbar-search-btn navbar-w-8 navbar-h-8 xl-navbar-w-9 xl-navbar-h-9"
-              aria-label="Submit search">
-              <i class="fa-solid fa-magnifying-glass navbar-text-xs xl-navbar-text-sm" aria-hidden="true"></i>
+      <!-- Airbnb-Style Segmented Pill Search Bar -->
+      <div class="wander-search-box">
+        <form method="GET" action="/listings" role="search" aria-label="Search destinations">
+          <div class="wander-search-wrapper" id="wanderSearchWrapper">
+            <i class="fa-solid fa-magnifying-glass wander-search-icon" aria-hidden="true"></i>
+            <div class="wander-search-input-wrap">
+              <input type="text" name="search" id="searchInput" class="wander-search-input"
+                placeholder="Where to? Search destinations, stays..."
+                value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>"
+                autocomplete="off" aria-label="Search destinations" aria-autocomplete="list" aria-controls="searchSuggestions" />
+            </div>
+            <button type="button" class="wander-search-clear" id="searchClearBtn" aria-label="Clear search" style="<%= (typeof searchQuery !== 'undefined' && searchQuery) ? 'display: inline-flex;' : 'display: none;' %>">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <button type="submit" class="wander-search-btn" aria-label="Search destinations">
+              <span>Search</span>
             </button>
           </div>
         </form>
-        <div
-          class="search-suggestions navbar-absolute navbar-top-full navbar-w-full navbar-glass-dark navbar-rounded-2xl navbar-mt-2 navbar-border navbar-border-white-20 navbar-hidden navbar-z-50"
-          id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
+        <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
       </div>
     </div>
 
-    <!-- RIGHT SECTION: Action Buttons -->
-    <div
-      class="navbar-right-section navbar-flex navbar-items-center navbar-gap-2 xl-navbar-gap-3 navbar-flex-shrink-0">
-      <!-- Add New Listing -->
-      <a href="/listings/new" class="navbar-action-button wander-nav-desktop">
-        <i class="fa-solid fa-plus navbar-text-sm navbar-flex-shrink-0" aria-hidden="true"></i>
-        <span>
-          <%= __('add_new_listing') %>
-        </span>
+    <!-- RIGHT: Actions, Auth, Lang, Theme -->
+    <div class="wander-nav-right">
+      <!-- Add New Listing CTA -->
+      <a href="/listings/new" class="wander-btn-soft wander-nav-desktop-only">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span>Add new listing</span>
       </a>
 
-      <% if (typeof currentUser==='undefined' || !currentUser) { %>
-        <!-- Login Button -->
-        <a href="/login" class="navbar-action-button wander-nav-desktop">
-          <i class="fa-solid fa-sign-in-alt navbar-text-base navbar-flex-shrink-0" aria-hidden="true"></i>
-          <span class="navbar-whitespace-nowrap">
-            <%= __('login') %>
-          </span>
+      <% if (typeof currentUser === 'undefined' || !currentUser) { %>
+        <!-- Guest: Log in & Sign up -->
+        <a href="/login" class="wander-nav-link wander-nav-desktop-only">
+          <span>Log in</span>
         </a>
-
-        <!-- Signup Button -->
-        <a href="/signup" class="navbar-primary-button navbar-action-button">
-          <i class="fa-solid fa-user-plus navbar-text-base navbar-flex-shrink-0" aria-hidden="true"></i>
-          <span class="navbar-whitespace-nowrap">
-            <%= __('signup') %>
-          </span>
+        <a href="/signup" class="btn-solid-asym wander-nav-desktop-only" style="height: 34px; padding: 0 0.875rem; font-size: 0.8125rem;">
+          <span>Sign up</span>
+          <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size: 0.65rem;" aria-hidden="true"></i>
         </a>
-        <% } else { %>
-          <!-- Profile Dropdown -->
-          <div class="dropdown navbar-relative navbar-flex-shrink-0 wander-nav-desktop">
-            <button class="navbar-action-button" data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown"
-              aria-label="User profile menu" type="button">
-              <i class="fa-solid fa-user navbar-text-base navbar-flex-shrink-0" aria-hidden="true"></i>
-              <span class="navbar-whitespace-nowrap">
-                <%= __('profile') %>
-              </span>
-            </button>
-            <ul
-              class="dropdown-menu dropdown-menu-end navbar-glass-dark navbar-border navbar-border-white-20 navbar-rounded-2xl navbar-p-2 navbar-min-w-250 navbar-mt-2 navbar-shadow-2xl"
-              aria-labelledby="profileDropdown">
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/profile"><i
-                    class="fa-solid fa-user navbar-mr-2"></i>My Profile</a></li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/profile/wishlist"><i
-                    class="fa-solid fa-bookmark navbar-mr-2"></i>My Wishlist</a></li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/profile/likes"><i
-                    class="fa-solid fa-heart navbar-mr-2"></i>Liked Listings</a></li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/profile/vacation-slots">
-                  <i class="fa-solid fa-calendar-check navbar-mr-2"></i>My Vacation Slots
-                  <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length> 0) { %>
-                    <span
-                      class="navbar-inline-flex navbar-items-center navbar-justify-center navbar-bg-coral navbar-text-white navbar-text-xs navbar-rounded-full navbar-px-2 navbar-py-0\.5 navbar-ml-2">
-                      <%= currentUser.vacationSlots.length %>
-                    </span>
-                    <% } %>
-                </a></li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/trip-planner/my-trips"><i
-                    class="fa-solid fa-suitcase-rolling navbar-mr-2"></i>My Trip Plans</a>
-              </li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/phrase-assistant"><i
-                    class="fa-solid fa-language navbar-mr-2"></i>Phrase Assistant</a></li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/profile/travel-journal"><i
-                    class="fa-solid fa-book navbar-mr-2"></i>Travel Journal</a></li>
-              <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/trip-planner/offline-trips">
-                  <i class="fa-solid fa-download navbar-mr-2"></i>My Downloads
-                  <span id="profileDownloadCount"
-                    class="navbar-inline-flex navbar-items-center navbar-justify-center navbar-bg-aqua navbar-text-white navbar-text-xs navbar-rounded-full navbar-px-2 navbar-py-0\.5 navbar-ml-2"
-                    style="display: none;">0</span>
-                </a></li>
-              <% if (currentUser && currentUser.isAdmin) { %>
-                <li>
-                  <hr class="navbar-border-white-10 navbar-my-1">
-                </li>
-                <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/admin/dashboard"><i
-                      class="fa-solid fa-chart-line navbar-mr-2"></i>Admin Dashboard</a></li>
-                <% } %>
-                  <li>
-                    <hr class="navbar-border-white-10 navbar-my-1">
-                  </li>
-                  <li><a class="navbar-dropdown-menu dropdown-item navbar-no-underline" href="/logout"><i
-                        class="fa-solid fa-sign-out-alt navbar-mr-2"></i>
-                      <%= __('logout') %>
-                    </a></li>
-            </ul>
-          </div>
-
-          <!-- Notifications Dropdown -->
-          <div class="dropdown navbar-relative navbar-flex-shrink-0 wander-nav-desktop">
-            <button class="navbar-icon-button" data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle"
-              aria-label="View notifications" type="button">
-              <i class="fa-solid fa-bell navbar-text-base" aria-hidden="true"></i>
-              <span id="notificationBadge" class="navbar-badge" style="display: none;">0</span>
-            </button>
-            <div
-              class="dropdown-menu dropdown-menu-end navbar-glass-dark navbar-border navbar-border-white-20 navbar-rounded-2xl navbar-p-0 navbar-w-350 navbar-mt-2 navbar-shadow-2xl"
-              aria-labelledby="notificationToggle">
-              <div
-                class="navbar-p-4 navbar-border-b navbar-border-white-10 navbar-flex navbar-justify-between navbar-items-center">
-                <h6 class="navbar-text-white navbar-font-bold navbar-mb-0 navbar-text-sm">Notifications</h6>
-                <button id="markAllRead"
-                  class="navbar-text-aqua navbar-text-xs navbar-transition navbar-bg-transparent navbar-border-0 navbar-cursor-pointer"
-                  type="button">Mark All Read</button>
+      <% } else { %>
+        <!-- Logged-in: Notifications Dropdown -->
+        <div class="dropdown wander-nav-desktop-only">
+          <button class="wander-icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle" aria-label="View notifications">
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+            <span id="notificationBadge" class="wander-badge-dot" style="display: none;">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end wander-dropdown-menu wander-notifications-panel" aria-labelledby="notificationToggle">
+            <div class="wander-notifications-header">
+              <h6>Notifications</h6>
+              <button id="markAllRead" type="button" class="btn btn-sm btn-link text-decoration-none p-0" style="font-size: 0.75rem; color: var(--brand);">Mark all read</button>
+            </div>
+            <div id="notificationList" class="wander-notifications-body">
+              <div class="text-center text-muted p-4" id="noNotifications">
+                <i class="fa-solid fa-bell-slash mb-2" style="font-size: 1.5rem;" aria-hidden="true"></i>
+                <p class="mb-0 small">No notifications yet</p>
               </div>
-              <div id="notificationList" class="navbar-max-h-350 navbar-overflow-y-auto">
-                <div class="navbar-text-center navbar-text-white-60 navbar-p-8" id="noNotifications">
-                  <i class="fa-solid fa-bell-slash navbar-text-4xl navbar-mb-3" aria-hidden="true"></i>
-                  <p class="navbar-mb-0 navbar-text-sm">No notifications yet</p>
-                </div>
-              </div>
-              <div class="navbar-p-3 navbar-border-t navbar-border-white-10 navbar-text-center">
-                <a href="/notifications"
-                  class="navbar-text-aqua navbar-text-sm navbar-transition navbar-no-underline">View All
-                  Notifications</a>
-              </div>
+            </div>
+            <div class="p-2 border-top text-center" style="border-color: var(--card-edge) !important;">
+              <a href="/notifications" class="small text-decoration-none" style="color: var(--foreground); font-weight: 500;">View all notifications</a>
             </div>
           </div>
-          <% } %>
+        </div>
 
-            <!-- Language Selector -->
-            <div class="dropdown navbar-relative wander-nav-desktop navbar-flex-shrink-0">
-              <button class="navbar-action-button navbar-max-w-140" data-bs-toggle="dropdown" aria-expanded="false"
-                id="languageToggle" aria-label="Select language" type="button">
-                <span class="navbar-text-base navbar-flex-shrink-0">
-                  <%= languageMap[getLocale()].flag %>
-                </span>
-                <span class="navbar-text-sm navbar-truncate">
-                  <%= languageMap[getLocale()].name %>
-                </span>
-              </button>
-              <ul
-                class="dropdown-menu dropdown-menu-end navbar-glass-dark navbar-border navbar-border-white-20 navbar-rounded-2xl navbar-p-2 navbar-mt-2 navbar-shadow-2xl"
-                aria-labelledby="languageToggle">
-                <% Object.keys(languageMap).forEach(lang=> { %>
-                  <li>
-                    <a class="navbar-dropdown-menu dropdown-item navbar-no-underline <%= getLocale() === lang ? 'navbar-bg-white-20' : '' %>"
-                      href="<%= buildLangUrl(lang) %>">
-                      <%= languageMap[lang].flag %>
-                        <%= languageMap[lang].name %>
-                    </a>
-                  </li>
-                  <% }); %>
-              </ul>
-            </div>
+        <!-- Logged-in: User Profile Dropdown -->
+        <div class="dropdown wander-nav-desktop-only">
+          <button class="wander-btn-soft" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown" aria-label="User profile menu">
+            <i class="fa-solid fa-circle-user" aria-hidden="true"></i>
+            <span class="text-truncate" style="max-width: 100px;"><%= (currentUser && currentUser.username) ? currentUser.username : 'Profile' %></span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end wander-dropdown-menu" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user"></i>My profile</a></li>
+            <li><a class="dropdown-item" href="/profile/wishlist"><i class="fa-solid fa-bookmark"></i>My wishlist</a></li>
+            <li><a class="dropdown-item" href="/profile/likes"><i class="fa-solid fa-heart"></i>Liked listings</a></li>
+            <li><a class="dropdown-item" href="/profile/vacation-slots">
+              <i class="fa-solid fa-calendar-check"></i>My vacation slots
+              <% if (currentUser && currentUser.vacationSlots && currentUser.vacationSlots.length > 0) { %>
+                <span class="badge rounded-pill bg-danger ms-auto" style="font-size: 0.65rem;"><%= currentUser.vacationSlots.length %></span>
+              <% } %>
+            </a></li>
+            <li><a class="dropdown-item" href="/trip-planner/my-trips"><i class="fa-solid fa-suitcase-rolling"></i>My trip plans</a></li>
+            <li><a class="dropdown-item" href="/phrase-assistant"><i class="fa-solid fa-language"></i>Phrase assistant</a></li>
+            <li><a class="dropdown-item" href="/profile/travel-journal"><i class="fa-solid fa-book"></i>Travel journal</a></li>
+            <li><a class="dropdown-item" href="/trip-planner/offline-trips">
+              <i class="fa-solid fa-download"></i>My downloads
+              <span id="profileDownloadCount" class="badge rounded-pill bg-info ms-auto" style="display: none; font-size: 0.65rem;">0</span>
+            </a></li>
+            <% if (currentUser && currentUser.isAdmin) { %>
+              <li><hr></li>
+              <li><a class="dropdown-item" href="/admin/dashboard"><i class="fa-solid fa-chart-line"></i>Admin dashboard</a></li>
+            <% } %>
+            <li><hr></li>
+            <li><a class="dropdown-item text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>Log out</a></li>
+          </ul>
+        </div>
+      <% } %>
 
-            <!-- Theme Toggle -->
-            <div class="navbar-flex-shrink-0 d-flex align-items-center">
-              <%- include("../includes/theme-toggle.ejs") %>
-            </div>
+      <!-- Theme Switcher -->
+      <div class="d-flex align-items-center">
+        <%- include("../includes/theme-toggle.ejs") %>
+      </div>
 
-            <!-- Mobile Menu Toggle -->
-            <button class="navbar-icon-button wander-nav-mobile-toggle" type="button"
-              data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
-              aria-label="Toggle navigation menu">
-              <i class="fa-solid fa-bars navbar-text-xl" aria-hidden="true"></i>
-            </button>
+      <!-- Mobile Menu Hamburger Button -->
+      <button class="wander-icon-btn wander-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation menu">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
-</nav>
+</header>
 
 <!-- Mobile Menu (Offcanvas) -->
-<div class="offcanvas offcanvas-end navbar-glass-dark navbar-border-l navbar-border-white-20 wander-mobile-menu"
-  style="width: 85%; max-width: 320px;" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
-  <div class="offcanvas-header navbar-border-b navbar-border-white-10 navbar-p-4">
-    <h5
-      class="offcanvas-title navbar-text-white navbar-font-bold navbar-text-lg navbar-flex navbar-items-center navbar-gap-2"
-      id="mobileMenuLabel">
-      <i class="fa-regular fa-compass navbar-text-aqua" aria-hidden="true"></i>
-      <span>Menu</span>
-    </h5>
-    <button type="button"
-      class="navbar-inline-flex navbar-items-center navbar-justify-center navbar-h-9 navbar-w-9 navbar-bg-white-10 navbar-border navbar-border-white-20 navbar-rounded-full navbar-text-white navbar-transition"
-      data-bs-dismiss="offcanvas" aria-label="Close">
-      <i class="fa-solid fa-times" aria-hidden="true"></i>
+<div class="offcanvas offcanvas-end wander-offcanvas" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+  <div class="wander-offcanvas-header">
+    <a href="/listings" class="wander-brand">
+      <img src="/images/logo.svg" alt="WanderLust logo" class="wander-brand-icon" width="28" height="28" />
+      <span class="wander-brand-name">WanderLust</span>
+    </a>
+    <button type="button" class="wander-icon-btn" data-bs-dismiss="offcanvas" aria-label="Close menu">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
     </button>
   </div>
 
-  <div class="offcanvas-body navbar-p-4">
-    <!-- Mobile Search -->
-    <form method="GET" action="/listings" class="navbar-mobile-search" role="search">
-      <div class="navbar-mobile-search-wrapper">
-        <i class="fa-solid fa-magnifying-glass navbar-text-white-60 navbar-text-sm" aria-hidden="true"></i>
-        <input type="search" name="search" placeholder="<%= __('search_destinations') %>"
-          class="navbar-mobile-search-input" />
+  <div class="wander-offcanvas-body">
+    <!-- Mobile Search Form -->
+    <form method="GET" action="/listings" role="search" class="mb-3">
+      <div class="wander-search-wrapper" style="width: 100%; max-width: 100%;">
+        <i class="fa-solid fa-magnifying-glass wander-search-icon" aria-hidden="true"></i>
+        <div class="wander-search-input-wrap">
+          <input type="text" name="search" id="mobileSearchInput" class="wander-search-input" placeholder="Where to? Search stays..." />
+        </div>
+        <button type="button" class="wander-search-clear" id="mobileSearchClearBtn" aria-label="Clear search" style="display: none;">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <button type="submit" class="wander-search-btn" aria-label="Search">
+          <span>Search</span>
+        </button>
       </div>
     </form>
 
-    <!-- Mobile Nav Links -->
-    <div class="navbar-space-y-1 navbar-mb-6">
-      <a href="/listings" class="navbar-mobile-nav-link">
-        <i class="fa-regular fa-copy navbar-text-lg navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-        <span>
-          <%= __('all_listings') %>
-        </span>
+    <!-- Primary Nav Links -->
+    <div>
+      <div class="wander-mobile-section-title">Navigation</div>
+      <a href="/listings" class="wander-mobile-link">
+        <i class="fa-solid fa-earth-americas" aria-hidden="true"></i>
+        <span>All listings</span>
       </a>
-
-      <a href="/listings/about" class="navbar-mobile-nav-link">
-        <i class="fa-solid fa-info-circle navbar-text-lg navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-        <span>
-          <%= __('about') %>
-        </span>
+      <a href="/about" class="wander-mobile-link">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <span>About</span>
       </a>
-
-      <a href="/listings/new" class="navbar-mobile-nav-link">
-        <i class="fa-solid fa-plus navbar-text-lg navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-        <span>
-          <%= __('add_new_listing') %>
-        </span>
+      <a href="/listings/new" class="wander-mobile-link">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span>Add new listing</span>
       </a>
-
-      <!-- Mobile Travel Tools Section -->
-      <div class="navbar-border-t navbar-border-white-10 navbar-mt-4 navbar-pt-4">
-        <p class="navbar-mobile-section-title">Travel Tools</p>
-        <a href="/trip-planner" class="navbar-mobile-nav-link">
-          <i class="fa-solid fa-route navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-          <span>Trip Planner</span>
-        </a>
-        <a href="/packing-list" class="navbar-mobile-nav-link">
-          <i class="fa-solid fa-suitcase navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-          <span>Packing List</span>
-        </a>
-        <a href="/holiday" class="navbar-mobile-nav-link">
-          <i class="fa-solid fa-calendar-days navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-          <span>Holiday Calendar</span>
-        </a>
-        <a href="/weather" class="navbar-mobile-nav-link">
-          <i class="fa-solid fa-cloud-sun navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-          <span>Weather Info</span>
-        </a>
-      </div>
     </div>
 
-    <% if (typeof currentUser==='undefined' || !currentUser) { %>
-      <!-- Mobile Auth Buttons -->
-      <div class="navbar-space-y-3 navbar-mt-6">
-        <a href="/login" class="navbar-mobile-auth-button login">
-          <i class="fa-solid fa-sign-in-alt" aria-hidden="true"></i>
-          <span>
-            <%= __('login') %>
-          </span>
-        </a>
-        <a href="/signup" class="navbar-mobile-auth-button signup">
-          <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
-          <span>
-            <%= __('signup') %>
-          </span>
-        </a>
-      </div>
-      <% } else { %>
-        <!-- Mobile User Menu -->
-        <div class="navbar-border-t navbar-border-white-10 navbar-pt-4 navbar-mt-4">
-          <p class="navbar-mobile-section-title">Account</p>
-          <div class="navbar-space-y-1">
-            <a href="/profile" class="navbar-mobile-nav-link">
-              <i class="fa-solid fa-user navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-              <span>My Profile</span>
-            </a>
-            <a href="/profile/wishlist" class="navbar-mobile-nav-link">
-              <i class="fa-solid fa-bookmark navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-              <span>My Wishlist</span>
-            </a>
-            <a href="/profile/likes" class="navbar-mobile-nav-link">
-              <i class="fa-solid fa-heart navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-              <span>Liked Listings</span>
-            </a>
-            <a href="/trip-planner/my-trips" class="navbar-mobile-nav-link">
-              <i class="fa-solid fa-suitcase-rolling navbar-text-base navbar-w-5 navbar-text-center"
-                aria-hidden="true"></i>
-              <span>My Trip Plans</span>
-            </a>
-            <a href="/notifications"
-              class="navbar-flex navbar-items-center navbar-justify-between navbar-mobile-nav-link">
-              <div class="navbar-flex navbar-items-center navbar-gap-3">
-                <i class="fa-solid fa-bell navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-                <span>Notifications</span>
-              </div>
-              <span id="mobileNotificationBadge"
-                class="navbar-bg-coral navbar-text-white navbar-text-xs navbar-rounded-full navbar-px-2 navbar-py-0\.5"
-                style="display: none;">0</span>
-            </a>
-            <a href="/logout" class="navbar-mobile-nav-link navbar-text-coral navbar-mt-3 navbar-font-medium">
-              <i class="fa-solid fa-sign-out-alt navbar-text-base navbar-w-5 navbar-text-center" aria-hidden="true"></i>
-              <span>
-                <%= __('logout') %>
-              </span>
-            </a>
-          </div>
+    <!-- Travel Tools -->
+    <div>
+      <div class="wander-mobile-section-title">Travel Tools</div>
+      <a href="/trip-planner" class="wander-mobile-link">
+        <i class="fa-solid fa-route" aria-hidden="true"></i>
+        <span>Trip planner</span>
+      </a>
+      <a href="/packing-list" class="wander-mobile-link">
+        <i class="fa-solid fa-suitcase" aria-hidden="true"></i>
+        <span>Packing list</span>
+      </a>
+      <a href="/holiday" class="wander-mobile-link">
+        <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+        <span>Holiday calendar</span>
+      </a>
+      <a href="/listings/compare" class="wander-mobile-link">
+        <i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>
+        <span>Compare destinations</span>
+      </a>
+      <a href="/weather" class="wander-mobile-link">
+        <i class="fa-solid fa-cloud-sun" aria-hidden="true"></i>
+        <span>Weather info</span>
+      </a>
+      <a href="/trip-planner/mood-fixing" class="wander-mobile-link">
+        <i class="fa-solid fa-music" aria-hidden="true"></i>
+        <span>Mood fixing</span>
+      </a>
+      <a href="/achievements" class="wander-mobile-link">
+        <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+        <span>Achievements</span>
+      </a>
+      <a href="/leaderboard" class="wander-mobile-link">
+        <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+        <span>Leaderboard</span>
+      </a>
+    </div>
+
+    <!-- Account / Auth -->
+    <div>
+      <div class="wander-mobile-section-title">Account</div>
+      <% if (typeof currentUser === 'undefined' || !currentUser) { %>
+        <div class="d-flex flex-column gap-2 mt-2">
+          <a href="/login" class="wander-btn-soft justify-content-center w-100">
+            <i class="fa-solid fa-arrow-right-to-bracket me-1" aria-hidden="true"></i>
+            <span>Log in</span>
+          </a>
+          <a href="/signup" class="btn-solid-asym justify-content-center w-100" style="height: 36px;">
+            <span>Sign up</span>
+            <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size: 0.7rem;" aria-hidden="true"></i>
+          </a>
         </div>
-        <% } %>
+      <% } else { %>
+        <a href="/profile" class="wander-mobile-link">
+          <i class="fa-solid fa-user" aria-hidden="true"></i>
+          <span>My profile</span>
+        </a>
+        <a href="/profile/wishlist" class="wander-mobile-link">
+          <i class="fa-solid fa-bookmark" aria-hidden="true"></i>
+          <span>My wishlist</span>
+        </a>
+        <a href="/profile/likes" class="wander-mobile-link">
+          <i class="fa-solid fa-heart" aria-hidden="true"></i>
+          <span>Liked listings</span>
+        </a>
+        <a href="/trip-planner/my-trips" class="wander-mobile-link">
+          <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i>
+          <span>My trip plans</span>
+        </a>
+        <a href="/notifications" class="wander-mobile-link justify-content-between">
+          <div class="d-flex align-items-center gap-3">
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+            <span>Notifications</span>
+          </div>
+          <span id="mobileNotificationBadge" class="badge rounded-pill bg-danger" style="display: none;">0</span>
+        </a>
+        <a href="/logout" class="wander-mobile-link text-danger mt-2">
+          <i class="fa-solid fa-arrow-right-from-bracket text-danger" aria-hidden="true"></i>
+          <span>Log out</span>
+        </a>
+      <% } %>
+    </div>
+
   </div>
 </div>
 
-<% if (typeof currentUser !=='undefined' && currentUser) { %>
-  <script>
-    (function () {
-      'use strict';
+<!-- ===================================================================
+     Navbar Client Logic: Notifications, Downloads, Toasts, Sticky Scroll
+     =================================================================== -->
+<script>
+  (function () {
+    'use strict';
 
-      document.addEventListener('DOMContentLoaded', function () {
-        if (window.OfflineManager) {
-          initializeDownloadsDropdown();
-        }
-        if (typeof currentUser !== 'undefined' && currentUser) {
-          window.notificationManager = new NotificationManager();
-        }
-      });
+    // Sticky Scroll Blur
+    function handleNavbarScroll() {
+      const navbar = document.querySelector('.wander-navbar');
+      if (!navbar) return;
+      if (window.scrollY > 15) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+    window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+    document.addEventListener('DOMContentLoaded', handleNavbarScroll);
 
-      async function initializeDownloadsDropdown() {
+    // Downloads Dropdown Initializer
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.OfflineManager) {
+        window.OfflineManager.getStoredPdfs()
+          .then(trips => {
+            const badge = document.getElementById('profileDownloadCount');
+            if (badge && trips && trips.length > 0) {
+              badge.textContent = trips.length;
+              badge.style.display = 'inline-flex';
+            }
+          })
+          .catch(err => console.error('Error initializing downloads:', err));
+      }
+    });
+
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+    // Notification Manager
+    class NotificationManager {
+      constructor() {
+        this.notifications = [];
+        this.unreadCount = 0;
+        this.init();
+      }
+
+      async init() {
         try {
-          const trips = await window.OfflineManager.getStoredPdfs();
-          updateDownloadsBadge(trips);
+          await this.loadNotifications();
+          this.setupEventListeners();
         } catch (error) {
-          console.error('Error initializing downloads:', error);
+          console.error('Failed to init notifications:', error);
         }
       }
 
-      function updateDownloadsBadge(trips) {
-        const badge = document.getElementById('profileDownloadCount');
-        if (!badge) return;
-
-        if (trips && trips.length > 0) {
-          badge.textContent = trips.length;
-          badge.style.display = 'inline-flex';
-        } else {
-          badge.style.display = 'none';
-        }
-      }
-
-      window.viewDownloadedTrip = async function (tripId) {
+      async loadNotifications() {
         try {
-          if (!window.OfflineManager) return;
-          const pdfData = await window.OfflineManager.getTripPdf(tripId);
+          const response = await fetch('/trip-planner/api/notifications');
+          if (response.ok) {
+            this.notifications = await response.json();
+            this.updateUnreadCount();
+            this.renderNotifications();
+          }
+        } catch (error) {
+          console.error('Failed to load notifications:', error);
+        }
+      }
 
-          if (pdfData) {
-            const blob = new Blob([pdfData], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
+      updateUnreadCount() {
+        this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+        const badge = document.getElementById('notificationBadge');
+        const mobileBadge = document.getElementById('mobileNotificationBadge');
+
+        [badge, mobileBadge].forEach(b => {
+          if (!b) return;
+          if (this.unreadCount > 0) {
+            b.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+            b.style.display = 'inline-flex';
           } else {
-            showToast('PDF not found', 'error');
+            b.style.display = 'none';
           }
-        } catch (error) {
-          console.error('Error viewing downloaded trip:', error);
-          showToast('Failed to open PDF', 'error');
-        }
-      };
+        });
+      }
 
-      class NotificationManager {
-        constructor() {
-          this.notifications = [];
-          this.unreadCount = 0;
-          this.isInitialized = false;
-          this.init();
-        }
+      renderNotifications() {
+        const container = document.getElementById('notificationList');
+        const noNotifications = document.getElementById('noNotifications');
+        if (!container) return;
 
-        async init() {
-          if (this.isInitialized) return;
-
-          try {
-            await this.loadNotifications();
-            this.setupEventListeners();
-            this.isInitialized = true;
-          } catch (error) {
-            console.error('Failed to initialize notifications:', error);
-          }
+        if (this.notifications.length === 0) {
+          if (noNotifications) noNotifications.style.display = 'block';
+          return;
         }
 
-        async loadNotifications() {
-          try {
-            const response = await fetch('/trip-planner/api/notifications');
-            if (response.ok) {
-              this.notifications = await response.json();
-              this.updateUnreadCount();
-              this.renderNotifications();
-            }
-          } catch (error) {
-            console.error('Failed to load notifications:', error);
-          }
-        }
-
-        updateUnreadCount() {
-          this.unreadCount = this.notifications.filter(n => !n.isRead).length;
-          this.updateBadge();
-        }
-
-        updateBadge() {
-          const badge = document.getElementById('notificationBadge');
-          const mobileBadge = document.getElementById('mobileNotificationBadge');
-
-          if (badge) {
-            if (this.unreadCount > 0) {
-              badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
-              badge.style.display = 'inline-block';
-            } else {
-              badge.style.display = 'none';
-            }
-          }
-
-          if (mobileBadge) {
-            if (this.unreadCount > 0) {
-              mobileBadge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
-              mobileBadge.style.display = 'inline-block';
-            } else {
-              mobileBadge.style.display = 'none';
-            }
-          }
-        }
-
-        renderNotifications() {
-          const container = document.getElementById('notificationList');
-          const noNotifications = document.getElementById('noNotifications');
-
-          if (!container) return;
-
-          if (this.notifications.length === 0) {
-            if (noNotifications) noNotifications.style.display = 'block';
-            return;
-          }
-
-          if (noNotifications) noNotifications.style.display = 'none';
-
-          const recentNotifications = this.notifications.slice(0, 5);
-          container.innerHTML = recentNotifications.map(n => this.createNotificationHTML(n)).join('');
-        }
-
-        createNotificationHTML(notification) {
-          const timeAgo = this.getTimeAgo(notification.createdAt);
-          const unreadClass = notification.isRead ? '' : 'navbar-bg-white-5';
-
-          return `
-        <div class="navbar-p-3 navbar-border-b navbar-border-white-10 ${unreadClass} navbar-transition navbar-cursor-pointer" data-id="${notification._id}">
-          <div class="navbar-flex navbar-justify-between navbar-items-start navbar-gap-2">
-            <div class="navbar-flex-grow navbar-min-w-0">
-              <h6 class="navbar-text-white navbar-font-bold navbar-mb-1 navbar-text-sm navbar-truncate">${this.escapeHtml(notification.title)}</h6>
-              <p class="navbar-text-white-60 navbar-mb-1 navbar-text-xs navbar-line-clamp-2">${this.escapeHtml(notification.message)}</p>
-              <small class="navbar-text-white-50 navbar-text-xs">${timeAgo}</small>
-            </div>
-            <div class="navbar-flex navbar-flex-col navbar-gap-2 navbar-flex-shrink-0">
-              ${!notification.isRead ? `
-                <button class="navbar-text-green-400 navbar-transition navbar-text-sm" onclick="event.stopPropagation(); window.notificationManager.markAsRead('${notification._id}')" title="Mark as read" aria-label="Mark as read">
-                  <i class="fa-solid fa-check"></i>
+        if (noNotifications) noNotifications.style.display = 'none';
+        const recent = this.notifications.slice(0, 5);
+        container.innerHTML = recent.map(n => `
+          <div class="p-3 border-bottom ${n.isRead ? '' : 'bg-white-5'}" style="border-color: var(--card-edge) !important;" data-id="${n._id}">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div class="flex-grow-1 min-w-0">
+                <div class="fw-semibold small text-truncate" style="color: var(--foreground);">${this.escapeHtml(n.title)}</div>
+                <div class="text-muted small text-truncate" style="font-size: 0.75rem;">${this.escapeHtml(n.message)}</div>
+                <small class="text-muted" style="font-size: 0.7rem;">${this.getTimeAgo(n.createdAt)}</small>
+              </div>
+              <div class="d-flex flex-column gap-1 flex-shrink-0">
+                ${!n.isRead ? `
+                  <button type="button" class="btn btn-sm btn-link text-success p-0" onclick="event.stopPropagation(); window.notificationManager.markAsRead('${n._id}')" title="Mark as read" aria-label="Mark as read">
+                    <i class="fa-solid fa-check"></i>
+                  </button>
+                ` : ''}
+                <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="event.stopPropagation(); window.notificationManager.deleteNotification('${n._id}')" title="Delete" aria-label="Delete notification">
+                  <i class="fa-solid fa-trash"></i>
                 </button>
-              ` : ''}
-              <button class="navbar-text-red-400 navbar-transition navbar-text-sm" onclick="event.stopPropagation(); window.notificationManager.deleteNotification('${notification._id}')" title="Delete" aria-label="Delete notification">
-                <i class="fa-solid fa-trash"></i>
-              </button>
+              </div>
             </div>
           </div>
-        </div>
-      `;
-        }
+        `).join('');
+      }
 
-        escapeHtml(text) {
-          const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-          };
-          return String(text).replace(/[&<>"']/g, m => map[m]);
-        }
+      escapeHtml(text) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return String(text).replace(/[&<>"']/g, m => map[m]);
+      }
 
-        getTimeAgo(dateString) {
-          const now = new Date();
-          const date = new Date(dateString);
-          const diffInSeconds = Math.floor((now - date) / 1000);
+      getTimeAgo(dateString) {
+        const diffInSeconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        return `${Math.floor(diffInSeconds / 86400)}d ago`;
+      }
 
-          if (diffInSeconds < 60) return 'Just now';
-          if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-          if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-          return `${Math.floor(diffInSeconds / 86400)}d ago`;
-        }
+      setupEventListeners() {
+        const btn = document.getElementById('markAllRead');
+        if (btn) btn.addEventListener('click', () => this.markAllAsRead());
+      }
 
-        setupEventListeners() {
-          const markAllReadBtn = document.getElementById('markAllRead');
-          if (markAllReadBtn) {
-            markAllReadBtn.addEventListener('click', () => this.markAllAsRead());
+      async markAsRead(id) {
+        try {
+          const res = await fetch(`/trip-planner/api/notifications/${id}/read`, { method: 'PATCH' });
+          if (res.ok) {
+            const notif = this.notifications.find(n => n._id === id);
+            if (notif) notif.isRead = true;
+            this.updateUnreadCount();
+            this.renderNotifications();
           }
-        }
-
-        async markAsRead(notificationId) {
-          try {
-            const response = await fetch(`/trip-planner/api/notifications/${notificationId}/read`, { method: 'PATCH' });
-            if (response.ok) {
-              const notification = this.notifications.find(n => n._id === notificationId);
-              if (notification) {
-                notification.isRead = true;
-                this.updateUnreadCount();
-                this.renderNotifications();
-              }
-            }
-          } catch (error) {
-            console.error('Failed to mark notification as read:', error);
-            showToast('Failed to mark notification as read', 'error');
-          }
-        }
-
-        async markAllAsRead() {
-          try {
-            const unreadNotifications = this.notifications.filter(n => !n.isRead);
-            await Promise.all(unreadNotifications.map(n => this.markAsRead(n._id)));
-            showToast('All notifications marked as read', 'success');
-          } catch (error) {
-            console.error('Failed to mark all notifications as read:', error);
-            showToast('Failed to mark all notifications as read', 'error');
-          }
-        }
-
-        async deleteNotification(notificationId) {
-          try {
-            const response = await fetch(`/trip-planner/api/notifications/${notificationId}`, { method: 'DELETE' });
-            if (response.ok) {
-              this.notifications = this.notifications.filter(n => n._id !== notificationId);
-              this.updateUnreadCount();
-              this.renderNotifications();
-              showToast('Notification deleted', 'success');
-            }
-          } catch (error) {
-            console.error('Failed to delete notification:', error);
-            showToast('Failed to delete notification', 'error');
-          }
-        }
-
-        addNotification(notification) {
-          this.notifications.unshift(notification);
-          this.updateUnreadCount();
-          this.renderNotifications();
-          showToast(notification.title, 'info');
+        } catch (err) {
+          console.error(err);
         }
       }
 
-      window.showToast = function (message, type = 'info') {
-        const alertClass = {
-          'success': 'alert-success',
-          'error': 'alert-danger',
-          'info': 'alert-info',
-          'warning': 'alert-warning'
-        }[type] || 'alert-info';
-
-        const iconClass = {
-          'success': 'fa-check-circle',
-          'error': 'fa-times-circle',
-          'info': 'fa-info-circle',
-          'warning': 'fa-exclamation-circle'
-        }[type] || 'fa-info-circle';
-
-        const toast = document.createElement('div');
-        toast.className = `alert ${alertClass} position-fixed shadow-lg`;
-        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideIn 0.3s ease-out;';
-        toast.setAttribute('role', 'alert');
-        toast.innerHTML = `<div class="d-flex align-items-center"><i class="fa-solid ${iconClass} me-2"></i><span>${message}</span></div>`;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-          toast.style.animation = 'slideOut 0.3s ease-in';
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
-      };
-    })();
-  </script>
-  <% } %>
-
-    <!-- Enhanced Navbar Scroll Effect Script -->
-    <script>
-      (function () {
-        'use strict';
-        // Add scroll effect to navbar for enhanced visibility
-        const navbar = document.querySelector('.wander-navbar');
-        if (navbar) {
-          let lastScroll = 0;
-          window.addEventListener('scroll', function () {
-            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
-            // Add 'scrolled' class when scrolled down
-            if (currentScroll > 50) {
-              navbar.classList.add('scrolled');
-            } else {
-              navbar.classList.remove('scrolled');
-            }
-
-            lastScroll = currentScroll;
-          });
+      async markAllAsRead() {
+        try {
+          const unread = this.notifications.filter(n => !n.isRead);
+          await Promise.all(unread.map(n => this.markAsRead(n._id)));
+          window.showToast('All notifications marked as read', 'success');
+        } catch (err) {
+          console.error(err);
         }
-      })();
-    </script>
+      }
+
+      async deleteNotification(id) {
+        try {
+          const res = await fetch(`/trip-planner/api/notifications/${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            this.notifications = this.notifications.filter(n => n._id !== id);
+            this.updateUnreadCount();
+            this.renderNotifications();
+            window.showToast('Notification deleted', 'success');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      window.notificationManager = new NotificationManager();
+    });
+    <% } %>
+
+    // Toast Utility (Clean ChaiUI toast)
+    window.showToast = function (message, type = 'info') {
+      const toast = document.createElement('div');
+      const isDark = document.documentElement.classList.contains('dark');
+      toast.className = 'position-fixed d-flex align-items-center gap-2 px-3 py-2 rounded-3';
+      toast.style.cssText = `
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        font-size: 0.875rem;
+        font-family: var(--font-sans);
+        background: ${isDark ? '#18181b' : '#ffffff'};
+        color: ${isDark ? '#fafafa' : '#0a0a0a'};
+        border: 1px solid var(--card-edge);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: opacity 250ms ease, transform 250ms ease;
+      `;
+      const icon = type === 'success' ? 'fa-circle-check text-success' : (type === 'error' ? 'fa-circle-xmark text-danger' : 'fa-circle-info text-info');
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    };
+  })();
+</script>

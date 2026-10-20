@@ -146,176 +146,177 @@
 </div>
 
 <style>
-/* Enhanced background with subtle animated gradient */
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-        .search-btn {
-        padding-top: 0.5rem;  
-        padding-bottom: 0.5rem;
-}
-
-
 .mood-fixing-container {
-    min-height: 100vh;
-    padding: 2rem 0;
-    background: linear-gradient(270deg, #08697d, #146695, #31739f, #076582);
-    background-size: 800% 800%;
-    animation: gradientShift 20s ease infinite;
-    color: #f0f0f0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 80vh;
+    padding: 2rem 0 4rem;
+    background: transparent;
+    color: var(--foreground);
+    font-family: var(--font-sans);
 }
 
-/* Magical search bar */
+/* Search bar */
 .search-bar-container {
     position: relative;
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
+    max-width: 560px;
+    margin: 0 auto 2.5rem auto;
 }
 
 #moodSearch {
     width: 100%;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-    border-radius: 50px;
-    border: none;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    border-radius: 9999px;
+    border: 1px solid var(--card-edge);
     outline: none;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    transition: box-shadow 0.3s ease;
+    background: var(--card-fill);
+    color: var(--foreground);
+    backdrop-filter: blur(10px);
+    transition: border-color 0.2s ease;
 }
 
 #moodSearch::placeholder {
-    color: #ddd;
-    font-style: italic;
-    letter-spacing: 0.05em;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
 }
 
 #moodSearch:focus {
-    box-shadow: 0 0 25px #ff4081, 0 0 35px #ff4081;
-    background: rgba(255, 255, 255, 0.3);
+    border-color: var(--brand);
+    box-shadow: 0 0 0 2px rgba(255, 125, 12, 0.15);
 }
 
-/* Magical glow effect */
 .magical-glow {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border-radius: 60px;
-    pointer-events: none;
-    background: linear-gradient(45deg, #ff4081, #ff80ab, #ff4081, #ff80ab);
-    background-size: 400% 400%;
-    animation: gradientShift 10s ease infinite;
-    filter: blur(15px);
-    opacity: 0.7;
-    z-index: -1;
+    display: none;
 }
 
 /* Header */
 .mood-header h1 {
-    font-weight: 900;
-    font-size: 3rem;
-    text-shadow: 0 0 10px rgba(255, 64, 129, 0.8);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 2.25rem;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
     margin-bottom: 0.5rem;
 }
 
 .mood-header .lead {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #ffe4e1cc;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--foreground);
     margin-bottom: 0.25rem;
 }
 
 .mood-header .text-muted {
-    font-size: 1.1rem;
-    color: #ffd1dcaa;
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+}
+
+/* Language Filter */
+.language-filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.language-btn {
+    border: 1px solid var(--card-edge) !important;
+    color: var(--muted-foreground) !important;
+    background: transparent !important;
+    border-radius: 9999px !important;
+    padding: 0.35rem 0.85rem !important;
+    font-size: 0.8125rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.language-btn:hover {
+    color: var(--foreground) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.language-btn.active {
+    color: var(--background) !important;
+    background: var(--foreground) !important;
+    border-color: var(--foreground) !important;
+    font-weight: 600 !important;
 }
 
 /* Mood Selection Card */
-.mood-selection-card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    border-radius: 30px;
-    padding: 3rem 2rem;
-    box-shadow: 0 0 40px rgba(255, 64, 129, 0.3);
-    margin-bottom: 3rem;
+.mood-selection-card,
+.now-playing-card,
+.recommendations-section,
+.bollywood-section {
+    background: var(--card-fill);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-edge);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: none;
 }
 
-.mood-selection-card h3 {
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 8px rgba(255, 64, 129, 0.7);
+.mood-selection-card h3,
+.bollywood-section h3 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
 }
 
 /* Mood Grid */
 .mood-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
 }
 
 /* Mood Item */
 .mood-item {
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 25px;
-    padding: 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 0.75rem;
+    padding: 1.5rem 1rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.4s ease;
-    box-shadow: 0 0 15px rgba(255, 64, 129, 0.2);
-    border: 3px solid transparent;
-    color: white;
-    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid var(--card-edge);
+    color: var(--foreground);
+    font-weight: 500;
     user-select: none;
 }
 
 .mood-item:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 0 30px rgba(255, 64, 129, 0.6);
-    background: rgba(255, 255, 255, 0.35);
-    border-color: #ff4081;
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .mood-item.selected {
-    border-color: #ff4081;
-    background: linear-gradient(135deg, rgba(255, 64, 129, 0.3), rgba(255, 64, 129, 0.15));
-    box-shadow: 0 0 40px #ff4081;
+    border-color: var(--brand);
+    background: rgba(255, 125, 12, 0.08);
 }
 
 .mood-icon {
-    font-size: 4rem;
-    margin-bottom: 0.75rem;
-    text-shadow: 0 0 10px rgba(255, 64, 129, 0.8);
+    font-size: 2.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .mood-name {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: 0.25rem;
+    color: var(--foreground);
 }
 
 .mood-desc {
-    font-size: 1rem;
+    font-size: 0.8125rem;
     font-weight: 400;
-    color: #ffd1dccc;
+    color: var(--muted-foreground);
 }
 
 /* Now Playing Card */
-.now-playing-card {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(25px);
-    border-radius: 30px;
-    padding: 2.5rem;
-    box-shadow: 0 0 50px rgba(255, 64, 129, 0.4);
-    animation: fadeInUp 0.6s ease-out;
-    color: white;
-}
-
 .now-playing-header {
     display: flex;
     justify-content: space-between;
@@ -324,117 +325,84 @@
 }
 
 .mood-badge {
-    padding: 0.6rem 1.2rem;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 1rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    background: #ff4081;
-    box-shadow: 0 0 15px #ff4081;
+    gap: 0.5rem;
+    background: var(--brand);
     color: white;
 }
 
 .spotify-player-container {
     margin: 1.5rem 0;
-    border-radius: 20px;
+    border-radius: 0.75rem;
     overflow: hidden;
-    box-shadow: 0 0 30px rgba(255, 64, 129, 0.3);
+    border: 1px solid var(--card-edge);
 }
 
 .player-controls {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     justify-content: center;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
 }
 
 .player-controls button {
     font-weight: 600;
-    font-size: 1rem;
-    padding: 0.5rem 1.5rem;
-    border-radius: 30px;
-    transition: background-color 0.3s ease;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-asym);
+    border: 1px solid var(--card-edge);
+    background: transparent;
+    color: var(--foreground);
+    transition: all 0.2s ease;
 }
 
 .player-controls button:hover {
-    background-color: #ff4081;
-    color: white;
-}
-
-/* Recommendations Section */
-.recommendations-section {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    border-radius: 30px;
-    padding: 2.5rem;
-    box-shadow: 0 0 40px rgba(255, 64, 129, 0.3);
-    color: white;
+    background: var(--foreground);
+    color: var(--background);
 }
 
 .playlist-card {
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 0 20px rgba(255, 64, 129, 0.2);
-    color: white;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-edge);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: var(--foreground);
 }
 
 .playlist-card h5 {
-    color: #ff80ab;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 0.35rem;
+    font-weight: 600;
 }
 
 .playlist-card p {
-    color: #ffd1dccc;
-    font-size: 1rem;
-    margin-bottom: 1rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
 }
 
 .playlist-card iframe {
-    border-radius: 12px;
-}
-
-/* Bollywood Section */
-.bollywood-section {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    border-radius: 30px;
-    padding: 2.5rem;
-    box-shadow: 0 0 40px rgba(255, 64, 129, 0.3);
-    color: white;
-}
-
-.bollywood-section h3 {
-    color: #ff80ab;
-    font-weight: 700;
-    margin-bottom: 2rem;
+    border-radius: 8px;
 }
 
 @media (max-width: 768px) {
     .mood-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 1.2rem;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0.75rem;
     }
 
     .mood-item {
-        padding: 1.2rem;
-    }
-
-    .mood-icon {
-        font-size: 3rem;
+        padding: 1rem 0.75rem;
     }
 
     .mood-selection-card, .now-playing-card, .recommendations-section, .bollywood-section {
-        padding: 1.8rem 1.2rem;
-    }
-
-    #moodSearch {
-        font-size: 1rem;
-        padding: 0.6rem 1.2rem;
+        padding: 1.25rem;
     }
 }
 </style>

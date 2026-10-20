@@ -26,333 +26,234 @@ function getCategoryDescription(category) {
 %>
 
 <style>
-    :root {
-          --achievement-bg: rgba(4, 56, 112, 0.7);
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --card-bg-alt: rgba(255, 255, 255, 0.98);
-      --text-primary: #2c3e50;
-      --text-secondary: #7f8c8d;
-       --accent-color: #db3434;
-       --success-color: #27ae60;
-      --warning-color: #f39c12;
-       --danger-color: #e74c3c;
-        --glass-bg: rgba(255, 255, 255, 0.25);
-       --glass-border: rgba(255, 255, 255, 0.18);
-
-        --shadow-light: 0 8px 32px 0 rgba(145, 145, 149, 0.37);
-        --shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-       
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        background: var(--achievement-bg);
-        background-attachment: fixed;
-        min-height: 100vh;
-        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: var(--text-primary);
-        overflow-x: hidden;
-          background: linear-gradient(
-      135deg,
-      rgba(102, 215, 243, 0.4),
-      rgba(190, 241, 248, 0.3)
-    ),
-    url("/images/beach.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  background-blend-mode: multiply;
-  color: var(--text-primary) !important;
-
-        
-    }
-
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background:
-            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.3) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
-
     .achievements-container {
         max-width: 1200px;
-        margin: 2rem auto;
+        margin: 2rem auto 4rem;
         padding: 0 1rem;
-        backdrop-filter: blur(10px); /* optional frosted-glass effect */
-
+        color: var(--foreground);
+        font-family: var(--font-sans);
     }
-    [data-theme="light"] .achievements-container {
-    /* Use a lighter, semi-transparent color in Light Mode */
-    backdrop-filter: blur(10px); /* optional: gives a frosted-glass effect */
-      background: linear-gradient(
-      135deg,
-      rgba(102, 215, 243, 0.4),
-      rgba(190, 241, 248, 0.3)
-    ),
-    url("/images/beach.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  background-blend-mode: multiply;
-  color: var(--text-primary) !important;
-
-}
-
 
     .achievements-header {
         text-align: center;
-        margin-bottom: 3rem;
-        color: white;
-        text-shadow: 2px 2px 4px white;
+        margin-bottom: 2.5rem;
     }
 
     .achievements-header h1 {
-        font-size: 3rem;
+        font-family: var(--font-sans);
+        font-size: clamp(2rem, 4vw, 2.75rem);
         font-weight: 700;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(255, 254, 254, 0.3);
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+        color: var(--foreground);
     }
 
     .achievements-header p {
-        font-size: 1.2rem;
-        opacity: 0.9;
+        font-size: 1.05rem;
+        color: var(--muted-foreground);
         margin-bottom: 0;
     }
 
     .stats-overview {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
     }
 
     .stat-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        border-radius: 1rem;
+        background: var(--card-fill);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--card-edge);
+        border-radius: 0.75rem;
         padding: 1.5rem;
         text-align: center;
-        color: white;
-        box-shadow: var(--shadow-light);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        color: var(--foreground);
+        box-shadow: none;
+        transition: border-color 0.2s ease, transform 0.2s ease;
     }
 
     .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-dark);
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
     }
 
     .stat-number {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.35rem;
         display: block;
+        color: var(--brand);
     }
 
     .stat-label {
-        font-size: 1rem;
-        opacity: 0.9;
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
         font-weight: 500;
     }
 
     .category-section {
-        margin-bottom: 3rem;
+        margin-bottom: 2.5rem;
     }
 
     .category-header {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        border-radius: 1rem;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        color: white;
-        box-shadow: var(--shadow-light);
+        background: var(--card-fill);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--card-edge);
+        border-radius: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--foreground);
+        box-shadow: none;
     }
 
     .category-title {
-        font-size: 1.8rem;
+        font-family: var(--font-sans);
+        font-size: 1.35rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.25rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        color: var(--foreground);
+    }
+
+    .category-title i {
+        color: var(--brand);
+        font-size: 1.15rem;
     }
 
     .category-description {
-        opacity: 0.8;
+        color: var(--muted-foreground);
+        font-size: 0.875rem;
         margin: 0;
     }
 
     .achievements-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
     }
 
     .achievement-card {
-        background: var(--card-bg);
-        border-radius: 1rem;
+        background: var(--card-fill);
+        border: 1px solid var(--card-edge);
+        border-radius: 0.75rem;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: none;
+        transition: border-color 0.2s ease, transform 0.2s ease;
         position: relative;
     }
 
     .achievement-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
     }
 
     .achievement-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid var(--card-edge);
+        padding: 1.25rem;
         text-align: center;
-        color: white;
+        color: var(--foreground);
         position: relative;
     }
 
-    .achievement-card.earned .achievement-header {
-        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-    }
-
-    .achievement-card.locked .achievement-header {
-        background: linear-gradient(135deg, #95a5a6 0%, #bdc3c7 100%);
-    }
-
     .achievement-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.9;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--brand);
+    }
+
+    .achievement-card.locked .achievement-icon {
+        opacity: 0.4;
+        filter: grayscale(1);
     }
 
     .achievement-name {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
+        color: var(--foreground);
     }
 
     .achievement-description {
-        font-size: 0.95rem;
-        opacity: 0.9;
+        font-size: 0.8125rem;
+        color: var(--muted-foreground);
         margin-bottom: 0;
     }
 
     .achievement-body {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
 
     .progress-section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .progress-label {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        color: var(--text-secondary);
+        margin-bottom: 0.35rem;
+        font-size: 0.8125rem;
+        color: var(--muted-foreground);
     }
 
     .progress {
-        height: 8px;
-        border-radius: 4px;
-        background-color: #ecf0f1;
+        height: 6px;
+        border-radius: 9999px;
+        background-color: rgba(255, 255, 255, 0.08);
         overflow: hidden;
     }
 
     .progress-bar {
-        background: linear-gradient(90deg, #3498db, #2980b9);
+        background: var(--brand);
         transition: width 0.3s ease;
-    }
-
-    .achievement-card.earned .progress-bar {
-        background: linear-gradient(90deg, #27ae60, #229954);
     }
 
     .achievement-status {
         text-align: center;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-top: 1px solid #e9ecef;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-top: 1px solid var(--card-edge);
+        font-size: 0.8125rem;
     }
 
     .status-earned {
-        color: var(--success-color);
+        color: var(--foreground);
         font-weight: 600;
     }
 
     .status-locked {
-        color: var(--text-secondary);
+        color: var(--muted-foreground);
         font-weight: 500;
-    }
-
-    .current-value {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-top: 0.5rem;
     }
 
     .earned-badge {
         position: absolute;
         top: 10px;
         right: 10px;
-        background: var(--success-color);
+        background: var(--brand);
         color: white;
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.8rem;
-        box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
-    }
-
-    .locked-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        border-radius: 1rem;
+        font-size: 0.75rem;
     }
 
     .empty-category {
         text-align: center;
-        padding: 3rem;
-        color: rgba(255, 255, 255, 0.7);
+        padding: 2.5rem;
+        color: var(--muted-foreground);
     }
 
-    .empty-category i {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-
-    /* Responsive Design */
     @media (max-width: 768px) {
-        .achievements-header h1 {
-            font-size: 2.5rem;
-        }
-
         .achievements-grid {
             grid-template-columns: 1fr;
         }
@@ -360,65 +261,6 @@ function getCategoryDescription(category) {
         .stats-overview {
             grid-template-columns: repeat(2, 1fr);
         }
-
-        .category-title {
-            font-size: 1.5rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .stats-overview {
-            grid-template-columns: 1fr;
-        }
-
-        .achievements-header h1 {
-            font-size: 2rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-        }
-    }
-
-    /* Category specific colors */
-    .category-explorer .achievement-header {
-        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    }
-
-    .category-explorer.earned .achievement-header {
-        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-    }
-
-    .category-reviewer .achievement-header {
-        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    }
-
-    .category-reviewer.earned .achievement-header {
-        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-    }
-
-    .category-host .achievement-header {
-        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-    }
-
-    .category-host.earned .achievement-header {
-        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-    }
-
-    .category-social .achievement-header {
-        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-    }
-
-    .category-social.earned .achievement-header {
-        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-    }
-
-    .category-milestone .achievement-header {
-        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
-    }
-
-    .category-milestone.earned .achievement-header {
-        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
     }
 </style>
 

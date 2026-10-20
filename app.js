@@ -49,7 +49,6 @@ const passport = require("passport");
 const helmet = require("helmet");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
-const i18n = require('i18n');
 const cron = require('node-cron');
 // Import OAuth strategies
 require("./config/passport");
@@ -124,46 +123,7 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false, // Disable for compatibility with external resources
 }));
 
-// i18n configuration
-i18n.configure({
-    locales: ['en', 'hi', 'bn', 'te', 'mr', 'ta', 'gu', 'kn', 'ml', 'pa', 'or', 'as', 'ur', 'es', 'fr', 'de', 'ja', 'zh', 'it', 'pt'],
-    directory: path.join(__dirname, 'locales'),
-    defaultLocale: 'en',
-    queryParameter: 'lang',
-    cookie: 'lang',
-    autoReload: true,
-    updateFiles: false,
-    api: {
-        '__': '__',
-        '__n': '__n'
-    }
-});
 
-// Language mapping for display names and flags
-const languageMap = {
-    'en': { name: 'English', flag: '🇺🇸' },
-    'hi': { name: 'हिंदी', flag: '🇮🇳' },
-    'bn': { name: 'বাংলা', flag: '🇧🇩' },
-    'te': { name: 'తెలుగు', flag: '🇮🇳' },
-    'mr': { name: 'मराठी', flag: '🇮🇳' },
-    'ta': { name: 'தமிழ்', flag: '🇮🇳' },
-    'gu': { name: 'ગુજરાતી', flag: '🇮🇳' },
-    'kn': { name: 'ಕನ್ನಡ', flag: '🇮🇳' },
-    'ml': { name: 'മലയാളം', flag: '🇮🇳' },
-    'pa': { name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
-    'or': { name: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
-    'as': { name: 'অসমীয়া', flag: '🇮🇳' },
-    'ur': { name: 'اردو', flag: '🇮🇳' },
-    'es': { name: 'Español', flag: '🇪🇸' },
-    'fr': { name: 'Français', flag: '🇫🇷' },
-    'de': { name: 'Deutsch', flag: '🇩🇪' },
-    'ja': { name: '日本語', flag: '🇯🇵' },
-    'zh': { name: '中文', flag: '🇨🇳' },
-    'it': { name: 'Italiano', flag: '🇮🇹' },
-    'pt': { name: 'Português', flag: '🇵🇹' }
-};
-
-app.use(i18n.init);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -221,26 +181,8 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.searchQuery = req.query.search || '';
 
-    // Debug logging for i18n
-    if (req.query.lang) {
-        console.log(`🌍 Language parameter detected: ${req.query.lang}`);
-        console.log(`🌍 Current locale: ${i18n.getLocale(req)}`);
-        // Set the locale manually if it's in the query parameter
-        i18n.setLocale(req, req.query.lang);
-        console.log(`🌍 Locale set to: ${i18n.getLocale(req)}`);
-    }
-
-    // Language switching helper
-    res.locals.buildLangUrl = (lang) => {
-        const currentUrl = req.originalUrl.split('?')[0];
-        const params = new URLSearchParams(req.query);
-        params.set('lang', lang);
-        return currentUrl + '?' + params.toString();
-    };
-
-    // Make language map available to templates
-    res.locals.languageMap = languageMap;
-    res.locals.getLocale = () => i18n.getLocale(req);
+    res.locals.__ = (str) => str;
+    res.locals.getLocale = () => 'en';
 
     next();
 });

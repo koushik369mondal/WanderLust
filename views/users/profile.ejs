@@ -2,20 +2,24 @@
 
 <style>
     :root {
-        --body-text-color: #e0f7ff;
-        --text-primary: #0a2533;
-        --shadow-color: rgba(0, 0, 0, 0.2);
+        --body-text-color: var(--foreground);
+        --text-primary: var(--foreground);
+        --shadow-color: transparent;
+        --profile-header-bg: var(--card-fill);
+        --profile-card-bg: var(--card-fill);
+        --accent-border-color: var(--brand);
     }
 
     .profile-header {
-        background: var(--profile-header-bg);
+        background: var(--card-fill);
         backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 1.25rem;
-        color: white;
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--card-edge);
+        border-radius: 1rem;
+        color: var(--foreground);
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        box-shadow: none;
         position: relative;
         overflow: hidden;
     }
@@ -26,88 +30,93 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: linear-gradient(to right, #1ed9a8, #0f5a7c);
+        height: 2px;
+        background: var(--brand);
+        opacity: 0.8;
     }
 
     .profile-avatar {
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
+        background: var(--card-fill);
         display: flex;
         align-items: center;
         justify-content: center;
         margin: auto;
-        border: 3px solid white;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease;
+        border: 2px solid var(--card-edge);
+        box-shadow: none;
+        transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
     .profile-avatar:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
+        border-color: var(--brand);
     }
 
     .profile-avatar .fa-user-circle {
-        color: #0f5a7c !important;
+        color: var(--muted-foreground) !important;
     }
 
     .profile-header h3 {
-        font-weight: 800;
-        font-size: 2.2rem;
-        color: var(--text-primary);
-        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 2rem;
+        color: var(--foreground);
         margin-bottom: 0.5rem;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.02em;
     }
 
     .profile-header p {
-        opacity: 0.95;
-        color: var(--body-text-color);
+        opacity: 0.85;
+        color: var(--muted-foreground);
         margin-bottom: 0.3rem;
     }
 
     .nav-tabs {
-        border-bottom: 2px solid rgba(30, 217, 168, 0.3);
+        border-bottom: 1px solid var(--card-edge);
         margin-bottom: 2rem;
     }
 
     .nav-tabs .nav-link {
         border: none;
-        color: var(--body-text-color);
-        font-weight: 600;
+        color: var(--muted-foreground);
+        font-weight: 500;
         padding: 0.8rem 1.5rem;
         border-radius: 0.5rem 0.5rem 0 0;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         margin-right: 0.5rem;
+        background: transparent;
     }
 
     .nav-tabs .nav-link:hover {
-        background-color: rgba(30, 217, 168, 0.1);
+        color: var(--foreground);
+        background-color: rgba(255, 255, 255, 0.04);
         border-color: transparent;
     }
 
     .nav-tabs .nav-link.active {
-        background: linear-gradient(to bottom, rgba(30, 217, 168, 0.2), transparent);
-        color: var(--accent-border-color);
-        border-bottom: 3px solid var(--accent-border-color);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--foreground);
+        border-bottom: 2px solid var(--brand);
     }
 
     .profile-card {
-        background-color: var(--profile-card-bg);
+        background-color: var(--card-fill);
         backdrop-filter: blur(10px);
-        border-radius: 1rem;
-        color: var(--body-text-color);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 0.75rem;
+        color: var(--foreground);
         height: 100%;
         overflow: hidden;
-        border: 2px solid transparent;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--card-edge);
+        transition: border-color 0.2s ease;
+        box-shadow: none;
         margin-bottom: 1.5rem;
     }
 
     .profile-card:hover {
-        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
     }
 
     .profile-card-header {
@@ -303,50 +312,55 @@
 
     .profile-actions .btn {
         font-weight: 600;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.75rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        min-width: 150px;
+        padding: 0.65rem 1.25rem;
+        border-radius: var(--radius-asym);
+        transition: all 0.2s ease;
+        box-shadow: none;
+        min-width: 140px;
         display: flex;
         align-items: center;
         justify-content: center;
+        text-decoration: none;
     }
 
     .profile-actions .btn-primary {
-        background: linear-gradient(135deg, var(--accent-border-color), #0f5a7c);
-        color: white;
-        border: none;
+        background: var(--foreground);
+        color: var(--background);
+        border: 1px solid var(--foreground);
     }
 
     .profile-actions .btn-primary:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(135deg, #22e6b8, #11688e);
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: none;
+        background: var(--foreground);
+        color: var(--background);
     }
 
     .profile-actions .btn-secondary {
         background: transparent;
-        border: 2px solid rgba(255, 255, 255, 0.7);
-        color: white;
+        border: 1px solid var(--card-edge);
+        color: var(--foreground);
     }
 
     .profile-actions .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--foreground);
+        transform: translateY(-1px);
+        box-shadow: none;
     }
 
     .profile-actions .btn-danger {
         background: transparent;
-        border: 2px solid #dc3545;
-        color: #dc3545;
+        border: 1px solid #ef4444;
+        color: #ef4444;
     }
 
     .btn-danger:hover {
-        background: var(--color-danger);
-        color: var(--text-inverse);
-        transform: translateY(-2px);
+        background: #ef4444;
+        color: white;
+        transform: translateY(-1px);
     }
 
     .btn-success {
@@ -502,8 +516,8 @@
         left: 1rem;
         top: 0;
         bottom: 0;
-        width: 2px;
-        background: linear-gradient(180deg, var(--accent-border-color), var(--accent-border-color-dark));
+        width: 1px;
+        background: var(--card-edge);
     }
 
     .activity-item {
@@ -520,14 +534,14 @@
         top: 0;
         width: 2rem;
         height: 2rem;
-        background: var(--accent-border-color);
+        background: var(--card-fill);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: var(--brand);
         font-size: 0.8rem;
-        border: 3px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--card-edge);
     }
 
     .activity-content {
@@ -966,7 +980,7 @@
                                     <% }); %>
                                 <% } else { %>
                                     <div class="text-center py-4">
-                                        <i class="fa-solid fa-compass fa-3x text-muted mb-3"></i>
+                                        <i class="fa-solid fa-map-location-dot fa-3x text-muted mb-3"></i>
                                         <h5>No travel goals set</h5>
                                         <p class="text-muted">Set your travel goals and track your journey!</p>
                                     </div>

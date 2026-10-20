@@ -1,41 +1,39 @@
 :root {
-  --bg-primary-solid: #41b7cc92;
-  --bg-primary: linear-gradient(135deg, #61bcd3fa, #4876cbd6, #4edbcd);
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #ebebeb;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --text-muted: #525151;
-  --navbar-bg: #ffffff;
-  --card-bg: linear-gradient(135deg, #4590a2fa, #315aa5c7, #28d0bf);
-  --border-color: #dee2e6;
-  --accent-color: #fe424d;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --filter-bg: #f8f9fa;
-
-  --filter-border: #dee2e6;
-  --filter-hover: #430000;
-  --filter-active: #fe424d;
+  --bg-primary-solid: var(--card);
+  --bg-primary: var(--background);
+  --bg-secondary: rgba(0, 0, 0, 0.03);
+  --bg-tertiary: rgba(0, 0, 0, 0.05);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--muted-foreground);
+  --text-muted: var(--muted-foreground);
+  --navbar-bg: var(--card);
+  --card-bg: var(--card-fill);
+  --border-color: var(--card-edge);
+  --accent-color: var(--brand);
+  --shadow: none;
+  --filter-bg: var(--card);
+  --filter-border: var(--card-edge);
+  --filter-hover: rgba(0, 0, 0, 0.06);
+  --filter-active: var(--brand);
 }
 
 [data-theme="dark"] {
-  --bg-primary-solid: #00566c92;
-  --bg-primary: linear-gradient(135deg, #3287c0, #112344ec, #048679);
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #333333;
-  --text-primary: #ffffff;
-  --text-secondary: #f0f0f0;
-  --text-muted: #cccccc;
-  --navbar-bg: #2d2d2d;
-  --card-bg: linear-gradient(135deg, #4cafef, #112344c7, #009688);
-  --border-color: #404040;
-  --accent-color: #fe424d;
-  --shadow: rgba(255, 255, 255, 0.1);
-  /* --filter-bg: #2d2d2d; */
-  --filter-text: #cccccc;
-  /* --filter-border: #404040; */
-  /* --filter-hover: #404040; */
-  --filter-active: #fe424d;
+  --bg-primary-solid: var(--card);
+  --bg-primary: var(--background);
+  --bg-secondary: rgba(255, 255, 255, 0.04);
+  --bg-tertiary: rgba(255, 255, 255, 0.07);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--muted-foreground);
+  --text-muted: var(--muted-foreground);
+  --navbar-bg: var(--card);
+  --card-bg: var(--card-fill);
+  --border-color: var(--card-edge);
+  --accent-color: var(--brand);
+  --shadow: none;
+  --filter-text: var(--foreground);
+  --filter-border: var(--card-edge);
+  --filter-hover: rgba(255, 255, 255, 0.08);
+  --filter-active: var(--brand);
 }
 
 body {
@@ -43,97 +41,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-/* FIX: Enhanced Glassmorphism and Text Contrast for Navbar - Premium Edition */
-/* SCOPED CSS RESET: Override Bootstrap navbar defaults WITHOUT breaking Tailwind utilities */
-nav[role="navigation"] {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  left: 0 !important;
-  right: 0 !important;
-  max-width: 100vw !important;
-}
-
-/* Reset ONLY Bootstrap navbar container classes - NOT all children */
-.navbar {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.navbar-brand,
-.navbar-nav,
-.nav-link,
-.container-fluid,
-.container {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Premium Navbar Styling with Enhanced Visibility and Sticky Behavior */
-.premium-navbar {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  z-index: 9999 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: auto !important;
-
-  /* Enhanced blur effect for premium look */
-  backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
-
-  /* Stronger background for better readability over images */
-  background: linear-gradient(135deg, rgba(17, 35, 68, 0.96) 0%, rgba(45, 62, 80, 0.96) 50%, rgba(17, 35, 68, 0.96) 100%) !important;
-
-  /* Premium shadow for depth */
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-
-  /* Smooth transitions */
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-
-  /* Border enhancement */
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Legacy navbar class - minimal interference */
-.navbar {
-  position: relative;
-  z-index: 1030;
-}
-
-/* Dark Mode Override: Enhanced glass effect with better contrast */
-[data-theme="dark"] .navbar,
-[data-theme="dark"] .premium-navbar {
-  background: linear-gradient(135deg, rgba(17, 35, 68, 0.97) 0%, rgba(45, 62, 80, 0.97) 50%, rgba(17, 35, 68, 0.97) 100%) !important;
-  backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05) !important;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Light Mode Override: Ensure proper styling with strong contrast */
-[data-theme="light"] .navbar,
-[data-theme="light"] .premium-navbar {
-  background: linear-gradient(135deg, rgba(136, 203, 244, 0.92) 0%, rgba(156, 213, 254, 0.92) 50%, rgba(136, 203, 244, 0.92) 100%) !important;
-  backdrop-filter: blur(24px) saturate(180%) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1) !important;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Scrolled state - even stronger background */
-.premium-navbar.scrolled {
-  background: linear-gradient(135deg, rgba(17, 35, 68, 0.98) 0%, rgba(45, 62, 80, 0.98) 50%, rgba(17, 35, 68, 0.98) 100%) !important;
-  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-}
-
-[data-theme="light"] .premium-navbar.scrolled {
-  background: linear-gradient(135deg, rgba(136, 203, 244, 0.95) 0%, rgba(156, 213, 254, 0.95) 50%, rgba(136, 203, 244, 0.95) 100%) !important;
 }
 
 .container {
@@ -217,33 +124,11 @@ nav[role="navigation"] {
 
 .wander-footer {
   position: relative;
-  padding: 20px 20px 3px;
-  margin-top: 50px;
-  font-family: "Plus Jakarta Sans", sans-serif;
-
-  /* Enhanced glassmorphism with better contrast */
-  background: linear-gradient(135deg,
-      rgba(65, 183, 204, 0.85),
-      rgba(72, 118, 203, 0.85),
-      rgba(78, 219, 205, 0.85));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 2px solid var(--border-color);
-  border-radius: 12px 12px 0 0;
-  color: #ffffff;
-  box-shadow: 0 -4px 16px var(--shadow);
-  transition: background 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Dark theme footer styling */
-[data-theme="dark"] .wander-footer {
-  background: linear-gradient(135deg,
-      rgba(50, 135, 192, 0.9),
-      rgba(17, 35, 68, 0.9),
-      rgba(4, 134, 121, 0.9));
-  color: #ffffff;
+  padding: 40px 20px 20px;
+  margin-top: 60px;
+  font-family: var(--font-sans);
+  background: transparent;
+  color: var(--foreground);
 }
 
 /* === Footer layout === */
@@ -265,7 +150,7 @@ nav[role="navigation"] {
   font-weight: 600;
   margin-bottom: 18px;
   font-size: 1.1rem;
-  color: var(--footer-title-color, #ffffff);
+  color: var(--footer-title-color, var(--foreground));
 }
 
 /* Text & links - Enhanced visibility */
@@ -273,7 +158,7 @@ nav[role="navigation"] {
 .footer-col a {
   font-size: 15px;
   line-height: 1.8;
-  color: var(--footer-text-color, #ffffff);
+  color: var(--footer-text-color, var(--muted-foreground));
   text-decoration: none;
   display: block;
   margin-bottom: 10px;
@@ -282,8 +167,7 @@ nav[role="navigation"] {
 }
 
 .footer-col a:hover {
-  color: var(--footer-link-hover-color);
-  text-shadow: var(--footer-link-hover-shadow);
+  color: var(--brand);
 }
 
 /* Newsletter form */
@@ -382,18 +266,6 @@ nav[role="navigation"] {
 
   .footer-col {
     text-align: center;
-  }
-
-  .footer-col form {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footer-col input,
-  .footer-col button {
-    width: 100%;
-    border-radius: 6px;
-    margin: 5px 0;
   }
 }
 
@@ -1070,23 +942,16 @@ body::before {
   color: white;
 }
 
-/* Overlay effect for badges on cards (additive only) */
-.listing-card .badge {
-  position: absolute;
-  top: 1em;
-  left: 1em;
-  z-index: 10;
-}
-
-/* Listing Badges container for overlay (additive only) */
+/* Listing Badges container for overlay: top-right to avoid compare checkbox */
 .listing-badges {
   position: absolute;
-  top: 1em;
-  left: 1em;
+  top: 0.65rem;
+  right: 0.65rem;
+  left: auto;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 0.3em;
+  gap: 0.35rem;
 }
 
 .listing-card {
@@ -1992,24 +1857,7 @@ body::before {
   color: white;
 }
 
-/* Overlay effect for badges on cards (additive only) */
-.listing-card .badge {
-  position: absolute;
-  top: 1em;
-  left: 1em;
-  z-index: 10;
-}
-
-/* Listing Badges container for overlay (additive only) */
-.listing-badges {
-  position: absolute;
-  top: 1em;
-  left: 1em;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3em;
-}
+/* Second badge definition removed to avoid conflict */
 
 .listing-card {
   position: relative;

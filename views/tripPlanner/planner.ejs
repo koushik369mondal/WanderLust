@@ -138,13 +138,13 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg me-3">
+                        <div class="text-center mt-4 d-flex flex-wrap justify-content-center gap-3">
+                            <button type="submit" class="btn-solid-asym" style="height: 42px; padding: 0 1.5rem; font-size: 0.95rem;">
                                 <i class="fa-solid fa-calculator me-2"></i>
-                                Get Smart Estimate
+                                Get smart estimate
                             </button>
-                            <button type="button" class="btn btn-outline-secondary btn-lg" id="resetForm">
-                                <i class="fa-solid fa-refresh me-2"></i>
+                            <button type="button" class="btn-outline-asym" id="resetForm" style="height: 42px; padding: 0 1.25rem;">
+                                <i class="fa-solid fa-arrows-rotate me-2"></i>
                                 Reset
                             </button>
                         </div>
@@ -300,25 +300,25 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="text-center mt-4">
+                        <div class="text-center mt-4 d-flex flex-wrap justify-content-center gap-3">
                             <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-                                <button class="btn btn-success btn-lg me-3" id="saveTripBtn">
+                                <button class="btn-solid-asym" id="saveTripBtn">
                                     <i class="fa-solid fa-save me-2"></i>
-                                    Save Trip Plan
+                                    Save trip plan
                                 </button>
                             <% } else { %>
-                                <a href="/login" class="btn btn-success btn-lg me-3">
-                                    <i class="fa-solid fa-sign-in-alt me-2"></i>
-                                    Login to Save Trip
+                                <a href="/login" class="btn-solid-asym">
+                                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>
+                                    Log in to save trip
                                 </a>
                             <% } %>
-                            <button class="btn btn-outline-info btn-lg me-3" id="shareEstimateBtn">
+                            <button class="btn-outline-asym" id="shareEstimateBtn">
                                 <i class="fa-solid fa-share me-2"></i>
-                                Share Estimate
+                                Share estimate
                             </button>
-                            <button class="btn btn-outline-primary btn-lg" id="planAnotherBtn">
+                            <button class="btn-outline-asym" id="planAnotherBtn">
                                 <i class="fa-solid fa-plus me-2"></i>
-                                Plan Another Trip
+                                Plan another trip
                             </button>
                         </div>
                     </div>
@@ -345,58 +345,58 @@ padding-bottom: 0.5rem;
     margin-bottom: 1rem;
 }
 
-.trip-form-card {
-    background: var(--bg-primary-solid);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border: 1px solid var(--border-color);
+.trip-form-card, .results-card {
+    background: var(--card-fill);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    box-shadow: none;
+    border: 1px solid var(--card-edge);
 }
 
 .form-label {
     font-weight: 600;
-    color: var(--text-primary);
+    font-size: 0.875rem;
+    color: var(--foreground);
     margin-bottom: 0.5rem;
 }
 
 .form-control, .form-select {
-    border-radius: 12px;
-    border: 2px solid var(--border-color);
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+    border: 1px solid var(--card-edge);
+    background: var(--background);
+    color: var(--foreground);
+    padding: 0.625rem 0.875rem;
+    transition: border-color 0.2s ease;
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 0.25rem rgba(254, 66, 77, 0.15);
-}
-
-.results-card {
-    background: var(--bg-primary-solid);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border: 1px solid var(--border-color);
+    border-color: var(--card-edge-hover);
+    box-shadow: none;
+    outline: none;
 }
 
 .total-cost {
-    background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
+    background: var(--card-fill);
+    border: 1px solid var(--card-edge);
+    color: var(--foreground);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
     margin: 1rem 0;
 }
 
 .total-cost .currency {
-    font-size: 2rem;
-    font-weight: 300;
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--muted-foreground);
 }
 
 .total-cost span:not(.currency) {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
+    font-family: var(--font-display);
+    color: var(--foreground);
 }
 
 .cost-breakdown {
