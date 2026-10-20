@@ -1,741 +1,615 @@
 <% layout("/layouts/boilerplate") %>
 
 <style>
-  .hero-section {
-    background: rgba(0, 5, 13, 0.566) !important; /* Darker transparency */
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    border-color: rgba(255, 255, 255, 0.1);
+  /* ===================================================================
+     About Page - ChaiUI Styling
+     =================================================================== */
 
-    color: white;
-    padding: 5rem 0;
+  .about-hero {
+    padding: 4rem 0 3rem;
     position: relative;
-    overflow: hidden;
+    text-align: center;
   }
-    [data-theme="dark"] .hero-section {
-    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    color: white !important;
-    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
 
-}
-[data-theme="light"] .hero-section {
-    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    border-color: rgba(255, 255, 255, 0.1);
-    color: rgb(6, 5, 5) !important; /* Ensure text is white */
-    text-shadow: 2px 2px 4px rgba(11, 2, 2, 0.956);
-
-}
-
-  
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3') center/cover;
-    opacity: 0.2;
-    z-index: 1;
-  }
-  
-  .hero-content {
-    position: relative;
-    z-index: 2;
-  }
-  
-  .testimonial-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    margin: 1rem 0;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s ease;
-  }
-    [data-theme="dark"] .hero-section {
-    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    color: white !important;
-    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
-
-}
-[data-theme="light"] .hero-section {
-    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    border-color: rgba(255, 255, 255, 0.1);
-    color: rgb(6, 5, 5) !important; /* Ensure text is white */
-    text-shadow: 2px 2px 4px rgba(11, 2, 2, 0.956);
-
-}
-
-  
-  .testimonial-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #fe424d, #667eea, #764ba2);
-  }
-  
-  .testimonial-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-  }
-  
-  .user-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-        background: linear-gradient(
-      135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(17, 112, 136, 0.9),
-      rgba(9, 72, 80, 0.9)
-    ),;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0 auto 1rem;
-    border: 3px solid rgba(255,255,255,0.3);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
-    -webkit-text-fill-color: #f9f7f7;
-
-
-  }
-  
-  .testimonial-text {
-    font-style: italic;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    color: #000305;
-    text-shadow: 2px 2px 4px rgba(4, 0, 0, 0.956);
-
-  }
-  
-  .user-name {
+  .about-hero h1 {
+    font-family: var(--font-sans) !important;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
     font-weight: 700;
-    color: #030000;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .user-location {
-    color: #fdfdfe;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  
-  .stats-section {
-    background: rgba(0, 5, 13, 0.566) !important; /* Darker transparency */
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    border-color: rgba(255, 255, 255, 0.1);
-    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
-    color: white;
-    padding: 4rem ;
-  }
-  
-  .stat-card {
-    text-align: center;
-    padding: 2rem;
-    color:#030000;
-  }
-  
-  .stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #f8f7f7;
-    display: block;
-  }
-  
-  .stat-label {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color:#f5f7fa;
-  }
-  
-  .section-title {
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-  }
-  
-  .section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, #fe424d, #667eea);
-    border-radius: 2px;
-  }
-  
-  .feature-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 1rem;
-    padding: 1rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    height: 100%;
-    -webkit-text-fill-color: #090000;
-
-  }
-  
-  .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-  }
-  
-  .feature-icon {
-    font-size: 3rem;
-    color: #fbfafa;
-    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
+    letter-spacing: -0.03em;
+    color: var(--foreground);
     margin-bottom: 1rem;
   }
-  
-  
-  .team-card {
-    background: linear-gradient(135deg, rgba(5, 0, 0, 0.1), rgba(220, 228, 233, 0.952));
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.4s ease;
-    -webkit-text-fill-color: #090000;
 
-    
+  .about-hero p.lead {
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    color: var(--muted-foreground);
+    max-width: 48rem;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
   }
-  
-  .team-card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+
+  /* Stats Section */
+  .stats-section {
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3.5rem;
   }
-  
-  .team-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-        background: linear-gradient(
-      135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(17, 112, 136, 0.9),
-      rgba(9, 72, 80, 0.9)
-    ),;
+
+  .stat-card {
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--foreground);
+    display: block;
+    line-height: 1.1;
+  }
+
+  .stat-label {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    margin-top: 0.35rem;
+    display: block;
+  }
+
+  /* Section Title */
+  .about-section-title {
+    font-family: var(--font-sans);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Feature Cards */
+  .about-card {
+    background: rgba(18, 18, 18, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-edge);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    height: 100%;
+    transition: border-color 200ms ease;
+  }
+
+  .about-card:hover {
+    border-color: var(--card-edge-hover);
+  }
+
+  :root:not(.dark) .about-card,
+  html:not(.dark) .about-card {
+    background: #ffffff;
+    border-color: rgba(120, 53, 15, 0.15);
+  }
+
+  .feature-icon {
+    font-size: 2rem;
+    color: var(--brand);
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .about-card h4 {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+  }
+
+  .about-card p {
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Mission Section */
+  .mission-container {
+    background: rgba(18, 18, 18, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-edge);
+    border-radius: 1rem;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    margin: 3.5rem 0;
+  }
+
+  :root:not(.dark) .mission-container,
+  html:not(.dark) .mission-container {
+    background: #ffffff;
+    border-color: rgba(120, 53, 15, 0.15);
+  }
+
+  .mission-title {
+    font-family: var(--font-sans);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 1.25rem;
+  }
+
+  .mission-lead {
+    font-size: 1.125rem;
+    color: var(--foreground);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .mission-body {
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .mission-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.65rem;
+    color: var(--foreground);
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .mission-emoji-large {
+    font-size: clamp(6rem, 12vw, 9rem);
+    line-height: 1;
+    display: inline-block;
+    user-select: none;
+  }
+
+  /* Testimonials */
+  .testimonial-card {
+    background: rgba(18, 18, 18, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-edge);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 200ms ease;
+  }
+
+  .testimonial-card:hover {
+    border-color: var(--card-edge-hover);
+  }
+
+  :root:not(.dark) .testimonial-card,
+  html:not(.dark) .testimonial-card {
+    background: #ffffff;
+    border-color: rgba(120, 53, 15, 0.15);
+  }
+
+  .testimonial-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-edge);
+    color: var(--foreground);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.125rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin: 0 auto 1rem;
-    border: 4px solid rgba(255,255,255,0.3);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
-  
-  .mission-card {
-      background: linear-gradient(
-      135deg,
-      #89CFF0(2, 42, 87, 0.9),
-      #3B82F6(36, 67, 141, 0.9),
-      #1E3A8A(61, 208, 228, 0.9)
-    ),;
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    border-color: rgba(255, 255, 255, 0.1);
-    border-radius: 2rem;
-    padding: 4rem;
-    margin: 2rem 0;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.3);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(20px);
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    transition: all 0.5s ease;
+    margin-bottom: 1.25rem;
   }
 
-  
-  .mission-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 35px 70px rgba(0,0,0,0.2), 0 0 0 1px rgba(254,66,77,0.3);
+  :root:not(.dark) .testimonial-avatar,
+  html:not(.dark) .testimonial-avatar {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
   }
-  
-  .mission-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-        background: linear-gradient(
-      135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(17, 112, 136, 0.9),
-      rgba(9, 72, 80, 0.9)
-    ),;
-    background-size: 200% 100%;
-    animation: gradientShift 3s ease-in-out infinite;
+
+  .testimonial-quote {
+    color: var(--foreground);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    flex: 1;
   }
-  
-  .mission-card::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(254,66,77,0.1) 0%, transparent 70%);
-    animation: rotate 20s linear infinite;
-    z-index: -1;
+
+  .testimonial-author {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--foreground);
   }
-  
-  .mission-emoji {
-    position: relative;
-    display: inline-block;
-    animation: float 3s ease-in-out infinite;
+
+  .testimonial-location {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.2rem;
   }
-  
-  .mission-emoji::before {
-    content: '✨';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    font-size: 2rem;
-    animation: sparkle 2s ease-in-out infinite;
-  }
-  
-  .mission-emoji::after {
-    content: '🚀';
-    position: absolute;
-    bottom: -30px;
-    left: -30px;
-    font-size: 1.5rem;
-    animation: bounce 2s ease-in-out infinite;
-  }
-  
-  .mission-text {
-    position: relative;
-    z-index: 2;
-  }
-  
-  .mission-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+
+  /* Team */
+  .team-card {
+    background: rgba(18, 18, 18, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-edge);
+    border-radius: 0.75rem;
+    padding: 2rem 1.75rem;
+    text-align: center;
     height: 100%;
-    pointer-events: none;
-    z-index: 1;
+    transition: border-color 200ms ease;
   }
-  
-  .particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(45deg, #fe424d, #00020a);
-    border-radius: 50%;
-    animation: particleFloat 4s ease-in-out infinite;
+
+  .team-card:hover {
+    border-color: var(--card-edge-hover);
   }
-  
-  .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-  .particle:nth-child(2) { top: 60%; left: 20%; animation-delay: 1s; }
-  .particle:nth-child(3) { top: 30%; left: 80%; animation-delay: 2s; }
-  .particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 3s; }
-  .particle:nth-child(5) { top: 10%; left: 60%; animation-delay: 0.5s; }
-  
-  @keyframes gradientShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+
+  :root:not(.dark) .team-card,
+  html:not(.dark) .team-card {
+    background: #ffffff;
+    border-color: rgba(120, 53, 15, 0.15);
   }
-  
-  @keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+
+  .team-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-edge);
+    color: var(--foreground);
+    font-size: 1.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
   }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(5deg); }
+
+  :root:not(.dark) .team-avatar,
+  html:not(.dark) .team-avatar {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
   }
-  
-  @keyframes sparkle {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.2); }
+
+  .team-name {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 0.25rem;
   }
-  
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
+
+  .team-role {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 0.75rem;
   }
-  
-  @keyframes particleFloat {
-    0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
-    25% { transform: translateY(-10px) translateX(5px); opacity: 1; }
-    50% { transform: translateY(-5px) translateX(-5px); opacity: 0.7; }
-    75% { transform: translateY(-15px) translateX(10px); opacity: 1; }
+
+  .team-bio {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+    margin: 0;
   }
-  
-  .cta-section {
-        background: linear-gradient(
-      135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(17, 112, 136, 0.9),
-      rgba(9, 72, 80, 0.9)
-    ),;
-    color: white;
-    padding: 4rem 0;
+
+  /* CTA Section */
+  .about-cta {
+    padding: 4rem 0 2rem;
     text-align: center;
   }
-    [data-theme="dark"] .cta-section {
-    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    color: white !important;
-    text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
 
-}
-[data-theme="light"] .cta-section {
-    background: rgba(14, 49, 109, 0.566) !important; /* Darker transparency */
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.1); /* Subtle dark mode shadow */
-    border-color: rgba(255, 255, 255, 0.1);
-    color: rgb(6, 5, 5) !important; /* Ensure text is white */
-    text-shadow: 2px 2px 4px rgba(11, 2, 2, 0.956);
+  .about-cta h2 {
+    font-family: var(--font-sans);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 1rem;
+  }
 
-}
-
+  .about-cta p {
+    color: var(--muted-foreground);
+    font-size: 1.125rem;
+    max-width: 36rem;
+    margin: 0 auto 2rem;
+  }
 </style>
 
-<!-- Hero Section -->
-<section class="hero-section">
-  <div class="container hero-content">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 text-center">
-        <h1 class="display-3 fw-bold mb-4">🌍 Welcome to WanderLust</h1>
-        <p class="lead fs-4 mb-4">Your ultimate travel companion for discovering and sharing amazing destinations around the world</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <a href="/listings" class="btn btn-light btn-lg px-4 py-3">
-            <i class="fa-solid fa-compass me-2"></i>Explore Now
-          </a>
-          <a href="/signup" class="btn btn-outline-light btn-lg px-4 py-3">
-            <i class="fa-solid fa-user-plus me-2"></i>Join Community
-          </a>
-        </div>
-      </div>
+<div class="chai-container py-3">
+  <!-- Hero Section -->
+  <section class="about-hero">
+    <div class="chai-animated-badge mb-3">
+      <span class="chai-animated-badge-text">
+        <i class="fa-solid fa-compass me-1" style="color: var(--brand);"></i> WanderLust Story
+      </span>
     </div>
-  </div>
-</section>
+    <h1>Welcome to WanderLust</h1>
+    <p class="lead">
+      Your travel companion for discovering and sharing <span class="highlight">unforgettable adventures</span> across handpicked destinations around the globe.
+    </p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="/listings" class="btn-solid-asym">
+        <i class="fa-solid fa-compass me-2"></i>Explore now
+      </a>
+      <a href="/signup" class="btn-outline-asym">
+        <i class="fa-solid fa-user-plus me-2"></i>Join community
+      </a>
+    </div>
+  </section>
 
-<!-- Stats Section -->
-<section class="stats-section">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3">
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="row g-4">
+      <div class="col-6 col-md-3">
         <div class="stat-card">
           <span class="stat-number">10K+</span>
-          <span class="stat-label">Happy Travelers</span>
+          <span class="stat-label">Happy travelers</span>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <div class="stat-card">
           <span class="stat-number">5K+</span>
           <span class="stat-label">Destinations</span>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <div class="stat-card">
           <span class="stat-number">25K+</span>
-          <span class="stat-label">Reviews</span>
+          <span class="stat-label">Verified reviews</span>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <div class="stat-card">
           <span class="stat-number">50+</span>
-          <span class="stat-label">Countries</span>
+          <span class="stat-label">Countries reached</span>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Features Section -->
-<section class="py-5">
-  <div class="container">
-    <h2 class="section-title display-5 fw-bold">✨ What Makes Us Special</h2>
+  <!-- Features Section -->
+  <section class="py-4">
+    <h2 class="about-section-title">What makes WanderLust special</h2>
     <div class="row g-4">
-      <div class="col-md-3">
-        <div class="feature-card">
+      <div class="col-md-6 col-lg-3">
+        <div class="about-card">
           <div class="feature-icon">
             <i class="fa-solid fa-map-marked-alt"></i>
           </div>
-          <h4>Discover Places</h4>
-          <p>Explore thousands of unique destinations shared by fellow travelers</p>
+          <h4>Discover places</h4>
+          <p>Explore thousands of unique destinations shared by fellow travelers.</p>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="feature-card">
+      <div class="col-md-6 col-lg-3">
+        <div class="about-card">
           <div class="feature-icon">
             <i class="fa-solid fa-camera"></i>
           </div>
-          <h4>Share Adventures</h4>
-          <p>Create beautiful listings and help others discover hidden gems</p>
+          <h4>Share adventures</h4>
+          <p>Create beautiful listings and help others discover hidden gems.</p>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="feature-card">
+      <div class="col-md-6 col-lg-3">
+        <div class="about-card">
           <div class="feature-icon">
             <i class="fa-solid fa-star"></i>
           </div>
-          <h4>Real Reviews</h4>
-          <p>Get authentic insights from travelers who have been there</p>
+          <h4>Real reviews</h4>
+          <p>Get authentic insights from travelers who have been there firsthand.</p>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="feature-card">
+      <div class="col-md-6 col-lg-3">
+        <div class="about-card">
           <div class="feature-icon">
             <i class="fa-solid fa-route"></i>
           </div>
-          <h4>Plan Journey</h4>
-          <p>Use interactive maps and detailed info to plan your perfect trip</p>
+          <h4>Plan journey</h4>
+          <p>Use interactive tools and detailed info to plan your perfect trip.</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Mission Section -->
-<section class="py-5" style="background: linear-gradient(
-      135deg,
-      rgba(11, 30, 30, 0.9),
-      rgba(99, 159, 200, 0.9),
-      rgba(245, 247, 247, 0.9)
-    )
-
-;
-text-shadow: 2px 2px 4px rgba(252, 250, 250, 0.956);
-  -webkit-text-fill-color: #f9f7f7;
-  padding:4rem ;"
-  
-
->
-  <div class="container">
-    <div class="mission-card">
-      <div class="mission-particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-      </div>
-      <div class="row align-items-center mission-text">
-        <div class="col-lg-6">
-          <h2 class="display-5 fw-bold mb-4" style="color: #2c3e50; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">🚀 Our Mission</h2>
-          <p class="lead" style="color: #34495e; font-weight: 500; line-height: 1.8;">To create a world where every traveler feels at home, anywhere they go. We believe travel should be <span style="color: #fe424d; font-weight: 700;">personal</span>, <span style="color: #667eea; font-weight: 700;">authentic</span>, and <span style="color: #764ba2; font-weight: 700;">transformative</span>.</p>
-          <p style="color: #34495e; font-size: 1.1rem; line-height: 1.7;">WanderLust isn't just about finding places to stay—it's about discovering experiences that change you, connecting with locals who welcome you, and creating memories that last a lifetime.</p>
-          <div class="mt-4">
-            <div class="d-flex align-items-center mb-2">
-              <span style="color: #fe424d; font-size: 1.5rem; margin-right: 1rem;">💝</span>
-              <span style="color: #2c3e50; font-weight: 600;">Authentic Connections</span>
+  <!-- Mission Section -->
+  <section>
+    <div class="mission-container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="chai-animated-badge mb-3">
+            <span class="chai-animated-badge-text">Core Purpose</span>
+          </div>
+          <h2 class="mission-title">Our mission</h2>
+          <p class="mission-lead">
+            To create a world where every traveler feels at home, anywhere they go, through <span class="highlight">authentic and transformative</span> experiences.
+          </p>
+          <p class="mission-body mb-4">
+            WanderLust is not just about finding places to stay. It is about discovering journeys that inspire you, connecting with hosts who welcome you, and creating memories that last a lifetime.
+          </p>
+          <div>
+            <div class="mission-item">
+              <i class="fa-solid fa-heart me-1" style="color: var(--brand);"></i>
+              <span>Authentic community connections</span>
             </div>
-            <div class="d-flex align-items-center mb-2">
-              <span style="color: #667eea; font-size: 1.5rem; margin-right: 1rem;">🌟</span>
-              <span style="color: #2c3e50; font-weight: 600;">Transformative Experiences</span>
+            <div class="mission-item">
+              <i class="fa-solid fa-sparkles me-1" style="color: var(--brand);"></i>
+              <span>Curated local recommendations</span>
             </div>
-            <div class="d-flex align-items-center">
-              <span style="color: #764ba2; font-size: 1.5rem; margin-right: 1rem;">🏠</span>
-              <span style="color: #2c3e50; font-weight: 600;">Feel at Home Anywhere</span>
+            <div class="mission-item">
+              <i class="fa-solid fa-house me-1" style="color: var(--brand);"></i>
+              <span>Feel comfortable anywhere on earth</span>
             </div>
           </div>
         </div>
-        <div class="col-lg-6 text-center">
-          <div class="mission-emoji" style="font-size: 10rem; color: #fe424d; opacity: 0.9; filter: drop-shadow(0 10px 20px rgba(254,66,77,0.3));">
-            🌍
-          </div>
+        <div class="col-lg-5 text-center">
+          <div class="mission-emoji-large">🌍</div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Testimonials Section -->
-<section class="py-5">
-  <div class="container">
-    <h2 class="section-title display-5 fw-bold">💬 What Our Travelers Say</h2>
+  <!-- Testimonials Section -->
+  <section class="py-4">
+    <h2 class="about-section-title">What our travelers say</h2>
     <div class="row g-4">
-      <div class="col-lg-4">
+      <div class="col-md-6 col-lg-4">
         <div class="testimonial-card">
-          <div class="user-avatar">M</div>
-          <div class="testimonial-text">
-            "Hey! I'm Mary and I just came back from the most amazing trip to Bali! WanderLust helped me find this hidden waterfall that wasn't in any guidebook. The local recommendations were spot on! 🌺"
+          <div>
+            <div class="testimonial-avatar">M</div>
+            <p class="testimonial-quote">
+              "Hey! I am Mary and I just came back from the most amazing trip to Bali. WanderLust helped me find a hidden waterfall not in any guidebook. The recommendations were spot on."
+            </p>
           </div>
-          <div class="text-center">
-            <div class="user-name">Mary Johnson</div>
-            <div class="user-location">
-              <i class="fa-solid fa-location-dot"></i>
-              New York, USA
+          <div>
+            <div class="testimonial-author">Mary Johnson</div>
+            <div class="testimonial-location">
+              <i class="fa-solid fa-location-dot"></i> New York, USA
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="col-lg-4">
+
+      <div class="col-md-6 col-lg-4">
         <div class="testimonial-card">
-          <div class="user-avatar">A</div>
-          <div class="testimonial-text">
-            "As a solo female traveler, safety is my priority. The detailed reviews and photos on WanderLust gave me confidence to explore Tokyo on my own. Met amazing people through the platform! 🗾"
+          <div>
+            <div class="testimonial-avatar">A</div>
+            <p class="testimonial-quote">
+              "As a solo female traveler, safety is my priority. The detailed reviews and photos on WanderLust gave me confidence to explore Tokyo on my own. Met wonderful people along the way."
+            </p>
           </div>
-          <div class="text-center">
-            <div class="user-name">Alex Chen</div>
-            <div class="user-location">
-              <i class="fa-solid fa-location-dot"></i>
-              Toronto, Canada
+          <div>
+            <div class="testimonial-author">Alex Chen</div>
+            <div class="testimonial-location">
+              <i class="fa-solid fa-location-dot"></i> Toronto, Canada
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="col-lg-4">
+
+      <div class="col-md-6 col-lg-4">
         <div class="testimonial-card">
-          <div class="user-avatar">R</div>
-          <div class="testimonial-text">
-            "I've been using WanderLust for 2 years now. From the Swiss Alps to Moroccan deserts, every recommendation has been perfect. The community here truly understands what makes a place special! ⛰️"
+          <div>
+            <div class="testimonial-avatar">R</div>
+            <p class="testimonial-quote">
+              "I have been using WanderLust for two years now. From the Swiss Alps to Moroccan deserts, every recommendation has been reliable and authentic."
+            </p>
           </div>
-          <div class="text-center">
-            <div class="user-name">Raj Patel</div>
-            <div class="user-location">
-              <i class="fa-solid fa-location-dot"></i>
-              Mumbai, India
+          <div>
+            <div class="testimonial-author">Raj Patel</div>
+            <div class="testimonial-location">
+              <i class="fa-solid fa-location-dot"></i> Mumbai, India
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="col-lg-4">
+
+      <div class="col-md-6 col-lg-4">
         <div class="testimonial-card">
-          <div class="user-avatar">S</div>
-          <div class="testimonial-text">
-            "Planning our honeymoon was stressful until we found WanderLust! The couples who shared their romantic getaway spots made our Santorini trip absolutely magical. Forever grateful! 💕"
+          <div>
+            <div class="testimonial-avatar">S</div>
+            <p class="testimonial-quote">
+              "Planning our honeymoon was stressful until we found WanderLust. The couples who shared romantic getaway spots made our Santorini trip truly magical."
+            </p>
           </div>
-          <div class="text-center">
-            <div class="user-name">Sarah & Mike</div>
-            <div class="user-location">
-              <i class="fa-solid fa-location-dot"></i>
-              London, UK
+          <div>
+            <div class="testimonial-author">Sarah & Mike</div>
+            <div class="testimonial-location">
+              <i class="fa-solid fa-location-dot"></i> London, UK
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="col-lg-4">
+
+      <div class="col-md-6 col-lg-4">
         <div class="testimonial-card">
-          <div class="user-avatar">L</div>
-          <div class="testimonial-text">
-            "As a budget backpacker, I love how WanderLust shows real costs and budget-friendly options. Found amazing hostels in Prague and Budapest that I never would have discovered otherwise! 🎒"
+          <div>
+            <div class="testimonial-avatar">L</div>
+            <p class="testimonial-quote">
+              "As a budget backpacker, I appreciate that WanderLust shows real costs and practical tips. Found incredible hostels in Prague and Budapest."
+            </p>
           </div>
-          <div class="text-center">
-            <div class="user-name">Lucas Schmidt</div>
-            <div class="user-location">
-              <i class="fa-solid fa-location-dot"></i>
-              Berlin, Germany
+          <div>
+            <div class="testimonial-author">Lucas Schmidt</div>
+            <div class="testimonial-location">
+              <i class="fa-solid fa-location-dot"></i> Berlin, Germany
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="col-lg-4">
+
+      <div class="col-md-6 col-lg-4">
         <div class="testimonial-card">
-          <div class="user-avatar">P</div>
-          <div class="testimonial-text">
-            "Traveling with kids is challenging, but WanderLust's family-friendly filters and parent reviews made our Costa Rica adventure smooth and fun for everyone! The kids still talk about it! 👨👩👧👦"
+          <div>
+            <div class="testimonial-avatar">P</div>
+            <p class="testimonial-quote">
+              "Traveling with kids is challenging, but WanderLust family-friendly filters and parent reviews made our Costa Rica trip smooth and fun for all of us."
+            </p>
           </div>
-          <div class="text-center">
-            <div class="user-name">Priya Sharma</div>
-            <div class="user-location">
-              <i class="fa-solid fa-location-dot"></i>
-              Sydney, Australia
+          <div>
+            <div class="testimonial-author">Priya Sharma</div>
+            <div class="testimonial-location">
+              <i class="fa-solid fa-location-dot"></i> Sydney, Australia
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Team Section -->
-<section class="py-5" style=" background: linear-gradient(
-      135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(17, 112, 136, 0.9),
-      rgba(9, 72, 80, 0.9)
-    ),
-; color: white;">
-  <div class="container">
-    <h2 class="section-title display-5 fw-bold">👥 Meet Our Team</h2>
+  <!-- Team Section -->
+  <section class="py-4">
+    <h2 class="about-section-title">Meet our team</h2>
     <div class="row g-4">
-      <div class="col-lg-4">
+      <div class="col-md-4">
         <div class="team-card">
           <div class="team-avatar">K</div>
-          <h4 style="color: #2c3e50;">Kaushik Mandal</h4>
-          <p style="color: #667eea; font-weight: 600;">Founder & Lead Developer</p>
-          <p style="color: #34495e;">"Passionate about creating technology that brings people together. When I'm not coding, you'll find me exploring new destinations!"</p>
+          <h4 class="team-name">Kaushik Mandal</h4>
+          <p class="team-role">Founder & Lead Developer</p>
+          <p class="team-bio">Passionate about creating technology that connects travelers worldwide with unforgettable destinations.</p>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-md-4">
         <div class="team-card">
           <div class="team-avatar">🤖</div>
-          <h4 style="color: #2c3e50;">AI Assistant</h4>
-          <p style="color: #667eea; font-weight: 600;">Development Partner</p>
-          <p style="color: #34495e;">"Helping build amazing features and ensuring every line of code contributes to better travel experiences for our community."</p>
+          <h4 class="team-name">AI Assistant</h4>
+          <p class="team-role">Development Partner</p>
+          <p class="team-bio">Refining experiences and ensuring every line of code powers delightful travel discoveries.</p>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-md-4">
         <div class="team-card">
           <div class="team-avatar">🌟</div>
-          <h4 style="color: #2c3e50;">You!</h4>
-          <p style="color: #667eea; font-weight: 600;">Community Member</p>
-          <p style="color: #34495e;">"Every traveler, host, and explorer who joins WanderLust becomes part of our extended team. Welcome aboard!"</p>
+          <h4 class="team-name">You</h4>
+          <p class="team-role">Community Member</p>
+          <p class="team-bio">Every traveler, host, and explorer who joins WanderLust helps make our journey richer.</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA Section -->
-<section class="cta-section">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <h2 class="display-4 fw-bold mb-4">🚀 Ready to Start Your Adventure?</h2>
-        <p class="lead mb-4">Join thousands of travelers who trust WanderLust to make their journeys unforgettable</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <a href="/listings" class="btn btn-light btn-lg px-5 py-3">
-            <i class="fa-solid fa-compass me-2"></i>Explore Destinations
-          </a>
-          <a href="/signup" class="btn btn-outline-light btn-lg px-5 py-3">
-            <i class="fa-solid fa-user-plus me-2"></i>Join Community
-          </a>
-        </div>
-      </div>
+  <!-- CTA Section -->
+  <section class="about-cta">
+    <h2>Ready to start your adventure?</h2>
+    <p>Join thousands of travelers who use WanderLust to plan authentic journeys worldwide.</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="/listings" class="btn-solid-asym">
+        <i class="fa-solid fa-compass me-2"></i>Explore destinations
+      </a>
+      <a href="/signup" class="btn-outline-asym">
+        <i class="fa-solid fa-user-plus me-2"></i>Join community
+      </a>
     </div>
-  </div>
-</section>
+  </section>
+</div>

@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 });
 
 // API endpoint to fetch holidays
-router.get("/api/:country/:year?", async (req, res) => {
+router.get(["/api/:country", "/api/:country/:year"], async (req, res) => {
     try {
         const { country, year } = req.params;
         console.error('DEBUG: Country param:', country);

@@ -39,43 +39,10 @@
 }
 
 body {
-  background: linear-gradient(135deg,
-      rgba(102, 215, 243, 0.4),
-      rgba(190, 241, 248, 0.3)),
-    url("/images/beach.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  background-blend-mode: multiply;
-  color: var(--text-primary) !important;
-  font-family: "Plus Jakarta Sans", sans-serif !important;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-[data-theme="light"] body {
-  background: linear-gradient(135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(35, 117, 138, 0.9),
-      rgba(27, 93, 102, 0.9)),
-    url("/images/beach.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  background-blend-mode: overlay;
-}
-
-
-[data-theme="dark"] body {
-  background: linear-gradient(135deg,
-      rgba(7, 41, 46, 0.9),
-      rgba(35, 117, 138, 0.9),
-      rgba(27, 93, 102, 0.9)),
-    url("/images/beach.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  background-blend-mode: overlay;
 }
 
 /* FIX: Enhanced Glassmorphism and Text Contrast for Navbar - Premium Edition */
@@ -195,42 +162,11 @@ nav[role="navigation"] {
   font-size: 2rem;
 }
 
-/* Enhanced navbar text visibility with proper contrast ratios - Premium Edition */
+/* Nav links base styling in style.css */
 .nav-link {
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Enhanced text shadow for better readability over images */
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Light mode text with WCAG AA compliant contrast - Enhanced */
-[data-theme="light"] .nav-link {
-  color: #0a0a0a !important;
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.2) !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="light"] .nav-link:hover {
-  color: #000000 !important;
-  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9), 0 1px 4px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Dark mode text with proper contrast - Enhanced */
-[data-theme="dark"] .nav-link {
-  color: #ffffff !important;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 1px 4px rgba(0, 0, 0, 0.4) !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="dark"] .nav-link:hover {
-  color: #f0f0f0 !important;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7), 0 2px 5px rgba(0, 0, 0, 0.5) !important;
-}
-
-.nav-link:hover {
-  color: var(--accent-color) !important;
-  transform: translateY(-1px);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
 }
 
 #theme-toggle {

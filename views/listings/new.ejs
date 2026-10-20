@@ -1,281 +1,221 @@
 <% layout('/layouts/boilerplate') %>
 
 <style>
-  .form-card {
-    background: rgba(20, 30, 48, 0.45); /* darker glass */
-    backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
+  /* ===================================================================
+     New Listing Form - Modern ChaiUI Styling
+     =================================================================== */
+
+  .form-shell {
+    padding: 2.5rem 0 4rem;
+  }
+
+  .form-card-chai {
+    background: rgba(18, 18, 18, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-edge);
     border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    padding: clamp(1.5rem, 3.5vw, 2.75rem);
+    box-shadow: none;
   }
 
-  h3 {
+  :root:not(.dark) .form-card-chai {
+    background: #ffffff;
+    border-color: rgba(120, 53, 15, 0.15);
+  }
+
+  .form-title-head {
+    font-family: var(--font-sans) !important;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
-    color: #ffffff;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Labels */
-  .form-label {
-    font-weight: 600;
-    color: #f8fafc; /* bright white */
+    color: var(--foreground);
     margin-bottom: 0.5rem;
   }
 
-  /* Inputs & Select */
-  .form-control,
-  .form-select {
-    border-radius: 0.8rem;
-    padding: 0.9rem 1rem;
-    font-size: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.35); /* darker translucent */
-    color: #ffffff; /* user text = pure white */
-    transition: all 0.3s ease-in-out;
+  .form-subtitle-head {
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+    margin-bottom: 2rem;
   }
 
-  .form-control::placeholder,
-  .form-select option {
-    color: rgba(255, 255, 255, 0.65); /* brighter placeholder */
+  /* File Upload Zone */
+  .upload-dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: border-color 150ms ease, background-color 150ms ease;
   }
 
-  .form-control:focus,
-  .form-select:focus {
-    border-color: #38bdf8;
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
-    color: #ffffff;
+  .upload-dropzone:hover {
+    border-color: var(--card-edge-hover);
+    background: rgba(255, 255, 255, 0.04);
   }
 
-  /* File input fix */
-  input[type="file"] {
-    color: #fff;
-  }
-
-  /* Image Preview */
-  .listing-preview-wrapper {
+  .listing-preview-frame {
     display: none;
     margin-top: 1rem;
-    border-radius: 0.8rem;
+    border-radius: 0.75rem;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--card-edge);
+    max-height: 280px;
   }
 
-  .listing-preview-wrapper img {
+  .listing-preview-frame img {
     width: 100%;
-    height: 250px;
+    height: 280px;
     object-fit: cover;
     display: block;
   }
-
-  /* Submit Button */
-  .btn-submit {
-    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-    border: none;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    padding: 0.9rem;
-    transition: all 0.25s ease-in-out;
-    color: #fff;
-    font-size: 1rem;
-    letter-spacing: 0.3px;
-    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
-  }
-  .search-btn {
-  padding-top: 0.5rem;  
-  padding-bottom: 0.5rem;
-}
-
-
-  .btn-submit:hover {
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.55);
-  }
-  /* FIX 1: File Input Vertical Alignment */
-.file-upload-wrapper {
-    /* Use Flexbox to vertically center the button and text, fixing misalignment */
-    display: flex; 
-    align-items: center; /* Vertically centers all children */
-    gap: 1rem; /* Adds space between the button and the 'No file chosen' text */
-    flex-wrap: nowrap; /* Prevents wrapping which could break alignment */
-}
-
-/* FIX 2: Curvy Design & Contrast */
-.file-input-control {
-    border-radius: 25px; /* Makes the entire input area curvy/oval */
-    border: 2px solid var(--accent-color, #43E0D8); /* Subtle border color */
-    padding: 0.5rem 1rem; /* Add internal padding */
-    font-weight: 500;
-    
-    /* Ensure text contrast is right in Dark Mode */
-    color: #f7f7f7; 
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Styling the actual 'Choose File' button inside the input element */
-.file-input-control::file-selector-button {
-    border-radius: 20px; /* Makes the internal button curvy */
-    background-color: var(--primary-color, #fe424d); /* Consistent with other buttons (Red) */
-    color: white;
-    padding: 0.4rem 1rem;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-/* Ensure Light Mode compatibility (if background turns white, text must be dark) */
-@media (prefers-color-scheme: light) {
-    .file-input-control {
-        color: #333333;
-        background-color: #ffffff;
-        border-color: #ced4da;
-    }
-}
 </style>
 
-<div class="row mt-5">
-  <div class="col-md-8 offset-md-2">
-    <div class="form-card"> 
-      <h3 class="text-center mb-4">Create a New Listing</h3>
+<div class="chai-container form-shell">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Back Link -->
+      <a href="/listings" class="show-nav-back mb-3 d-inline-flex" style="text-decoration: none; color: var(--muted-foreground); font-size: 0.875rem;">
+        <i class="fa-solid fa-arrow-left me-2"></i>Back to listings
+      </a>
 
-      <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
-
-        <!-- Title -->
-        <div class="mb-3">
-          <label for="title" class="form-label">Title</label>
-          <input type="text" placeholder="Add a catchy title" name="listing[title]" id="title" class="form-control" required />
-          <div class="valid-feedback">Title looks good!</div>
-          <div class="invalid-feedback">Please enter a title.</div>
-        </div>
-
-        <!-- Description -->
-        <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
-          <textarea name="listing[description]" id="description" class="form-control" rows="3" placeholder="Write a short description..." required></textarea>
-          <div class="valid-feedback">Description looks good!</div>
-          <div class="invalid-feedback">Please enter a short description.</div>
-        </div>
-
-        <!-- Category -->
-        <div class="mb-3">
-          <label for="category" class="form-label">Category</label>
-          <select name="listing[category]" id="category" class="form-select" required>
-            <option selected disabled value="">Choose a category</option>
-            <option>Trending</option>
-            <option>Rooms</option>
-            <option>Iconic Cities</option>
-            <option>Mountains</option>
-            <option>Castles</option>
-            <option>Amazing Pool</option>
-            <option>Camping</option>
-            <option>Farms</option>
-            <option>Arctic</option>
-            <option>Domes</option>
-            <option>Boats</option>
-          </select>
-          <div class="valid-feedback">Looks good!</div>
-          <div class="invalid-feedback">Please select a category.</div>
-        </div>
-
-        <!-- Best Season & Travel Tip -->
-        <div class="row">
-          <div class="mb-3 col-md-6">
-            <label for="bestSeason" class="form-label">Best Season to Visit</label>
-            <input name="listing[bestSeason]" id="bestSeason" placeholder="e.g., Winter (Nov-Feb)" type="text" class="form-control">
+      <div class="form-card-chai">
+        <div class="text-center mb-4">
+          <div class="chai-animated-badge mb-2">
+            <span class="chai-animated-badge-text">
+              <i class="fa-solid fa-plus-circle me-1" style="color: var(--brand);"></i> Host Community
+            </span>
           </div>
-          <div class="mb-3 col-md-6">
-            <label for="travelTip" class="form-label">Travel Buddy Tip</label>
-            <input name="listing[travelTip]" id="travelTip" placeholder="e.g., Go early to avoid crowds" type="text" class="form-control">
-          </div>
+          <h1 class="form-title-head">Host a New Destination</h1>
+          <p class="form-subtitle-head">Share your unique property or travel experience with travelers worldwide.</p>
         </div>
 
-        <div class="mb-3">
-    <label for="image" class="form-label">Upload Listing Image</label>
-    
-    <div class="file-upload-wrapper">
-        <input 
-            type="file" 
-            name="listing[image]" 
-            id="image" 
-            class="form-control file-input-control" 
-            accept="image/*" 
-            onchange="previewImage(event)" 
-            required
-        >
-    </div>
-    <div class="listing-preview-wrapper mt-3">
-        <img id="imagePreview" src="" alt="Image Preview">
-    </div>
-    <div class="valid-feedback">Looks good!</div>
-    <div class="invalid-feedback">Please upload an image.</div>
-</div>
+        <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+          <!-- Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Destination Title</label>
+            <input type="text" placeholder="e.g., Clifftop Villa with Ocean Sunset" name="listing[title]" id="title" class="form-control" required />
+            <div class="valid-feedback">Title looks great!</div>
+            <div class="invalid-feedback">Please enter a catchy title.</div>
+          </div>
 
-        <!-- Price & Country -->
-        <div class="row">
-          <div class="mb-3 col-md-4">
-            <label for="price" class="form-label">Price</label>
-            <input placeholder="1200" name="listing[price]" id="price" class="form-control" type="number" required />
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="listing[description]" id="description" class="form-control" rows="3" placeholder="Describe the ambiance, surrounding nature, and amenities..." required></textarea>
             <div class="valid-feedback">Looks good!</div>
-            <div class="invalid-feedback">Please enter a valid price.</div>
+            <div class="invalid-feedback">Please provide a description.</div>
           </div>
-          <div class="mb-3 col-md-8">
-            <label for="country" class="form-label">Country</label>
-            <input type="text" placeholder="India" name="listing[country]" id="country" class="form-control" required />
-            <div class="valid-feedback">Looks good!</div>
-            <div class="invalid-feedback">Please enter the country name.</div>
+
+          <!-- Category -->
+          <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="listing[category]" id="category" class="form-select" required>
+              <option selected disabled value="">Choose category</option>
+              <option>Trending</option>
+              <option>Rooms</option>
+              <option>Iconic Cities</option>
+              <option>Mountains</option>
+              <option>Castles</option>
+              <option>Amazing Pool</option>
+              <option>Camping</option>
+              <option>Farms</option>
+              <option>Arctic</option>
+              <option>Domes</option>
+              <option>Boats</option>
+            </select>
+            <div class="valid-feedback">Category selected!</div>
+            <div class="invalid-feedback">Please select a category.</div>
           </div>
-        </div>
 
-        <!-- Location -->
-        <div class="mb-3">
-          <label for="location" class="form-label">Location</label>
-          <input type="text" placeholder="Jaipur, Rajasthan" name="listing[location]" id="location" class="form-control" required />
-          <div class="valid-feedback">Looks good!</div>
-          <div class="invalid-feedback">Please enter the location.</div>
-        </div>
+          <!-- Best Season & Travel Tip -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="bestSeason" class="form-label">Best Season to Visit</label>
+              <input name="listing[bestSeason]" id="bestSeason" placeholder="e.g., Autumn (Sep - Nov)" type="text" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="travelTip" class="form-label">Travel Buddy Tip</label>
+              <input name="listing[travelTip]" id="travelTip" placeholder="e.g., Book sunset cruise early" type="text" class="form-control">
+            </div>
+          </div>
 
-        <!-- Submit -->
-        <button class="btn btn-submit w-100 mt-3">+ Add Listing</button>
-      </form>
+          <!-- Image Upload -->
+          <div class="mb-3">
+            <label for="image" class="form-label">Listing Cover Photo</label>
+            <div class="upload-dropzone" onclick="document.getElementById('image').click();">
+              <i class="fa-solid fa-cloud-arrow-up fa-2x mb-2" style="color: var(--brand);"></i>
+              <div style="font-weight: 600; color: var(--foreground); font-size: 0.95rem;">Click to upload image</div>
+              <div style="font-size: 0.8125rem; color: var(--muted-foreground);">High-resolution JPG, PNG, or WebP recommended</div>
+              <input type="file" name="listing[image]" id="image" class="d-none" accept="image/*" onchange="previewImage(event)" required>
+            </div>
+            <div class="listing-preview-frame">
+              <img id="imagePreview" src="" alt="Preview">
+            </div>
+            <div class="invalid-feedback">Please upload an image.</div>
+          </div>
+
+          <!-- Price & Country -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label for="price" class="form-label">Price per night (₹)</label>
+              <input placeholder="2500" name="listing[price]" id="price" class="form-control" type="number" required />
+              <div class="invalid-feedback">Please enter a valid price.</div>
+            </div>
+            <div class="col-md-8">
+              <label for="country" class="form-label">Country</label>
+              <input type="text" placeholder="e.g., India" name="listing[country]" id="country" class="form-control" required />
+              <div class="invalid-feedback">Please enter the country.</div>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="mb-4">
+            <label for="location" class="form-label">City / Region</label>
+            <input type="text" placeholder="e.g., Jaipur, Rajasthan" name="listing[location]" id="location" class="form-control" required />
+            <div class="invalid-feedback">Please enter the location.</div>
+          </div>
+
+          <!-- Submit CTA -->
+          <button type="submit" class="btn-solid-asym w-100 justify-content-center py-3" style="font-size: 1rem;">
+            <i class="fa-solid fa-plus me-2"></i>Publish listing
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  // Image Preview
   function previewImage(event) {
     const input = event.target;
-    const wrapper = document.querySelector('.listing-preview-wrapper');
+    const frame = document.querySelector('.listing-preview-frame');
     const preview = document.getElementById('imagePreview');
 
     if (input.files && input.files[0]) {
       const reader = new FileReader();
       reader.onload = function(e) {
         preview.src = e.target.result;
-        wrapper.style.display = 'block';
+        frame.style.display = 'block';
       }
       reader.readAsDataURL(input.files[0]);
     } else {
       preview.src = "";
-      wrapper.style.display = 'none';
+      frame.style.display = 'none';
     }
   }
 
-  // Bootstrap Validation
   (() => {
-    'use strict'
-    const forms = document.querySelectorAll('.needs-validation')
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
     Array.from(forms).forEach(form => {
       form.addEventListener('submit', event => {
         if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
+          event.preventDefault();
+          event.stopPropagation();
         }
-        form.classList.add('was-validated')
-      }, false)
-    })
-  })()
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
 </script>

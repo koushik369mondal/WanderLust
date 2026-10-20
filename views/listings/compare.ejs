@@ -1,315 +1,306 @@
 <% layout('/layouts/boilerplate') %>
 
 <style>
-    body {
-        background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80') center/cover no-repeat fixed;
-        min-height: 100vh;
-        position: relative;
-    }
-    
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.1);
-        z-index: -1;
-    }
-    
-    .comparison-table {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .comparison-header {
-        background: linear-gradient(135deg, #fe424d 0%, #ff6b6b 100%);
-        color: white;
-        padding: 3rem 2rem;
-        text-align: center;
-    }
-    
-    .comparison-row {
-        display: flex;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-        transition: background-color 0.3s ease;
-    }
-    
-    .comparison-row:hover {
-        background-color: rgba(254, 66, 77, 0.05);
-    }
-    
-    .comparison-label {
-        flex: 0 0 200px;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        padding: 1.5rem;
-        font-weight: 700;
-        color: #2c3e50;
-        border-right: 1px solid rgba(0,0,0,0.1);
-        display: flex;
-        align-items: center;
-    }
-    
-    .comparison-value {
-        flex: 1;
-        padding: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .comparison-card {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
-        height: 100%;
-        width: 100%;
-        max-width: 300px;
-        overflow: hidden;
-    }
-    
-    .comparison-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    }
-    
-    .amenity-badge {
-        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-        color: #1976d2;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin: 0.3rem;
-        display: inline-block;
-        border: 1px solid rgba(25, 118, 210, 0.2);
-    }
-    
-    .rating-stars {
-        color: #ffc107;
-        font-size: 1.3rem;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
-    }
-    
-    .price-breakdown {
-        text-align: center;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        padding: 1rem;
-        border-radius: 10px;
-    }
-    
-    .base-price {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #fe424d;
-    }
-    
-    .tax-price {
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-    
-    .total-price {
-        font-size: 1.3rem;
-        font-weight: 800;
-        color: #28a745;
-        margin-top: 0.5rem;
-    }
-    .search-btn {
-    padding-top: 0.5rem;  
-    padding-bottom: 0.5rem;
-}
+  /* ===================================================================
+     Compare Page - Modern ChaiUI Styling
+     =================================================================== */
 
+  .compare-container {
+    padding-top: 1.5rem;
+    padding-bottom: 4rem;
+  }
+
+  .compare-header-box {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .compare-header-box h1 {
+    font-family: var(--font-sans) !important;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-header-box p {
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* Comparison Matrix Frame */
+  .matrix-wrapper {
+    background: rgba(18, 18, 18, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--card-edge);
+    border-radius: 1rem;
+    overflow-x: auto;
+    margin-bottom: 2.5rem;
+  }
+
+  :root:not(.dark) .matrix-wrapper {
+    background: #ffffff;
+    border-color: rgba(120, 53, 15, 0.15);
+  }
+
+  .matrix-table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .matrix-row {
+    border-bottom: 1px solid var(--border);
+    display: flex;
+  }
+
+  .matrix-row:last-child {
+    border-bottom: none;
+  }
+
+  .matrix-label-col {
+    flex: 0 0 190px;
+    background: rgba(255, 255, 255, 0.02);
+    border-right: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+  }
+
+  :root:not(.dark) .matrix-label-col {
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .matrix-val-col {
+    flex: 1;
+    min-width: 240px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .matrix-val-col:last-child {
+    border-right: none;
+  }
+
+  /* Comparison Card Item */
+  .compare-preview-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  :root:not(.dark) .compare-preview-card {
+    background: #ffffff;
+  }
+
+  .compare-preview-img {
+    height: 160px;
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 16/10;
+  }
+
+  /* Price Details Pill */
+  .compare-price-pill {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.85rem 1.25rem;
+    text-align: center;
+    width: 100%;
+    max-width: 240px;
+  }
+
+  :root:not(.dark) .compare-price-pill {
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .compare-base-price {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .compare-tax-note {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: 0.2rem;
+  }
+
+  .compare-total-price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--brand);
+    margin-top: 0.4rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .amenity-chip {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    display: inline-block;
+    margin: 0.2rem;
+  }
+
+  :root:not(.dark) .amenity-chip {
+    background: rgba(0, 0, 0, 0.04);
+  }
 </style>
-<body>
-    <div class="container-fluid py-4">
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="comparison-header">
-                    <h1 class="h2 mb-3">
-                        <i class="fas fa-chart-bar me-2"></i>Listing Comparison
-                    </h1>
-                    <p class="mb-0 fs-5">Compare properties side-by-side to make the best choice</p>
+
+<div class="chai-container compare-container">
+  <!-- Header -->
+  <div class="compare-header-box">
+    <div class="chai-animated-badge mb-3">
+      <span class="chai-animated-badge-text">
+        <i class="fa-solid fa-balance-scale me-1" style="color: var(--brand);"></i> Side-by-Side Analysis
+      </span>
+    </div>
+    <h1>Compare Destinations</h1>
+    <p>Compare selected properties side-by-side to choose the perfect match for your next journey.</p>
+  </div>
+
+  <% if (typeof listings !== 'undefined' && listings && listings.length > 0) { %>
+    <!-- Matrix Frame -->
+    <div class="matrix-wrapper">
+      <div class="matrix-table">
+        <!-- Row 1: Property Cards -->
+        <div class="matrix-row">
+          <div class="matrix-label-col">Property</div>
+          <% listings.forEach(listing => { %>
+            <div class="matrix-val-col">
+              <div class="compare-preview-card">
+                <img src="<%= listing.image?.url ? listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_500/') : 'https://via.placeholder.com/300' %>"
+                  class="compare-preview-img" alt="<%= listing.title %>">
+                <div class="p-3">
+                  <h5 style="font-size: 1rem; font-weight: 600; color: var(--foreground); margin-bottom: 0.25rem;"><%= listing.title %></h5>
+                  <small style="color: var(--muted-foreground); font-size: 0.8125rem;">
+                    <i class="fas fa-map-marker-alt me-1" style="color: var(--brand);"></i> <%= listing.location %>, <%= listing.country %>
+                  </small>
                 </div>
+              </div>
             </div>
+          <% }); %>
         </div>
 
-        <!-- Comparison Content -->
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="comparison-table">
-                    <!-- Listing Cards Row -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Properties</strong>
-                        </div>
-                        <% listings.forEach((listing, index) => { %>
-                        <div class="comparison-value">
-                            <div class="comparison-card card">
-                                <img src="<%= listing.image && listing.image.url ? listing.image.url.replace('/upload/', '/upload/f_auto,q_auto,w_600/') : 'https://via.placeholder.com/300' %>" 
-                                     class="card-img-top" 
-                                     alt="<%= listing.title %>" 
-                                     loading="lazy"
-                                     width="300" height="200"
-                                     style="height: 200px; aspect-ratio: 16/10; object-fit: cover;">
-                                <div class="card-body">
-                                    <h5 class="card-title"><%= listing.title %></h5>
-                                    <p class="card-text text-muted">
-                                        <i class="fas fa-map-marker-alt me-1"></i> 
-                                        <%= listing.location %>, <%= listing.country %>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-
-                    <!-- Price Comparison -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Price Details</strong>
-                        </div>
-                        <% listings.forEach(listing => { %>
-                        <div class="comparison-value">
-                            <div class="price-breakdown">
-                                <div class="base-price">₹<%= listing.price.toLocaleString() %> / night</div>
-                                <div class="tax-price">+18% GST: ₹<%= (listing.price * 0.18).toLocaleString() %></div>
-                                <div class="total-price mt-2">Total: ₹<%= listing.priceWithTax.toLocaleString() %></div>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-
-                    <!-- Rating Comparison -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Ratings & Reviews</strong>
-                        </div>
-                        <% listings.forEach(listing => { %>
-                        <div class="comparison-value">
-                            <div class="text-center">
-                                <div class="rating-stars">
-                                    <% for(let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(listing.avgRating)) { %>
-                                            <i class="fas fa-star"></i>
-                                        <% } else if (i === Math.ceil(listing.avgRating) && listing.avgRating % 1 !== 0) { %>
-                                            <i class="fas fa-star-half-alt"></i>
-                                        <% } else { %>
-                                            <i class="far fa-star"></i>
-                                        <% } %>
-                                    <% } %>
-                                </div>
-                                <div class="rating-text">
-                                    <span class="fw-bold fs-5"><%= listing.avgRating %></span>/5 
-                                    <br>
-                                    <small class="text-muted">(<%= listing.reviewCount %> reviews)</small>
-                                </div>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-
-                    <!-- Location Details -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Location</strong>
-                        </div>
-                        <% listings.forEach(listing => { %>
-                        <div class="comparison-value">
-                            <div class="location-info text-center">
-                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                <span><%= listing.location %>, <%= listing.country %></span>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-
-                    <!-- Amenities Comparison -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Amenities</strong>
-                        </div>
-                        <% listings.forEach(listing => { %>
-                        <div class="comparison-value">
-                            <div class="amenities-list text-center">
-                                <% if (listing.amenities && listing.amenities.length > 0) { %>
-                                    <% listing.amenities.slice(0, 6).forEach(amenity => { %>
-                                        <span class="amenity-badge d-inline-block mb-1"><%= amenity %></span>
-                                    <% }); %>
-                                    <% if (listing.amenities.length > 6) { %>
-                                        <span class="amenity-badge d-inline-block mb-1">+<%= listing.amenities.length - 6 %> more</span>
-                                    <% } %>
-                                <% } else { %>
-                                    <span class="text-muted">No amenities listed</span>
-                                <% } %>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Description</strong>
-                        </div>
-                        <% listings.forEach(listing => { %>
-                        <div class="comparison-value">
-                            <p class="description-text text-center">
-                                <%= listing.description ? listing.description.substring(0, 120) + '...' : 'No description available' %>
-                            </p>
-                        </div>
-                        <% }); %>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="comparison-row">
-                        <div class="comparison-label">
-                            <strong>Actions</strong>
-                        </div>
-                        <% listings.forEach(listing => { %>
-                        <div class="comparison-value">
-                            <div class="action-buttons text-center">
-                                <a href="/listings/<%= listing._id %>" class="btn btn-primary btn-sm me-2 mb-2">
-                                    <i class="fas fa-eye me-1"></i>View Details
-                                </a>
-                                <a href="/listings/<%= listing._id %>/book" class="btn btn-success btn-sm mb-2">
-                                    <i class="fas fa-calendar-check me-1"></i>Book Now
-                                </a>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-                </div>
+        <!-- Row 2: Price Details -->
+        <div class="matrix-row">
+          <div class="matrix-label-col">Price Details</div>
+          <% listings.forEach(listing => { %>
+            <div class="matrix-val-col">
+              <div class="compare-price-pill">
+                <div class="compare-base-price">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : 0 %> / night</div>
+                <div class="compare-tax-note">+18% GST: ₹<%= listing.price ? Math.round(listing.price * 0.18).toLocaleString('en-IN') : 0 %></div>
+                <div class="compare-total-price">Total: ₹<%= listing.price ? Math.round(listing.price * 1.18).toLocaleString('en-IN') : 0 %></div>
+              </div>
             </div>
+          <% }); %>
         </div>
 
-        <!-- Back to Listings -->
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a href="/listings" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Listings
-                </a>
-                <button id="clear-comparison" class="btn btn-outline-light btn-lg ms-3">
-                    <i class="fas fa-times me-2"></i>Clear Comparison
-                </button>
+        <!-- Row 3: Ratings & Reviews -->
+        <div class="matrix-row">
+          <div class="matrix-label-col">Ratings</div>
+          <% listings.forEach(listing => { %>
+            <div class="matrix-val-col text-center">
+              <div style="color: #facc15; font-size: 0.95rem; margin-bottom: 0.25rem;">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <i class="fa-solid fa-star <%= i <= Math.round(listing.avgRating || 0) ? '' : 'text-muted' %>"></i>
+                <% } %>
+              </div>
+              <div style="font-weight: 700; color: var(--foreground); font-size: 1.1rem;">
+                <%= listing.avgRating || '0.0' %> <span style="font-size: 0.85rem; font-weight: normal; color: var(--muted-foreground);">/ 5</span>
+              </div>
+              <small style="color: var(--muted-foreground);">(<%= listing.reviewCount || (listing.reviews ? listing.reviews.length : 0) %> reviews)</small>
             </div>
+          <% }); %>
         </div>
+
+        <!-- Row 4: Category & Best Season -->
+        <div class="matrix-row">
+          <div class="matrix-label-col">Category & Season</div>
+          <% listings.forEach(listing => { %>
+            <div class="matrix-val-col text-center">
+              <span class="amenity-chip mb-1"><%= listing.category || 'Handcrafted Stay' %></span>
+              <div style="font-size: 0.8125rem; color: var(--muted-foreground); margin-top: 0.25rem;">
+                Best time: <strong style="color: var(--foreground);"><%= listing.bestSeason || 'Year-round' %></strong>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+
+        <!-- Row 5: Local Tip -->
+        <div class="matrix-row">
+          <div class="matrix-label-col">Travel Tip</div>
+          <% listings.forEach(listing => { %>
+            <div class="matrix-val-col text-center">
+              <p style="font-size: 0.875rem; color: var(--foreground); font-style: italic; max-width: 220px; margin: 0;">
+                "<%= listing.travelTip || 'Explore local neighborhood and cuisines.' %>"
+              </p>
+            </div>
+          <% }); %>
+        </div>
+
+        <!-- Row 6: Actions -->
+        <div class="matrix-row">
+          <div class="matrix-label-col">Action</div>
+          <% listings.forEach(listing => { %>
+            <div class="matrix-val-col text-center">
+              <a href="/listings/<%= listing._id %>" class="btn-solid-asym" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
+                <i class="fa-solid fa-eye me-1"></i>View details
+              </a>
+            </div>
+          <% }); %>
+        </div>
+      </div>
     </div>
 
-    <script>
-        document.getElementById('clear-comparison').addEventListener('click', function() {
-            localStorage.removeItem('selectedListings');
-            window.location.href = '/listings';
-        });
-    </script>
-</body>
-</html>
+    <!-- Clear & Back Actions -->
+    <div class="d-flex justify-content-center gap-3">
+      <a href="/listings" class="btn-outline-asym">
+        <i class="fa-solid fa-arrow-left me-2"></i>Back to listings
+      </a>
+      <button id="clear-comparison" class="btn-card-action">
+        <i class="fa-solid fa-trash me-2"></i>Clear comparison
+      </button>
+    </div>
+  <% } else { %>
+    <div class="text-center py-5">
+      <i class="fa-solid fa-balance-scale fa-3x mb-3" style="color: var(--muted-foreground); opacity: 0.5;"></i>
+      <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--foreground); margin-bottom: 0.5rem;">No destinations selected for comparison</h3>
+      <p style="color: var(--muted-foreground); margin-bottom: 1.5rem;">Select properties on the home page using the Compare checkbox to analyze them here.</p>
+      <a href="/listings" class="btn-solid-asym">
+        <i class="fa-solid fa-compass me-2"></i>Browse destinations
+      </a>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  const clearBtn = document.getElementById('clear-comparison');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      localStorage.removeItem('selectedListings');
+      window.location.href = '/listings';
+    });
+  }
+</script>

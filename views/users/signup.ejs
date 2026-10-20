@@ -1,38 +1,39 @@
 <% layout('/layouts/boilerplate') %>
 
-    <div class="row mt-3">
+    <div class="row mt-4 mb-5">
         <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
-            <div class="auth-container">
-                <h1 class="auth-title">SignUp on Wanderlust</h1>
+            <div class="auth-container card-chai p-4 p-sm-5">
+                <div class="text-center mb-4">
+                    <h1 class="auth-title h3 mb-2" style="font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em;">Sign up for WanderLust</h1>
+                    <p class="text-muted small">Create an account and <span class="highlight">discover unique stays</span> around the world.</p>
+                </div>
                 
                 <!-- Social Login Section -->
-                <div class="social-login mb-4">
-                    <a href="/auth/google" class="btn btn-outline-danger w-100 mb-3">
+                <div class="social-login mb-4 pb-3 text-center border-bottom border-secondary border-opacity-25">
+                    <a href="/auth/google" class="btn-outline-asym w-100 justify-content-center mb-3">
                         <i class="fab fa-google me-2"></i>Continue with Google
                     </a>
-                    <div class="text-center">
-                        <span class="text-muted">or</span>
-                    </div>
+                    <span class="text-muted small">or continue with email</span>
                 </div>
                 
                 <form action="/signup" method="POST" class="auth-form needs-validation" novalidate id="signupForm">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" required />
+                        <label for="username" class="form-label small font-semibold">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Choose a username" required />
                         <div class="invalid-feedback" id="username-error"></div>
                         <div class="valid-feedback">Looks good!</div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" required />
+                        <label for="email" class="form-label small font-semibold">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="name@example.com" required />
                         <div class="invalid-feedback" id="email-error"></div>
                         <div class="valid-feedback">Looks good!</div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required />
+                        <label for="password" class="form-label small font-semibold">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="At least 8 characters" required />
                         <div class="invalid-feedback" id="password-error"></div>
                         <div class="valid-feedback">Password is strong!</div>
                         
@@ -68,26 +69,28 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required />
+                        <label for="confirmPassword" class="form-label small font-semibold">Confirm Password</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Re-enter password" required />
                         <div class="invalid-feedback" id="confirm-password-error"></div>
                         <div class="valid-feedback">Passwords match!</div>
                     </div>
                     
                     <!-- Terms and Privacy Policy Checkbox -->
-                    <div class="mb-3 form-check">
+                    <div class="mb-4 form-check">
                         <input type="checkbox" class="form-check-input" id="acceptTerms" name="acceptTerms" required>
-                        <label class="form-check-label" for="acceptTerms">
-                            I agree to the <a href="/terms" target="_blank" class="text-primary">Terms of Service</a> 
-                            and <a href="/privacy" target="_blank" class="text-primary">Privacy Policy</a>
+                        <label class="form-check-label small text-muted" for="acceptTerms">
+                            I agree to the <a href="/terms" target="_blank" class="text-decoration-none" style="color: var(--foreground); font-weight: 500;">Terms of service</a> 
+                            and <a href="/privacy" target="_blank" class="text-decoration-none" style="color: var(--foreground); font-weight: 500;">Privacy policy</a>
                         </label>
                         <div class="invalid-feedback">You must accept the terms and conditions</div>
                     </div>
                     
-                    <button type="submit" class="btn btn-success w-100" id="submitBtn" disabled>Sign Up</button>
+                    <button type="submit" class="btn-solid-asym w-100 justify-content-center" id="submitBtn" disabled>
+                        Sign up <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size: 0.75rem;" aria-hidden="true"></i>
+                    </button>
                     
-                    <div class="mt-3 text-center">
-                        <p class="text-dark">Already have an account? <a href="/login" class="text-dark"><u>Log in here</u></a></p>
+                    <div class="mt-4 text-center">
+                        <p class="text-muted small mb-0">Already have an account? <a href="/login" class="text-decoration-none" style="color: var(--foreground); font-weight: 500;">Log in here</a></p>
                     </div>
                 </form>
             </div>

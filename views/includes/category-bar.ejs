@@ -26,9 +26,9 @@
             ]; %>
 
             <% categories.forEach(cat => { %>
-                <a href="/listings?category=<%= cat.name %>" class="category-item"
+                <a href="/listings?category=<%= encodeURIComponent(cat.name) %>" class="category-item"
                     aria-label="Filter by <%= cat.name %>">
-                    <div class="category-pill <%= (typeof category !== 'undefined' && category === cat.name) ? cat.gradient + ' active' : '' %>">
+                    <div class="category-pill <%= (typeof category !== 'undefined' && category === cat.name) ? 'active' : '' %>">
                         <i class="fa-solid <%= cat.icon %>" aria-hidden="true"></i>
                         <span><%= cat.name %></span>
                     </div>

@@ -3,23 +3,10 @@
     <style>
         /* Core Controls */
         .controls-bar {
-            background: var(--bg-primary);
-            border-radius: 15px;
-            padding: 1rem;
-            margin: 0 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .controls-bar {
-                margin: 0 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .controls-bar {
-                margin: 0 0.75rem;
-            }
+            width: 100%;
+            margin: 0;
+            padding: 0.75rem 1rem;
+            box-shadow: none;
         }
 
         .controls-bar .btn {
@@ -236,36 +223,40 @@
             color: white;
         }
 
-        /* Compare Checkbox */
+        /* Compare Checkbox (Top Left of Card Image) */
         .compare-checkbox {
             position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
-            background: rgba(255, 255, 255, 0.95);
+            top: 0.65rem;
+            left: 0.65rem;
+            bottom: auto;
+            right: auto;
+            background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px);
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.85rem;
+            border: 1px solid rgba(255, 247, 237, 0.2);
+            border-radius: 6px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.78rem;
+            font-weight: 500;
             cursor: pointer;
-            z-index: 20;
+            z-index: 25;
             display: flex;
             align-items: center;
-            gap: 0.25rem;
-            color: #2d3748;
+            gap: 0.35rem;
+            color: #fafafa;
             transition: all 0.2s ease;
         }
 
         .compare-checkbox:hover {
-            border-color: #fe424d;
-            color: #fe424d;
-            box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            box-shadow: none;
         }
 
         .compare-checkbox input[type="checkbox"] {
             cursor: pointer;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
+            accent-color: #ff7d0c;
         }
 
         /* Compare Button */
@@ -348,23 +339,8 @@
         }
 
         .listings-container {
-            padding: 0 1.5rem;
-        }
-
-        .listings-container.loading {
-            opacity: 0.5;
-        }
-
-        @media (max-width: 768px) {
-            .listings-container {
-                padding: 0 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .listings-container {
-                padding: 0 0.75rem;
-            }
+            padding: 0;
+            width: 100%;
         }
 
         /* Responsive */
@@ -419,23 +395,47 @@
         }
     </style>
 
+    <!-- ChaiUI Hero Section -->
+    <% if (!searchQuery && (!category || category === 'Trending')) { %>
+    <section class="chai-hero">
+        <div class="chai-animated-badge">
+            <span class="chai-animated-badge-inner">
+                <i class="fa-solid fa-compass" style="color: #ff7d0c;" aria-hidden="true"></i>
+                Handcrafted stays and escapes
+            </span>
+        </div>
+        <h1>Find your place in the world</h1>
+        <p class="chai-hero-lead">
+            Discover authentic stays and travel experiences with <span class="highlight">unmatched comfort and quality</span> across the globe.
+        </p>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a href="#listingsGrid" class="btn-solid-asym">
+                Explore stays <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size: 0.75rem;" aria-hidden="true"></i>
+            </a>
+            <a href="/trip-planner" class="btn-outline-asym">
+                Plan a trip <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.75rem;" aria-hidden="true"></i>
+            </a>
+        </div>
+    </section>
+    <% } %>
+
     <!-- Category Filters -->
     <%- include("../includes/category-bar.ejs") %>
 
         <!-- Controls Bar -->
-        <div class="controls-bar mt-3">
-            <div class="row g-3">
+        <div class="controls-bar mt-3 mb-3">
+            <div class="row g-3 align-items-center">
                 <div class="col-md-6">
-                    <button class="btn btn-outline-primary w-100" id="showAdvancedFilters">
-                        <i class="fa-solid fa-sliders-h me-2"></i>Advanced Filters
+                    <button class="btn btn-outline-secondary w-100 btn-asym-mirror" id="showAdvancedFilters">
+                        <i class="fa-solid fa-sliders-h me-2"></i>Filter listings
                     </button>
                 </div>
                 <div class="col-md-6">
                     <div class="tax-toggle w-100">
-                        <div class="form-check form-switch">
+                        <div class="form-check form-switch mb-0">
                             <input class="form-check-input" type="checkbox" role="switch" id="taxToggle">
                             <label class="form-check-label tax-label-text" for="taxToggle">
-                                <b class="tax-text">Display total after taxes</b>
+                                <span class="tax-text">Display total after taxes</span>
                             </label>
                         </div>
                     </div>
@@ -559,13 +559,22 @@
                         <!-- Listings Grid -->
                         <% if (allListings && allListings.length> 0) { %>
                             <div class="listings-container" id="listingsContainer">
-                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 mt-3" id="listingsGrid">
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4 mt-2" id="listingsGrid">
                                     <% allListings.forEach(listing=> { %>
                                         <div class="col mb-4">
                                             <a href="/listings/<%= listing._id %>" class="listing-link"
                                                 style="text-decoration: none; color: inherit;">
                                                 <div class="card listing-card h-100">
-                                                    <!-- Badges -->
+                                                    <!-- Compare Checkbox (Top Left of Card) -->
+                                                    <div class="compare-checkbox"
+                                                        onclick="event.preventDefault(); event.stopPropagation();">
+                                                        <input type="checkbox" class="compare-item"
+                                                            data-id="<%= listing._id %>"
+                                                            onclick="event.stopPropagation();">
+                                                        <span>Compare</span>
+                                                    </div>
+
+                                                    <!-- Badges (Top Right of Card) -->
                                                     <div class="listing-badges">
                                                         <% if (listing.isNewBadge) { %>
                                                             <span class="badge badge-new">New</span>
@@ -591,29 +600,23 @@
                                                      </div>
 
                                                     <!-- Card Body -->
-                                                    <div class="card-body">
-                                                        <b class="listing-title">
+                                                    <div class="card-body p-3 d-flex flex-column">
+                                                        <h3 class="listing-title mb-1">
                                                             <%= listing.title %>
-                                                        </b><br>
-                                                        <small class="text-muted listing-location">
-                                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                                        </h3>
+                                                        <small class="text-muted listing-location mb-3 d-block">
+                                                            <i class="fas fa-map-marker-alt me-1" style="color: var(--brand);"></i>
                                                             <%= listing.location %>, <%= listing.country %>
-                                                        </small><br>
-                                                        <span class="listing-price"
-                                                            data-base-price="<%= listing.price %>">
-                                                            ₹<%= listing.price?.toLocaleString('en-IN') || 'N/A' %> /
-                                                                night
-                                                                <i class="tax-info">&nbsp;+18% GST</i>
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Compare Checkbox -->
-                                                    <div class="compare-checkbox"
-                                                        onclick="event.preventDefault(); event.stopPropagation();">
-                                                        <input type="checkbox" class="compare-item"
-                                                            data-id="<%= listing._id %>"
-                                                            onclick="event.stopPropagation();">
-                                                        <span>Compare</span>
+                                                        </small>
+                                                        <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                                                            <div>
+                                                                <span class="listing-price" data-base-price="<%= listing.price %>">
+                                                                    ₹<%= listing.price?.toLocaleString('en-IN') || 'N/A' %>
+                                                                </span>
+                                                                <span class="tax-info">&nbsp;/ night <i class="tax-info">+18% GST</i></span>
+                                                            </div>
+                                                            <span class="btn-card-action">View details</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </a>

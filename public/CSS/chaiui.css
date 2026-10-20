@@ -1,0 +1,1575 @@
+/* ===================================================================
+   ChaiUI Design System for WanderLust
+   The chaicode.com aesthetic:
+   - Near-black warm background (#0a0a0a)
+   - Crisp white Manrope headlines
+   - One pale-cream Montserrat highlight phrase per paragraph
+   - Solid asymmetric white buttons (one main action per screen)
+   - Warm hairline cards with NO shadow
+   - Orange almost nowhere (never as a fill; only logo, link hover, glint, hairline)
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..600&family=Manrope:wght@200..800&family=Montserrat:wght@400..800&family=Onest:wght@400..700&display=swap');
+
+:root {
+  --radius: 0.625rem;
+
+  /* Fonts */
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Montserrat', sans-serif;
+  --font-brand: 'Onest', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+
+  /* Light Theme (Default fallback when user chooses light) */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --card-edge: rgba(120, 53, 15, 0.15); /* amber-900/15 */
+  --card-edge-hover: rgba(120, 53, 15, 0.25);
+  --card-fill: rgba(255, 255, 255, 0.7);
+
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.08);
+  --ring: #a1a1aa;
+
+  /* Legacy variable mappings for light mode */
+  --text-primary: #0a0a0a;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --bg-primary-solid: #ffffff;
+  --bg-primary: #ffffff;
+  --card-bg: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --accent-color: #ff7d0c;
+
+  /* ChaiUI Signatures */
+  --brand: #ff7d0c;
+  --highlight: #854d0e; /* yellow-800 */
+  --footer-hairline: #d97706; /* amber-600 */
+}
+
+/* Dark Theme is the DEFAULT in ChaiUI */
+.dark,
+[data-theme="dark"],
+:root.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #141414;
+  --card-foreground: #fafafa;
+  --card-edge: rgba(255, 247, 237, 0.15); /* orange-50/15 */
+  --card-edge-hover: rgba(255, 247, 237, 0.3);
+  --card-fill: rgba(0, 0, 0, 0.2);
+
+  --primary: #e4e4e7;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #52525b;
+
+  /* Legacy variable mappings for dark mode */
+  --text-primary: #fafafa;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --bg-primary-solid: #141414;
+  --bg-primary: #141414;
+  --card-bg: #141414;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --accent-color: #ff7d0c;
+
+  /* ChaiUI Signatures */
+  --brand: #ff7d0c;
+  --highlight: #ffedd5; /* orange-100 */
+  --footer-hairline: #fdba74; /* orange-300 */
+}
+
+/* Base resets & typography */
+html, body {
+  font-family: var(--font-sans) !important;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background) !important;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ChaiUI Page Wrapper & Backdrop SVG */
+.chai-page-shell {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chai-backdrop {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: -50;
+  width: 2842px;
+  max-width: none;
+  transform: translateX(-50%);
+  user-select: none;
+  mask-image: linear-gradient(to bottom, #000000 55%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 55%, transparent);
+  transition: filter 300ms ease;
+}
+
+:root:not(.dark) .chai-backdrop,
+html:not(.dark) .chai-backdrop {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Highlight phrase: ONE per paragraph */
+.highlight {
+  font-family: var(--font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.025em !important;
+  text-transform: capitalize !important;
+  color: var(--highlight) !important;
+  display: inline;
+}
+
+/* Standardized container: Expands smoothly to cover large screens with balanced padding */
+.main-container,
+.chai-container {
+  max-width: min(1680px, 98vw) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: clamp(1rem, 2.5vw, 2.5rem) !important;
+  padding-right: clamp(1rem, 2.5vw, 2.5rem) !important;
+  width: 100% !important;
+}
+
+.listings-container {
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+/* ===================================================================
+   Buttons
+   =================================================================== */
+
+/* Solid Asymmetric Button: The single main action on a screen */
+.btn-solid-asym,
+.btn-asym {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 2.5rem !important;
+  padding: 0 1.25rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  border-radius: 0 var(--radius) 0 var(--radius) !important; /* top-right & bottom-left */
+  background: #ffffff !important;
+  color: #0a0a0a !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background-color 200ms ease, transform 150ms ease !important;
+  cursor: pointer !important;
+}
+
+.btn-solid-asym:hover,
+.btn-asym:hover {
+  background: #e4e4e7 !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+:root:not(.dark) .btn-solid-asym,
+html:not(.dark) .btn-solid-asym,
+:root:not(.dark) .btn-asym,
+html:not(.dark) .btn-asym {
+  background: #18181b !important;
+  color: #ffffff !important;
+}
+
+:root:not(.dark) .btn-solid-asym:hover,
+html:not(.dark) .btn-solid-asym:hover,
+:root:not(.dark) .btn-asym:hover,
+html:not(.dark) .btn-asym:hover {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Outline Asymmetric Button: Beside the solid button */
+.btn-outline-asym,
+.btn-asym-mirror {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  height: 2.5rem !important;
+  padding: 0 1.25rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  border-radius: var(--radius) 0 var(--radius) 0 !important; /* mirrored */
+  background: transparent !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+  transition: background-color 200ms ease, border-color 200ms ease !important;
+  cursor: pointer !important;
+}
+
+.btn-outline-asym:hover,
+.btn-asym-mirror:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) .btn-outline-asym:hover,
+html:not(.dark) .btn-outline-asym:hover,
+:root:not(.dark) .btn-asym-mirror:hover,
+html:not(.dark) .btn-asym-mirror:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Card Button: Soft shadcn default */
+.btn-card-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 2rem !important;
+  padding: 0 0.875rem !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  border-radius: 0.375rem !important;
+  background: #e4e4e7 !important;
+  color: #18181b !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  transition: background-color 200ms ease !important;
+}
+
+.btn-card-action:hover {
+  background: #f4f4f5 !important;
+  color: #09090b !important;
+}
+
+:root:not(.dark) .btn-card-action,
+html:not(.dark) .btn-card-action {
+  background: #18181b !important;
+  color: #fafafa !important;
+}
+
+:root:not(.dark) .btn-card-action:hover,
+html:not(.dark) .btn-card-action:hover {
+  background: #27272a !important;
+  color: #ffffff !important;
+}
+
+/* Danger Button: Red fill, ONLY in confirm dialogs or delete confirmations */
+.btn-danger-confirm {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+}
+.btn-danger-confirm:hover {
+  background-color: #dc2626 !important;
+}
+
+/* ===================================================================
+   Cards (Warm Hairline, NO SHADOW)
+   =================================================================== */
+
+.card-chai,
+.listing-card,
+.card {
+  border-radius: 0.75rem !important; /* rounded-xl */
+  border: 1px solid var(--card-edge) !important;
+  background: var(--card-fill) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  box-shadow: none !important;
+  transition: border-color 300ms ease, opacity 300ms ease !important;
+  overflow: hidden !important;
+}
+
+.card-chai:hover,
+.listing-card:hover {
+  border-color: var(--card-edge-hover) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.listing-image-container {
+  overflow: hidden !important;
+  position: relative !important;
+  aspect-ratio: 16 / 10 !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.listing-image-container img,
+.card img.show-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.listing-card:hover .listing-image-container img {
+  transform: scale(1.03) !important;
+}
+
+.listing-title {
+  font-family: var(--font-display) !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--foreground) !important;
+}
+
+.listing-price {
+  font-family: var(--font-display) !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: var(--foreground) !important;
+}
+
+.tax-info {
+  font-size: 0.75rem !important;
+  color: var(--muted-foreground) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
+/* Card Status Badges: Text and Thin Outline, NEVER Filled Status Pills */
+.listing-badges {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  z-index: 10;
+}
+
+.listing-badges .badge {
+  font-family: var(--font-sans) !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  padding: 0.2rem 0.55rem !important;
+  border-radius: 0.25rem !important;
+  background: rgba(10, 10, 10, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  text-transform: none !important; /* Sentence case, no all-caps */
+  box-shadow: none !important;
+}
+
+.listing-badges .badge-new {
+  border: 1px solid rgba(34, 197, 94, 0.6) !important;
+  color: #4ade80 !important;
+}
+
+.listing-badges .badge-featured {
+  border: 1px solid rgba(59, 130, 246, 0.6) !important;
+  color: #60a5fa !important;
+}
+
+.listing-badges .badge-discount {
+  border: 1px solid rgba(239, 68, 68, 0.6) !important;
+  color: #f87171 !important;
+}
+
+.listing-badges .badge-rated {
+  border: 1px solid rgba(234, 179, 8, 0.6) !important;
+  color: #facc15 !important;
+}
+
+/* Compare checkbox: Top Left of Card (mirrored to status badges at top-right) */
+.compare-checkbox {
+  position: absolute !important;
+  top: 0.65rem !important;
+  left: 0.65rem !important;
+  bottom: auto !important;
+  right: auto !important;
+  background: rgba(10, 10, 10, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 247, 237, 0.2) !important;
+  border-radius: 0.375rem !important;
+  padding: 0.25rem 0.55rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  font-family: var(--font-sans) !important;
+  color: #fafafa !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  z-index: 25 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  transition: border-color 200ms ease, color 200ms ease !important;
+}
+
+.compare-checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff !important;
+}
+
+:root:not(.dark) .compare-checkbox,
+html:not(.dark) .compare-checkbox {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #18181b !important;
+}
+
+/* ===================================================================
+   Animated Hero Badge (Signature Glint)
+   =================================================================== */
+
+.chai-animated-badge {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+  overflow: hidden;
+  border-radius: 9999px;
+  padding: 1px;
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.chai-animated-badge::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 20px;
+  width: 300px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, transparent, #ff7d0c);
+  transform: translate(-50%, -50%);
+  animation: chai-spin 4s linear infinite;
+}
+
+.chai-animated-badge-inner {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.3rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: #171717;
+  color: #f4f4f5;
+}
+
+:root:not(.dark) .chai-animated-badge-inner,
+html:not(.dark) .chai-animated-badge-inner {
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+@keyframes chai-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ===================================================================
+   Hero Section & Section Headings
+   =================================================================== */
+
+.chai-hero {
+  padding: 2.5rem 0 2rem;
+  position: relative;
+}
+
+.chai-hero h1 {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(2.25rem, 4.5vw, 3.75rem) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.15 !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.chai-hero p.chai-hero-lead {
+  font-size: clamp(1rem, 1.8vw, 1.25rem) !important;
+  line-height: 1.6 !important;
+  color: var(--muted-foreground) !important;
+  max-width: 46rem;
+  margin-bottom: 1.5rem !important;
+}
+
+.chai-section-head h2 {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(1.5rem, 2.5vw, 1.875rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.chai-section-head p {
+  color: var(--muted-foreground) !important;
+  font-size: 0.95rem !important;
+}
+
+/* ===================================================================
+   Navigation (Navbar)
+   =================================================================== */
+
+.wander-navbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 64px !important;
+  z-index: 1000 !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: none !important;
+  transition: background-color 250ms ease, backdrop-filter 250ms ease, border-color 250ms ease !important;
+}
+
+.wander-navbar.scrolled {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+html.dark .wander-navbar,
+[data-theme="dark"] .wander-navbar {
+  background: rgba(10, 10, 10, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .wander-navbar.scrolled,
+[data-theme="dark"] .wander-navbar.scrolled {
+  background: rgba(10, 10, 10, 0.96) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+.navbar-container {
+  max-width: min(1680px, 98vw) !important;
+  margin: 0 auto !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 clamp(1rem, 2.5vw, 2.5rem) !important;
+}
+
+.navbar-brand-link {
+  font-family: var(--font-brand) !important;
+  font-size: 1.35rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--foreground) !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.navbar-brand-icon {
+  color: var(--brand) !important;
+  font-size: 1.25rem !important;
+}
+
+/* Nav links: High-contrast crisp type in both modes, NO text shadows */
+.wander-navbar .nav-link,
+.nav-link {
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #27272a !important;
+  text-shadow: none !important;
+  text-decoration: none !important;
+  opacity: 0.92 !important;
+  transition: color 150ms ease, opacity 150ms ease !important;
+}
+
+.wander-navbar .nav-link:hover,
+.wander-navbar .nav-link:focus,
+.nav-link:hover,
+.nav-link:focus {
+  color: #09090b !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+html.dark .wander-navbar .nav-link,
+[data-theme="dark"] .wander-navbar .nav-link,
+html.dark .nav-link,
+[data-theme="dark"] .nav-link {
+  color: #e4e4e7 !important;
+}
+
+html.dark .wander-navbar .nav-link:hover,
+[data-theme="dark"] .wander-navbar .nav-link:hover,
+html.dark .nav-link:hover,
+[data-theme="dark"] .nav-link:hover {
+  color: #ffffff !important;
+}
+
+/* Navbar Search Input */
+.navbar-search-wrapper {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 9999px !important;
+  height: 38px !important;
+  padding: 0 0.75rem 0 1rem !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+:root:not(.dark) .navbar-search-wrapper,
+html:not(.dark) .navbar-search-wrapper {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.navbar-search-input {
+  background: transparent !important;
+  border: none !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  outline: none !important;
+  width: 100% !important;
+}
+
+.navbar-search-input::placeholder {
+  color: var(--muted-foreground) !important;
+}
+
+.navbar-search-btn {
+  background: transparent !important;
+  border: none !important;
+  color: var(--muted-foreground) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.navbar-search-btn:hover {
+  color: var(--foreground) !important;
+}
+
+/* Dropdown Menu: Frosted & Hairline */
+.dropdown-menu,
+.navbar-dropdown-menu {
+  background: rgba(15, 15, 15, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--card-edge) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+  padding: 0.5rem !important;
+}
+
+:root:not(.dark) .dropdown-menu,
+html:not(.dark) .dropdown-menu {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: var(--card-edge) !important;
+}
+
+.dropdown-item {
+  border-radius: 0.375rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  color: var(--foreground) !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--brand) !important;
+}
+
+:root:not(.dark) .dropdown-item:hover,
+:root:not(.dark) .dropdown-item:focus,
+html:not(.dark) .dropdown-item:hover,
+html:not(.dark) .dropdown-item:focus {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--brand) !important;
+}
+
+/* ===================================================================
+   Navbar Action Buttons Contrast & ChaiUI Polish
+   =================================================================== */
+
+.navbar-action-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  height: 2.5rem !important;
+  padding: 0 1rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  border-radius: 0.5rem !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  color: #09090b !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease !important;
+}
+
+.navbar-action-button:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(0, 0, 0, 0.22) !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+html.dark .navbar-action-button,
+[data-theme="dark"] .navbar-action-button {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #fafafa !important;
+}
+
+html.dark .navbar-action-button:hover,
+[data-theme="dark"] .navbar-action-button:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+}
+
+/* Navbar Primary Button (Signup / CTA) - ChaiUI Signature Solid Asymmetric Button */
+.navbar-primary-button {
+  background: #0a0a0a !important;
+  border: 1px solid #0a0a0a !important;
+  color: #ffffff !important;
+  border-radius: 0.375rem 0.75rem 0.375rem 0.75rem !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+.navbar-primary-button:hover {
+  background: #27272a !important;
+  color: #ffffff !important;
+}
+
+html.dark .navbar-primary-button,
+[data-theme="dark"] .navbar-primary-button {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #0a0a0a !important;
+}
+
+html.dark .navbar-primary-button:hover,
+[data-theme="dark"] .navbar-primary-button:hover {
+  background: #f4f4f5 !important;
+  color: #000000 !important;
+}
+
+/* Responsive visibility rules for navbar items */
+.wander-nav-desktop {
+  display: none !important;
+}
+
+.wander-nav-mobile-toggle {
+  display: inline-flex !important;
+}
+
+@media (min-width: 992px) {
+  .wander-nav-desktop.navbar-action-button {
+    display: inline-flex !important;
+  }
+  .wander-nav-desktop.dropdown {
+    display: block !important;
+  }
+  .wander-nav-mobile-toggle {
+    display: none !important;
+  }
+}
+
+/* Navbar dropdown menus: ChaiUI clean look */
+.wander-navbar .dropdown-menu {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1) !important;
+  padding: 0.5rem !important;
+}
+
+html.dark .wander-navbar .dropdown-menu,
+[data-theme="dark"] .wander-navbar .dropdown-menu {
+  background: #141414 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6) !important;
+}
+
+.wander-navbar .dropdown-item {
+  color: #27272a !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 0.75rem !important;
+  transition: background-color 150ms ease, color 150ms ease !important;
+}
+
+.wander-navbar .dropdown-item:hover,
+.wander-navbar .dropdown-item:focus {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #000000 !important;
+}
+
+html.dark .wander-navbar .dropdown-item,
+[data-theme="dark"] .wander-navbar .dropdown-item {
+  color: #d4d4d8 !important;
+}
+
+html.dark .wander-navbar .dropdown-item:hover,
+[data-theme="dark"] .wander-navbar .dropdown-item:hover,
+html.dark .wander-navbar .dropdown-item:focus,
+[data-theme="dark"] .wander-navbar .dropdown-item:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+/* ===================================================================
+   Universal Form Controls & Inputs (Crisp Contrast in Both Modes)
+   =================================================================== */
+
+.form-label,
+label {
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.4rem !important;
+}
+
+.form-control,
+.form-select,
+textarea.form-control,
+input.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="file"],
+select {
+  font-family: var(--font-sans) !important;
+  font-size: 0.9375rem !important;
+  background-color: rgba(20, 20, 20, 0.75) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.5rem !important;
+  color: #fafafa !important;
+  box-shadow: none !important;
+  transition: border-color 150ms ease !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea.form-control:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+select:focus {
+  background-color: rgba(24, 24, 27, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.form-control::placeholder,
+textarea::placeholder,
+input::placeholder {
+  color: #71717a !important;
+}
+
+/* Light mode form inputs */
+:root:not(.dark) .form-control,
+:root:not(.dark) .form-select,
+:root:not(.dark) textarea.form-control,
+:root:not(.dark) input.form-control,
+:root:not(.dark) input[type="text"],
+:root:not(.dark) input[type="email"],
+:root:not(.dark) input[type="password"],
+:root:not(.dark) input[type="number"],
+:root:not(.dark) input[type="search"],
+:root:not(.dark) select,
+html:not(.dark) .form-control,
+html:not(.dark) .form-select,
+html:not(.dark) textarea.form-control,
+html:not(.dark) input.form-control,
+html:not(.dark) input[type="text"],
+html:not(.dark) input[type="email"],
+html:not(.dark) input[type="password"],
+html:not(.dark) input[type="number"],
+html:not(.dark) input[type="search"],
+html:not(.dark) select {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.16) !important;
+  color: #0a0a0a !important;
+}
+
+:root:not(.dark) .form-control:focus,
+:root:not(.dark) .form-select:focus,
+html:not(.dark) .form-control:focus,
+html:not(.dark) .form-select:focus {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.4) !important;
+  color: #000000 !important;
+}
+
+:root:not(.dark) .form-control::placeholder,
+html:not(.dark) .form-control::placeholder {
+  color: #a1a1aa !important;
+}
+
+/* Native select options styling */
+select option,
+.form-select option {
+  background: #141414 !important;
+  color: #fafafa !important;
+}
+
+:root:not(.dark) select option,
+:root:not(.dark) .form-select option,
+html:not(.dark) select option,
+html:not(.dark) .form-select option {
+  background: #ffffff !important;
+  color: #0a0a0a !important;
+}
+
+/* Form Action Buttons: Asymmetric White Primary */
+.add-btn,
+.edit-btn,
+.btn-submit {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  background: #ffffff !important;
+  color: #0a0a0a !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 0.375rem 0.75rem 0.375rem 0.75rem !important;
+  box-shadow: none !important;
+  padding: 0.65rem 1.5rem !important;
+  transition: background-color 150ms ease !important;
+}
+
+.add-btn:hover,
+.edit-btn:hover,
+.btn-submit:hover {
+  background: #f4f4f5 !important;
+  color: #000000 !important;
+  transform: none !important;
+}
+
+:root:not(.dark) .add-btn,
+:root:not(.dark) .edit-btn,
+:root:not(.dark) .btn-submit,
+html:not(.dark) .add-btn,
+html:not(.dark) .edit-btn,
+html:not(.dark) .btn-submit {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  border: 1px solid #0a0a0a !important;
+}
+
+:root:not(.dark) .add-btn:hover,
+:root:not(.dark) .edit-btn:hover,
+:root:not(.dark) .btn-submit:hover,
+html:not(.dark) .add-btn:hover,
+html:not(.dark) .edit-btn:hover,
+html:not(.dark) .btn-submit:hover {
+  background: #27272a !important;
+  color: #ffffff !important;
+}
+
+/* ===================================================================
+   Reviews & Show Page Text Visibility
+   =================================================================== */
+
+.review-form-container,
+.review-card,
+.show-card {
+  background: rgba(18, 18, 18, 0.7) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--card-edge) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) .review-form-container,
+:root:not(.dark) .review-card,
+:root:not(.dark) .show-card,
+html:not(.dark) .review-form-container,
+html:not(.dark) .review-card,
+html:not(.dark) .show-card {
+  background: #ffffff !important;
+  border-color: rgba(120, 53, 15, 0.15) !important;
+  color: #0a0a0a !important;
+}
+
+.review-form-header h4,
+.reviews-title,
+.reviewer-name {
+  color: var(--foreground) !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+}
+
+.review-subtitle,
+.form-note,
+.character-count,
+.rating-text {
+  color: var(--muted-foreground) !important;
+}
+
+.rating-container {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px dashed var(--border) !important;
+  border-radius: 0.5rem !important;
+}
+
+/* ===================================================================
+   Weather Page Contrast Overrides
+   =================================================================== */
+
+.weather-hero {
+  background: rgba(18, 18, 18, 0.5) !important;
+  border-bottom: 1px solid var(--card-edge) !important;
+  color: var(--foreground) !important;
+  border-radius: 0 0 1.5rem 1.5rem !important;
+  box-shadow: none !important;
+}
+
+.weather-destination-select,
+.weather-search-input {
+  background: rgba(20, 20, 20, 0.8) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  box-shadow: none !important;
+}
+
+:root:not(.dark) .weather-destination-select,
+:root:not(.dark) .weather-search-input,
+html:not(.dark) .weather-destination-select,
+html:not(.dark) .weather-search-input {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  color: #0a0a0a !important;
+}
+
+.weather-main-card,
+.weather-details-card,
+.weather-forecast-card {
+  background: rgba(18, 18, 18, 0.7) !important;
+  border: 1px solid var(--card-edge) !important;
+  border-radius: 1rem !important;
+  box-shadow: none !important;
+}
+
+:root:not(.dark) .weather-main-card,
+:root:not(.dark) .weather-details-card,
+:root:not(.dark) .weather-forecast-card,
+html:not(.dark) .weather-main-card,
+html:not(.dark) .weather-details-card,
+html:not(.dark) .weather-forecast-card {
+  background: #ffffff !important;
+  border-color: rgba(120, 53, 15, 0.15) !important;
+}
+
+.weather-temp {
+  color: var(--foreground) !important;
+}
+
+.weather-condition {
+  color: var(--muted-foreground) !important;
+}
+
+/* ===================================================================
+   Compare Page Overrides
+   =================================================================== */
+
+.comparison-table {
+  background: rgba(18, 18, 18, 0.7) !important;
+  border: 1px solid var(--card-edge) !important;
+  border-radius: 1rem !important;
+  box-shadow: none !important;
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) .comparison-table,
+html:not(.dark) .comparison-table {
+  background: #ffffff !important;
+  border-color: rgba(120, 53, 15, 0.15) !important;
+  color: #0a0a0a !important;
+}
+
+.comparison-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+.comparison-label {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--foreground) !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+:root:not(.dark) .comparison-label,
+html:not(.dark) .comparison-label {
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: #0a0a0a !important;
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.comparison-row {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.comparison-card {
+  background: var(--card) !important;
+  border: 1px solid var(--card-edge) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+}
+
+.price-breakdown {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) .price-breakdown,
+html:not(.dark) .price-breakdown {
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: #0a0a0a !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ===================================================================
+   General Typography & Contrast Fixes
+   =================================================================== */
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-sans) !important;
+  color: var(--foreground) !important;
+}
+
+.text-muted {
+  color: var(--muted-foreground) !important;
+}
+
+.search-suggestions {
+  background: rgba(15, 15, 15, 0.95) !important;
+  border: 1px solid var(--card-edge) !important;
+  color: var(--foreground) !important;
+  box-shadow: none !important;
+}
+
+:root:not(.dark) .search-suggestions,
+html:not(.dark) .search-suggestions {
+  background: #ffffff !important;
+  border-color: rgba(120, 53, 15, 0.15) !important;
+  color: #0a0a0a !important;
+}
+
+/* ===================================================================
+   ChaiUI Signature Half-Circle Theme Switcher
+   =================================================================== */
+
+.chai-theme-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none !important;
+  transition: border-color 200ms ease;
+  overflow: hidden;
+}
+
+.chai-theme-switch:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+:root:not(.dark) .chai-theme-switch:hover,
+html:not(.dark) .chai-theme-switch:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* The half-shaded disk */
+.chai-theme-disk {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--foreground);
+  background: linear-gradient(90deg, var(--foreground) 50%, transparent 50%);
+  transform: rotate(-45deg);
+  transition: transform 300ms ease;
+}
+
+.dark .chai-theme-disk,
+[data-theme="dark"] .chai-theme-disk {
+  transform: rotate(135deg);
+}
+
+/* ===================================================================
+   Category Bar (Segmented / Warm Hairline Pills)
+   =================================================================== */
+
+.wander-category-bar {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: none !important;
+  padding: 0.75rem 0 !important;
+}
+
+.category-bar-container {
+  max-width: min(1680px, 98vw) !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(1rem, 2.5vw, 2.5rem) !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.category-scroll-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+}
+.category-scroll-wrapper::-webkit-scrollbar {
+  display: none !important;
+}
+
+.category-item {
+  text-decoration: none !important;
+  flex-shrink: 0 !important;
+}
+
+.category-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--border) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--muted-foreground) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  transition: all 200ms ease !important;
+  box-shadow: none !important;
+}
+
+.category-pill:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--foreground) !important;
+}
+
+/* ChaiUI Segmented Active State: Dark brown fill (orange-900/40) in dark */
+.category-pill.active {
+  background: rgba(124, 45, 18, 0.4) !important; /* orange-900/40 */
+  border-color: rgba(255, 125, 12, 0.3) !important;
+  color: #ffedd5 !important; /* orange-100 */
+}
+
+:root:not(.dark) .category-pill.active,
+html:not(.dark) .category-pill.active {
+  background: #ffedd5 !important; /* orange-100 */
+  border-color: #fdba74 !important;
+  color: #7c2d12 !important; /* orange-900 */
+}
+
+.category-nav-arrow {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  transition: all 200ms ease !important;
+}
+
+.category-nav-arrow:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ===================================================================
+   Toolbar & Tax Toggle
+   =================================================================== */
+
+.controls-bar {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.tax-toggle {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  height: 42px !important;
+  box-shadow: none !important;
+}
+
+.tax-toggle .form-check-label {
+  font-family: var(--font-sans) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  color: var(--foreground) !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--brand) !important;
+  border-color: var(--brand) !important;
+}
+
+/* ===================================================================
+   Footer (10% Faded Hairline)
+   =================================================================== */
+
+.wander-footer {
+  position: relative !important;
+  margin-top: auto !important;
+  padding: 3rem 0 1.5rem !important;
+  background: transparent !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  font-family: var(--font-sans) !important;
+}
+
+/* ChaiUI Faded 10% Hairline */
+.wander-footer::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  height: 1px !important;
+  width: 100% !important;
+  max-width: 1440px !important;
+  transform: translateX(-50%) !important;
+  background-color: var(--footer-hairline) !important;
+  opacity: 0.12 !important;
+  mask-image: linear-gradient(90deg, transparent 0%, black 40%, black 60%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 40%, black 60%, transparent 100%) !important;
+}
+
+.footer-container {
+  max-width: min(1680px, 98vw) !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(1rem, 2.5vw, 2.5rem) !important;
+  display: grid !important;
+  grid-template-columns: 1.5fr 1fr 1fr 1.25fr !important;
+  gap: 2.5rem !important;
+}
+
+@media (max-width: 991px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-container {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem !important;
+  }
+}
+
+.footer-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.footer-brand h5 {
+  font-family: var(--font-brand) !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--foreground) !important;
+  margin: 0 !important;
+}
+
+.footer-brand .footer-logo {
+  color: var(--brand) !important;
+  font-size: 1.15rem !important;
+}
+
+.footer-description {
+  color: var(--muted-foreground) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  margin-bottom: 1rem !important;
+}
+
+.footer-col h6 {
+  font-family: var(--font-sans) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--foreground) !important;
+  margin-bottom: 1rem !important;
+  text-transform: none !important; /* Sentence case */
+}
+
+.footer-links a,
+.contact-item span {
+  display: block !important;
+  color: var(--muted-foreground) !important;
+  font-size: 0.875rem !important;
+  text-decoration: none !important;
+  margin-bottom: 0.5rem !important;
+  transition: color 200ms ease !important;
+}
+
+.footer-links a:hover {
+  color: var(--brand) !important; /* Allowed hover:text-brand */
+}
+
+/* Newsletter Input */
+.newsletter-form .input-group {
+  display: flex !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.newsletter-form input {
+  background: transparent !important;
+  border: none !important;
+  color: var(--foreground) !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  width: 100% !important;
+  outline: none !important;
+}
+
+.newsletter-form button {
+  background: transparent !important;
+  border: none !important;
+  color: var(--muted-foreground) !important;
+  padding: 0 0.85rem !important;
+  cursor: pointer !important;
+  transition: color 200ms ease !important;
+}
+
+.newsletter-form button:hover {
+  color: var(--brand) !important;
+}
+
+.footer-bottom {
+  max-width: min(1680px, 98vw) !important;
+  margin: 2.5rem auto 0 !important;
+  padding: 1.25rem clamp(1rem, 2.5vw, 2.5rem) 0 !important;
+  border-top: 1px solid var(--border) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+  font-size: 0.8125rem !important;
+  color: var(--muted-foreground) !important;
+}
+
+.footer-bottom a {
+  color: var(--muted-foreground) !important;
+  transition: color 200ms ease !important;
+}
+
+.footer-bottom a:hover {
+  color: var(--brand) !important;
+}
+
+/* ===================================================================
+   ChaiUI Global Overrides: Eliminating garish drop shadows & glows
+   =================================================================== */
+
+* {
+  box-shadow: none !important;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

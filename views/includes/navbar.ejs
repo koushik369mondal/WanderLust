@@ -94,9 +94,9 @@
 
     <!-- RIGHT SECTION: Action Buttons -->
     <div
-      class="navbar-flex navbar-items-center navbar-gap-2 xl-navbar-gap-4 navbar-flex-shrink-0 lg-navbar-hidden xl-navbar-flex">
+      class="navbar-right-section navbar-flex navbar-items-center navbar-gap-2 xl-navbar-gap-3 navbar-flex-shrink-0">
       <!-- Add New Listing -->
-      <a href="/listings/new" class="navbar-action-button navbar-hidden xl-navbar-inline-flex">
+      <a href="/listings/new" class="navbar-action-button wander-nav-desktop">
         <i class="fa-solid fa-plus navbar-text-sm navbar-flex-shrink-0" aria-hidden="true"></i>
         <span>
           <%= __('add_new_listing') %>
@@ -105,7 +105,7 @@
 
       <% if (typeof currentUser==='undefined' || !currentUser) { %>
         <!-- Login Button -->
-        <a href="/login" class="navbar-action-button navbar-hidden xl-navbar-inline-flex">
+        <a href="/login" class="navbar-action-button wander-nav-desktop">
           <i class="fa-solid fa-sign-in-alt navbar-text-base navbar-flex-shrink-0" aria-hidden="true"></i>
           <span class="navbar-whitespace-nowrap">
             <%= __('login') %>
@@ -113,7 +113,7 @@
         </a>
 
         <!-- Signup Button -->
-        <a href="/signup" class="navbar-primary-button navbar-action-button navbar-hidden xl-navbar-inline-flex">
+        <a href="/signup" class="navbar-primary-button navbar-action-button">
           <i class="fa-solid fa-user-plus navbar-text-base navbar-flex-shrink-0" aria-hidden="true"></i>
           <span class="navbar-whitespace-nowrap">
             <%= __('signup') %>
@@ -121,7 +121,7 @@
         </a>
         <% } else { %>
           <!-- Profile Dropdown -->
-          <div class="dropdown navbar-relative navbar-flex-shrink-0 navbar-hidden xl-navbar-block">
+          <div class="dropdown navbar-relative navbar-flex-shrink-0 wander-nav-desktop">
             <button class="navbar-action-button" data-bs-toggle="dropdown" aria-expanded="false" id="profileDropdown"
               aria-label="User profile menu" type="button">
               <i class="fa-solid fa-user navbar-text-base navbar-flex-shrink-0" aria-hidden="true"></i>
@@ -178,7 +178,7 @@
           </div>
 
           <!-- Notifications Dropdown -->
-          <div class="dropdown navbar-relative navbar-flex-shrink-0 navbar-hidden xl-navbar-block">
+          <div class="dropdown navbar-relative navbar-flex-shrink-0 wander-nav-desktop">
             <button class="navbar-icon-button" data-bs-toggle="dropdown" aria-expanded="false" id="notificationToggle"
               aria-label="View notifications" type="button">
               <i class="fa-solid fa-bell navbar-text-base" aria-hidden="true"></i>
@@ -210,7 +210,7 @@
           <% } %>
 
             <!-- Language Selector -->
-            <div class="dropdown navbar-relative navbar-hidden xl-navbar-block navbar-flex-shrink-0">
+            <div class="dropdown navbar-relative wander-nav-desktop navbar-flex-shrink-0">
               <button class="navbar-action-button navbar-max-w-140" data-bs-toggle="dropdown" aria-expanded="false"
                 id="languageToggle" aria-label="Select language" type="button">
                 <span class="navbar-text-base navbar-flex-shrink-0">
@@ -236,12 +236,12 @@
             </div>
 
             <!-- Theme Toggle -->
-            <div class="navbar-flex-shrink-0 navbar-hidden xl-navbar-block">
+            <div class="navbar-flex-shrink-0 d-flex align-items-center">
               <%- include("../includes/theme-toggle.ejs") %>
             </div>
 
             <!-- Mobile Menu Toggle -->
-            <button class="navbar-icon-button lg-navbar-inline-flex xl-navbar-hidden" type="button"
+            <button class="navbar-icon-button wander-nav-mobile-toggle" type="button"
               data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
               aria-label="Toggle navigation menu">
               <i class="fa-solid fa-bars navbar-text-xl" aria-hidden="true"></i>
